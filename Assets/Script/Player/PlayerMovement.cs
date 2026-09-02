@@ -19,10 +19,12 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 _localMoveDir;
     private bool _isRunning;
     private float _speed01;
+    private PlayerStats _stats;
 
     public override void Spawned()
     {
         _cc = GetComponent<CharacterController>();
+        _stats = GetComponent<PlayerStats>();
 
         if (HasStateAuthority)
         {
@@ -47,7 +49,8 @@ public class PlayerMovement : NetworkBehaviour
         _localMoveDir = new Vector3(h, 0f, v).normalized;
 
         _isRunning = Input.GetKey(KeyCode.LeftShift) && v > 0.1f;
-        float speed = _isRunning ? runSpeed : walkSpeed;
+        float baseSpd = _stats.Get(StatType.MoveSpeed);
+        float speed = _isRunning ? baseSpd * 1.6f : baseSpd;
         _speed01 = _localMoveDir.magnitude;
 
         Vector3 worldDir = transform.TransformDirection(_localMoveDir);

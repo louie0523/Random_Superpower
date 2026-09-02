@@ -16,8 +16,12 @@ GameObject:
   - component: {fileID: 7364691003183976539}
   - component: {fileID: 7416004861657723609}
   - component: {fileID: 7430700015858829311}
-  m_Layer: 0
-  m_Name: PLayer
+  - component: {fileID: 5643511878234427327}
+  - component: {fileID: 2292308803494601025}
+  - component: {fileID: -4611531175301071505}
+  - component: {fileID: 2170944513226956342}
+  m_Layer: 3
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -116,6 +120,10 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 927725796463626508}
   - {fileID: 7416004861657723609}
+  - {fileID: 5643511878234427327}
+  - {fileID: 2292308803494601025}
+  - {fileID: -4611531175301071505}
+  - {fileID: 2170944513226956342}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &927725796463626508
 MonoBehaviour:
@@ -219,17 +227,98 @@ MonoBehaviour:
   pitchMin: -85
   pitchMax: 85
   walkBobFreq: 1.8
-  walkBobAmpY: 0.05
-  walkBobAmpX: 0.03
+  walkBobAmpY: 0.04
+  walkBobAmpX: 0.02
   runBobFreq: 2.6
-  runBobAmpY: 0.09
-  runBobAmpX: 0.05
+  runBobAmpY: 0.07
+  runBobAmpX: 0.04
+  walkBobRoll: 0.5
+  runBobRoll: 2
   baseFov: 70
   runFovAdd: 10
   fovLerp: 8
-  strafeRoll: 2
+  strafeRoll: 1
   landDipAmount: 0.15
   landRecoverSpeed: 6
+  shakeDecay: 5
+  shakeSpeed: 15
+  hitPunchAmount: 8
+--- !u!114 &5643511878234427327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa2b36362053bb4daaefabf071e7e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  range: 3
+  radius: 0.6
+  cooldown: 0.5
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 8
+  cameraRoot: {fileID: 6648097054573201572}
+  fpsCamera: {fileID: 7430700015858829311}
+--- !u!114 &2292308803494601025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4204d4157ba57e14d85bb9f843b3b331, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHP: 100
+  respawnDelay: 3
+  _HP: 0
+  _IsDead: 0
+  _Soul: 0
+--- !u!114 &-4611531175301071505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5960b318420fb8945b98013e47833a26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  baseMaxHP: 100
+  baseAttack: 25
+  baseDefense: 0
+  baseMoveSpeed: 6
+  baseAttackSpeed: 1
+  baseCritChance: 0.05
+  baseCritDamage: 1.5
+  baseCooldownReduction: 0
+  baseLifeSteal: 0
+--- !u!114 &2170944513226956342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0cb771dc89fde9488a887fd687fdd0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEquipment
+  database: {fileID: 11400000, guid: fab1b4881b0d24544923c3252d281a4a, type: 2}
+  _WeaponId: 0
+  _ArmorId: 0
+  _HelmetId: 0
+  _BootsId: 0
+  startWeaponId: 1001
 --- !u!1 &6774034678307414958
 GameObject:
   m_ObjectHideFlags: 0

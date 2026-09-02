@@ -44,7 +44,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             Vector3 pos = new Vector3(UnityEngine.Random.Range(-4f, 4f), 1f,
                                       UnityEngine.Random.Range(-4f, 4f));
-            runner.Spawn(playerPrefab, pos, Quaternion.identity, player);
+            var obj = runner.Spawn(playerPrefab, pos, Quaternion.identity, player);
+            runner.SetPlayerObject(player, obj);   // ก็ ภฬ มู
         }
     }
 

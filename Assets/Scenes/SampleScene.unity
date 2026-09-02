@@ -418,6 +418,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1401543693}
   - component: {fileID: 1401543694}
+  - component: {fileID: 1401543695}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -453,6 +454,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicSpawner
   playerPrefab: {fileID: 1933714763159700364, guid: 2e88d1791f21fe64c9c1d3b2386535b9, type: 3}
+--- !u!114 &1401543695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401543692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6986047598763349a616b0513ee6774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameHUD
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

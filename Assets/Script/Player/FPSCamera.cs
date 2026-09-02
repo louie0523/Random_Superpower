@@ -1,0 +1,204 @@
+using UnityEngine;
+
+public class FPSCamera : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField] private Transform cameraRoot;   // 피치 회전
+    [SerializeField] private Transform cameraHolder; // 헤드밥 오프셋
+    [SerializeField] private Camera cam;
+
+    [Header("Look")]
+    [SerializeField] private float sensitivity = 0.3f;
+    [SerializeField] private float pitchMin = -85f;
+    [SerializeField] private float pitchMax = 85f;
+
+    [Header("Head Bob")]
+    [SerializeField] private float walkBobFreq = 1.8f;
+    [SerializeField] private float walkBobAmpY = 0.05f;
+    [SerializeField] private float walkBobAmpX = 0.05f;
+    [SerializeField] private float runBobFreq = 3.0f;
+    [SerializeField] private float runBobAmpY = 0.09f;
+    [SerializeField] private float runBobAmpX = 0.09f;
+    [SerializeField] private float walkBobRoll = 0.5f;
+    [SerializeField] private float runBobRoll = 2.0f;
+
+    [Header("FOV")]
+    [SerializeField] private float baseFov = 70f;
+    [SerializeField] private float runFovAdd = 14f;
+    [SerializeField] private float fovLerp = 8f;
+
+    [Header("Lean / Land")]
+    [SerializeField] private float strafeRoll = 2f;
+    [SerializeField] private float landDipAmount = 0.15f;
+    [SerializeField] private float landRecoverSpeed = 6f;
+
+    [Header("Hit Shake")]
+    [SerializeField] private float shakeDecay = 5f;
+    [SerializeField] private float shakeSpeed = 30f;
+    [SerializeField] private float hitPunchAmount = 6f;
+
+    // 내부 상태
+    private float _pitch;
+    private float _yawAccum;
+    private float _bobTimer;
+    private float _landOffset;
+    private float _roll;
+    private float _targetFov;
+    private float _kickFov;
+    private float _shakeAmount;
+    private Vector2 _shakeOffset;
+    private Vector2 _punch;
+    private Vector2 _punchVel;
+
+    void Awake()
+    {
+        _targetFov = baseFov;
+        if (cam != null) cam.fieldOfView = baseFov;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked
+                ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = Cursor.lockState != CursorLockMode.Locked;
+        }
+    }
+
+    public void Init()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    /// <summary>PlayerMovement의 Update가 호출</summary>
+    public void Tick(Vector3 localMoveDir, bool isRunning, float speed01)
+    {
+        HandleLook();
+        HandleBob(localMoveDir, isRunning, speed01);
+        HandleFov(isRunning);
+    }
+
+    /// <summary>PlayerMovement의 FixedUpdateNetwork가 호출</summary>
+    public float ConsumeYaw()
+    {
+        float y = _yawAccum;
+        _yawAccum = 0f;
+        return y;
+    }
+
+    // ---------------- 시점 ----------------
+
+    void HandleLook()
+    {
+        float mx = Input.GetAxisRaw("Mouse X") * sensitivity * 10f;
+        float my = Input.GetAxisRaw("Mouse Y") * sensitivity * 10f;
+
+        _yawAccum += mx;   // 좌우는 누적만 (네트워크 틱에서 적용)
+
+        _pitch = Mathf.Clamp(_pitch - my, pitchMin, pitchMax);
+        cameraRoot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
+    }
+
+    // ---------------- 헤드밥 ----------------
+
+    void HandleBob(Vector3 moveDir, bool isRunning, float speed01)
+    {
+        float freq = isRunning ? runBobFreq : walkBobFreq;
+        float ampY = isRunning ? runBobAmpY : walkBobAmpY;
+        float ampX = isRunning ? runBobAmpX : walkBobAmpX;
+        float roll = isRunning ? runBobRoll : walkBobRoll;
+
+
+
+        Vector3 bob = Vector3.zero;
+
+        if (speed01 > 0.1f)
+        {
+            _bobTimer += Time.deltaTime * freq * Mathf.PI * 2f;
+            bob.y = Mathf.Sin(_bobTimer) * ampY * speed01;
+            bob.x = Mathf.Cos(_bobTimer * 0.5f) * ampX * speed01;
+        }
+        else
+        {
+            _bobTimer = Mathf.Lerp(_bobTimer, 0f, Time.deltaTime * 4f);
+        }
+
+        // 착지 딥
+        _landOffset = Mathf.Lerp(_landOffset, 0f, Time.deltaTime * landRecoverSpeed);
+        bob.y += _landOffset;
+
+        // 위치 적용
+        cameraHolder.localPosition = Vector3.Lerp(
+            cameraHolder.localPosition, bob, Time.deltaTime * 12f);
+
+        // 셰이크 감쇠
+        _shakeAmount = Mathf.Lerp(_shakeAmount, 0f, Time.deltaTime * shakeDecay);
+        if (_shakeAmount > 0.001f)
+        {
+            float t = Time.time * shakeSpeed;
+            _shakeOffset.x = (Mathf.PerlinNoise(t, 0f) - 0.5f) * 2f * _shakeAmount;
+            _shakeOffset.y = (Mathf.PerlinNoise(0f, t) - 0.5f) * 2f * _shakeAmount;
+        }
+        else
+        {
+            _shakeOffset = Vector2.zero;
+        }
+
+        // 피격 반동 (스프링)
+        _punchVel = Vector2.Lerp(_punchVel, -_punch * 30f, Time.deltaTime * 12f);
+        _punch += _punchVel * Time.deltaTime;
+        _punch = Vector2.Lerp(_punch, Vector2.zero, Time.deltaTime * 6f);
+
+        // 롤
+        float stepRoll = Mathf.Cos(_bobTimer * 0.5f) * roll * speed01;
+        float targetRoll = -moveDir.x * strafeRoll + stepRoll;
+        _roll = Mathf.Lerp(_roll, targetRoll, Time.deltaTime * 6f);
+
+        // 최종 회전
+        cameraHolder.localRotation = Quaternion.Euler(
+            _punch.y + _shakeOffset.y * 2f,
+            _punch.x + _shakeOffset.x * 2f,
+            _roll + _shakeOffset.x * 3f
+        );
+    }
+
+    // ---------------- FOV ----------------
+
+    void HandleFov(bool isRunning)
+    {
+        _targetFov = baseFov + (isRunning ? runFovAdd : 0f);
+        _kickFov = Mathf.Lerp(_kickFov, 0f, Time.deltaTime * 4f);
+        cam.fieldOfView = Mathf.Lerp(
+            cam.fieldOfView, _targetFov + _kickFov, Time.deltaTime * fovLerp);
+    }
+
+    // ---------------- 외부 호출 ----------------
+
+    /// <summary>대시, 공격 등</summary>
+    public void FovKick(float amount)
+    {
+        _kickFov = amount;
+    }
+
+    /// <summary>착지</summary>
+    public void LandDip(float force01)
+    {
+        _landOffset = -landDipAmount * Mathf.Clamp01(force01);
+    }
+
+    /// <summary>피격. dirLocal은 맞은 방향(-1~1)</summary>
+    public void HitReact(float intensity01, Vector2 dirLocal)
+    {
+        _shakeAmount = Mathf.Max(_shakeAmount, 1.5f * intensity01);
+        _punchVel += dirLocal * hitPunchAmount * intensity01;
+        FovKick(-5f * intensity01);
+    }
+
+    /// <summary>폭발 등 방향 없는 흔들림</summary>
+    public void Shake(float amount)
+    {
+        _shakeAmount = Mathf.Max(_shakeAmount, amount);
+    }
+}
