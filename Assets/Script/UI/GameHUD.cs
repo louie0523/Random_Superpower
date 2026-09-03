@@ -25,5 +25,10 @@ public class GameHUD : MonoBehaviour
 
         // 조준점
         GUI.Label(new Rect(Screen.width / 2 - 4, Screen.height / 2 - 10, 20, 20), "+");
+
+        var ar = local.GetComponent<AbilityRuntime>();
+        var rand = ar?.GetRandomAbility();
+        if (rand != null)
+            GUI.Label(new Rect(20, 50, 400, 30), $"이번 생: {rand.DisplayName}");
     }
 }

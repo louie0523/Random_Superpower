@@ -73,16 +73,37 @@ public class PlayerHealth : NetworkBehaviour
         IsDead = true;
         RespawnTimer = TickTimer.CreateFromSeconds(Runner, respawnDelay);
 
-        // 소울 35% 손실 → 킬러에게
-        int lost = Mathf.FloorToInt(Soul * 0.35f);
-        Soul -= lost;
+        bool killedByPlayer = killer != PlayerRef.None && killer != Object.InputAuthority;
 
-        var killerObj = Runner.GetPlayerObject(killer);
-        if (killerObj != null &&
-            killerObj.TryGetComponent<PlayerHealth>(out var kh))
+        // 소울 이전
+        if (killedByPlayer)
         {
-            kh.RPC_GainSoul(5 + lost);
+            int lost = Mathf.FloorToInt(Soul * 0.35f);
+            Soul -= lost;
+
+            var killerObj = Runner.GetPlayerObject(killer);
+            if (killerObj != null && killerObj.TryGetComponent<PlayerHealth>(out var kh))
+                kh.RPC_GainSoul(5 + lost);
         }
+
+        // 랜덤 능력 갱신 — 남에게 죽었을 때만
+        if (killedByPlayer)
+            GetComponent<AbilityRuntime>()?.RerollRandomAbility();
+
+        GetComponent<AbilityRuntime>()?.FireTrigger(TriggerType.OnDeath, null);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_Heal(int amount)
+    {
+        if (IsDead) return;
+        HP = Mathf.Min(HP + amount, Mathf.RoundToInt(_stats.Get(StatType.MaxHP)));
+    }
+
+    public void SpendSoul(int amount)
+    {
+        if (!HasStateAuthority) return;
+        Soul = Mathf.Max(0, Soul - amount);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -93,15 +114,18 @@ public class PlayerHealth : NetworkBehaviour
 
     void Respawn()
     {
-        HP = maxHP;
+        HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         IsDead = false;
 
-        Vector3 pos = new Vector3(Random.Range(-8f, 8f), 1f, Random.Range(-8f, 8f));
+        // 이번 생 한정 버프 전부 제거
+        _stats.RemoveBySource(SourceId.RandomAbility);
 
-        // CharacterController는 켜진 상태로 위치를 바꾸면 씹힙니다
+        Vector3 pos = new Vector3(Random.Range(-8f, 8f), 1f, Random.Range(-8f, 8f));
         _cc.enabled = false;
         transform.position = pos;
         _cc.enabled = true;
+
+        GetComponent<AbilityRuntime>()?.FireTrigger(TriggerType.OnRespawn, null);
     }
 
     // ---------- 시각 효과 (모든 클라이언트에서 실행) ----------

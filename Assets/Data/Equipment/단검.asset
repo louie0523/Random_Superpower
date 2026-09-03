@@ -15,9 +15,329 @@ MonoBehaviour:
   Id: 1001
   DisplayName: "\uB2E8\uAC80"
   Slot: 0
+  Icon: {fileID: 0}
   Description: "\uC870\uC57D\uD569\uB2C8\uB2E4."
   BaseStats:
   - Stat: 1
     Type: 0
     Value: 25
   MaxOptionSlots: 3
+  ModelPrefab: {fileID: 100000, guid: 550a61d9929e19749851330ea8c46ecd, type: 3}
+  Grip: 0
+  PositionOffset: {x: 0, y: 0, z: 0}
+  RotationOffset: {x: 0, y: 0, z: 0}
+  ScaleOverride: {x: 1, y: 1, z: 1}
+  FpPositionOffset: {x: 0.006, y: 0.665, z: 0.303}
+  FpRotationOffset: {x: 289.15997, y: 0, z: 271.95}
+  HitMode: 0
+  HitBoxCenter: {x: 0, y: 0, z: 0.6}
+  HitBoxSize: {x: 0.3, y: 0.3, z: 1.2}
+  Range: 3
+  HitRadius: 0.1
+  Combo:
+  - Name: "1\uD0C0"
+    WindUp: 0.15
+    ActiveWindow: 0.24
+    Recovery: 0.35
+    CancelPoint: 0.6
+    ComboResetTime: 0.8
+    DamageMultiplier: 1
+    RangeMultiplier: 1
+    RadiusMultiplier: 1
+    MaxTargets: 1
+    Motion:
+      Keys:
+      - Time: 0
+        Pose:
+          RightPos: {x: 0.86, y: 0, z: 1.28}
+          RightRot: {x: 0, y: 0, z: 0}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.32
+        Pose:
+          RightPos: {x: 0.98, y: 0.28, z: 1.16}
+          RightRot: {x: -35, y: 42, z: -45}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0.2
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.52
+        Pose:
+          RightPos: {x: 0.52, y: -0.14, z: 1.38}
+          RightRot: {x: 28, y: -42, z: 42}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0.1
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 3.5
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 1
+        Pose:
+          RightPos: {x: 0.86, y: 0, z: 1.28}
+          RightRot: {x: 0, y: 0, z: 0}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0.2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 2
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      Amplitude: 1
+    HitStopDuration: 0.05
+    CameraKickFov: 4
+    CameraShake: 0.3
+    LungeDistance: 0
+    SwingSound: {fileID: 0}
+    TrailPrefab: {fileID: 0}
+  - Name: "2\uD0C0"
+    WindUp: 0.15
+    ActiveWindow: 0.3
+    Recovery: 0.35
+    CancelPoint: 0.6
+    ComboResetTime: 0.8
+    DamageMultiplier: 1
+    RangeMultiplier: 1
+    RadiusMultiplier: 1
+    MaxTargets: 1
+    Motion:
+      Keys:
+      - Time: 0
+        Pose:
+          RightPos: {x: 0.86, y: 0, z: 1.28}
+          RightRot: {x: 0, y: 0, z: 0}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.38
+        Pose:
+          RightPos: {x: 0.8, y: 0.5, z: 1.0999999}
+          RightRot: {x: -75, y: 0, z: -8}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0.2
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.56
+        Pose:
+          RightPos: {x: 0.8, y: -0.26, z: 1.4}
+          RightRot: {x: 62, y: 0, z: 4}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0.1
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 3.5
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 1
+        Pose:
+          RightPos: {x: 0.86, y: 0, z: 1.28}
+          RightRot: {x: 0, y: 0, z: 0}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: 0, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0.2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 2
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      Amplitude: 1
+    HitStopDuration: 0.05
+    CameraKickFov: 4
+    CameraShake: 0.3
+    LungeDistance: 0
+    SwingSound: {fileID: 0}
+    TrailPrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 0}
+  ProjectileSpeed: 40
+  ProjectileLifetime: 3
+  MuzzleNodeName: Muzzle

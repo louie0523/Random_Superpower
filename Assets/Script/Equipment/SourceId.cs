@@ -10,6 +10,7 @@ public static class SourceId
     // 능력
     public const int MainAbility = 100010;
     public const int SubAbility = 100011;
+    public const int RandomAbility = 100012;
 
     // 상점 (영구)
     public const int ShopPurchase = 100020;

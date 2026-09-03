@@ -14,10 +14,12 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int BootsId { get; set; }
 
+
     [Header("Starting Gear")]
     [SerializeField] private int startWeaponId = 1001;
 
     private PlayerStats _stats;
+    [SerializeField] private FPArmRig armRig;
 
     public override void Spawned()
     {
@@ -55,6 +57,10 @@ public class PlayerEquipment : NetworkBehaviour
 
         foreach (var s in data.BaseStats)
             _stats.AddModifier(new StatModifier(s.Stat, s.Type, s.Value, sourceId));
+
+        // 무기 모델 장착 (내 화면에만)
+        if (data.Slot == EquipSlot.Weapon && HasStateAuthority && armRig != null)
+            armRig.Mount(data);
     }
 
     /// <summary>장비 교체 (주인만 호출)</summary>
