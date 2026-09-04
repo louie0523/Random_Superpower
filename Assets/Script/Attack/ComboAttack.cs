@@ -6,17 +6,30 @@ public class ComboStep
     [Header("Info")]
     public string Name = "1타";
 
-    [Header("Timing (초)")]
-    public float WindUp = 0.15f;
-    [Tooltip("판정이 열려있는 시간")]
-    public float ActiveWindow = 0.10f;
-    public float Recovery = 0.35f;
+    [Header("Timing")]
+    [Tooltip("공격 전체 길이 (초)")]
+    public float Duration = 0.55f;
 
-    [Header("Combo Window")]
-    [Tooltip("이 시점 이후 입력하면 다음 타로 연결 (WindUp+Active 기준 비율)")]
-    [Range(0f, 1f)] public float CancelPoint = 0.6f;
+    [Tooltip("판정 시작 지점 (0~1, 전체 대비 비율)")]
+    [Range(0f, 1f)] public float HitStart = 0.27f;
+
+    [Tooltip("판정 종료 지점 (0~1)")]
+    [Range(0f, 1f)] public float HitEnd = 0.45f;
+
+    [Tooltip("다음 타로 연결 가능한 지점 (0~1)")]
+    [Range(0f, 1f)] public float CancelPoint = 0.75f;
     [Tooltip("이 시간 안에 입력 없으면 콤보 초기화")]
     public float ComboResetTime = 0.8f;
+
+    [Header("Hit Override")]
+    [Tooltip("체크하면 이 타만 별도 판정 범위 사용")]
+    public bool OverrideHitShape = false;
+
+    public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;
+    public float Range = 3f;
+    [Range(20f, 360f)] public float HitAngle = 120f;
+    public float HitHeight = 1.2f;
+    public float MinRange = 0f;
 
     [Header("Damage")]
     [Tooltip("무기 공격력 대비 배율")]
@@ -40,6 +53,30 @@ public class ComboStep
     public AudioClip SwingSound;
     public GameObject TrailPrefab;
 
-    public float TotalTime => WindUp + ActiveWindow + Recovery;
-    public float CancelTime => (WindUp + ActiveWindow) * CancelPoint;
+    public float TotalTime => Duration;
+    public float WindUp => Duration * HitStart;
+    public float ActiveWindow => Duration * (HitEnd - HitStart);
+    public float Recovery => Duration * (1f - HitEnd);
+    public float CancelTime => Duration * CancelPoint;
+
+    /// <summary>이 타가 실제로 쓸 판정 값</summary>
+    public void ResolveHitShape(EquipmentData weapon, out WeaponHitMode mode, out float range, out float angle, out float height, out float minRange)
+    {
+        if (OverrideHitShape)
+        {
+            mode = HitMode;
+            range = Range;
+            angle = HitAngle;
+            height = HitHeight;
+            minRange = MinRange;
+        }
+        else
+        {
+            mode = weapon.HitMode;
+            range = weapon.Range * RangeMultiplier;
+            angle = weapon.HitAngle;
+            height = weapon.HitHeight;
+            minRange = weapon.MinRange;
+        }
+    }
 }

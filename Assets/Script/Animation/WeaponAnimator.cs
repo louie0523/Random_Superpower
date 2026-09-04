@@ -44,6 +44,14 @@ public class WeaponAnimator : MonoBehaviour
         _t = 0f;
     }
 
+
+    /// <summary>원격 플레이어용. 스윙 포즈만 재생 (스웨이/바빙 제외)</summary>
+    public void TickRemote()
+    {
+        if (armRig == null) return;
+        HandleSwingPose();
+        armRig.ApplyOffset(Vector3.zero, Vector3.zero);
+    }
     public void StopSwing()
     {
         _t = -1f;
@@ -80,7 +88,11 @@ public class WeaponAnimator : MonoBehaviour
             return;
         }
 
-        armRig.ApplySwing(_step.Motion, _t / _step.TotalTime);
+        float p = _t / _step.TotalTime;
+        var pose = _step.Motion.Evaluate(p, armRig.IdlePose);
+        Debug.Log($"[Swing] p={p:F2} keys={_step.Motion.Keys?.Count} pos={pose.RightPos}");
+
+        armRig.ApplySwing(_step.Motion, p);
     }
 
     // ── 스웨이 / 바빙 (ArmRoot 전체) ──

@@ -6,8 +6,8 @@ public enum WeaponClass { Melee, Ranged }
 
 public enum WeaponHitMode
 {
-    WeaponBox,       // 무기에 붙은 박스 (근접 기본)
-    ForwardSphere,   // 카메라 정면 구체 (마법, 범위기)
+    ForwardArc,      // 정면 부채꼴 (근접 기본)
+    ForwardSphere,   // 정면 구체 (각도 제한 없음, 범위기)
 }
 
 
@@ -44,17 +44,19 @@ public class EquipmentData : ScriptableObject
     public Vector3 FpRotationOffset;
 
     [Header("─── Weapon: Hit Shape ───")]
-    public WeaponHitMode HitMode = WeaponHitMode.WeaponBox;
+    public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;
 
-    [Tooltip("무기 기준 판정 박스 중심. Z+ 가 날 방향")]
-    public Vector3 HitBoxCenter = new(0f, 0f, 0.6f);
-
-    [Tooltip("판정 박스 크기 (가로, 세로, 길이)")]
-    public Vector3 HitBoxSize = new(0.3f, 0.3f, 1.2f);
-
-    [Tooltip("ForwardSphere 전용")]
+    [Tooltip("사거리 (m)")]
     public float Range = 3f;
-    public float HitRadius = 0.8f;
+
+    [Tooltip("좌우 판정 각도 (전체각, 도)")]
+    [Range(20f, 360f)] public float HitAngle = 120f;
+
+    [Tooltip("최소 사거리. 너무 붙으면 안 맞게 (보통 0)")]
+    public float MinRange = 0f;
+
+    [Tooltip("수직 판정 허용 높이 (m). 눈높이 기준 위아래")]
+    public float HitHeight = 1.2f;
 
 
 

@@ -50,6 +50,8 @@ public class FPSCamera : MonoBehaviour
     private Vector2 _punch;
     private Vector2 _punchVel;
 
+    public float Pitch => _pitch;
+
     void Awake()
     {
         _targetFov = baseFov;

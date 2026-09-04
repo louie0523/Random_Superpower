@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
+    [Header("View")]
+    [SerializeField] private GameObject bodyRoot;
+    [SerializeField] private GameObject armRoot;
+
     [Header("Move")]
     [SerializeField] private float walkSpeed = 6f;
     [SerializeField] private float runSpeed = 10f;
@@ -20,11 +24,17 @@ public class PlayerMovement : NetworkBehaviour
     private bool _isRunning;
     private float _speed01;
     private PlayerStats _stats;
+    [SerializeField] private WeaponAnimator weaponAnim;
+    private PlayerAnimator _anim;
+
 
     public override void Spawned()
     {
         _cc = GetComponent<CharacterController>();
         _stats = GetComponent<PlayerStats>();
+        _anim = GetComponent<PlayerAnimator>();
+
+        if (armRoot != null) armRoot.SetActive(true);   // 항상 켬
 
         if (HasStateAuthority)
         {
@@ -32,8 +42,13 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            // 남의 캐릭터는 카메라 끄기
-            fpsCamera.GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            // 오브젝트가 아니라 Camera 컴포넌트만 비활성화
+            var cam = fpsCamera.GetComponentInChildren<Camera>(true);
+            if (cam != null) cam.enabled = false;
+
+            var listener = fpsCamera.GetComponentInChildren<AudioListener>(true);
+            if (listener != null) listener.enabled = false;
+
             fpsCamera.enabled = false;
         }
     }
@@ -72,11 +87,21 @@ public class PlayerMovement : NetworkBehaviour
 
         Vector3 motion = worldDir * speed + Vector3.up * _verticalVel;
         _cc.Move(motion * Runner.DeltaTime);
+
+        _anim?.SetMovement(_speed01 * (_isRunning ? 1f : 0.5f), _cc.isGrounded, fpsCamera.Pitch);
     }
 
     void Update()
     {
-        if (!HasStateAuthority) return;
-        fpsCamera.Tick(_localMoveDir, _isRunning, _speed01);
+        if (HasStateAuthority)
+        {
+            fpsCamera.Tick(_localMoveDir, _isRunning, _speed01);
+            weaponAnim?.Tick(_localMoveDir, _isRunning, _speed01);
+        }
+        else
+        {
+            // 남의 무기도 스윙은 재생
+            weaponAnim?.TickRemote();
+        }
     }
 }

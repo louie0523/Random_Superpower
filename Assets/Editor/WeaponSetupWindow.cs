@@ -28,13 +28,13 @@ public class WeaponSetupWindow : EditorWindow
     private bool _foldMotion = true;
     private bool _foldTools;
 
-    // 디버깅
+    // ── 씬 표시 ──
     private bool _showHitbox = true;
     private bool _showTrail = true;
     private bool _showOnlyDuringActive = false;
     private readonly List<Vector3> _tipTrail = new();
 
-    private bool _editBox = false;
+    private int _dragHandle = -1;
 
     [MenuItem("Tools/Weapon Setup")]
     static void Open()
@@ -118,8 +118,7 @@ public class WeaponSetupWindow : EditorWindow
                 "PreviewCamera\n" +
                 " └ ArmRoot  (FPArmRig)\n" +
                 "    ├ RightHand\n" +
-                "    └ LeftHand\n\n" +
-                "구조를 만들고 FPArmRig에 연결하세요.",
+                "    └ LeftHand",
                 MessageType.Warning);
 
             if (GUILayout.Button("씬에서 찾기")) FindRig();
@@ -186,7 +185,7 @@ public class WeaponSetupWindow : EditorWindow
         if (GUILayout.Button("초기화")) ResetWeaponTransform();
         EditorGUILayout.EndHorizontal();
 
-        // ══════ 여기부터 히트 판정 ══════
+        // ══════ 히트 판정 ══════
 
         EditorGUILayout.Space(8);
         EditorGUILayout.LabelField("히트 판정", EditorStyles.boldLabel);
@@ -195,53 +194,47 @@ public class WeaponSetupWindow : EditorWindow
         so2.Update();
 
         EditorGUILayout.PropertyField(so2.FindProperty("HitMode"), new GUIContent("판정 방식"));
+        EditorGUILayout.PropertyField(so2.FindProperty("Range"), new GUIContent("사거리 (m)"));
 
-        if (_weapon.HitMode == WeaponHitMode.WeaponBox)
-        {
-            EditorGUILayout.PropertyField(so2.FindProperty("HitBoxCenter"), new GUIContent("박스 중심"));
-            EditorGUILayout.PropertyField(so2.FindProperty("HitBoxSize"), new GUIContent("박스 크기"));
+        if (_weapon.HitMode == WeaponHitMode.ForwardArc)
+            EditorGUILayout.PropertyField(so2.FindProperty("HitAngle"), new GUIContent("판정 각도 (°)"));
 
-            EditorGUILayout.Space(2);
-
-            _editBox = GUILayout.Toggle(_editBox,
-                _editBox ? "■ 씬 편집 중 (끄기)" : "▶ 씬에서 박스 편집",
-                "Button", GUILayout.Height(24));
-
-            EditorGUILayout.Space(2);
-            EditorGUILayout.LabelField("프리셋", EditorStyles.miniBoldLabel);
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("검", EditorStyles.miniButtonLeft))
-                SetBoxPreset(new Vector3(0, 0, 0.7f), new Vector3(0.2f, 0.2f, 1.3f));
-            if (GUILayout.Button("대검", EditorStyles.miniButtonMid))
-                SetBoxPreset(new Vector3(0, 0, 0.9f), new Vector3(0.3f, 0.3f, 1.8f));
-            if (GUILayout.Button("망치", EditorStyles.miniButtonMid))
-                SetBoxPreset(new Vector3(0, 0, 1.0f), new Vector3(0.7f, 0.7f, 0.5f));
-            if (GUILayout.Button("창", EditorStyles.miniButtonMid))
-                SetBoxPreset(new Vector3(0, 0, 1.2f), new Vector3(0.15f, 0.15f, 2.2f));
-            if (GUILayout.Button("단검", EditorStyles.miniButtonRight))
-                SetBoxPreset(new Vector3(0, 0, 0.3f), new Vector3(0.15f, 0.15f, 0.5f));
-            EditorGUILayout.EndHorizontal();
-        }
-        else
-        {
-            EditorGUILayout.PropertyField(so2.FindProperty("Range"), new GUIContent("사거리"));
-            EditorGUILayout.PropertyField(so2.FindProperty("HitRadius"), new GUIContent("반경"));
-        }
+        EditorGUILayout.PropertyField(so2.FindProperty("MinRange"), new GUIContent("최소 사거리"));
+        EditorGUILayout.PropertyField(so2.FindProperty("HitHeight"), new GUIContent("수직 허용 (m)"));
 
         so2.ApplyModifiedProperties();
 
+        EditorGUILayout.Space(2);
+        EditorGUILayout.LabelField("프리셋", EditorStyles.miniBoldLabel);
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("단검", EditorStyles.miniButtonLeft)) SetHitPreset(2.0f, 70f);
+        if (GUILayout.Button("검", EditorStyles.miniButtonMid)) SetHitPreset(3.0f, 110f);
+        if (GUILayout.Button("대검", EditorStyles.miniButtonMid)) SetHitPreset(3.5f, 160f);
+        if (GUILayout.Button("망치", EditorStyles.miniButtonMid)) SetHitPreset(2.5f, 90f);
+        if (GUILayout.Button("창", EditorStyles.miniButtonRight)) SetHitPreset(4.5f, 45f);
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.Space(4);
         EditorGUILayout.HelpBox(
-            "씬 뷰에서 무기를 직접 옮긴 뒤 '씬 위치를 저장'을 누르면 EquipmentData에 기록됩니다.",
+            "판정은 카메라 정면 부채꼴입니다. 무기 모션과 무관하게 동작하니 " +
+            "모션은 보기 좋게만 만드시면 됩니다.",
             MessageType.None);
     }
 
+    void SetHitPreset(float range, float angle)
+    {
+        Undo.RecordObject(_weapon, "Hit Preset");
+        _weapon.Range = range;
+        _weapon.HitAngle = angle;
+        EditorUtility.SetDirty(_weapon);
+        SceneView.RepaintAll();
+    }
 
     // ─────────── 모션 편집 ───────────
 
     void DrawMotion()
-    {   
+    {
         int len = _weapon.ComboLength;
         if (len == 0)
         {
@@ -284,36 +277,32 @@ public class WeaponSetupWindow : EditorWindow
 
         // 프리셋
         EditorGUILayout.BeginHorizontal();
-        _presetKind = (SwingPresets.Kind)EditorGUILayout.EnumPopup("프리셋", _presetKind);
+        _presetKind = (SwingPresets.Kind)EditorGUILayout.EnumPopup("모션 프리셋", _presetKind);
 
         if (GUILayout.Button("적용", GUILayout.Width(52)))
         {
             Undo.RecordObject(_weapon, "Apply Swing Preset");
-
-            bool twoHand = _weapon.Grip == GripType.TwoHand;
-            step.Motion = SwingPresets.Create(_presetKind, _rig.IdlePose, twoHand);
-
+            step.Motion = SwingPresets.Create(_presetKind, _rig.IdlePose,
+                                              _weapon.Grip == GripType.TwoHand);
             EditorUtility.SetDirty(_weapon);
             _selectedKey = -1;
             _playT = 0f;
             RefreshPreview();
         }
-        EditorGUILayout.EndHorizontal();          // ★ 추가
+        EditorGUILayout.EndHorizontal();
 
         if (GUILayout.Button("현재 씬 포즈를 기준으로 프리셋 적용"))
         {
             Undo.RecordObject(_weapon, "Apply Preset From Scene");
-
-            bool twoHand = _weapon.Grip == GripType.TwoHand;
-            step.Motion = SwingPresets.Create(_presetKind, CaptureCurrentPose(), twoHand);
-
+            step.Motion = SwingPresets.Create(_presetKind, CaptureCurrentPose(),
+                                              _weapon.Grip == GripType.TwoHand);
             EditorUtility.SetDirty(_weapon);
             _selectedKey = -1;
             _playT = 0f;
             RefreshPreview();
         }
 
-        EditorGUILayout.Space(4);                 // ★ 추가 (구분)
+        EditorGUILayout.Space(4);
 
         // 콤보 추가/삭제
         EditorGUILayout.BeginHorizontal();
@@ -328,10 +317,12 @@ public class WeaponSetupWindow : EditorWindow
             var next = new ComboStep
             {
                 Name = $"{list.Count + 1}타",
-                WindUp = src?.WindUp ?? 0.15f,
-                ActiveWindow = src?.ActiveWindow ?? 0.10f,
-                Recovery = src?.Recovery ?? 0.30f,
-                CancelPoint = src?.CancelPoint ?? 0.6f,
+
+                Duration = src?.Duration ?? 0.55f,
+                HitStart = src?.HitStart ?? 0.27f,
+                HitEnd = src?.HitEnd ?? 0.45f,
+                CancelPoint = src?.CancelPoint ?? 0.75f,
+
                 ComboResetTime = src?.ComboResetTime ?? 0.8f,
                 DamageMultiplier = (src?.DamageMultiplier ?? 1f) + 0.15f,
                 RangeMultiplier = src?.RangeMultiplier ?? 1f,
@@ -343,7 +334,6 @@ public class WeaponSetupWindow : EditorWindow
                 LungeDistance = src?.LungeDistance ?? 0f,
             };
 
-            // 직전 타와 반대 방향 프리셋을 기본으로
             var kind = (list.Count % 2 == 0)
                 ? SwingPresets.Kind.DiagonalSlash
                 : SwingPresets.Kind.BackhandReturn;
@@ -374,7 +364,7 @@ public class WeaponSetupWindow : EditorWindow
                     _weapon.Combo = list.ToArray();
                     EditorUtility.SetDirty(_weapon);
 
-                    _comboIndex = Mathf.Clamp(_comboIndex, 0, list.Count - 1);
+                    _comboIndex = Mathf.Clamp(_comboIndex, 0, Mathf.Max(0, list.Count - 1));
                     _selectedKey = -1;
                     RefreshPreview();
                 }
@@ -386,9 +376,7 @@ public class WeaponSetupWindow : EditorWindow
             Undo.RecordObject(_weapon, "Duplicate Combo Step");
 
             var list = new List<ComboStep>(_weapon.Combo);
-            var src = list[_comboIndex];
-
-            var copy = JsonUtility.FromJson<ComboStep>(JsonUtility.ToJson(src));
+            var copy = JsonUtility.FromJson<ComboStep>(JsonUtility.ToJson(list[_comboIndex]));
             copy.Name = $"{list.Count + 1}타";
 
             list.Insert(_comboIndex + 1, copy);
@@ -400,7 +388,6 @@ public class WeaponSetupWindow : EditorWindow
         }
 
         EditorGUILayout.EndHorizontal();
-
 
         EditorGUILayout.Space(4);
         DrawStepTiming(step);
@@ -421,20 +408,78 @@ public class WeaponSetupWindow : EditorWindow
         so.Update();
 
         var arr = so.FindProperty("Combo");
-        if (_comboIndex >= arr.arraySize) return;
+        if (arr == null || _comboIndex >= arr.arraySize) return;
         var sp = arr.GetArrayElementAtIndex(_comboIndex);
 
         EditorGUILayout.PropertyField(sp.FindPropertyRelative("Name"), new GUIContent("이름"));
 
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(sp.FindPropertyRelative("WindUp"), new GUIContent("선딜"));
-        EditorGUILayout.PropertyField(sp.FindPropertyRelative("ActiveWindow"), new GUIContent("판정"));
-        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.Space(2);
+        EditorGUILayout.LabelField("타이밍", EditorStyles.miniBoldLabel);
+
+        EditorGUILayout.PropertyField(sp.FindPropertyRelative("Duration"),
+            new GUIContent("전체 길이 (초)"));
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(sp.FindPropertyRelative("Recovery"), new GUIContent("후딜"));
-        EditorGUILayout.PropertyField(sp.FindPropertyRelative("CancelPoint"), new GUIContent("캔슬"));
+        EditorGUILayout.PropertyField(sp.FindPropertyRelative("HitStart"), new GUIContent("판정 시작"));
+        EditorGUILayout.PropertyField(sp.FindPropertyRelative("HitEnd"), new GUIContent("판정 끝"));
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.PropertyField(sp.FindPropertyRelative("CancelPoint"), new GUIContent("캔슬 지점"));
+
+        EditorGUILayout.Space(2);
+        EditorGUILayout.LabelField("피해", EditorStyles.miniBoldLabel);
+
+        EditorGUILayout.Space(2);
+
+        var ovr = sp.FindPropertyRelative("OverrideHitShape");
+        EditorGUILayout.PropertyField(ovr, new GUIContent("판정 범위 개별 설정"));
+
+        if (ovr.boolValue)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(sp.FindPropertyRelative("HitMode"), new GUIContent("방식"));
+            EditorGUILayout.PropertyField(sp.FindPropertyRelative("Range"), new GUIContent("사거리"));
+
+            if (step.HitMode == WeaponHitMode.ForwardArc)
+                EditorGUILayout.PropertyField(sp.FindPropertyRelative("HitAngle"), new GUIContent("각도"));
+
+            EditorGUILayout.PropertyField(sp.FindPropertyRelative("HitHeight"), new GUIContent("수직 허용"));
+            EditorGUILayout.PropertyField(sp.FindPropertyRelative("MinRange"), new GUIContent("최소 사거리"));
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("무기 값 복사", EditorStyles.miniButton))
+            {
+                Undo.RecordObject(_weapon, "Copy Hit Shape");
+                step.HitMode = _weapon.HitMode;
+                step.Range = _weapon.Range;
+                step.HitAngle = _weapon.HitAngle;
+                step.HitHeight = _weapon.HitHeight;
+                step.MinRange = _weapon.MinRange;
+                EditorUtility.SetDirty(_weapon);
+            }
+            if (GUILayout.Button("넓게", EditorStyles.miniButton))
+            {
+                Undo.RecordObject(_weapon, "Wide Preset");
+                step.Range = _weapon.Range * 1.2f;
+                step.HitAngle = Mathf.Min(360f, _weapon.HitAngle * 1.5f);
+                EditorUtility.SetDirty(_weapon);
+            }
+            if (GUILayout.Button("찌르기", EditorStyles.miniButton))
+            {
+                Undo.RecordObject(_weapon, "Thrust Preset");
+                step.Range = _weapon.Range * 1.4f;
+                step.HitAngle = 40f;
+                EditorUtility.SetDirty(_weapon);
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel--;
+        }
+        else
+        {
+            EditorGUILayout.LabelField(
+                $"무기 값 사용  ({_weapon.Range * step.RangeMultiplier:F2}m / {_weapon.HitAngle:F0}°)",
+                EditorStyles.miniLabel);
+        }
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(sp.FindPropertyRelative("DamageMultiplier"), new GUIContent("피해×"));
@@ -443,72 +488,143 @@ public class WeaponSetupWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(sp.FindPropertyRelative("MaxTargets"), new GUIContent("최대 대상"));
-        EditorGUILayout.PropertyField(sp.FindPropertyRelative("LungeDistance"), new GUIContent("전진"));
+        EditorGUILayout.PropertyField(sp.FindPropertyRelative("LungeDistance"), new GUIContent("전진 (m)"));
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(2);
+        EditorGUILayout.LabelField("연출", EditorStyles.miniBoldLabel);
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(sp.FindPropertyRelative("HitStopDuration"), new GUIContent("히트스톱"));
         EditorGUILayout.PropertyField(sp.FindPropertyRelative("CameraKickFov"), new GUIContent("FOV킥"));
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(sp.FindPropertyRelative("CameraShake"), new GUIContent("셰이크"));
+        EditorGUILayout.PropertyField(sp.FindPropertyRelative("ComboResetTime"), new GUIContent("콤보 유지"));
+        EditorGUILayout.EndHorizontal();
+
+        var snd = sp.FindPropertyRelative("SwingSound");
+        if (snd != null) EditorGUILayout.PropertyField(snd, new GUIContent("스윙 사운드"));
+
         so.ApplyModifiedProperties();
 
-        EditorGUILayout.LabelField($"총 시간 {step.TotalTime:F2}s   캔슬 가능 {step.CancelTime:F2}s",
+        EditorGUILayout.Space(2);
+        EditorGUILayout.LabelField(
+            $"선딜 {step.WindUp:F2}s  ·  판정 {step.ActiveWindow:F2}s  ·  후딜 {step.Recovery:F2}s",
+            EditorStyles.miniLabel);
+
+        if (step.ActiveWindow < 0.05f)
+        {
+            EditorGUILayout.HelpBox(
+                $"판정 구간이 {step.ActiveWindow:F3}초로 너무 짧습니다. " +
+                "네트워크 틱(약 0.017초)을 건너뛸 수 있으니 0.08초 이상으로 늘리세요.",
+                MessageType.Warning);
+        }
+        EditorGUILayout.LabelField(
+            $"캔슬 {step.CancelTime:F2}s 부터  ·  DPS 참고 {(step.DamageMultiplier / Mathf.Max(0.01f, step.Duration)):F2}×/s",
             EditorStyles.miniLabel);
     }
 
     void DrawTimelineBar(ComboStep step)
     {
-        Rect r = GUILayoutUtility.GetRect(0, 30, GUILayout.ExpandWidth(true));
-        float total = Mathf.Max(0.01f, step.TotalTime);
+        Rect r = GUILayoutUtility.GetRect(0, 42, GUILayout.ExpandWidth(true));
+        EditorGUI.DrawRect(r, new Color(0.14f, 0.14f, 0.14f));
 
-        EditorGUI.DrawRect(r, new Color(0.16f, 0.16f, 0.16f));
+        float xs = r.x + r.width * step.HitStart;
+        float xe = r.x + r.width * step.HitEnd;
+        float xc = r.x + r.width * step.CancelPoint;
 
-        float w1 = step.WindUp / total;
-        float w2 = step.ActiveWindow / total;
+        EditorGUI.DrawRect(new Rect(r.x, r.y, xs - r.x, r.height), new Color(0.26f, 0.31f, 0.45f));
+        EditorGUI.DrawRect(new Rect(xs, r.y, xe - xs, r.height), new Color(0.80f, 0.26f, 0.18f));
+        EditorGUI.DrawRect(new Rect(xe, r.y, r.x + r.width - xe, r.height), new Color(0.22f, 0.22f, 0.24f));
 
-        EditorGUI.DrawRect(new Rect(r.x, r.y, r.width * w1, r.height),
-            new Color(0.28f, 0.33f, 0.48f));
-        EditorGUI.DrawRect(new Rect(r.x + r.width * w1, r.y, r.width * w2, r.height),
-            new Color(0.78f, 0.28f, 0.20f));
+        DrawHandle(xs, r, new Color(1f, 0.9f, 0.3f));
+        DrawHandle(xe, r, new Color(1f, 0.9f, 0.3f));
+        DrawHandle(xc, r, new Color(0.4f, 0.95f, 0.5f));
 
-        // 캔슬 지점
-        float cp = step.CancelTime / total;
-        EditorGUI.DrawRect(new Rect(r.x + r.width * cp - 1, r.y, 1, r.height),
-            new Color(0.4f, 0.9f, 0.4f, 0.8f));
-
-        // 키 마커
         if (step.Motion?.Keys != null)
         {
-            for (int i = 0; i < step.Motion.Keys.Count; i++)
+            foreach (var k in step.Motion.Keys)
             {
-                float kt = Mathf.Clamp01(step.Motion.Keys[i].Time);
-                var m = new Rect(r.x + r.width * kt - 2, r.y, 4, r.height);
-                EditorGUI.DrawRect(m, i == _selectedKey
-                    ? Color.yellow : new Color(1f, 1f, 1f, 0.65f));
+                float kx = r.x + r.width * Mathf.Clamp01(k.Time);
+                EditorGUI.DrawRect(new Rect(kx - 1, r.y + r.height - 6, 2, 6),
+                    new Color(1f, 1f, 1f, 0.7f));
             }
         }
 
-        // 재생 커서
-        float p = Mathf.Clamp01(_playT / total);
+        float p = Mathf.Clamp01(_playT / Mathf.Max(0.01f, step.Duration));
         EditorGUI.DrawRect(new Rect(r.x + r.width * p - 1, r.y, 2, r.height), Color.cyan);
 
-        // 클릭 스크럽
+        HandleTimelineInput(r, step);
+
+        GUI.Label(new Rect(r.x + 4, r.y + 2, r.width, 14),
+            $"판정 {step.WindUp:F2}s ~ {(step.WindUp + step.ActiveWindow):F2}s / 전체 {step.Duration:F2}s",
+            EditorStyles.miniLabel);
+    }
+
+    void DrawHandle(float x, Rect r, Color c)
+    {
+        EditorGUI.DrawRect(new Rect(x - 2, r.y, 4, r.height), c);
+        EditorGUI.DrawRect(new Rect(x - 6, r.y + r.height - 12, 12, 12),
+            new Color(c.r, c.g, c.b, 0.85f));
+        EditorGUIUtility.AddCursorRect(new Rect(x - 6, r.y, 12, r.height),
+            MouseCursor.ResizeHorizontal);
+    }
+
+    void HandleTimelineInput(Rect r, ComboStep step)
+    {
         Event e = Event.current;
-        if (e.type == EventType.MouseDown || (e.type == EventType.MouseDrag && e.button == 0))
+        float t = Mathf.Clamp01((e.mousePosition.x - r.x) / r.width);
+
+        if (e.type == EventType.MouseDown && r.Contains(e.mousePosition))
         {
-            if (r.Contains(e.mousePosition))
+            float dS = Mathf.Abs(t - step.HitStart);
+            float dE = Mathf.Abs(t - step.HitEnd);
+            float dC = Mathf.Abs(t - step.CancelPoint);
+            float min = Mathf.Min(dS, Mathf.Min(dE, dC));
+
+            if (min < 0.03f)
+            {
+                _dragHandle = min == dS ? 0 : (min == dE ? 1 : 2);
+                Undo.RecordObject(_weapon, "Edit Timing");
+            }
+            else
             {
                 _playing = false;
-                _playT = Mathf.Clamp01((e.mousePosition.x - r.x) / r.width) * total;
+                _playT = t * step.Duration;
                 RefreshPreview();
-                e.Use();
-                Repaint();
             }
+            e.Use();
         }
+        else if (e.type == EventType.MouseDrag && _dragHandle >= 0)
+        {
+            switch (_dragHandle)
+            {
+                case 0: step.HitStart = Mathf.Min(t, step.HitEnd - 0.02f); break;
+                case 1: step.HitEnd = Mathf.Max(t, step.HitStart + 0.02f); break;
+                case 2: step.CancelPoint = t; break;
+            }
+            step.HitStart = Mathf.Clamp01(step.HitStart);
+            step.HitEnd = Mathf.Clamp01(step.HitEnd);
 
-        GUI.Label(new Rect(r.x + 4, r.y + 8, r.width, 16),
-            "  선딜 · 판정 · 후딜   |  녹색=캔슬  흰색=키  청록=커서", EditorStyles.miniLabel);
+            EditorUtility.SetDirty(_weapon);
+            e.Use();
+            Repaint();
+        }
+        else if (e.type == EventType.MouseUp && _dragHandle >= 0)
+        {
+            _dragHandle = -1;
+            e.Use();
+        }
+        else if (e.type == EventType.MouseDrag && _dragHandle < 0 && r.Contains(e.mousePosition))
+        {
+            _playing = false;
+            _playT = t * step.Duration;
+            RefreshPreview();
+            e.Use();
+            Repaint();
+        }
     }
 
     void DrawPlayback(ComboStep step)
@@ -518,7 +634,7 @@ public class WeaponSetupWindow : EditorWindow
         if (GUILayout.Button(_playing ? "■ 정지" : "▶ 재생", GUILayout.Height(26)))
         {
             _playing = !_playing;
-            if (_playing) { _playT = 0f; _tipTrail.Clear(); _sweepGhost.Clear(); }
+            if (_playing) { _playT = 0f; _tipTrail.Clear(); }
             else RefreshPreview();
         }
 
@@ -528,10 +644,10 @@ public class WeaponSetupWindow : EditorWindow
             _comboIndex = 0;
             _playT = 0f;
             _tipTrail.Clear();
-            _sweepGhost.Clear();
         }
 
-        _loop = GUILayout.Toggle(_loop, "반복", EditorStyles.miniButton, GUILayout.Width(46), GUILayout.Height(26));
+        _loop = GUILayout.Toggle(_loop, "반복", EditorStyles.miniButton,
+            GUILayout.Width(46), GUILayout.Height(26));
 
         EditorGUILayout.EndHorizontal();
 
@@ -689,23 +805,20 @@ public class WeaponSetupWindow : EditorWindow
 
         EditorGUILayout.Space(4);
 
-        if (GUILayout.Button("Idle 포즈를 씬에서 저장"))
+        if (GUILayout.Button("Idle 포즈를 씬에서 저장") && _rig != null)
         {
-            if (_rig != null)
-            {
-                Undo.RecordObject(_rig, "Capture Idle Pose");
-                _rig.IdlePose = CaptureCurrentPose();
-                EditorUtility.SetDirty(_rig);
-            }
+            Undo.RecordObject(_rig, "Capture Idle Pose");
+            _rig.IdlePose = CaptureCurrentPose();
+            EditorUtility.SetDirty(_rig);
         }
 
         EditorGUILayout.Space(4);
         EditorGUILayout.LabelField("씬 표시", EditorStyles.miniBoldLabel);
-        _showHitbox = EditorGUILayout.Toggle("히트박스", _showHitbox);
+        _showHitbox = EditorGUILayout.Toggle("판정 범위", _showHitbox);
         _showTrail = EditorGUILayout.Toggle("무기 궤적", _showTrail);
         _showOnlyDuringActive = EditorGUILayout.Toggle("판정 중에만", _showOnlyDuringActive);
 
-        if (GUILayout.Button("궤적 지우기")) { _tipTrail.Clear(); _sweepGhost.Clear(); }
+        if (GUILayout.Button("궤적 지우기")) _tipTrail.Clear();
     }
 
     // ══════════════════ 동작 ══════════════════
@@ -723,7 +836,7 @@ public class WeaponSetupWindow : EditorWindow
         }
 
         if (_weapon.ModelPrefab == null)
-            Debug.LogWarning($"[WeaponSetup] {_weapon.name}: ModelPrefab이 비어 있습니다. 손만 표시됩니다.");
+            Debug.LogWarning($"[WeaponSetup] {_weapon.name}: ModelPrefab이 비어 있습니다.");
 
         _rig.Mount(_weapon);
         MarkPreviewObjects();
@@ -940,7 +1053,7 @@ public class WeaponSetupWindow : EditorWindow
         bool inActive = _playT >= step.WindUp &&
                         _playT <= step.WindUp + step.ActiveWindow;
 
-        if (_showHitbox) DrawHitbox(eye, step, inActive);
+        if (_showHitbox) DrawHitArc(eye, step, inActive);
         if (_showTrail) DrawTipTrail(inActive);
 
         DrawInfoLabel(sv, step, p, inActive);
@@ -953,106 +1066,64 @@ public class WeaponSetupWindow : EditorWindow
         return arm.parent != null ? arm.parent : arm;
     }
 
-    void DrawHitbox(Transform eye, ComboStep step, bool inActive)
+    void DrawHitArc(Transform eye, ComboStep step, bool inActive)
     {
         if (_showOnlyDuringActive && !inActive) return;
 
-        if (_weapon.HitMode == WeaponHitMode.ForwardSphere)
-        {
-            DrawSphereHitbox(eye, step, inActive);
-            return;
-        }
+        step.ResolveHitShape(_weapon, out var mode, out float range,
+                             out float angle, out float height, out float minRange);
 
-        if (!_rig.GetHitBox(_weapon, out Vector3 c, out Vector3 half, out Quaternion rot))
-            return;
-
-        half *= step.RadiusMultiplier;
-
-        Color col = inActive
-            ? new Color(1f, 0.25f, 0.15f, 1f)
-            : new Color(0.5f, 0.5f, 0.55f, 0.6f);
-
-        Handles.color = col;
-        Handles.matrix = Matrix4x4.TRS(c, rot, Vector3.one);
-        Handles.DrawWireCube(Vector3.zero, half * 2f);
-        Handles.matrix = Matrix4x4.identity;
-
-        Handles.Label(c + Vector3.up * (half.y + 0.08f),
-            $"{_weapon.HitBoxSize.x:F2} × {_weapon.HitBoxSize.y:F2} × {_weapon.HitBoxSize.z:F2}",
-            EditorStyles.whiteMiniLabel);
-
-        if (inActive && _playing) RecordSweep(c, rot, half);
-        DrawSweepGhost();
-    }
-
-    void RecordSweep(Vector3 c, Quaternion r, Vector3 h)
-    {
-        _sweepGhost.Add((c, r, h));
-        if (_sweepGhost.Count > 30) _sweepGhost.RemoveAt(0);
-    }
-
-    void DrawSphereHitbox(Transform eye, ComboStep step, bool inActive)
-    {
-        float range = _weapon.Range * step.RangeMultiplier;
-        float radius = _weapon.HitRadius * step.RadiusMultiplier;
-        float sphereR = radius + range * 0.3f;
-
-        Vector3 origin = eye.position;
-        Vector3 dir = eye.forward;
-        Vector3 center = origin + dir * (range * 0.5f);
+        Vector3 o = eye.position - Vector3.up * 0.6f;
+        Vector3 f = new Vector3(eye.forward.x, 0f, eye.forward.z).normalized;
+        if (f.sqrMagnitude < 0.001f) f = Vector3.forward;
 
         Color c = inActive
             ? new Color(1f, 0.25f, 0.15f, 1f)
-            : new Color(0.5f, 0.5f, 0.55f, 0.5f);
+            : new Color(0.5f, 0.55f, 0.6f, 0.6f);
 
-        // 반투명 구
-        Handles.color = new Color(c.r, c.g, c.b, inActive ? 0.14f : 0.05f);
-        Handles.SphereHandleCap(0, center, Quaternion.identity, sphereR * 2f, EventType.Repaint);
+        // 오버라이드면 색을 다르게
+        if (step.OverrideHitShape)
+            c = inActive ? new Color(1f, 0.5f, 0.1f, 1f) : new Color(0.6f, 0.5f, 0.3f, 0.6f);
 
-        // 와이어 3축
-        Handles.color = c;
-        Handles.DrawWireDisc(center, Vector3.up, sphereR);
-        Handles.DrawWireDisc(center, eye.right, sphereR);
-        Handles.DrawWireDisc(center, eye.forward, sphereR);
+        if (mode == WeaponHitMode.ForwardSphere)
+        {
+            Handles.color = new Color(c.r, c.g, c.b, inActive ? 0.14f : 0.05f);
+            Handles.SphereHandleCap(0, o, Quaternion.identity, range * 2f, EventType.Repaint);
+            Handles.color = c;
+            Handles.DrawWireDisc(o, Vector3.up, range);
+        }
+        else
+        {
+            float half = angle * 0.5f;
+            Vector3 from = Quaternion.Euler(0f, -half, 0f) * f;
 
-        // 중심축
-        Handles.color = new Color(c.r, c.g, c.b, 0.8f);
-        Handles.DrawLine(origin, origin + dir * range, inActive ? 3f : 1.5f);
+            Handles.color = new Color(c.r, c.g, c.b, inActive ? 0.20f : 0.07f);
+            Handles.DrawSolidArc(o, Vector3.up, from, angle, range);
 
-        // 사거리 끝
+            Handles.color = c;
+            Handles.DrawWireArc(o, Vector3.up, from, angle, range);
+            Handles.DrawLine(o, o + from * range, inActive ? 3f : 1.5f);
+            Handles.DrawLine(o, o + Quaternion.Euler(0f, half, 0f) * f * range, inActive ? 3f : 1.5f);
+
+            // 수직 경계
+            if (height < 50f)
+            {
+                Handles.color = new Color(c.r, c.g, c.b, 0.35f);
+                Handles.DrawWireArc(o + Vector3.up * height, Vector3.up, from, angle, range);
+                Handles.DrawWireArc(o - Vector3.up * height, Vector3.up, from, angle, range);
+            }
+        }
+
+        if (minRange > 0.01f)
+        {
+            Handles.color = new Color(0.3f, 0.6f, 1f, 0.7f);
+            Handles.DrawWireDisc(o, Vector3.up, minRange);
+        }
+
         Handles.color = Color.yellow;
-        Handles.DrawWireDisc(origin + dir * range, dir, 0.06f);
-        Handles.Label(origin + dir * range + Vector3.up * 0.12f,
-            $"{range:F2}m", EditorStyles.whiteMiniLabel);
-
-        // 눈 위치
-        Handles.color = Color.cyan;
-        Handles.DrawWireDisc(origin, dir, 0.04f);
-
-        // 다중 타격 표시
-        if (step.MaxTargets > 1)
-        {
-            Handles.color = new Color(1f, 0.8f, 0.2f, 0.35f);
-            Handles.DrawWireDisc(center, Vector3.up, sphereR * 1.02f);
-        }
-    }
-
-    private readonly List<(Vector3 c, Quaternion r, Vector3 h)> _sweepGhost = new();
-
-
-
-
-    void DrawSweepGhost()
-    {
-        for (int i = 0; i < _sweepGhost.Count; i++)
-        {
-            float a = (float)(i + 1) / _sweepGhost.Count;
-            Handles.color = new Color(1f, 0.4f, 0.2f, a * 0.3f);
-            var g = _sweepGhost[i];
-            Handles.matrix = Matrix4x4.TRS(g.c, g.r, Vector3.one);
-            Handles.DrawWireCube(Vector3.zero, g.h * 2f);
-        }
-        Handles.matrix = Matrix4x4.identity;
+        Handles.Label(o + f * range + Vector3.up * 0.12f,
+            $"{range:F2}m{(step.OverrideHitShape ? " (개별)" : "")}",
+            EditorStyles.whiteMiniLabel);
     }
 
     void DrawTipTrail(bool inActive)
@@ -1062,7 +1133,6 @@ public class WeaponSetupWindow : EditorWindow
         Transform tip = _rig.WeaponTip;
         if (tip == null) return;
 
-        // 재생 중일 때만 궤적 기록
         if (_playing)
         {
             _tipTrail.Add(tip.position);
@@ -1078,7 +1148,6 @@ public class WeaponSetupWindow : EditorWindow
             Handles.DrawLine(_tipTrail[i - 1], _tipTrail[i], 2f + a * 2f);
         }
 
-        // 현재 팁
         Handles.color = inActive ? Color.red : Color.white;
         Handles.SphereHandleCap(0, tip.position, Quaternion.identity, 0.035f, EventType.Repaint);
     }
@@ -1087,7 +1156,7 @@ public class WeaponSetupWindow : EditorWindow
     {
         Handles.BeginGUI();
 
-        var rect = new Rect(10, 10, 240, 92);
+        var rect = new Rect(10, 10, 250, 92);
         EditorGUI.DrawRect(rect, new Color(0, 0, 0, 0.65f));
 
         GUILayout.BeginArea(new Rect(rect.x + 8, rect.y + 6, rect.width - 16, rect.height - 12));
@@ -1096,76 +1165,18 @@ public class WeaponSetupWindow : EditorWindow
         GUILayout.Label($"진행 {p * 100f:F0}%   {(inActive ? "◆ 판정 중" : "－")}",
             inActive ? EditorStyles.whiteBoldLabel : EditorStyles.whiteMiniLabel);
 
-        if (_weapon.HitMode == WeaponHitMode.ForwardSphere)
-        {
-            float range = _weapon.Range * step.RangeMultiplier;
-            float radius = _weapon.HitRadius * step.RadiusMultiplier;
-            GUILayout.Label($"정면 구체  사거리 {range:F2}m", EditorStyles.whiteMiniLabel);
-            GUILayout.Label($"반경 {radius + range * 0.3f:F2}m   대상 {step.MaxTargets}",
+        float range = _weapon.Range * step.RangeMultiplier;
+
+        if (_weapon.HitMode == WeaponHitMode.ForwardArc)
+            GUILayout.Label($"부채꼴  {range:F2}m  /  {_weapon.HitAngle:F0}°",
                 EditorStyles.whiteMiniLabel);
-        }
         else
-        {
-            //float bladeLen = Mathf.Abs(_weapon.BladeEnd - _weapon.BladeStart);
-            //GUILayout.Label($"무기 궤적  날 {bladeLen:F2}m", EditorStyles.whiteMiniLabel);
-            //GUILayout.Label($"두께 {_weapon.BladeRadius * step.RadiusMultiplier:F2}m   대상 {step.MaxTargets}",
-            //    EditorStyles.whiteMiniLabel);
-        }
+            GUILayout.Label($"정면 구체  {range:F2}m", EditorStyles.whiteMiniLabel);
+
+        GUILayout.Label($"피해 ×{step.DamageMultiplier:F2}   대상 {step.MaxTargets}",
+            EditorStyles.whiteMiniLabel);
 
         GUILayout.EndArea();
         Handles.EndGUI();
-    }
-
-    void DrawBoxHandles()
-    {
-        if (_weapon.HitMode != WeaponHitMode.WeaponBox) return;
-
-        Transform w = _rig.GetWeaponTransform();
-        if (w == null) return;
-
-        EditorGUI.BeginChangeCheck();
-
-        // 중심 이동
-        Handles.matrix = w.localToWorldMatrix;
-        Vector3 newCenter = Handles.PositionHandle(_weapon.HitBoxCenter, Quaternion.identity);
-
-        // 크기 조절 (각 축 화살표)
-        Handles.color = Color.green;
-        Vector3 newSize = _weapon.HitBoxSize;
-        float hs = HandleUtility.GetHandleSize(w.TransformPoint(newCenter)) * 0.6f;
-
-        newSize.x = 2f * Handles.ScaleValueHandle(newSize.x * 0.5f,
-            newCenter + Vector3.right * newSize.x * 0.5f,
-            Quaternion.LookRotation(Vector3.right), hs, Handles.CubeHandleCap, 0f);
-
-        newSize.y = 2f * Handles.ScaleValueHandle(newSize.y * 0.5f,
-            newCenter + Vector3.up * newSize.y * 0.5f,
-            Quaternion.LookRotation(Vector3.up), hs, Handles.CubeHandleCap, 0f);
-
-        newSize.z = 2f * Handles.ScaleValueHandle(newSize.z * 0.5f,
-            newCenter + Vector3.forward * newSize.z * 0.5f,
-            Quaternion.LookRotation(Vector3.forward), hs, Handles.CubeHandleCap, 0f);
-
-        Handles.matrix = Matrix4x4.identity;
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            Undo.RecordObject(_weapon, "Edit Hit Box");
-            _weapon.HitBoxCenter = newCenter;
-            _weapon.HitBoxSize = new Vector3(
-                Mathf.Max(0.02f, newSize.x),
-                Mathf.Max(0.02f, newSize.y),
-                Mathf.Max(0.02f, newSize.z));
-            EditorUtility.SetDirty(_weapon);
-            Repaint();
-        }
-    }
-
-    void SetBoxPreset(Vector3 center, Vector3 size)
-    {
-        Undo.RecordObject(_weapon, "Box Preset");
-        _weapon.HitBoxCenter = center;
-        _weapon.HitBoxSize = size;
-        EditorUtility.SetDirty(_weapon);
     }
 }

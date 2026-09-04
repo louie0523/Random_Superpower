@@ -8,15 +8,12 @@ public class FPArmRig : MonoBehaviour
     public Transform RightHand;
     public Transform LeftHand;
 
-    [Header("Blade")]
-    public Transform BladeRoot;
-
     [Header("Idle Pose")]
     public ArmPose IdlePose = new();
 
     [Header("Left Hand IK")]
     [Tooltip("양손 무기일 때 왼손이 붙을 지점. 무기 프리팹의 자식")]
-    public string LeftGripNodeName = "LeftGrip";
+    public string LeftGripNodeName = "EndGrip";
 
     private GameObject _weaponObj;
     private Transform _leftGripNode;
@@ -25,7 +22,7 @@ public class FPArmRig : MonoBehaviour
     public Transform WeaponTip { get; private set; }
 
     public Transform GetWeaponTransform() =>
-    _weaponObj != null ? _weaponObj.transform : null;
+        _weaponObj != null ? _weaponObj.transform : null;
 
     // ── 무기 장착 ──
 
@@ -36,7 +33,11 @@ public class FPArmRig : MonoBehaviour
         WeaponTip = null;
         _weapon = weapon;
 
-        if (weapon == null || weapon.ModelPrefab == null) return;
+        if (weapon == null || weapon.ModelPrefab == null)
+        {
+            ApplyPose(IdlePose);
+            return;
+        }
 
         Transform hand = weapon.Grip == GripType.LeftHand ? LeftHand : RightHand;
         if (hand == null) return;
@@ -60,22 +61,6 @@ public class FPArmRig : MonoBehaviour
         ApplyPose(IdlePose);
     }
 
-    /// <summary>현재 프레임의 판정 박스 (월드)</summary>
-    public bool GetHitBox(EquipmentData w, out Vector3 center,
-                          out Vector3 halfExtents, out Quaternion rot)
-    {
-        center = Vector3.zero;
-        halfExtents = Vector3.zero;
-        rot = Quaternion.identity;
-
-        if (_weaponObj == null || w == null) return false;
-
-        Transform t = _weaponObj.transform;
-        center = t.TransformPoint(w.HitBoxCenter);
-        halfExtents = w.HitBoxSize * 0.5f;
-        rot = t.rotation;
-        return true;
-    }
     void DestroyWeapon()
     {
         if (_weaponObj == null) return;
@@ -92,6 +77,8 @@ public class FPArmRig : MonoBehaviour
         CleanChildren(RightHand);
         CleanChildren(LeftHand);
         _weaponObj = null;
+        _leftGripNode = null;
+        WeaponTip = null;
     }
 
     void CleanChildren(Transform hand)
@@ -123,7 +110,7 @@ public class FPArmRig : MonoBehaviour
 
             if (pose.UseLeftHand)
             {
-                // 무기에 LeftGrip 노드가 있으면 거기 붙임 (IK 대용)
+                // 무기에 그립 노드가 있으면 거기 붙임 (IK 대용)
                 if (_leftGripNode != null)
                 {
                     LeftHand.position = _leftGripNode.position;

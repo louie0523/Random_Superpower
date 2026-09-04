@@ -4,6 +4,10 @@ using UnityEngine;
 public class PlayerEquipment : NetworkBehaviour
 {
     [SerializeField] private EquipmentDatabase database;
+    [SerializeField] private FPArmRig armRig;
+    [SerializeField] private Transform tpWeaponSocket;   // B-handProp.R
+    private GameObject _tpWeaponObj;
+    private int _tpMountedId = -1;
 
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int WeaponId { get; set; }
@@ -14,16 +18,16 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int BootsId { get; set; }
 
-
     [Header("Starting Gear")]
     [SerializeField] private int startWeaponId = 1001;
 
     private PlayerStats _stats;
-    [SerializeField] private FPArmRig armRig;
+    private int _mountedWeaponId = -1;
 
     public override void Spawned()
     {
         _stats = GetComponent<PlayerStats>();
+        if (armRig == null) armRig = GetComponentInChildren<FPArmRig>(true);
 
         if (HasStateAuthority)
         {
@@ -36,6 +40,24 @@ public class PlayerEquipment : NetworkBehaviour
         ApplyAll();
     }
 
+    void MountThirdPersonWeapon()
+    {
+        if (tpWeaponSocket == null) return;
+        if (_tpMountedId == WeaponId) return;
+
+        _tpMountedId = WeaponId;
+
+        if (_tpWeaponObj != null) Destroy(_tpWeaponObj);
+
+        var data = database.Get(WeaponId);
+        if (data == null || data.ModelPrefab == null) return;
+
+        _tpWeaponObj = Instantiate(data.ModelPrefab, tpWeaponSocket);
+        _tpWeaponObj.transform.localPosition = data.PositionOffset;   // 3인칭용 오프셋
+        _tpWeaponObj.transform.localRotation = Quaternion.Euler(data.RotationOffset);
+        _tpWeaponObj.transform.localScale = data.ScaleOverride;
+    }
+
     void OnEquipChanged() => ApplyAll();
 
     void ApplyAll()
@@ -46,6 +68,8 @@ public class PlayerEquipment : NetworkBehaviour
         Apply(ArmorId, SourceId.Armor);
         Apply(HelmetId, SourceId.Helmet);
         Apply(BootsId, SourceId.Boots);
+
+        MountWeaponModel();
     }
 
     void Apply(int id, int sourceId)
@@ -57,13 +81,17 @@ public class PlayerEquipment : NetworkBehaviour
 
         foreach (var s in data.BaseStats)
             _stats.AddModifier(new StatModifier(s.Stat, s.Type, s.Value, sourceId));
-
-        // 무기 모델 장착 (내 화면에만)
-        if (data.Slot == EquipSlot.Weapon && HasStateAuthority && armRig != null)
-            armRig.Mount(data);
     }
 
-    /// <summary>장비 교체 (주인만 호출)</summary>
+    void MountWeaponModel()
+    {
+        if (armRig == null) return;
+        if (_mountedWeaponId == WeaponId) return;
+
+        _mountedWeaponId = WeaponId;
+        armRig.Mount(database.Get(WeaponId));
+    }
+
     public void Equip(int id)
     {
         if (!HasStateAuthority) return;
@@ -80,6 +108,6 @@ public class PlayerEquipment : NetworkBehaviour
         }
     }
 
-    public EquipmentData GetWeapon() => database.Get(WeaponId);
-    public EquipmentData GetArmor() => database.Get(ArmorId);
+    public EquipmentData GetWeapon() => database != null ? database.Get(WeaponId) : null;
+    public EquipmentData GetArmor() => database != null ? database.Get(ArmorId) : null;
 }
