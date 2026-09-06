@@ -87,7 +87,7 @@ public class AbilityRuntime : NetworkBehaviour
 
     public float ChargeRatio => MaxCharge <= 0f ? 0f : Charge / MaxCharge;
 
-
+    public bool DashIgnoresGravity => _dashTimer > 0f && _dashParams.IgnoreGravity;
 
     public AbilityData.SkillDef GetSlot(int i) =>
         (i >= 0 && i < _slots.Length) ? _slots[i] : null;
@@ -491,11 +491,60 @@ public class AbilityRuntime : NetworkBehaviour
         if (p.Distance <= 0f) return;
 
         _dashParams = p;
-        _dashDir = transform.forward;
+        _dashDir = ResolveDashDirection(p);
         _dashSpeed = p.Distance / Mathf.Max(0.05f, p.Duration);
         _dashTimer = Mathf.Max(0.05f, p.Duration);
 
         if (p.PassThroughPlayers) RPC_SetGhost(true);
+    }
+
+    Vector3 ResolveDashDirection(DashParams p)
+    {
+        switch (p.Direction)
+        {
+            case DashDirection.CameraForward:
+                {
+                    if (cameraRoot == null) return transform.forward;
+
+                    Vector3 dir = cameraRoot.forward;
+
+                    // 피치 제한
+                    if (p.MaxPitch > 0f)
+                    {
+                        Vector3 flat = new Vector3(dir.x, 0f, dir.z);
+                        if (flat.sqrMagnitude < 0.0001f) return transform.forward;
+                        flat.Normalize();
+
+                        float pitch = Mathf.Asin(Mathf.Clamp(dir.y, -1f, 1f)) * Mathf.Rad2Deg;
+                        pitch = Mathf.Clamp(pitch, -p.MaxPitch, p.MaxPitch);
+
+                        float rad = pitch * Mathf.Deg2Rad;
+                        dir = flat * Mathf.Cos(rad) + Vector3.up * Mathf.Sin(rad);
+                    }
+
+                    return dir.normalized;
+                }
+
+            case DashDirection.MoveInput:
+                {
+                    if (_movement == null) return transform.forward;
+
+                    Vector3 local = _movement.LocalMoveDir;
+                    if (local.sqrMagnitude < 0.01f) return transform.forward;
+
+                    return transform.TransformDirection(local).normalized;
+                }
+
+            case DashDirection.Backward:
+                return -transform.forward;
+
+            default:   // Horizontal
+                {
+                    Vector3 f = transform.forward;
+                    f.y = 0f;
+                    return f.sqrMagnitude > 0.0001f ? f.normalized : transform.forward;
+                }
+        }
     }
 
     // ══════════════════ 쿨타임 조회 ══════════════════

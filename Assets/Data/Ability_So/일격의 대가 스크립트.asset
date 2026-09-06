@@ -21,8 +21,11 @@ MonoBehaviour:
   Dash:
     Distance: 8
     Duration: 0.2
+    Direction: 1
+    MaxPitch: 0
     PassThroughPlayers: 1
     StopOnContact: 0
+    IgnoreGravity: 1
   BreathCharge: 50
   StateId: 6001
   MasteryDuration: 8

@@ -30,6 +30,7 @@ public class PlayerMovement : NetworkBehaviour
     private float _currentSpeed;
 
     public bool IsMoving => _speed01 > 0.1f;
+    public Vector3 LocalMoveDir => _localMoveDir;
     private AbilityRuntime _ability;
 
 
@@ -83,13 +84,21 @@ public class PlayerMovement : NetworkBehaviour
         if (grounded && _verticalVel < 0f) _verticalVel = -2f;
         if (grounded && Input.GetKey(KeyCode.Space)) _verticalVel = jumpPower;
 
-        _verticalVel += gravity * Runner.DeltaTime;
-        _wasGrounded = grounded;
+        bool dashNoGravity = _ability != null && _ability.DashIgnoresGravity;
+
+        if (!dashNoGravity)
+        {
+            _verticalVel += gravity * Runner.DeltaTime;
+        }
+        else
+        {
+            _verticalVel = 0f;
+        }
 
         Vector3 motion = worldDir * speed + Vector3.up * _verticalVel;
 
         if (_ability != null && _ability.IsDashing)
-            motion = Vector3.up * _verticalVel;
+            motion = dashNoGravity ? Vector3.zero : Vector3.up * _verticalVel;
 
         _cc.Move(motion * Runner.DeltaTime);
 
