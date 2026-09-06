@@ -27,12 +27,18 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private WeaponAnimator weaponAnim;
     private PlayerAnimator _anim;
 
+    private float _currentSpeed;
+
+    public bool IsMoving => _speed01 > 0.1f;
+    private AbilityRuntime _ability;
+
 
     public override void Spawned()
     {
         _cc = GetComponent<CharacterController>();
         _stats = GetComponent<PlayerStats>();
         _anim = GetComponent<PlayerAnimator>();
+        _ability = GetComponent<AbilityRuntime>();
 
         if (armRoot != null) armRoot.SetActive(true);   // 항상 켬
 
@@ -63,45 +69,51 @@ public class PlayerMovement : NetworkBehaviour
         float v = Input.GetAxisRaw("Vertical");
         _localMoveDir = new Vector3(h, 0f, v).normalized;
 
-        _isRunning = Input.GetKey(KeyCode.LeftShift) && v > 0.1f;
-        float baseSpd = _stats.Get(StatType.MoveSpeed);
-        float speed = _isRunning ? baseSpd * 1.6f : baseSpd;
+        float speed = _stats.Get(StatType.MoveSpeed);
         _speed01 = _localMoveDir.magnitude;
+        _currentSpeed = speed * _speed01;
 
         Vector3 worldDir = transform.TransformDirection(_localMoveDir);
 
-        // 중력 & 점프
         bool grounded = _cc.isGrounded;
 
         if (grounded && !_wasGrounded)
             fpsCamera.LandDip(Mathf.Clamp01(-_verticalVel / 12f));
 
-        if (grounded && _verticalVel < 0f)
-            _verticalVel = -2f;
-
-        if (grounded && Input.GetKey(KeyCode.Space))
-            _verticalVel = jumpPower;
+        if (grounded && _verticalVel < 0f) _verticalVel = -2f;
+        if (grounded && Input.GetKey(KeyCode.Space)) _verticalVel = jumpPower;
 
         _verticalVel += gravity * Runner.DeltaTime;
         _wasGrounded = grounded;
 
         Vector3 motion = worldDir * speed + Vector3.up * _verticalVel;
+
+        if (_ability != null && _ability.IsDashing)
+            motion = Vector3.up * _verticalVel;
+
         _cc.Move(motion * Runner.DeltaTime);
 
-        _anim?.SetMovement(_speed01 * (_isRunning ? 1f : 0.5f), _cc.isGrounded, fpsCamera.Pitch);
+        _anim?.SetMovement(_speed01, _cc.isGrounded, fpsCamera.Pitch);
+
+
+
+
     }
 
     void Update()
     {
         if (HasStateAuthority)
         {
-            fpsCamera.Tick(_localMoveDir, _isRunning, _speed01);
-            weaponAnim?.Tick(_localMoveDir, _isRunning, _speed01);
+            fpsCamera.Tick(_localMoveDir, _currentSpeed, _speed01);
+            weaponAnim?.Tick(_localMoveDir, _speed01);
         }
         else
         {
             // 남의 무기도 스윙은 재생
             weaponAnim?.TickRemote();
         }
+
     }
+
+
 }

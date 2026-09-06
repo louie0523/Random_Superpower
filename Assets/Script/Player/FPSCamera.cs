@@ -23,9 +23,12 @@ public class FPSCamera : MonoBehaviour
     [SerializeField] private float runBobRoll = 2.0f;
 
     [Header("FOV")]
-    [SerializeField] private float baseFov = 70f;
-    [SerializeField] private float runFovAdd = 14f;
-    [SerializeField] private float fovLerp = 8f;
+    [SerializeField] private float baseFov = 75f;
+    [Tooltip("이 속도에서 FOV 추가량이 최대가 됨")]
+    [SerializeField] private float fovMaxSpeed = 12f;
+    [Tooltip("최대 FOV 추가량")]
+    [SerializeField] private float fovMaxAdd = 10f;
+    [SerializeField] private float fovLerp = 6f;
 
     [Header("Lean / Land")]
     [SerializeField] private float strafeRoll = 2f;
@@ -36,6 +39,11 @@ public class FPSCamera : MonoBehaviour
     [SerializeField] private float shakeDecay = 5f;
     [SerializeField] private float shakeSpeed = 30f;
     [SerializeField] private float hitPunchAmount = 6f;
+
+    // 모션 카메라 오프셋
+    private Vector3 _motionPos;
+    private Vector3 _motionRot;
+    private float _motionFov;
 
     // 내부 상태
     private float _pitch;
@@ -49,6 +57,10 @@ public class FPSCamera : MonoBehaviour
     private Vector2 _shakeOffset;
     private Vector2 _punch;
     private Vector2 _punchVel;
+
+    private float _abilityLean;
+    private float _abilityLeanTarget;
+    private float _leanSpeed = 10f;
 
     public float Pitch => _pitch;
 
@@ -75,11 +87,12 @@ public class FPSCamera : MonoBehaviour
     }
 
     /// <summary>PlayerMovement의 Update가 호출</summary>
-    public void Tick(Vector3 localMoveDir, bool isRunning, float speed01)
+    /// <summary>speed는 현재 실제 이동 속도 (m/s)</summary>
+    public void Tick(Vector3 localMoveDir, float speed, float speed01)
     {
         HandleLook();
-        HandleBob(localMoveDir, isRunning, speed01);
-        HandleFov(isRunning);
+        HandleBob(localMoveDir, speed01);
+        HandleFov(speed);
     }
 
     /// <summary>PlayerMovement의 FixedUpdateNetwork가 호출</summary>
@@ -103,14 +116,37 @@ public class FPSCamera : MonoBehaviour
         cameraRoot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
     }
 
+
+    // ---------------- 몸기울임 ----------------
+    //public void SetLean(float degrees, float speed = 10f)
+    //{
+    //    _abilityLeanTarget = degrees;
+    //    _leanSpeed = speed;
+    //}
+
+    /// <summary>모션이 매 프레임 갱신</summary>
+    public void SetMotionOffset(Vector3 pos, Vector3 rot, float fovAdd)
+    {
+        _motionPos = pos;
+        _motionRot = rot;
+        _motionFov = fovAdd;
+    }
+
+    public void ClearMotionOffset()
+    {
+        _motionPos = Vector3.zero;
+        _motionRot = Vector3.zero;
+        _motionFov = 0f;
+    }
+
     // ---------------- 헤드밥 ----------------
 
-    void HandleBob(Vector3 moveDir, bool isRunning, float speed01)
+    void HandleBob(Vector3 moveDir, float speed01)
     {
-        float freq = isRunning ? runBobFreq : walkBobFreq;
-        float ampY = isRunning ? runBobAmpY : walkBobAmpY;
-        float ampX = isRunning ? runBobAmpX : walkBobAmpX;
-        float roll = isRunning ? runBobRoll : walkBobRoll;
+        float freq = walkBobFreq;
+        float ampY = walkBobAmpY;
+        float ampX = walkBobAmpX;
+        float roll = walkBobRoll;
 
 
 
@@ -133,7 +169,7 @@ public class FPSCamera : MonoBehaviour
 
         // 위치 적용
         cameraHolder.localPosition = Vector3.Lerp(
-            cameraHolder.localPosition, bob, Time.deltaTime * 12f);
+                  cameraHolder.localPosition, bob + _motionPos, Time.deltaTime * 12f);
 
         // 셰이크 감쇠
         _shakeAmount = Mathf.Lerp(_shakeAmount, 0f, Time.deltaTime * shakeDecay);
@@ -159,18 +195,22 @@ public class FPSCamera : MonoBehaviour
         _roll = Mathf.Lerp(_roll, targetRoll, Time.deltaTime * 6f);
 
         // 최종 회전
+        _abilityLean = Mathf.Lerp(_abilityLean, _abilityLeanTarget, Time.deltaTime * _leanSpeed);
+
         cameraHolder.localRotation = Quaternion.Euler(
-            _punch.y + _shakeOffset.y * 2f,
-            _punch.x + _shakeOffset.x * 2f,
-            _roll + _shakeOffset.x * 3f
+            _punch.y + _shakeOffset.y * 2f + _motionRot.x,
+            _punch.x + _shakeOffset.x * 2f + _motionRot.y,
+            _roll + _shakeOffset.x * 3f + _abilityLean + _motionRot.z
         );
     }
 
     // ---------------- FOV ----------------
 
-    void HandleFov(bool isRunning)
+    void HandleFov(float speed)
     {
-        _targetFov = baseFov + (isRunning ? runFovAdd : 0f);
+        float t = Mathf.Clamp01(speed / Mathf.Max(0.01f, fovMaxSpeed));
+        _targetFov = baseFov + fovMaxAdd * t + _motionFov;
+
         _kickFov = Mathf.Lerp(_kickFov, 0f, Time.deltaTime * 4f);
         cam.fieldOfView = Mathf.Lerp(
             cam.fieldOfView, _targetFov + _kickFov, Time.deltaTime * fovLerp);

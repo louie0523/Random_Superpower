@@ -15,6 +15,18 @@ public class FPArmRig : MonoBehaviour
     [Tooltip("양손 무기일 때 왼손이 붙을 지점. 무기 프리팹의 자식")]
     public string LeftGripNodeName = "EndGrip";
 
+    [Header("Preview Markers")]
+    [Tooltip("이 이름의 자식은 무기 정리 시 삭제하지 않음")]
+    public string[] KeepChildNames = { "RightHand", "LeftHand" };
+
+    [Header("Camera")]
+    [Tooltip("모션 카메라 오프셋을 적용할 대상")]
+    public FPSCamera Camera;
+
+    [Header("Preview")]
+    [Tooltip("에디터 프리뷰에서 카메라 오프셋을 적용할 Transform")]
+    public Transform PreviewCameraPivot;
+
     private GameObject _weaponObj;
     private Transform _leftGripNode;
     private EquipmentData _weapon;
@@ -61,6 +73,22 @@ public class FPArmRig : MonoBehaviour
         ApplyPose(IdlePose);
     }
 
+    void ApplyCameraPose(ArmPose pose)
+    {
+        // 런타임: FPSCamera에 위임
+        if (Application.isPlaying && Camera != null)
+        {
+            Camera.SetMotionOffset(pose.CamPos, pose.CamRot, pose.CamFov);
+            return;
+        }
+
+        // 에디터: 피벗을 직접 이동
+        if (PreviewCameraPivot != null)
+        {
+            PreviewCameraPivot.localPosition = pose.CamPos;
+            PreviewCameraPivot.localRotation = Quaternion.Euler(pose.CamRot);
+        }
+    }
     void DestroyWeapon()
     {
         if (_weaponObj == null) return;
@@ -84,9 +112,17 @@ public class FPArmRig : MonoBehaviour
     void CleanChildren(Transform hand)
     {
         if (hand == null) return;
+
         for (int i = hand.childCount - 1; i >= 0; i--)
         {
             var go = hand.GetChild(i).gameObject;
+
+            // 보존 목록에 있으면 건너뜀
+            bool keep = false;
+            foreach (var n in KeepChildNames)
+                if (go.name == n) { keep = true; break; }
+            if (keep) continue;
+
             if (Application.isPlaying) Destroy(go);
             else DestroyImmediate(go);
         }
@@ -110,8 +146,8 @@ public class FPArmRig : MonoBehaviour
 
             if (pose.UseLeftHand)
             {
-                // 무기에 그립 노드가 있으면 거기 붙임 (IK 대용)
-                if (_leftGripNode != null)
+                // 명시적으로 켰을 때만 무기에 붙임
+                if (pose.LeftFollowsWeapon && _leftGripNode != null)
                 {
                     LeftHand.position = _leftGripNode.position;
                     LeftHand.rotation = _leftGripNode.rotation;
@@ -131,6 +167,11 @@ public class FPArmRig : MonoBehaviour
             _weaponObj.transform.localRotation =
                 Quaternion.Euler(_weapon.GetRotOffset(true) + pose.WeaponRot);
         }
+
+        if (Camera != null)
+            Camera.SetMotionOffset(pose.CamPos, pose.CamRot, pose.CamFov);
+
+        ApplyCameraPose(pose);
     }
 
     /// <summary>스윙 진행도 적용</summary>

@@ -1,0 +1,303 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93a947148812d8d4f8635b65435026f1, type: 3}
+  m_Name: "\uC77C\uACA9"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityMotionData
+  DisplayName: "\uC77C\uACA9"
+  Note: 
+  Step:
+    Name: "1\uD0C0"
+    Duration: 1.2
+    HitStart: 0.43
+    HitEnd: 0.71
+    CancelPoint: 1
+    ComboResetTime: 0.8
+    OverrideHitShape: 1
+    HitMode: 1
+    Range: 1.75
+    HitAngle: 120
+    HitHeight: 1.2
+    MinRange: 0
+    DamageMultiplier: 1
+    RangeMultiplier: 1
+    RadiusMultiplier: 1
+    MaxTargets: 12
+    Motion:
+      Keys:
+      - Time: 0
+        Pose:
+          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightRot: {x: -0, y: 0, z: 0}
+          UseLeftHand: 1
+          LeftFollowsWeapon: 0
+          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
+          LeftRot: {x: -0, y: -0, z: -0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.42
+        Pose:
+          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightRot: {x: 5.0432863, y: 327.0506, z: 117.15777}
+          UseLeftHand: 1
+          LeftFollowsWeapon: 0
+          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
+          LeftRot: {x: 5.0432878, y: -327.0506, z: -117.1578}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.47499996
+        Pose:
+          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightRot: {x: 347.05222, y: 117.70932, z: 66.4571}
+          UseLeftHand: 1
+          LeftFollowsWeapon: 0
+          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
+          LeftRot: {x: 347.05222, y: 242.29068, z: 293.5429}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.5
+        Pose:
+          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightRot: {x: 25.879742, y: 219.72485, z: 83.23723}
+          UseLeftHand: 1
+          LeftFollowsWeapon: 0
+          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
+          LeftRot: {x: 25.879742, y: -219.72485, z: -83.23723}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.72
+        Pose:
+          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightRot: {x: 25.879742, y: 219.72485, z: 83.23723}
+          UseLeftHand: 1
+          LeftFollowsWeapon: 0
+          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
+          LeftRot: {x: 25.879742, y: 140.27515, z: 276.76276}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 0.85
+        Pose:
+          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightRot: {x: 347.05222, y: 117.70932, z: 66.4571}
+          UseLeftHand: 1
+          LeftFollowsWeapon: 0
+          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
+          LeftRot: {x: 347.05222, y: 242.29068, z: 293.5429}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - Time: 1
+        Pose:
+          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightRot: {x: 0, y: 0, z: 0}
+          UseLeftHand: 1
+          LeftFollowsWeapon: 0
+          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
+          LeftRot: {x: 0, y: 0, z: 0}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      Amplitude: 1
+    HitStopDuration: 0.15
+    CameraKickFov: 10
+    CameraShake: 0.6
+    LungeDistance: 0
+    SwingSound: {fileID: 0}
+    TrailPrefab: {fileID: 0}
+  CameraRoll: 0
+  PreviewWeaponData: {fileID: 0}

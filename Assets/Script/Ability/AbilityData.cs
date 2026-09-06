@@ -1,3 +1,4 @@
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Ability")]
@@ -7,29 +8,35 @@ public class AbilityData : ScriptableObject
     public int Id;
     public string DisplayName;
     public AbilityKind Kind = AbilityKind.Main;
-    public SubTier Tier = SubTier.Silver;   // Sub¸¸ »ç¿ë
+    public SubTier Tier = SubTier.Silver;   // Subë§Œ ì‚¬ìš©
     public AbilityTag[] Tags;
 
     [Header("Presentation")]
     public Sprite Icon;
     [TextArea(2, 3)]
-    [Tooltip("´É·Â ÀÚÃ¼ÀÇ ÇÃ·¹ÀÌ¹ö ÅØ½ºÆ®")]
+    [Tooltip("ëŠ¥ë ¥ ìì²´ì˜ í”Œë ˆì´ë²„ í…ìŠ¤íŠ¸")]
     public string Flavor;
 
     [Header("Content")]
     public PassiveDef[] Passives;
     public SkillDef[] Skills;
 
-    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    [Header("Custom Logic")]
+    [Tooltip("ì „ìš© ë¡œì§ì´ í•„ìš”í•œ ëŠ¥ë ¥ë§Œ. ë‹¨ìˆœ ëŠ¥ë ¥ì€ ë¹„ì›Œë‘ì„¸ìš”")]
+    public AbilityBehaviour Behaviour;
+
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     [System.Serializable]
     public class PassiveDef
     {
         public string Name;
         public Sprite Icon;
-        [TextArea(2, 4)]
-        [Tooltip("{0} {1} ·Î EffectDefÀÇ Value¸¦ »ğÀÔ °¡´É")]
-        public string Description;
+        [TextArea(2, 4)] public string Description;
+        [TextArea(2, 5)] public string DetailedInfo;
+        [TextArea(1, 3)] public string Tip;
+        [TextArea(1, 2)] public string DevNote;
+
         public EffectDef[] Effects;
     }
 
@@ -38,13 +45,46 @@ public class AbilityData : ScriptableObject
     {
         public string Name;
         public Sprite Icon;
-        [TextArea(2, 4)] public string Description;
+
+
+        [TextArea(2, 4)]
+        [Tooltip("ì¸ê²Œì„ í‘œì‹œìš© ì§§ì€ ì„¤ëª…. {0} {1}ë¡œ Effectsì˜ Value ì‚½ì…")]
+        public string Description;
+
+        [TextArea(2, 5)]
+        [Tooltip("ìƒì„¸ ì„¤ëª… â€” íŒì • ë²”ìœ„, ì˜ˆì™¸ ìƒí™©, ìƒí˜¸ì‘ìš© ë“±")]
+        public string DetailedInfo;
+
+        [TextArea(1, 3)]
+        [Tooltip("í”Œë ˆì´ íŒ â€” ì–´ë–»ê²Œ ì¨ì•¼ ì¢‹ì€ì§€")]
+        public string Tip;
+
+        [TextArea(1, 2)]
+        [Tooltip("ê°œë°œ ë©”ëª¨ â€” ì¸ê²Œì„ì— ë…¸ì¶œ ì•ˆ ë¨. ë°¸ëŸ°ìŠ¤ ì˜ë„ ë“±")]
+        public string DevNote;
+
+        [Header("Slot")]
+        public SkillSlot Slot = SkillSlot.Skill1;
 
         [Header("Cost / Timing")]
         public float Cooldown = 8f;
         public int SoulCost = 0;
-        public float CastTime = 0f;
-        public KeyCode Hotkey = KeyCode.Q;
+
+        [Tooltip("ê¶ê·¹ê¸°ëŠ” ì†Œìš¸ì„ ëª¨ì•„ì•¼ ì“¸ ìˆ˜ ìˆê²Œ í•  ë•Œ")]
+        public int UltimateChargeCost = 0;
+
+        [Header("Motion")]
+        [Tooltip("ìŠ¤í‚¬ ì‹œì „ ëª¨ì…˜. ë¹„ìš°ë©´ ì¦‰ì‹œ ë°œë™")]
+        public ComboStep Motion = new();
+
+        [Header("Hit")]
+        [Tooltip("ì ì¤‘ íŒì •ì´ í•„ìš”í•œ ìŠ¤í‚¬ì¸ê°€ (ë²„í”„ë¥˜ëŠ” false)")]
+        public bool NeedsTarget = false;
+        public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;
+        public float Range = 6f;
+        [Range(20f, 360f)] public float HitAngle = 60f;
+        public float HitHeight = 1.5f;
+        public int MaxTargets = 1;
 
         public EffectDef[] Effects;
     }
@@ -56,20 +96,27 @@ public class AbilityData : ScriptableObject
         public EffectType Effect;
         public TargetType Target = TargetType.Self;
 
+        [Header("ì¡°ê±´")]
+        [Tooltip("ì´ ìƒíƒœì¼ ë•Œë§Œ ë°œë™ (0 = ì¡°ê±´ ì—†ìŒ)")]
+        public int RequireStateId = 0;
+
+        [Tooltip("ê²Œì´ì§€ ì†Œëª¨ëŸ‰ (0 = ì—†ìŒ)")]
+        public float ChargeCost = 0f;
+
         [Header("Values")]
-        [Tooltip("ÁÖ ¼öÄ¡. ·¹º§º°·Î ¿©·¯ °³ ³ÖÀ¸¸é ·©Å© ±¸Çö")]
+        [Tooltip("ì£¼ ìˆ˜ì¹˜. ë ˆë²¨ë³„ë¡œ ì—¬ëŸ¬ ê°œ ë„£ìœ¼ë©´ ë­í¬ êµ¬í˜„")]
         public float[] Values = new float[] { 0f };
         public float Duration = 0f;
         [Range(0f, 1f)] public float Chance = 1f;
 
-        [Header("StatMod Àü¿ë")]
+        [Header("StatMod ì „ìš©")]
         public StatType Stat;
         public ModType ModType;
 
-        [Header("Trigger ¿É¼Ç")]
-        [Tooltip("´ë»óº° Àç¹ßµ¿ ÄğÅ¸ÀÓ (0ÀÌ¸é ¾øÀ½)")]
+        [Header("Trigger ì˜µì…˜")]
+        [Tooltip("ëŒ€ìƒë³„ ì¬ë°œë™ ì¿¨íƒ€ì„ (0ì´ë©´ ì—†ìŒ)")]
         public float PerTargetCooldown = 0f;
-        [Tooltip("PeriodicÀÏ ¶§ ÁÖ±â(ÃÊ)")]
+        [Tooltip("Periodicì¼ ë•Œ ì£¼ê¸°(ì´ˆ)")]
         public float Interval = 1f;
 
         public float GetValue(int rank = 0) =>
@@ -78,7 +125,7 @@ public class AbilityData : ScriptableObject
                 : Values[Mathf.Clamp(rank, 0, Values.Length - 1)];
     }
 
-    /// <summary>¼³¸í ¹®ÀÚ¿­ÀÇ {0}, {1}À» ½ÇÁ¦ ¼öÄ¡·Î Ä¡È¯</summary>
+    /// <summary>ì„¤ëª… ë¬¸ìì—´ì˜ {0}, {1}ì„ ì‹¤ì œ ìˆ˜ì¹˜ë¡œ ì¹˜í™˜</summary>
     public static string Format(string desc, EffectDef[] effects, int rank = 0)
     {
         if (string.IsNullOrEmpty(desc) || effects == null) return desc;
@@ -87,5 +134,51 @@ public class AbilityData : ScriptableObject
             args[i] = effects[i].GetValue(rank);
         try { return string.Format(desc, args); }
         catch { return desc; }
+    }
+
+    /// <summary>ìŠ¤í‚¬ íˆ´íŒ ì „ì²´ í…ìŠ¤íŠ¸ (ìˆ˜ì¹˜ ì¹˜í™˜ í¬í•¨)</summary>
+    public static string BuildTooltip(SkillDef s, bool includeTip = true)
+    {
+        if (s == null) return "";
+
+        var sb = new System.Text.StringBuilder();
+
+        sb.AppendLine($"<b>{s.Name}</b>  <color=#888>[{s.Slot.Label()}]</color>");
+
+        // ì½”ìŠ¤íŠ¸/ì¿¨íƒ€ì„
+        var cost = new List<string>();
+        if (s.Cooldown > 0f) cost.Add($"ì¿¨íƒ€ì„ {s.Cooldown:0.#}ì´ˆ");
+        if (s.SoulCost > 0) cost.Add($"ì†Œìš¸ {s.SoulCost}");
+        if (cost.Count > 0)
+            sb.AppendLine($"<color=#7ac>{string.Join("  Â·  ", cost)}</color>");
+
+        sb.AppendLine();
+        sb.AppendLine(Format(s.Description, s.Effects));
+
+        if (!string.IsNullOrWhiteSpace(s.DetailedInfo))
+        {
+            sb.AppendLine();
+            sb.AppendLine($"<color=#aaa>{Format(s.DetailedInfo, s.Effects)}</color>");
+        }
+
+        if (includeTip && !string.IsNullOrWhiteSpace(s.Tip))
+        {
+            sb.AppendLine();
+            sb.AppendLine($"<color=#dc8><i>íŒ: {s.Tip}</i></color>");
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>íŒì • ë²”ìœ„ë¥¼ ìë™ìœ¼ë¡œ ë¬¸ì¥í™”</summary>
+    public static string DescribeRange(SkillDef s)
+    {
+        if (!s.NeedsTarget) return "ëŒ€ìƒ ì§€ì • ì—†ìŒ (ìì‹ ì—ê²Œ ì ìš©)";
+
+        string shape = s.HitMode == WeaponHitMode.ForwardArc
+            ? $"ì „ë°© {s.HitAngle:0}Â° ë¶€ì±„ê¼´"
+            : "ì£¼ë³€ ì „ì²´";
+
+        return $"{shape}, ì‚¬ê±°ë¦¬ {s.Range:0.#}m, ìµœëŒ€ {s.MaxTargets}ëª…";
     }
 }

@@ -60,12 +60,12 @@ public class WeaponAnimator : MonoBehaviour
     }
 
     /// <summary>PlayerMovement의 Update에서 호출</summary>
-    public void Tick(Vector3 moveDir, bool isRunning, float speed01)
+    public void Tick(Vector3 moveDir, float speed01)
     {
         if (armRig == null) return;
 
         HandleSwingPose();
-        HandleArmOffset(isRunning, speed01);
+        HandleArmOffset(speed01);
     }
 
     // ── 스윙 포즈 (손/무기) ──
@@ -90,14 +90,14 @@ public class WeaponAnimator : MonoBehaviour
 
         float p = _t / _step.TotalTime;
         var pose = _step.Motion.Evaluate(p, armRig.IdlePose);
-        Debug.Log($"[Swing] p={p:F2} keys={_step.Motion.Keys?.Count} pos={pose.RightPos}");
+        //Debug.Log($"[Swing] p={p:F2} keys={_step.Motion.Keys?.Count} pos={pose.RightPos}");
 
         armRig.ApplySwing(_step.Motion, p);
     }
 
     // ── 스웨이 / 바빙 (ArmRoot 전체) ──
 
-    void HandleArmOffset(bool isRunning, float speed01)
+    void HandleArmOffset(float speed01)
     {
         float mx = Input.GetAxisRaw("Mouse X");
         float my = Input.GetAxisRaw("Mouse Y");
@@ -120,14 +120,11 @@ public class WeaponAnimator : MonoBehaviour
 
         if (speed01 > 0.1f)
         {
-            float freq = isRunning ? runBobFreq : walkBobFreq;
-            float amp = isRunning ? bobAmount * 1.8f : bobAmount;
+            _bobTimer += Time.deltaTime * walkBobFreq * Mathf.PI * 2f;
 
-            _bobTimer += Time.deltaTime * freq * Mathf.PI * 2f;
-
-            bobPos.x = Mathf.Cos(_bobTimer * 0.5f) * amp;
-            bobPos.y = Mathf.Sin(_bobTimer) * amp * 0.6f;
-            bobRot.z = Mathf.Cos(_bobTimer * 0.5f) * bobRotAmount * (isRunning ? 1.8f : 1f);
+            bobPos.x = Mathf.Cos(_bobTimer * 0.5f) * bobAmount;
+            bobPos.y = Mathf.Sin(_bobTimer) * bobAmount * 0.6f;
+            bobRot.z = Mathf.Cos(_bobTimer * 0.5f) * bobRotAmount;
             bobRot.x = Mathf.Sin(_bobTimer) * bobRotAmount * 0.4f;
         }
         else

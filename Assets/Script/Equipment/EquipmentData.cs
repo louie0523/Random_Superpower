@@ -12,7 +12,7 @@ public enum WeaponHitMode
 
 
 [CreateAssetMenu(menuName = "Game/Equipment")]
-public class EquipmentData : ScriptableObject
+public class EquipmentData : ScriptableObject, IMotionSource
 {
     // ══════════ 공통 ══════════
 
@@ -76,6 +76,12 @@ public class EquipmentData : ScriptableObject
 
     public bool IsWeapon => Slot == EquipSlot.Weapon;
     public int ComboLength => Combo == null ? 0 : Combo.Length;
+
+    public string SourceName => DisplayName;
+    public EquipmentData PreviewWeapon => this;
+    public bool SupportsMultiStep => true;
+    public void SetSteps(ComboStep[] steps) => Combo = steps;
+    public ComboStep[] GetSteps() => Combo;
 
     public ComboStep GetStep(int index)
     {

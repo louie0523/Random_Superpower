@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
+  m_Name: "\uC77C\uACA9\uC758 \uB300\uAC00"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  Id: 6001
+  DisplayName: "\uC77C\uACA9\uC758 \uB300\uAC00"
+  Kind: 0
+  Tier: 0
+  Tags: 00000000
+  Icon: {fileID: 0}
+  Flavor: "\uB2F9\uC2E0\uC740 \uC77C\uACA9\uC758 \uB300\uAC00\uC785\uB2C8\uB2E4.
+    \uADFC\uC811 \uBB34\uAE30\uB85C \uB9C9\uAC15\uD55C \uD53C\uD574\uB97C \uC785\uD788\uACE0,
+    \uAE30\uB3D9\uC131\uC774 \uB6F0\uC5B4\uB09C \uB300\uC2E0 \uD798\uC744 \uAC00\uB2E4\uB4EC\uB294\uB370\uC5D0
+    \uC2DC\uAC04\uC774 \uD544\uC694\uD569\uB2C8\uB2E4."
+  Passives:
+  - Name: "\uC77C\uACA9"
+    Icon: {fileID: 0}
+    Description: "\uADFC\uC811 \uBB34\uAE30\uC758 \uAE30\uBCF8 \uACF5\uACA9\uC2DC
+      \uC804\uBC29\uC73C\uB85C \uBE60\uB974\uAC8C \uBCA0\uC5B4\uAC00\uBA70 \uB3CC\uC9C4\uD569\uB2C8\uB2E4.\n\uADFC\uC810
+      \uBB34\uAE30\uC758 \uAE30\uBCF8 \uACF5\uACA9 \uD53C\uD574\uB7C9\uC774 400%\uAC00
+      \uB429\uB2C8\uB2E4.\n\uACF5\uACA9 \uC0AC\uC6A9\uD6C4 '\uC77C\uACA9' \uAC8C\uC774\uC9C0\uB97C
+      \uBAA8\uC544\uC57C \uB2E4\uC2DC \uACF5\uACA9 \uAC00\uB2A5\uD569\uB2C8\uB2E4."
+    DetailedInfo: "'\uC77C\uACA9'\uAC8C\uC774\uC9C0\uB294 \uC774\uB3D9\uC2DC \uCD08\uB2F9
+      3%, \uC801 \uAE30\uBCF8\uACF5\uACA9 \uC801\uC911\uC2DC 5%\uC529 \uD68D\uB4DD\uD569\uB2C8\uB2E4."
+    Tip: 
+    DevNote: 
+    Effects: []
+  - Name: "\uC7AC\uBE60\uB978 \uBC1C"
+    Icon: {fileID: 0}
+    Description: "\uC774\uB3D9 \uC18D\uB3C4\uAC00 1 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Effects:
+    - Trigger: 0
+      Effect: 0
+      Target: 0
+      RequireStateId: 0
+      ChargeCost: 0
+      Values:
+      - 1
+      Duration: 0
+      Chance: 1
+      Stat: 3
+      ModType: 0
+      PerTargetCooldown: 0
+      Interval: 0
+  Skills:
+  - Name: "\uC228\uACE0\uB974\uAE30"
+    Icon: {fileID: 0}
+    Description: "\uC989\uC2DC \uC77C\uACA9 \uAC8C\uC774\uC9C0\uB97C 50% \uCC44\uC6C1\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 0
+    Cooldown: 1
+    SoulCost: 0
+    UltimateChargeCost: 0
+    Motion:
+      Name: "1\uD0C0"
+      Duration: 0.55
+      HitStart: 0.27
+      HitEnd: 0.45
+      CancelPoint: 0.75
+      ComboResetTime: 0.8
+      OverrideHitShape: 0
+      HitMode: 0
+      Range: 3
+      HitAngle: 120
+      HitHeight: 1.2
+      MinRange: 0
+      DamageMultiplier: 1
+      RangeMultiplier: 1
+      RadiusMultiplier: 1
+      MaxTargets: 1
+      Motion:
+        Keys: []
+        Amplitude: 1
+      HitStopDuration: 0.05
+      CameraKickFov: 4
+      CameraShake: 0.3
+      LungeDistance: 0
+      SwingSound: {fileID: 0}
+      TrailPrefab: {fileID: 0}
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    Effects: []
+  - Name: "\uC77C\uACA9\uC758 \uB300\uAC00"
+    Icon: {fileID: 0}
+    Description: "\uC0AC\uC6A9\uC2DC 8\uCD08\uAC04 '\uC77C\uACA9\uC758 \uB300\uAC00'
+      \uC0C1\uD0DC\uAC00 \uB429\uB2C8\uB2E4.\n'\uC77C\uACA9\uC758 \uB300\uAC00' \uC0C1\uD0DC\uC911
+      '\uC77C\uACA9' \uC801\uC911\uC2DC \uC989\uC2DC '\uC77C\uACA9' \uAC8C\uC774\uC9C0\uAC00
+      100%\uAC00 \uCC39\uB2C8\uB2E4.\n\uC9C0\uC18D \uC2DC\uAC04 \uB3C4\uC911 \uC774\uB3D9
+      \uC18D\uB3C4\uAC00 2 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 3
+    Cooldown: 12
+    SoulCost: 0
+    UltimateChargeCost: 0
+    Motion:
+      Name: "1\uD0C0"
+      Duration: 0.55
+      HitStart: 0.27
+      HitEnd: 0.45
+      CancelPoint: 0.75
+      ComboResetTime: 0.8
+      OverrideHitShape: 0
+      HitMode: 0
+      Range: 3
+      HitAngle: 120
+      HitHeight: 1.2
+      MinRange: 0
+      DamageMultiplier: 1
+      RangeMultiplier: 1
+      RadiusMultiplier: 1
+      MaxTargets: 1
+      Motion:
+        Keys: []
+        Amplitude: 1
+      HitStopDuration: 0.05
+      CameraKickFov: 4
+      CameraShake: 0.3
+      LungeDistance: 0
+      SwingSound: {fileID: 0}
+      TrailPrefab: {fileID: 0}
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    Effects: []
+  Behaviour: {fileID: 11400000, guid: 56eb6fad4c598474980a69fef924bb53, type: 2}

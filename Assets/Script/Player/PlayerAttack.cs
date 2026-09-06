@@ -1,4 +1,6 @@
-﻿using Fusion;
+﻿using System.Collections.Generic;
+using Fusion;
+using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 
 public class PlayerAttack : NetworkBehaviour
@@ -30,6 +32,14 @@ public class PlayerAttack : NetworkBehaviour
     private bool _hitApplied;
     private ComboStep _current;
 
+    private float _pendingDamageMul = 1f;
+
+    private readonly HashSet<int> _hitThisAttack = new();
+    private bool _isDashAttack;
+    private bool _dashStarted;
+    private AttackOverride _override;
+
+
     // ══════════════════ 초기화 ══════════════════
 
     public override void Spawned()
@@ -47,6 +57,8 @@ public class PlayerAttack : NetworkBehaviour
         if (fpsCamera == null) Debug.LogError("[Attack] fpsCamera 비었음", this);
         if (_stats == null) Debug.LogError("[Attack] PlayerStats 없음", this);
     }
+
+
 
     void Update()
     {
@@ -85,49 +97,61 @@ public class PlayerAttack : NetworkBehaviour
 
         float activeStart = _current.WindUp;
         float activeEnd = _current.WindUp + _current.ActiveWindow;
-
         bool inWindow = _attackTimer >= activeStart && _attackTimer <= activeEnd;
-
-        // 구간을 지나쳤는데 아직 안 때렸으면 즉시 판정
-        bool missed = !_hitApplied && _attackTimer > activeEnd
-                      && _attackTimer < _current.TotalTime;
-
-        if (inWindow || missed) DoHitCheck(_current);
-
-        // 전진은 정상 구간에서만
-        if (_current.LungeDistance > 0f && inWindow)
-        {
-            float speed = _current.LungeDistance / Mathf.Max(0.01f, _current.ActiveWindow);
-            _cc.Move(transform.forward * speed * dt);
-        }
-        bool inActive = _attackTimer >= activeStart && _attackTimer <= activeEnd;
 
         if (logHits)
             Debug.Log($"[Tick] 콤보{_comboIndex} t={_attackTimer:F3} " +
-                      $"구간={activeStart:F3}~{activeEnd:F3} active={inActive} applied={_hitApplied}");
+                      $"구간={activeStart:F3}~{activeEnd:F3} " +
+                      $"window={inWindow} applied={_hitApplied} dash={_isDashAttack}");
 
-        if (inActive) DoHitCheck(_current);
+        // ── 히트 판정 ──
+        if (_isDashAttack)
+        {
+            if (inWindow && !_dashStarted)
+            {
+                _dashStarted = true;
+                _ability.DoDash(_override.Dash);
 
-        // 전진
-        if (_current.LungeDistance > 0f && inActive)
+                if (fpsCamera != null)
+                    fpsCamera.FovKick(_current.CameraKickFov + 10f);
+            }
+
+            if (inWindow || _ability.IsDashing) SweepDashHit(_current);
+        }
+        else
+        {
+            // 일반 공격: 한 번만. 구간을 놓쳤으면 늦게라도 발동
+            bool missed = !_hitApplied && _attackTimer > activeEnd
+                          && _attackTimer < _current.TotalTime;
+
+            if (inWindow || missed) DoHitCheck(_current);
+        }
+
+        // ── 전진 (돌진 공격은 DoDash가 담당) ──
+        if (!_isDashAttack && _current.LungeDistance > 0f && inWindow)
         {
             float speed = _current.LungeDistance / Mathf.Max(0.01f, _current.ActiveWindow);
             _cc.Move(transform.forward * speed * dt);
         }
 
-        // 다음 입력 예약 — 판정이 끝난 뒤부터
+        // ── 다음 입력 예약 (판정 종료 후부터) ──
         if (pressed && _attackTimer >= activeEnd)
             _queuedInput = true;
 
-        // 마지막 타는 캔슬 불가
+        // ── 종료 판정 ──
         var weapon = _equip.GetWeapon();
         bool isLastHit = weapon != null && _comboIndex >= weapon.ComboLength;
-        float cancelAt = isLastHit ? _current.TotalTime : _current.CancelTime;
+
+        // 돌진 공격과 마지막 타는 캔슬 불가
+        float cancelAt = (_isDashAttack || isLastHit)
+            ? _current.TotalTime
+            : _current.CancelTime;
 
         if (_attackTimer >= _current.TotalTime ||
             (_attackTimer >= cancelAt && _queuedInput))
         {
             _attackTimer = -1f;
+
 
             if (_queuedInput)
             {
@@ -146,28 +170,35 @@ public class PlayerAttack : NetworkBehaviour
         var weapon = _equip != null ? _equip.GetWeapon() : null;
         if (weapon == null || weapon.ComboLength == 0) return;
 
-        if (logHits)
-            Debug.Log($"[Start] 콤보{_comboIndex} " +
-                      $"Duration={_current.Duration:F2} WindUp={_current.WindUp:F3} " +
-                      $"Active={_current.ActiveWindow:F3}");
+        _pendingDamageMul = 1f;
+        _isDashAttack = false;
+        _dashStarted = false;
+        _override = AttackOverride.None;
+        _hitThisAttack.Clear();
 
-        _comboIndex %= weapon.ComboLength;
-        _current = weapon.GetStep(_comboIndex);
-        if (_current == null) return;
+        if (_ability != null && _ability.TryOverrideAttack(out _override))
+        {
+            _pendingDamageMul = _override.DamageMul;
+            _current = _override.Step ?? weapon.GetStep(0);
+            if (_current == null) return;
+
+            _isDashAttack = _override.HasDash;
+            _comboIndex = 0;
+        }
+        else
+        {
+            _comboIndex %= weapon.ComboLength;
+            _current = weapon.GetStep(_comboIndex);
+            if (_current == null) return;
+            _comboIndex++;
+        }
 
         _attackTimer = 0f;
         _hitApplied = false;
-        _comboIndex++;
 
         if (fpsCamera != null) fpsCamera.FovKick(_current.CameraKickFov);
 
-        RPC_PlaySwing(_comboIndex - 1);
-
-        if (_anim != null)
-        {
-            float atkSpd = 1f / Mathf.Max(0.1f, _current.TotalTime);
-            _anim.RPC_PlayAttack(_comboIndex - 1, atkSpd);
-        }
+        RPC_PlaySwing(_isDashAttack ? -1 : _comboIndex - 1);
     }
 
     void ResetCombo()
@@ -176,7 +207,9 @@ public class PlayerAttack : NetworkBehaviour
         _comboIndex = 0;
         _queuedInput = false;
         _hitApplied = false;
+        _pendingDamageMul = 1f;
         _current = null;
+        _dashStarted = false;
     }
 
     // ══════════════════ 히트 판정 ══════════════════
@@ -248,7 +281,7 @@ public class PlayerAttack : NetworkBehaviour
 
     void ApplyHit(PlayerHealth target, GameObject targetObj, ComboStep step)
     {
-        int dmg = CalcDamage(step.DamageMultiplier);
+        int dmg = CalcDamage(step.DamageMultiplier * _pendingDamageMul);
 
         target.RPC_TakeDamage(dmg, Object.InputAuthority, cameraRoot.position);
         _ability?.FireTrigger(TriggerType.OnHit, targetObj);
@@ -286,10 +319,56 @@ public class PlayerAttack : NetworkBehaviour
         var step = weapon.GetStep(comboIndex);
         if (step == null) return;
 
+        if (comboIndex < 0)
+        {
+            var b = _ability?.FindAbility<EmpoweredStrikeAbility>();
+            step = b?.GetStrikeStep();
+        }
+
         weaponAnim?.Play(step);
 
         if (step.SwingSound != null)
             AudioSource.PlayClipAtPoint(step.SwingSound, transform.position, 0.7f);
+    }
+
+    void SweepDashHit(ComboStep step)
+    {
+        var weapon = _equip.GetWeapon();
+        if (weapon == null) return;
+
+        step.ResolveHitShape(weapon, out var mode, out float range,
+                             out float angle, out float height, out float minRange);
+
+        Vector3 origin = transform.position;
+        Vector3 flatFwd = new Vector3(cameraRoot.forward.x, 0f, cameraRoot.forward.z).normalized;
+        if (flatFwd.sqrMagnitude < 0.001f) flatFwd = transform.forward;
+
+        Collider[] cols = Physics.OverlapSphere(origin, range, hitMask);
+        float halfAngle = angle * 0.5f;
+
+        foreach (var col in cols)
+        {
+            if (col.gameObject == gameObject) continue;
+
+            int id = col.gameObject.GetInstanceID();
+            if (_hitThisAttack.Contains(id)) continue;      // ★ 중복 방지
+
+            if (!col.TryGetComponent<PlayerHealth>(out var target)) continue;
+            if (target.IsDead) continue;
+
+            Vector3 to = col.transform.position - origin;
+            if (Mathf.Abs(to.y) > height) continue;
+
+            Vector3 flat = new Vector3(to.x, 0f, to.z);
+            float d = flat.magnitude;
+            if (d > range || d < minRange) continue;
+
+            if (mode == WeaponHitMode.ForwardArc && d > 0.01f)
+                if (Vector3.Angle(flatFwd, flat.normalized) > halfAngle) continue;
+
+            _hitThisAttack.Add(id);
+            ApplyHit(target, col.gameObject, step);
+        }
     }
 
     // ══════════════════ 디버그 ══════════════════

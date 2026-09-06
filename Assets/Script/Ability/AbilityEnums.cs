@@ -14,6 +14,8 @@ public enum TriggerType
     OnSoulGain,
     Periodic,
     OnRespawn,
+    OnMove,
+    OnStateActive,
 }
 
 /// <summary>무엇을 하는가</summary>
@@ -29,6 +31,8 @@ public enum EffectType
     Projectile,
     MarkTarget,     // 복수 대상 지정 등
     GrantSoul,
+    AddCharge,
+    EnterState,
 }
 
 /// <summary>누구에게</summary>

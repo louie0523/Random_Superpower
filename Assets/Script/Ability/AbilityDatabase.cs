@@ -238,6 +238,27 @@ public class AbilityDatabase : ScriptableObject
                 errors++;
             }
 
+            if (a.Skills != null)
+            {
+                foreach (var s in a.Skills)
+                {
+                    if (string.IsNullOrWhiteSpace(s.Description))
+                    {
+                        Debug.LogWarning($"[AbilityDB] {a.name} / {s.Name}: 설명 없음", a);
+                        errors++;
+                    }
+
+                    // 설명에 {0}이 있는데 Effects가 비었으면 치환 실패
+                    if (s.Description != null && s.Description.Contains("{0}") &&
+                        (s.Effects == null || s.Effects.Length == 0))
+                    {
+                        Debug.LogError($"[AbilityDB] {a.name} / {s.Name}: " +
+                                       "설명에 {0}이 있는데 Effects가 비었습니다", a);
+                        errors++;
+                    }
+                }
+            }
+
             errors += ValidateDescriptions(a);
         }
 
