@@ -294,7 +294,7 @@ MonoBehaviour:
           m_RotationOrder: 4
       Amplitude: 1
     HitStopDuration: 0.15
-    CameraKickFov: 10
+    CameraKickFov: 0
     CameraShake: 0.6
     LungeDistance: 0
     SwingSound: {fileID: 0}

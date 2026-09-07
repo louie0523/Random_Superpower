@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
-
-
+using static AbilityData;
 
 public class AbilityRuntime : NetworkBehaviour
 {
@@ -13,13 +12,13 @@ public class AbilityRuntime : NetworkBehaviour
     [SerializeField] private WeaponAnimator weaponAnim;
 
     [Header("Debug — 테스트용 강제 지정")]
-    [Tooltip("0이 아니면 이 능력으로 시작 (테스트용)")]
     [SerializeField] private int forceMainId = 0;
     [SerializeField] private int forceSubId = 0;
     [SerializeField] private int forceRandomId = 0;
+    [SerializeField] private bool logSkills = false;
 
-    [Header("Charge")]
-    [SerializeField] private float defaultMaxCharge = 100f;
+    [Header("Dash")]
+    [SerializeField] private string ghostLayerName = "PlayerGhost";
 
     // ══════════════════ 네트워크 상태 ══════════════════
 
@@ -30,16 +29,15 @@ public class AbilityRuntime : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnAbilityChanged))]
     public int RandomAbilityId { get; set; }
 
-    [Networked, Capacity(4)]
-    public NetworkArray<float> CooldownEnd { get; }
-
-    [Networked] public float Charge { get; set; }
-    [Networked] public float MaxCharge { get; set; }
+    [Networked, Capacity(4)] public NetworkArray<float> CooldownEnd { get; }
+    [Networked, Capacity(4)] public NetworkArray<float> Charges { get; }
+    [Networked, Capacity(4)] public NetworkArray<float> MaxCharges { get; }
 
     [Networked] public TickTimer StateTimer { get; set; }
     [Networked] public int ActiveStateId { get; set; }
-
     [Networked] public TickTimer SealTimer { get; set; }
+
+    public const int ChargeSlotCount = 4;
 
     // ══════════════════ 내부 상태 ══════════════════
 
@@ -50,7 +48,11 @@ public class AbilityRuntime : NetworkBehaviour
     private Vector3 _dashDir;
     private float _dashSpeed;
     private float _dashTimer;
+    private DashParams _dashParams;
     private float _moveTickAccum;
+
+    private int _normalLayer;
+    private int _ghostLayer;
 
     private PlayerStats _stats;
     private PlayerHealth _health;
@@ -63,13 +65,9 @@ public class AbilityRuntime : NetworkBehaviour
     private readonly AbilityData.SkillDef[] _slots = new AbilityData.SkillDef[SkillSlotExt.Count];
     private readonly Dictionary<int, float> _perTargetCd = new();
 
+    [SerializeField] private float dashDecayTime = 0.15f;
+    private float _dashDecayTimer;
 
-    [Header("Dash")]
-    [SerializeField] private string ghostLayerName = "PlayerGhost";
-
-    private int _normalLayer;
-    private int _ghostLayer;
-    private DashParams _dashParams;
 
     // ══════════════════ 공개 접근자 ══════════════════
 
@@ -78,15 +76,12 @@ public class AbilityRuntime : NetworkBehaviour
 
     public PlayerStats Stats => _stats;
     public PlayerHealth Health => _health;
-    public Transform CameraRoot => cameraRoot;
+    public Transform CameraRootTransform => cameraRoot;
 
     public bool IsSealed => !SealTimer.ExpiredOrNotRunning(Runner);
     public bool IsCasting => _castTimer >= 0f;
     public bool IsDashing => _dashTimer > 0f;
     public bool IsMoving => _movement != null && _movement.IsMoving;
-
-    public float ChargeRatio => MaxCharge <= 0f ? 0f : Charge / MaxCharge;
-
     public bool DashIgnoresGravity => _dashTimer > 0f && _dashParams.IgnoreGravity;
 
     public AbilityData.SkillDef GetSlot(int i) =>
@@ -95,19 +90,55 @@ public class AbilityRuntime : NetworkBehaviour
     public bool HasState(int id) =>
         ActiveStateId == id && !StateTimer.ExpiredOrNotRunning(Runner);
 
-    public T GetAbilityBehaviour<T>() where T : AbilityBehaviour
-    {
-        foreach (var b in _behaviours)
-            if (b is T t) return t;
-        return null;
-    }
-
-    /// <summary>장착된 전용 로직 중 T 타입 찾기</summary>
     public T FindAbility<T>() where T : AbilityBehaviour
     {
         for (int i = 0; i < _behaviours.Count; i++)
             if (_behaviours[i] is T t) return t;
         return null;
+    }
+
+    // ══════════════════ 게이지 ══════════════════
+
+    public float GetCharge(int slot) =>
+        (slot >= 0 && slot < ChargeSlotCount) ? Charges[slot] : 0f;
+
+    public float GetMaxCharge(int slot) =>
+        (slot >= 0 && slot < ChargeSlotCount) ? MaxCharges[slot] : 0f;
+
+    public float GetChargeRatio(int slot)
+    {
+        float max = GetMaxCharge(slot);
+        return max <= 0f ? 0f : GetCharge(slot) / max;
+    }
+
+    public void SetMaxCharge(int slot, float v)
+    {
+        if (!HasStateAuthority) return;
+        if (slot < 0 || slot >= ChargeSlotCount) return;
+
+        MaxCharges.Set(slot, Mathf.Max(1f, v));
+        Charges.Set(slot, Mathf.Min(Charges[slot], MaxCharges[slot]));
+    }
+
+    public void AddCharge(int slot, float amount)
+    {
+        if (!HasStateAuthority) return;
+        if (slot < 0 || slot >= ChargeSlotCount) return;
+
+        float max = MaxCharges[slot];
+        if (max <= 0f) max = 100f;
+
+        Charges.Set(slot, Mathf.Clamp(Charges[slot] + amount, 0f, max));
+    }
+
+    public bool SpendCharge(int slot, float amount)
+    {
+        if (!HasStateAuthority) return false;
+        if (slot < 0 || slot >= ChargeSlotCount) return false;
+        if (Charges[slot] < amount) return false;
+
+        Charges.Set(slot, Charges[slot] - amount);
+        return true;
     }
 
     // ══════════════════ 초기화 ══════════════════
@@ -122,22 +153,6 @@ public class AbilityRuntime : NetworkBehaviour
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
-        if (HasStateAuthority)
-        {
-            if (MaxCharge <= 0f) MaxCharge = defaultMaxCharge;
-
-            if (forceMainId != 0) MainAbilityId = forceMainId;
-            if (forceSubId != 0) SubAbilityId = forceSubId;
-            if (forceRandomId != 0) RandomAbilityId = forceRandomId;
-
-
-            if (RandomAbilityId == 0) RerollRandomAbility();
-
-
-        }
-
-        RebuildAbilities();
-
         _normalLayer = gameObject.layer;
         _ghostLayer = LayerMask.NameToLayer(ghostLayerName);
         if (_ghostLayer < 0)
@@ -145,12 +160,21 @@ public class AbilityRuntime : NetworkBehaviour
             Debug.LogWarning($"[Ability] '{ghostLayerName}' 레이어가 없습니다.");
             _ghostLayer = _normalLayer;
         }
-    }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    void RPC_SetGhost(bool on)
-    {
-        gameObject.layer = on ? _ghostLayer : _normalLayer;
+        if (HasStateAuthority)
+        {
+            if (forceMainId != 0) MainAbilityId = forceMainId;
+            if (forceSubId != 0) SubAbilityId = forceSubId;
+            if (forceRandomId != 0) RandomAbilityId = forceRandomId;
+
+            if (RandomAbilityId == 0) RerollRandomAbility();
+        }
+
+        RebuildAbilities();
+
+        Debug.Log($"[Ability] input={_input != null} behaviours={_behaviours.Count} " +
+          $"slots=[{_slots[0]?.Name ?? "-"}] [{_slots[1]?.Name ?? "-"}] " +
+          $"[{_slots[2]?.Name ?? "-"}] [{_slots[3]?.Name ?? "-"}]");
     }
 
     void OnAbilityChanged() => RebuildAbilities();
@@ -179,7 +203,6 @@ public class AbilityRuntime : NetworkBehaviour
         if (a == null) return;
         _active.Add(a);
 
-        // 패시브 스탯
         if (a.Passives != null)
             foreach (var p in a.Passives)
             {
@@ -190,7 +213,6 @@ public class AbilityRuntime : NetworkBehaviour
                             e.Stat, e.ModType, e.GetValue(), sourceId));
             }
 
-        // 스킬 슬롯 배치
         if (a.Skills != null)
             foreach (var s in a.Skills)
             {
@@ -201,7 +223,6 @@ public class AbilityRuntime : NetworkBehaviour
                 else Debug.LogWarning($"[Ability] 슬롯 {s.Slot} 중복: {a.DisplayName} / {s.Name}");
             }
 
-        // 전용 로직
         if (a.Behaviour != null)
         {
             var b = a.Behaviour.CreateInstance(this, a);
@@ -220,29 +241,35 @@ public class AbilityRuntime : NetworkBehaviour
         {
             _castTimer = -1f;
             _casting = null;
-
             if (_dashTimer > 0f) { _dashTimer = 0f; RPC_SetGhost(false); }
-
             _input?.ClearAll();
             return;
         }
 
         float dt = Runner.DeltaTime;
 
+        // 대시
         if (_dashTimer > 0f)
         {
             _dashTimer -= dt;
-
             if (_cc != null)
             {
                 var flags = _cc.Move(_dashDir * _dashSpeed * dt);
-
                 if (_dashParams.StopOnContact && (flags & CollisionFlags.Sides) != 0)
                     _dashTimer = 0f;
             }
 
-            if (_dashTimer <= 0f && _dashParams.PassThroughPlayers)
-                RPC_SetGhost(false);
+            if (_dashTimer <= 0f)
+            {
+                if (_dashParams.PassThroughPlayers) RPC_SetGhost(false);
+                _dashDecayTimer = dashDecayTime;   // ★ 감속 시작
+            }
+        }
+        else if (_dashDecayTimer > 0f)
+        {
+            _dashDecayTimer -= dt;
+            float t = Mathf.Clamp01(_dashDecayTimer / dashDecayTime);
+            if (_cc != null) _cc.Move(_dashDir * _dashSpeed * t * dt);
         }
 
         // 상태 만료
@@ -253,11 +280,11 @@ public class AbilityRuntime : NetworkBehaviour
             RPC_OnStateChanged(old, false);
         }
 
-        // 전용 로직 틱
+        // 전용 로직
         for (int i = 0; i < _behaviours.Count; i++)
             _behaviours[i].Tick(dt);
 
-        // 이동 중 트리거 (초당 1회)
+        // 이동 트리거
         if (IsMoving)
         {
             _moveTickAccum += dt;
@@ -280,13 +307,6 @@ public class AbilityRuntime : NetworkBehaviour
         for (int i = 0; i < SkillSlotExt.Count; i++)
             if (_input != null && _input.Consume(i))
                 TryUseSkill(i);
-
-        if (_moveTickAccum >= 1f)
-        {
-            _moveTickAccum -= 1f;
-            FireTrigger(TriggerType.OnMove);
-            Debug.Log($"[Charge] {Charge:F0}/{MaxCharge:F0}");
-        }
     }
 
     void TickCast(float dt)
@@ -294,73 +314,99 @@ public class AbilityRuntime : NetworkBehaviour
         _castTimer += dt;
 
         var m = _casting.Motion;
-        float activeStart = m.WindUp;
-        float activeEnd = m.WindUp + m.ActiveWindow;
+        if (m == null) { _castTimer = -1f; _casting = null; return; }
 
-        bool inWindow = _castTimer >= activeStart && _castTimer <= activeEnd;
-        bool missed = !_castHitApplied && _castTimer > activeEnd && _castTimer < m.TotalTime;
-
-        if ((inWindow || missed) && !_castHitApplied)
+        if (_casting.EffectTiming == SkillEffectTiming.OnHitFrame && !_castHitApplied)
         {
-            _castHitApplied = true;
-            FireSkillEffects(_casting);
+            float activeStart = m.WindUp;
+            float activeEnd = m.WindUp + m.ActiveWindow;
+
+            bool inWindow = _castTimer >= activeStart && _castTimer <= activeEnd;
+            bool missed = _castTimer > activeEnd && _castTimer < m.TotalTime;
+
+            if (inWindow || missed)
+            {
+                _castHitApplied = true;
+                FireSkillEffects(_casting);
+            }
         }
 
         if (_castTimer >= m.TotalTime)
         {
+            if (_casting.EffectTiming == SkillEffectTiming.OnCastEnd && !_castHitApplied)
+            {
+                _castHitApplied = true;
+                FireSkillEffects(_casting);
+            }
+
             _castTimer = -1f;
             _casting = null;
         }
     }
 
-    // ══════════════════ 스킬 사용 ══════════════════
+    // ══════════════════ 스킬 ══════════════════
 
     public bool TryUseSkill(int slotIndex)
     {
-        if (!HasStateAuthority) return false;
-        if (IsSealed) { Debug.Log("[Skill] 봉인됨"); return false; }
+    Debug.Log($"[Skill] TryUse slot={slotIndex}");
 
-        var skill = GetSlot(slotIndex);
-        if (skill == null) { Debug.Log($"[Skill] 슬롯 {slotIndex} 비어있음"); return false; }
+    if (!HasStateAuthority) { Debug.Log("  → 권한 없음"); return false; }
+    if (IsSealed) { Debug.Log("  → 봉인"); return false; }
 
-        if (Runner.SimulationTime < CooldownEnd[slotIndex]) { Debug.Log("[Skill] 쿨타임"); return false; }
-        if (_health.Soul < skill.SoulCost) { Debug.Log("[Skill] 소울 부족"); return false; }
+    var skill = GetSlot(slotIndex);
+    if (skill == null) { Debug.Log("  → 슬롯 비어있음"); return false; }
 
-        // 전용 로직이 처리하는지 먼저 확인
-        bool handled = false;
-        for (int i = 0; i < _behaviours.Count; i++)
-            if (_behaviours[i].OnSkillUsed(slotIndex, skill)) handled = true;
+    if (Runner.SimulationTime < CooldownEnd[slotIndex]) { Debug.Log("  → 쿨타임"); return false; }
+    if (_health.Soul < skill.SoulCost) { Debug.Log("  → 소울 부족"); return false; }
 
-        // 쿨타임 / 코스트
+    bool handled = false;
+    for (int i = 0; i < _behaviours.Count; i++)
+        if (_behaviours[i].OnSkillUsed(slotIndex, skill)) handled = true;
+
+    Debug.Log($"  → {skill.Name} handled={handled} " +
+              $"motion={(skill.Motion != null ? skill.Motion.Duration.ToString("F2") : "null")} " +
+              $"timing={skill.EffectTiming} effects={skill.Effects?.Length ?? 0}");
+
         float cdr = _stats.Get(StatType.CooldownReduction);
         float cd = skill.Cooldown * (1f - Mathf.Clamp01(cdr));
         CooldownEnd.Set(slotIndex, Runner.SimulationTime + cd);
 
         if (skill.SoulCost > 0) _health.SpendSoul(skill.SoulCost);
 
-        // 모션
-        if (skill.Motion != null && skill.Motion.Duration > 0.01f)
+        if (logSkills)
+            Debug.Log($"[Skill] {skill.Name} 사용 (handled={handled}, timing={skill.EffectTiming})");
+
+        var motion = skill.Motion;
+
+        if (motion != null && motion.Duration > 0.01f)
         {
             _casting = skill;
             _castTimer = 0f;
-            _castHitApplied = handled;   // 이미 처리됐으면 효과 재발동 안 함
+            _castHitApplied = handled;
             RPC_PlaySkillMotion(slotIndex);
+
+            if (skill.EffectTiming == SkillEffectTiming.Immediate && !handled)
+            {
+                _castHitApplied = true;
+                FireSkillEffects(skill);
+            }
         }
         else if (!handled)
         {
             FireSkillEffects(skill);
         }
 
-        FireTrigger(TriggerType.OnSkillUse);
+        // 스킬 사용 트리거 (다른 능력의 OnSkillUse 반응용)
+        FireTrigger(TriggerType.OnSkillUse, null, skill);
         return true;
     }
 
     void FireSkillEffects(AbilityData.SkillDef skill)
     {
+        Debug.Log($"[Skill] FireEffects: {skill.Name} / {skill.Effects?.Length ?? 0}개");
         if (skill.Effects == null || skill.Effects.Length == 0) return;
 
         GameObject target = null;
-
         if (skill.NeedsTarget)
         {
             target = FindTarget(skill);
@@ -371,7 +417,6 @@ public class AbilityRuntime : NetworkBehaviour
             Execute(e, target);
     }
 
-    /// <summary>스킬 조준 대상 찾기 (공격 판정과 동일 방식)</summary>
     public GameObject FindTarget(AbilityData.SkillDef skill)
     {
         if (cameraRoot == null) return null;
@@ -412,12 +457,12 @@ public class AbilityRuntime : NetworkBehaviour
 
     // ══════════════════ 트리거 ══════════════════
 
-    public void FireTrigger(TriggerType trigger, GameObject other = null)
+    public void FireTrigger(TriggerType trigger, GameObject other = null,
+                            AbilityData.SkillDef exclude = null)
     {
         if (!HasStateAuthority) return;
         if (IsSealed && trigger != TriggerType.OnHitTaken) return;
 
-        // 데이터 기반 효과
         foreach (var ability in _active)
         {
             if (ability.Passives != null)
@@ -432,38 +477,15 @@ public class AbilityRuntime : NetworkBehaviour
                 foreach (var s in ability.Skills)
                 {
                     if (s.Effects == null) continue;
+                    if (s == exclude) continue;   // 방금 쓴 스킬은 제외 (중복 방지)
+
                     foreach (var e in s.Effects)
                         if (e.Trigger == trigger) Execute(e, other);
                 }
         }
 
-        // 전용 로직
         for (int i = 0; i < _behaviours.Count; i++)
             _behaviours[i].OnTrigger(trigger, other);
-    }
-
-
-    // ══════════════════ 자원 ══════════════════
-
-    public void AddCharge(float amount)
-    {
-        if (!HasStateAuthority) return;
-        Charge = Mathf.Clamp(Charge + amount, 0f, MaxCharge);
-    }
-
-    public bool SpendCharge(float amount)
-    {
-        if (!HasStateAuthority) return false;
-        if (Charge < amount) return false;
-        Charge -= amount;
-        return true;
-    }
-
-    public void SetMaxCharge(float v)
-    {
-        if (!HasStateAuthority) return;
-        MaxCharge = Mathf.Max(1f, v);
-        Charge = Mathf.Min(Charge, MaxCharge);
     }
 
     // ══════════════════ 상태 / 대시 ══════════════════
@@ -508,7 +530,6 @@ public class AbilityRuntime : NetworkBehaviour
 
                     Vector3 dir = cameraRoot.forward;
 
-                    // 피치 제한
                     if (p.MaxPitch > 0f)
                     {
                         Vector3 flat = new Vector3(dir.x, 0f, dir.z);
@@ -528,17 +549,15 @@ public class AbilityRuntime : NetworkBehaviour
             case DashDirection.MoveInput:
                 {
                     if (_movement == null) return transform.forward;
-
                     Vector3 local = _movement.LocalMoveDir;
                     if (local.sqrMagnitude < 0.01f) return transform.forward;
-
                     return transform.TransformDirection(local).normalized;
                 }
 
             case DashDirection.Backward:
                 return -transform.forward;
 
-            default:   // Horizontal
+            default:
                 {
                     Vector3 f = transform.forward;
                     f.y = 0f;
@@ -547,7 +566,7 @@ public class AbilityRuntime : NetworkBehaviour
         }
     }
 
-    // ══════════════════ 쿨타임 조회 ══════════════════
+    // ══════════════════ 쿨타임 ══════════════════
 
     public float GetCooldownRemain(int slot)
     {
@@ -575,12 +594,32 @@ public class AbilityRuntime : NetworkBehaviour
     public AbilityData GetMainAbility() => database?.Get(MainAbilityId);
     public AbilityData GetSubAbility() => database?.Get(SubAbilityId);
 
+    // ══════════════════ 공격 대체 ══════════════════
+
+    public bool TryOverrideAttack(out AttackOverride ovr)
+    {
+        ovr = AttackOverride.None;
+        if (!HasStateAuthority) return false;
+
+        for (int i = 0; i < _behaviours.Count; i++)
+            if (_behaviours[i].TryOverrideAttack(out ovr))
+                return true;
+
+        return false;
+    }
+
     // ══════════════════ RPC ══════════════════
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ApplySeal(float seconds)
     {
         SealTimer = TickTimer.CreateFromSeconds(Runner, seconds);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_SetGhost(bool on)
+    {
+        gameObject.layer = on ? _ghostLayer : _normalLayer;
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -605,14 +644,21 @@ public class AbilityRuntime : NetworkBehaviour
 
     void Execute(AbilityData.EffectDef e, GameObject other)
     {
-        if (e.Chance < 1f && Random.value > e.Chance) return;
-        if (e.RequireStateId != 0 && !HasState(e.RequireStateId)) return;
-        if (e.ChargeCost > 0f && !SpendCharge(e.ChargeCost)) return;
+        if (e.Chance < 1f && Random.value > e.Chance)
+        { Debug.Log($"[Exec] {e.Effect} → 확률 실패 (Chance={e.Chance})"); return; }
+
+        if (e.RequireStateId != 0 && !HasState(e.RequireStateId))
+        { Debug.Log($"[Exec] {e.Effect} → 상태 조건 미충족"); return; }
+
+        if (e.ChargeCost > 0f && !SpendCharge(e.ChargeSlot, e.ChargeCost))
+        { Debug.Log($"[Exec] {e.Effect} → 게이지 부족"); return; }
 
         GameObject target = ResolveTarget(e.Target, other);
-        if (target == null && e.Target != TargetType.AreaAroundSelf) return;
+        if (target == null && e.Target != TargetType.AreaAroundSelf)
+        { Debug.Log($"[Exec] {e.Effect} → 대상 null (Target={e.Target})"); return; }
 
-        // 대상별 쿨타임
+        Debug.Log($"[Exec] {e.Effect} 실행 → {target.name}, val={e.GetValue()}");
+
         if (e.PerTargetCooldown > 0f && target != null)
         {
             int key = target.GetInstanceID();
@@ -650,7 +696,7 @@ public class AbilityRuntime : NetworkBehaviour
 
             case EffectType.AddCharge:
                 if (target.TryGetComponent<AbilityRuntime>(out var ac))
-                    ac.AddCharge(e.GetValue());
+                    ac.AddCharge(e.ChargeSlot, e.GetValue());
                 break;
 
             case EffectType.EnterState:
@@ -662,11 +708,12 @@ public class AbilityRuntime : NetworkBehaviour
                 {
                     Distance = e.GetValue(),
                     Duration = e.Duration > 0f ? e.Duration : 0.2f,
+                    Direction = DashDirection.Horizontal,
+                    MaxPitch = 45f,
                     PassThroughPlayers = false,
                     StopOnContact = true,
                 });
                 break;
-
 
             default:
                 Debug.Log($"[Ability] 미구현 효과: {e.Effect}");
@@ -703,19 +750,5 @@ public class AbilityRuntime : NetworkBehaviour
     {
         yield return new WaitForSeconds(t);
         if (st != null) st.RemoveBySource(src);
-    }
-
-    /// <summary>능력이 기본 공격을 대체하는지 확인. PlayerAttack이 호출</summary>
-    public bool TryOverrideAttack(out AttackOverride ovr)
-    {
-        ovr = AttackOverride.None;
-
-        if (!HasStateAuthority) return false;
-
-        for (int i = 0; i < _behaviours.Count; i++)
-            if (_behaviours[i].TryOverrideAttack(out ovr))
-                return true;
-
-        return false;
     }
 }

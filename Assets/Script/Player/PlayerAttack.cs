@@ -112,8 +112,6 @@ public class PlayerAttack : NetworkBehaviour
                 _dashStarted = true;
                 _ability.DoDash(_override.Dash);
 
-                if (fpsCamera != null)
-                    fpsCamera.FovKick(_current.CameraKickFov + 10f);
             }
 
             if (inWindow || _ability.IsDashing) SweepDashHit(_current);
@@ -196,7 +194,8 @@ public class PlayerAttack : NetworkBehaviour
         _attackTimer = 0f;
         _hitApplied = false;
 
-        if (fpsCamera != null) fpsCamera.FovKick(_current.CameraKickFov);
+        if (fpsCamera != null && !_isDashAttack)
+            fpsCamera.FovKick(_current.CameraKickFov);
 
         RPC_PlaySwing(_isDashAttack ? -1 : _comboIndex - 1);
     }

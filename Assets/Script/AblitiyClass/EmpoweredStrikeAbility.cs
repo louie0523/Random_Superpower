@@ -4,9 +4,15 @@
 public class EmpoweredStrikeAbility : AbilityBehaviour
 {
     [Header("게이지")]
+    [Range(0, 3)] public int ChargeSlot = 0;
     public float MaxCharge = 100f;
     public float ChargePerSecondMoving = 3f;
     public float ChargePerHit = 5f;
+
+    public float ChargeRatio => Ctx.GetChargeRatio(ChargeSlot);
+    public bool IsReady => Ctx.GetCharge(ChargeSlot) >= StrikeCost;
+
+
 
     [Header("일격")]
     public float StrikeCost = 100f;
@@ -35,15 +41,13 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     private int _speedSourceId;
 
     // ── 조회 ──
-    public float ChargeRatio => Ctx.MaxCharge <= 0f ? 0f : Ctx.Charge / Ctx.MaxCharge;
-    public bool IsReady => Ctx.Charge >= StrikeCost;
     public bool InMastery => Ctx.HasState(StateId);
 
     // ══════════════════ 생명주기 ══════════════════
 
     public override void OnEquip()
     {
-        Ctx.SetMaxCharge(MaxCharge);
+        Ctx.SetMaxCharge(ChargeSlot, MaxCharge);
         _moveAccum = 0f;
     }
 
@@ -55,12 +59,11 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     public override void Tick(float dt)
     {
         if (!Ctx.IsMoving) { _moveAccum = 0f; return; }
-
         _moveAccum += dt;
         if (_moveAccum >= 1f)
         {
             _moveAccum -= 1f;
-            Ctx.AddCharge(ChargePerSecondMoving);
+            Ctx.AddCharge(ChargeSlot, ChargePerSecondMoving);
         }
     }
 
@@ -69,31 +72,19 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     public override void OnTrigger(TriggerType t, GameObject other)
     {
         if (t != TriggerType.OnHit) return;
-
-        // 대가 상태면 즉시 만충
-        Ctx.AddCharge(InMastery ? MaxCharge : ChargePerHit);
+        Ctx.AddCharge(ChargeSlot, InMastery ? MaxCharge : ChargePerHit);
     }
 
     // ══════════════════ 스킬 ══════════════════
 
     public override bool OnSkillUsed(int slot, AbilityData.SkillDef skill)
     {
-        Debug.Log($"[Strike] OnSkillUsed slot={slot}");
-
-        if (slot == (int)SkillSlot.Skill1)
-        {
-            Ctx.AddCharge(BreathCharge);
-            Debug.Log($"[Strike] 숨고르기 → {Ctx.Charge}");
-            return true;
-        }
-
         if (slot == (int)SkillSlot.Ultimate)
         {
             Ctx.EnterState(StateId, MasteryDuration);
             return true;
         }
-
-        return false;
+        return false;   // 숨고르기는 데이터가 처리
     }
 
     // ══════════════════ 기본 공격 대체 ══════════════════
@@ -103,8 +94,8 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     {
         ovr = AttackOverride.None;
 
-        if (Ctx.Charge < StrikeCost) return false;
-        if (!Ctx.SpendCharge(StrikeCost)) return false;
+        if (Ctx.GetCharge(ChargeSlot) < StrikeCost) return false;
+        if (!Ctx.SpendCharge(ChargeSlot, StrikeCost)) return false;
 
         ovr.Step = StrikeMotion != null ? StrikeMotion.Step : null;
         ovr.DamageMul = StrikeDamageMul;

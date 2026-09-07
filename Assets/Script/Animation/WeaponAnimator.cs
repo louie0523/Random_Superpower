@@ -88,11 +88,7 @@ public class WeaponAnimator : MonoBehaviour
             return;
         }
 
-        float p = _t / _step.TotalTime;
-        var pose = _step.Motion.Evaluate(p, armRig.IdlePose);
-        //Debug.Log($"[Swing] p={p:F2} keys={_step.Motion.Keys?.Count} pos={pose.RightPos}");
-
-        armRig.ApplySwing(_step.Motion, p);
+        armRig.ApplySwing(_step.Motion, _t / _step.TotalTime);
     }
 
     // ── 스웨이 / 바빙 (ArmRoot 전체) ──

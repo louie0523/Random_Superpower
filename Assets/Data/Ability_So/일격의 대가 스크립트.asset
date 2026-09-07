@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cda0fcb9866151644925cacb534aa79c, type: 3}
   m_Name: "\uC77C\uACA9\uC758 \uB300\uAC00 \uC2A4\uD06C\uB9BD\uD2B8"
   m_EditorClassIdentifier: Assembly-CSharp::EmpoweredStrikeAbility
+  ChargeSlot: 0
   MaxCharge: 100
   ChargePerSecondMoving: 3
   ChargePerHit: 5
@@ -19,7 +20,7 @@ MonoBehaviour:
   StrikeDamageMul: 4
   StrikeMotion: {fileID: 11400000, guid: 296a740b51561ad4db6fc3c9fc27859f, type: 2}
   Dash:
-    Distance: 8
+    Distance: 15
     Duration: 0.2
     Direction: 1
     MaxPitch: 0

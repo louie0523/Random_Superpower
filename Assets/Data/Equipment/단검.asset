@@ -27,8 +27,8 @@ MonoBehaviour:
   PositionOffset: {x: 0, y: 0, z: 0}
   RotationOffset: {x: 0, y: 0, z: 0}
   ScaleOverride: {x: 1, y: 1, z: 1}
-  FpPositionOffset: {x: 0.006, y: 0.665, z: 0.303}
-  FpRotationOffset: {x: 289.15997, y: 0, z: 271.95}
+  FpPositionOffset: {x: 0.007, y: 0.688, z: 0.025}
+  FpRotationOffset: {x: 274.73218, y: 354.08817, z: 277.78012}
   HitMode: 0
   Range: 3
   HitAngle: 100
@@ -59,8 +59,8 @@ MonoBehaviour:
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}
@@ -96,8 +96,8 @@ MonoBehaviour:
           RightRot: {x: -35, y: 42, z: -45}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}
@@ -133,8 +133,8 @@ MonoBehaviour:
           RightRot: {x: 28, y: -42, z: 42}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}
@@ -170,8 +170,8 @@ MonoBehaviour:
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}
@@ -232,8 +232,8 @@ MonoBehaviour:
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}
@@ -269,8 +269,8 @@ MonoBehaviour:
           RightRot: {x: -75, y: 0, z: -8}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}
@@ -306,8 +306,8 @@ MonoBehaviour:
           RightRot: {x: 62, y: 0, z: 4}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}
@@ -343,8 +343,8 @@ MonoBehaviour:
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
           LeftFollowsWeapon: 0
-          LeftPos: {x: -0.86, y: -0.7, z: 1.28}
-          LeftRot: {x: 0, y: 0, z: 0}
+          LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
+          LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
           CamPos: {x: 0, y: 0, z: 0}

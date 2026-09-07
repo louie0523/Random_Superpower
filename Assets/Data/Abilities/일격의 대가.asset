@@ -46,6 +46,8 @@ MonoBehaviour:
       Effect: 0
       Target: 0
       RequireStateId: 0
+      ChargeSlot: 0
+      CostChargeSlot: 0
       ChargeCost: 0
       Values:
       - 1
@@ -66,39 +68,45 @@ MonoBehaviour:
     Cooldown: 1
     SoulCost: 0
     UltimateChargeCost: 0
-    Motion:
-      Name: "1\uD0C0"
-      Duration: 0.55
-      HitStart: 0.27
-      HitEnd: 0.45
-      CancelPoint: 0.75
-      ComboResetTime: 0.8
-      OverrideHitShape: 0
-      HitMode: 0
-      Range: 3
-      HitAngle: 120
-      HitHeight: 1.2
-      MinRange: 0
-      DamageMultiplier: 1
-      RangeMultiplier: 1
-      RadiusMultiplier: 1
-      MaxTargets: 1
-      Motion:
-        Keys: []
-        Amplitude: 1
-      HitStopDuration: 0.05
-      CameraKickFov: 4
-      CameraShake: 0.3
-      LungeDistance: 0
-      SwingSound: {fileID: 0}
-      TrailPrefab: {fileID: 0}
+    MotionData: {fileID: 11400000, guid: 599f48ac1ff19fa45bba8d11924c6ff7, type: 2}
+    EffectTiming: 1
     NeedsTarget: 0
     HitMode: 0
     Range: 6
     HitAngle: 60
     HitHeight: 1.5
     MaxTargets: 1
-    Effects: []
+    Effects:
+    - Trigger: 1
+      Effect: 10
+      Target: 0
+      RequireStateId: 0
+      ChargeSlot: 0
+      CostChargeSlot: 0
+      ChargeCost: 0
+      Values:
+      - 50
+      Duration: 0
+      Chance: 1
+      Stat: 0
+      ModType: 0
+      PerTargetCooldown: 0
+      Interval: 0
+    - Trigger: 1
+      Effect: 0
+      Target: 0
+      RequireStateId: 0
+      ChargeSlot: 0
+      CostChargeSlot: 0
+      ChargeCost: 0
+      Values:
+      - 2
+      Duration: 1.5
+      Chance: 1
+      Stat: 3
+      ModType: 0
+      PerTargetCooldown: 0
+      Interval: 0
   - Name: "\uC77C\uACA9\uC758 \uB300\uAC00"
     Icon: {fileID: 0}
     Description: "\uC0AC\uC6A9\uC2DC 8\uCD08\uAC04 '\uC77C\uACA9\uC758 \uB300\uAC00'
@@ -113,32 +121,8 @@ MonoBehaviour:
     Cooldown: 12
     SoulCost: 0
     UltimateChargeCost: 0
-    Motion:
-      Name: "1\uD0C0"
-      Duration: 0.55
-      HitStart: 0.27
-      HitEnd: 0.45
-      CancelPoint: 0.75
-      ComboResetTime: 0.8
-      OverrideHitShape: 0
-      HitMode: 0
-      Range: 3
-      HitAngle: 120
-      HitHeight: 1.2
-      MinRange: 0
-      DamageMultiplier: 1
-      RangeMultiplier: 1
-      RadiusMultiplier: 1
-      MaxTargets: 1
-      Motion:
-        Keys: []
-        Amplitude: 1
-      HitStopDuration: 0.05
-      CameraKickFov: 4
-      CameraShake: 0.3
-      LungeDistance: 0
-      SwingSound: {fileID: 0}
-      TrailPrefab: {fileID: 0}
+    MotionData: {fileID: 0}
+    EffectTiming: 0
     NeedsTarget: 0
     HitMode: 0
     Range: 6
@@ -147,3 +131,4 @@ MonoBehaviour:
     MaxTargets: 1
     Effects: []
   Behaviour: {fileID: 11400000, guid: 56eb6fad4c598474980a69fef924bb53, type: 2}
+  Charges: []

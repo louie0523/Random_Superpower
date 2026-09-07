@@ -25,6 +25,18 @@ public class AbilityData : ScriptableObject
     [Tooltip("전용 로직이 필요한 능력만. 단순 능력은 비워두세요")]
     public AbilityBehaviour Behaviour;
 
+    [System.Serializable]
+    public struct ChargeInfo
+    {
+        [Range(0, 3)] public int Slot;
+        public string DisplayName;
+        public Color BarColor;
+        public float Max;
+    }
+
+    [Header("게이지")]
+    public ChargeInfo[] Charges;
+
     // ─────────────────────────────
 
     [System.Serializable]
@@ -40,8 +52,15 @@ public class AbilityData : ScriptableObject
         public EffectDef[] Effects;
     }
 
+    public enum SkillEffectTiming
+    {
+        OnHitFrame,     // 판정 시점 (공격형)
+        OnCastEnd,      // 모션 종료 후 (버프형)
+        Immediate,      // 즉시 (모션과 무관)
+    }
+
     [System.Serializable]
-    public class SkillDef
+    public class SkillDef   
     {
         public string Name;
         public Sprite Icon;
@@ -74,8 +93,15 @@ public class AbilityData : ScriptableObject
         public int UltimateChargeCost = 0;
 
         [Header("Motion")]
-        [Tooltip("스킬 시전 모션. 비우면 즉시 발동")]
-        public ComboStep Motion = new();
+        [Tooltip("시전 모션. 비우면 즉시 발동")]
+        public AbilityMotionData MotionData;
+
+        public ComboStep Motion => MotionData?.Step;
+
+        [Header("Timing")]
+        public SkillEffectTiming EffectTiming = SkillEffectTiming.OnHitFrame;
+
+
 
         [Header("Hit")]
         [Tooltip("적중 판정이 필요한 스킬인가 (버프류는 false)")]
@@ -100,7 +126,12 @@ public class AbilityData : ScriptableObject
         [Tooltip("이 상태일 때만 발동 (0 = 조건 없음)")]
         public int RequireStateId = 0;
 
-        [Tooltip("게이지 소모량 (0 = 없음)")]
+        [Header("Charge 전용")]
+        [Tooltip("게이지 슬롯 번호 (0~3)")]
+        [Range(0, 3)] public int ChargeSlot = 0;
+
+        [Tooltip("소모할 게이지 슬롯")]
+        [Range(0, 3)] public int CostChargeSlot = 0;
         public float ChargeCost = 0f;
 
         [Header("Values")]
