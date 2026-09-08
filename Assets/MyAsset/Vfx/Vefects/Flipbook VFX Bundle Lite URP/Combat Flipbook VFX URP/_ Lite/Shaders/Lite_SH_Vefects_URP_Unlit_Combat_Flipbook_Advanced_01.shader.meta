@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b038bf2280257d242a56937f63fefb02
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 395420
+  packageName: Free - URP Flipbook VFX Bundle Lite
+  packageVersion: 1.0.1
+  assetPath: Assets/Vefects/Flipbook VFX Bundle Lite URP/Combat Flipbook VFX URP/_
+    Lite/Shaders/Lite_SH_Vefects_URP_Unlit_Combat_Flipbook_Advanced_01.shader
+  uploadId: 961254

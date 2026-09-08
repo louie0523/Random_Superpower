@@ -50,7 +50,7 @@ MonoBehaviour:
       CostChargeSlot: 0
       ChargeCost: 0
       Values:
-      - 1
+      - 10
       Duration: 0
       Chance: 1
       Stat: 3
@@ -110,10 +110,12 @@ MonoBehaviour:
   - Name: "\uC77C\uACA9\uC758 \uB300\uAC00"
     Icon: {fileID: 0}
     Description: "\uC0AC\uC6A9\uC2DC 8\uCD08\uAC04 '\uC77C\uACA9\uC758 \uB300\uAC00'
-      \uC0C1\uD0DC\uAC00 \uB429\uB2C8\uB2E4.\n'\uC77C\uACA9\uC758 \uB300\uAC00' \uC0C1\uD0DC\uC911
-      '\uC77C\uACA9' \uC801\uC911\uC2DC \uC989\uC2DC '\uC77C\uACA9' \uAC8C\uC774\uC9C0\uAC00
-      100%\uAC00 \uCC39\uB2C8\uB2E4.\n\uC9C0\uC18D \uC2DC\uAC04 \uB3C4\uC911 \uC774\uB3D9
-      \uC18D\uB3C4\uAC00 2 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+      \uC0C1\uD0DC\uAC00 \uB429\uB2C8\uB2E4.\n\uC774\uB3D9 \uBC0F \uAE30\uBCF8\uACF5\uACA9
+      \uC801\uC911\uC73C\uB85C \uD68D\uB4DD\uD558\uB294 '\uC77C\uACA9' \uAC8C\uC774\uC9C0
+      \uD68D\uB4DD\uB7C9\uC774 300%\uAC00 \uB429\uB2C8\uB2E4.\n'\uC77C\uACA9\uC758
+      \uB300\uAC00' \uC0C1\uD0DC\uC911 '\uC77C\uACA9' \uC801\uC911\uC2DC \uC989\uC2DC
+      '\uC77C\uACA9' \uAC8C\uC774\uC9C0\uAC00 100%\uAC00 \uCC39\uB2C8\uB2E4.\n\uC9C0\uC18D
+      \uC2DC\uAC04 \uB3C4\uC911 \uC774\uB3D9 \uC18D\uB3C4\uAC00 2 \uC99D\uAC00\uD569\uB2C8\uB2E4."
     DetailedInfo: 
     Tip: 
     DevNote: 
@@ -121,14 +123,29 @@ MonoBehaviour:
     Cooldown: 12
     SoulCost: 0
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
-    EffectTiming: 0
+    MotionData: {fileID: 11400000, guid: 599f48ac1ff19fa45bba8d11924c6ff7, type: 2}
+    EffectTiming: 1
     NeedsTarget: 0
     HitMode: 0
     Range: 6
     HitAngle: 60
     HitHeight: 1.5
     MaxTargets: 1
-    Effects: []
+    Effects:
+    - Trigger: 1
+      Effect: 10
+      Target: 0
+      RequireStateId: 0
+      ChargeSlot: 0
+      CostChargeSlot: 0
+      ChargeCost: 0
+      Values:
+      - 100
+      Duration: 0
+      Chance: 1
+      Stat: 0
+      ModType: 0
+      PerTargetCooldown: 0
+      Interval: 0
   Behaviour: {fileID: 11400000, guid: 56eb6fad4c598474980a69fef924bb53, type: 2}
   Charges: []

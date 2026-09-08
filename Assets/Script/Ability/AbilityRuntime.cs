@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Fusion;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using static AbilityData;
 
@@ -59,6 +60,7 @@ public class AbilityRuntime : NetworkBehaviour
     private PlayerSkillInput _input;
     private PlayerMovement _movement;
     private CharacterController _cc;
+    private MotionEventPlayer _events;
 
     private readonly List<AbilityData> _active = new();
     private readonly List<AbilityBehaviour> _behaviours = new();
@@ -150,6 +152,7 @@ public class AbilityRuntime : NetworkBehaviour
         _input = GetComponent<PlayerSkillInput>();
         _movement = GetComponent<PlayerMovement>();
         _cc = GetComponent<CharacterController>();
+        _events = GetComponent<MotionEventPlayer>();
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
@@ -458,30 +461,22 @@ public class AbilityRuntime : NetworkBehaviour
     // ══════════════════ 트리거 ══════════════════
 
     public void FireTrigger(TriggerType trigger, GameObject other = null,
-                            AbilityData.SkillDef exclude = null)
+                         AbilityData.SkillDef exclude = null)
     {
         if (!HasStateAuthority) return;
         if (IsSealed && trigger != TriggerType.OnHitTaken) return;
 
+        // 패시브만 트리거에 반응
         foreach (var ability in _active)
         {
-            if (ability.Passives != null)
-                foreach (var p in ability.Passives)
-                {
-                    if (p.Effects == null) continue;
-                    foreach (var e in p.Effects)
-                        if (e.Trigger == trigger) Execute(e, other);
-                }
+            if (ability.Passives == null) continue;
 
-            if (ability.Skills != null)
-                foreach (var s in ability.Skills)
-                {
-                    if (s.Effects == null) continue;
-                    if (s == exclude) continue;   // 방금 쓴 스킬은 제외 (중복 방지)
-
-                    foreach (var e in s.Effects)
-                        if (e.Trigger == trigger) Execute(e, other);
-                }
+            foreach (var p in ability.Passives)
+            {
+                if (p.Effects == null) continue;
+                foreach (var e in p.Effects)
+                    if (e.Trigger == trigger) Execute(e, other);
+            }
         }
 
         for (int i = 0; i < _behaviours.Count; i++)
@@ -626,8 +621,11 @@ public class AbilityRuntime : NetworkBehaviour
     void RPC_PlaySkillMotion(int slotIndex)
     {
         var skill = GetSlot(slotIndex);
-        if (skill?.Motion == null) return;
-        weaponAnim?.Play(skill.Motion);
+        var step = skill?.Motion;
+        if (step == null) return;
+
+        weaponAnim?.Play(step);
+        _events?.Play(step, HasStateAuthority);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

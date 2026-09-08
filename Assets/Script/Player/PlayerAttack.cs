@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Fusion;
 using Unity.Entities.UniversalDelegates;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlayerAttack : NetworkBehaviour
@@ -22,6 +23,7 @@ public class PlayerAttack : NetworkBehaviour
     private AbilityRuntime _ability;
     private PlayerAnimator _anim;
     private CharacterController _cc;
+    private MotionEventPlayer _events;
 
     // 콤보 상태
     private int _comboIndex;
@@ -50,6 +52,7 @@ public class PlayerAttack : NetworkBehaviour
         _ability = GetComponent<AbilityRuntime>();
         _anim = GetComponent<PlayerAnimator>();
         _cc = GetComponent<CharacterController>();
+        _events = GetComponent<MotionEventPlayer>();
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
@@ -312,22 +315,24 @@ public class PlayerAttack : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     void RPC_PlaySwing(int comboIndex)
     {
-        var weapon = _equip != null ? _equip.GetWeapon() : null;
-        if (weapon == null) return;
-
-        var step = weapon.GetStep(comboIndex);
-        if (step == null) return;
+        ComboStep step;
 
         if (comboIndex < 0)
         {
-            var b = _ability?.FindAbility<EmpoweredStrikeAbility>();
+            // 능력 대체 공격 (일격 등)
+            var b = _ability != null ? _ability.FindAbility<EmpoweredStrikeAbility>() : null;
             step = b?.GetStrikeStep();
         }
+        else
+        {
+            var weapon = _equip != null ? _equip.GetWeapon() : null;
+            step = weapon?.GetStep(comboIndex);
+        }
+
+        if (step == null) return;
 
         weaponAnim?.Play(step);
-
-        if (step.SwingSound != null)
-            AudioSource.PlayClipAtPoint(step.SwingSound, transform.position, 0.7f);
+        _events?.Play(step, HasStateAuthority);
     }
 
     void SweepDashHit(ComboStep step)

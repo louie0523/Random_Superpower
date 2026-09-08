@@ -454,6 +454,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicSpawner
   playerPrefab: {fileID: 1933714763159700364, guid: 2e88d1791f21fe64c9c1d3b2386535b9, type: 3}
+  spawnDummyKey: 286
+  dummySpawnDistance: 5
 --- !u!114 &1401543695
 MonoBehaviour:
   m_ObjectHideFlags: 0

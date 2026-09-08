@@ -39,6 +39,8 @@ public class WeaponSetupWindow : EditorWindow
 
     private EquipmentData _previewWeaponOverride;
 
+    private int _selectedEvent = -1;
+
     [MenuItem("Tools/Motion Setup")]
     static void Open()
     {
@@ -73,6 +75,8 @@ public class WeaponSetupWindow : EditorWindow
     Object TargetAsset => _target;
 
     // ══════════════════ GUI ══════════════════
+
+
 
     void OnGUI()
     {
@@ -185,6 +189,7 @@ public class WeaponSetupWindow : EditorWindow
         _selectedKey = -1;
         _playT = 0f;
         _playing = false;
+        _selectedEvent = -1;
 
         SpawnWeapon();
     }
@@ -297,6 +302,7 @@ public class WeaponSetupWindow : EditorWindow
                 {
                     _comboIndex = i;
                     _selectedKey = -1;
+                    _selectedEvent = -1;
                     _playT = 0f;
                     _playing = false;
                     RefreshPreview();
@@ -350,6 +356,9 @@ public class WeaponSetupWindow : EditorWindow
 
         EditorGUILayout.Space(6);
         DrawKeyList(step);
+
+        EditorGUILayout.Space(6);
+        DrawEventList(step);
     }
 
     bool IsTwoHand() => _weapon != null && _weapon.Grip == GripType.TwoHand;
@@ -573,6 +582,14 @@ public class WeaponSetupWindow : EditorWindow
                 float kx = r.x + r.width * Mathf.Clamp01(k.Time);
                 EditorGUI.DrawRect(new Rect(kx - 1, r.y + r.height - 6, 2, 6),
                     new Color(1f, 1f, 1f, 0.7f));
+            }
+
+        if (step.Events != null)
+            foreach (var ev in step.Events)
+            {
+                float ex = r.x + r.width * Mathf.Clamp01(ev.Time);
+                EditorGUI.DrawRect(new Rect(ex - 1, r.y, 2, 7),
+                    new Color(0.3f, 1f, 0.9f, 0.95f));
             }
 
         float p = Mathf.Clamp01(_playT / Mathf.Max(0.01f, step.Duration));
@@ -1137,10 +1154,6 @@ public class WeaponSetupWindow : EditorWindow
     {
         if (Application.isPlaying)
         {
-            EditorGUILayout.HelpBox(
-                "플레이 모드에서는 모션을 편집할 수 없습니다.\n" +
-                "Play를 중지한 뒤 사용하세요.",
-                MessageType.Warning);
             return;
         }
 
@@ -1191,10 +1204,6 @@ public class WeaponSetupWindow : EditorWindow
     {
         if (Application.isPlaying)
         {
-            EditorGUILayout.HelpBox(
-                "플레이 모드에서는 모션을 편집할 수 없습니다.\n" +
-                "Play를 중지한 뒤 사용하세요.",
-                MessageType.Warning);
             return;
         }
 
@@ -1330,5 +1339,110 @@ public class WeaponSetupWindow : EditorWindow
 
         GUILayout.EndArea();
         Handles.EndGUI();
+    }
+
+    void DrawEventList(ComboStep step)
+    {
+        step.Events ??= new MotionEvent[0];
+
+        EditorGUILayout.LabelField($"이벤트 ({step.Events.Length})", EditorStyles.boldLabel);
+
+        for (int i = 0; i < step.Events.Length; i++)
+        {
+            var ev = step.Events[i];
+            bool sel = _selectedEvent == i;
+
+            EditorGUILayout.BeginHorizontal();
+
+            bool ns = GUILayout.Toggle(sel, EventIcon(ev.Type),
+                EditorStyles.miniButtonLeft, GUILayout.Width(30));
+            if (ns != sel) _selectedEvent = ns ? i : -1;
+
+            EditorGUI.BeginChangeCheck();
+            ev.Time = EditorGUILayout.Slider(ev.Time, 0f, 1f);
+            if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(TargetAsset);
+
+            GUILayout.Label($"{ev.Time * step.Duration:F2}s",
+                EditorStyles.miniLabel, GUILayout.Width(42));
+
+            if (GUILayout.Button("−", EditorStyles.miniButtonRight, GUILayout.Width(22)))
+            {
+                Undo.RecordObject(TargetAsset, "Delete Event");
+                var list = new List<MotionEvent>(step.Events);
+                list.RemoveAt(i);
+                step.Events = list.ToArray();
+                EditorUtility.SetDirty(TargetAsset);
+                _selectedEvent = -1;
+                EditorGUILayout.EndHorizontal();
+                break;
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            if (_selectedEvent == i) DrawEventDetail(ev);
+        }
+
+        if (GUILayout.Button("+ 이벤트 추가"))
+        {
+            Undo.RecordObject(TargetAsset, "Add Event");
+            var list = new List<MotionEvent>(step.Events);
+            list.Add(new MotionEvent { Time = Mathf.Clamp01(_playT / Mathf.Max(0.01f, step.Duration)) });
+            step.Events = list.ToArray();
+            EditorUtility.SetDirty(TargetAsset);
+            _selectedEvent = list.Count - 1;
+        }
+    }
+
+    string EventIcon(MotionEventType t) => t switch
+    {
+        MotionEventType.Sound => "♪",
+        MotionEventType.Effect => "✦",
+        MotionEventType.TrailStart => "▶",
+        MotionEventType.TrailEnd => "■",
+        MotionEventType.CameraShake => "≈",
+        _ => "◆",
+    };
+
+    void DrawEventDetail(MotionEvent ev)
+    {
+        EditorGUI.indentLevel++;
+        EditorGUI.BeginChangeCheck();
+
+        ev.Type = (MotionEventType)EditorGUILayout.EnumPopup("종류", ev.Type);
+
+        switch (ev.Type)
+        {
+            case MotionEventType.Sound:
+                ev.Clip = (AudioClip)EditorGUILayout.ObjectField("사운드", ev.Clip, typeof(AudioClip), false);
+                ev.Volume = EditorGUILayout.Slider("볼륨", ev.Volume, 0f, 1f);
+                ev.Pitch = EditorGUILayout.Slider("피치", ev.Pitch, 0.5f, 1.5f);
+                break;
+
+            case MotionEventType.Effect:
+                ev.Prefab = (GameObject)EditorGUILayout.ObjectField("프리팹", ev.Prefab, typeof(GameObject), false);
+                ev.Space = (EventSpace)EditorGUILayout.EnumPopup("기준", ev.Space);
+                ev.PositionOffset = EditorGUILayout.Vector3Field("위치", ev.PositionOffset);
+                ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
+                ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
+                ev.Lifetime = EditorGUILayout.FloatField("수명 (초)", ev.Lifetime);
+                break;
+
+            case MotionEventType.CameraShake:
+                ev.ShakeAmount = EditorGUILayout.FloatField("강도", ev.ShakeAmount);
+                break;
+
+            case MotionEventType.Custom:
+                ev.Key = EditorGUILayout.TextField("키", ev.Key);
+                break;
+        }
+
+        EditorGUILayout.BeginHorizontal();
+        ev.ShowFirstPerson = EditorGUILayout.Toggle("1인칭", ev.ShowFirstPerson);
+        ev.ShowThirdPerson = EditorGUILayout.Toggle("3인칭", ev.ShowThirdPerson);
+        EditorGUILayout.EndHorizontal();
+
+        if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(TargetAsset);
+
+        EditorGUI.indentLevel--;
     }
 }

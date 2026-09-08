@@ -299,5 +299,21 @@ MonoBehaviour:
     LungeDistance: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
+    Events:
+    - Time: 0
+      Type: 1
+      Clip: {fileID: 0}
+      Volume: 0.8
+      Pitch: 1
+      Prefab: {fileID: 0}
+      Space: 1
+      PositionOffset: {x: 0, y: 0, z: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      Scale: 1
+      Lifetime: 2
+      ShakeAmount: 0.3
+      Key: 
+      ShowFirstPerson: 1
+      ShowThirdPerson: 1
   CameraRoll: 0
   PreviewWeaponData: {fileID: 0}

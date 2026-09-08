@@ -53,6 +53,9 @@ public class ComboStep
     public AudioClip SwingSound;
     public GameObject TrailPrefab;
 
+    [Header("Events")]
+    public MotionEvent[] Events;
+
     public float TotalTime => Duration;
     public float WindUp => Duration * HitStart;
     public float ActiveWindow => Duration * (HitEnd - HitStart);

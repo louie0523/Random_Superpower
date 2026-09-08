@@ -17,6 +17,9 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private FPSCamera fpsCamera;
     [SerializeField] private GameObject[] hideOnLocal; // 내 몸통 메시
 
+    [Header("Debug")]
+    public bool IsDummy = false;
+
     private CharacterController _cc;
     private float _verticalVel;
     private bool _wasGrounded = true;
@@ -32,6 +35,8 @@ public class PlayerMovement : NetworkBehaviour
     public bool IsMoving => _speed01 > 0.1f;
     public Vector3 LocalMoveDir => _localMoveDir;
     private AbilityRuntime _ability;
+    private Vector3 _smoothMoveDir;
+    public Vector3 SmoothMoveDir => _smoothMoveDir;
 
 
     public override void Spawned()
@@ -113,15 +118,16 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (HasStateAuthority)
         {
-            fpsCamera.Tick(_localMoveDir, _currentSpeed, _speed01);
-            weaponAnim?.Tick(_localMoveDir, _speed01);
+            _smoothMoveDir = Vector3.Lerp(_smoothMoveDir, _localMoveDir,
+                                          Time.deltaTime * 8f);
+
+            fpsCamera.Tick(_smoothMoveDir, _currentSpeed, _speed01);
+            weaponAnim?.Tick(_smoothMoveDir, _speed01);
         }
         else
         {
-            // 남의 무기도 스윙은 재생
             weaponAnim?.TickRemote();
         }
-
     }
 
 
