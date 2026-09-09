@@ -12,6 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2aa3eceb991af64a83878c34931423c, type: 3}
   m_Name: Ability Database
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDatabase
-  searchFolder: Assets/Data/Abilities
+  mainFolder: Assets/Data/Abilities/Main
+  subFolder: Assets/Data/Abilities/Sub
+  randomFolder: Assets/Data/Abilities/Rand
+  MainAbilities:
+  - {fileID: 11400000, guid: 821dcd2550639484baa4403a59e9fba3, type: 2}
+  - {fileID: 11400000, guid: b5c6b443df31b8847baa2782e5c236a3, type: 2}
+  SubAbilities: []
+  RandomAbilities:
+  - {fileID: 11400000, guid: 9f7ca8a8bcde5e64681b3d2dd3b5c2b7, type: 2}
+  - {fileID: 11400000, guid: bcd93379c888fbe43ba481d9cc12ffa3, type: 2}
+  - {fileID: 11400000, guid: 661866e4924313d48811d410bea82e38, type: 2}
   All:
   - {fileID: 11400000, guid: 821dcd2550639484baa4403a59e9fba3, type: 2}
+  - {fileID: 11400000, guid: b5c6b443df31b8847baa2782e5c236a3, type: 2}
+  - {fileID: 11400000, guid: 9f7ca8a8bcde5e64681b3d2dd3b5c2b7, type: 2}
+  - {fileID: 11400000, guid: bcd93379c888fbe43ba481d9cc12ffa3, type: 2}
+  - {fileID: 11400000, guid: 661866e4924313d48811d410bea82e38, type: 2}

@@ -20,6 +20,7 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public int Id;
     public string DisplayName;
     public EquipSlot Slot;
+    public WeaponClass Class = WeaponClass.Melee;
     public Sprite Icon;
     [TextArea(2, 4)] public string Description;
 

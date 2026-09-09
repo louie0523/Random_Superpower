@@ -15,6 +15,23 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private float baseCooldownReduction = 0f;
     [SerializeField] private float baseLifeSteal = 0f;
 
+    [Header("Multiplier Stats (1.0 = 100%)")]
+    [SerializeField] private float baseDamageDealt = 1f;
+    [SerializeField] private float baseDamageTaken = 1f;
+    [SerializeField] private float baseMeleeDamage = 1f;
+    [SerializeField] private float baseRangedDamage = 1f;
+    [SerializeField] private float baseSkillDamage = 1f;
+    [SerializeField] private float baseUltimateDamage = 1f;
+
+    /// <summary>배율 스탯 — Percent를 곱연산으로 처리</summary>
+    static bool IsMultiplierStat(StatType s) =>
+        s == StatType.DamageDealt ||
+        s == StatType.DamageTaken ||
+        s == StatType.MeleeDamage ||
+        s == StatType.RangedDamage ||
+        s == StatType.SkillDamage ||
+        s == StatType.UltimateDamage;
+
     private readonly List<StatModifier> _mods = new();
     private readonly Dictionary<StatType, float> _cache = new();
     private bool _dirty = true;
@@ -50,6 +67,12 @@ public class PlayerStats : NetworkBehaviour
         StatType.CritDamage => baseCritDamage,
         StatType.CooldownReduction => baseCooldownReduction,
         StatType.LifeSteal => baseLifeSteal,
+        StatType.DamageDealt => baseDamageDealt,
+        StatType.DamageTaken => baseDamageTaken,
+        StatType.MeleeDamage => baseMeleeDamage,
+        StatType.RangedDamage => baseRangedDamage,
+        StatType.SkillDamage => baseSkillDamage,
+        StatType.UltimateDamage => baseUltimateDamage,
         _ => 0f,
     };
 
@@ -88,27 +111,46 @@ public class PlayerStats : NetworkBehaviour
 
         foreach (StatType stat in System.Enum.GetValues(typeof(StatType)))
         {
-            float flat = 0f;
-            float percent = 0f;   // 0.25 = +25%
+            float result;
 
-            foreach (var m in _mods)
+            if (IsMultiplierStat(stat))
             {
-                if (m.Stat != stat) continue;
+                // 곱연산: 1.0 × (1+0.2) × (1+0.15) ...
+                float mult = GetBase(stat);
 
-                if (m.Type == ModType.Flat)
+                foreach (var m in _mods)
                 {
-                    flat += m.Value;
+                    if (m.Stat != stat) continue;
+
+                    if (m.Type == ModType.Flat)
+                        mult += m.Value;                 // 0.2 = +20%p
+                    else
+                        mult *= (1f + m.Value * 0.01f);  // 20 = ×1.2
                 }
-                else
-                {
-                    // 인스펙터/코드에는 25로 넣고, 여기서 0.25로 변환
-                    percent += m.Value * 0.01f;
-                }
+
+                result = Mathf.Max(0f, mult);
             }
+            else if (IsRatioStat(stat))
+            {
+                float flat = 0f;
+                foreach (var m in _mods)
+                    if (m.Stat == stat && m.Type == ModType.Flat) flat += m.Value;
 
-            float result = IsRatioStat(stat)
-                ? GetBase(stat) + flat                        // 비율 스탯은 Flat만
-                : (GetBase(stat) + flat) * (1f + percent);
+                result = GetBase(stat) + flat;
+            }
+            else
+            {
+                float flat = 0f, percent = 0f;
+
+                foreach (var m in _mods)
+                {
+                    if (m.Stat != stat) continue;
+                    if (m.Type == ModType.Flat) flat += m.Value;
+                    else percent += m.Value * 0.01f;
+                }
+
+                result = (GetBase(stat) + flat) * (1f + percent);
+            }
 
             _cache[stat] = Mathf.Max(0f, result);
         }

@@ -25,6 +25,23 @@ public class AbilityData : ScriptableObject
     [Tooltip("전용 로직이 필요한 능력만. 단순 능력은 비워두세요")]
     public AbilityBehaviour Behaviour;
 
+    [Header("배정 규칙")]
+    [Tooltip("한 게임에 동시에 존재 가능한 인원. 0이면 무제한")]
+    public int MaxConcurrent = 0;
+
+    [Tooltip("체크하면 랜덤 배정에서 제외 (진화 전용 등)")]
+    public bool ExcludeFromRoll = false;
+
+    [Tooltip("추첨 가중치. 클수록 자주 나옴")]
+    public float RollWeight = 1f;
+
+    [Header("진화")]
+    [Tooltip("이 능력으로 진화할 대상")]
+    public int EvolveToId = 0;
+
+    [Tooltip("진화 조건: 막타 횟수")]
+    public int EvolveKillCount = 0;
+
     [System.Serializable]
     public struct ChargeInfo
     {
@@ -135,10 +152,14 @@ public class AbilityData : ScriptableObject
         public float ChargeCost = 0f;
 
         [Header("Values")]
-        [Tooltip("주 수치. 레벨별로 여러 개 넣으면 랭크 구현")]
+        [Tooltip("배열에 추가시 랭크에 따라 수치 변경\n" +
+            "일반 스탯: Flat = 실수치(+25), Percent = 퍼센트(25 = +25%)\n" +
+         "배율 스탯(피해 계열): Flat = 합연산(25 = +25%p), Percent = 곱연산(25 = ×1.25)\n" +
+         "비율 스탯(치확/쿨감/흡혈): Flat만, 0~1 단위(0.1 = 10%)")]
         public float[] Values = new float[] { 0f };
         public float Duration = 0f;
-        [Range(0f, 1f)] public float Chance = 1f;
+        [Range(0f, 1f)] 
+        public float Chance = 1f;
 
         [Header("StatMod 전용")]
         public StatType Stat;
@@ -212,4 +233,31 @@ public class AbilityData : ScriptableObject
 
         return $"{shape}, 사거리 {s.Range:0.#}m, 최대 {s.MaxTargets}명";
     }
+
+#if UNITY_EDITOR
+    void OnValidate()
+    {
+        FixEffects(Passives);
+        FixEffects(Skills);
+    }
+
+    void FixEffects(PassiveDef[] arr)
+    {
+        if (arr == null) return;
+        foreach (var p in arr) FixChance(p?.Effects);
+    }
+
+    void FixEffects(SkillDef[] arr)
+    {
+        if (arr == null) return;
+        foreach (var s in arr) FixChance(s?.Effects);
+    }
+
+    static void FixChance(EffectDef[] effects)
+    {
+        if (effects == null) return;
+        foreach (var e in effects)
+            if (e != null && e.Chance <= 0f) e.Chance = 1f;
+    }
+#endif
 }

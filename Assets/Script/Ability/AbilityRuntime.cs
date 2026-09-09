@@ -21,6 +21,8 @@ public class AbilityRuntime : NetworkBehaviour
     [Header("Dash")]
     [SerializeField] private string ghostLayerName = "PlayerGhost";
 
+    [Networked] private int RandomAbilityKills { get; set; }
+
     // ══════════════════ 네트워크 상태 ══════════════════
 
     [Networked, OnChangedRender(nameof(OnAbilityChanged))]
@@ -70,6 +72,20 @@ public class AbilityRuntime : NetworkBehaviour
     [SerializeField] private float dashDecayTime = 0.15f;
     private float _dashDecayTimer;
 
+    private bool _castingIsUltimate;
+
+    private PlayerEquipment _equipment;
+    public PlayerEquipment Equipment => _equipment;
+
+
+    // ══════════════════ 능력 고유 효과 관련 ══════════════════
+
+    #region 능력 고유 효과
+    public LayerMask HitMask => hitMask;
+    public enum MoveLockMode { None, StrafeOnly, ForwardOnly }
+    public MoveLockMode MoveLock { get; set; } = MoveLockMode.None;
+
+    #endregion
 
     // ══════════════════ 공개 접근자 ══════════════════
 
@@ -153,6 +169,7 @@ public class AbilityRuntime : NetworkBehaviour
         _movement = GetComponent<PlayerMovement>();
         _cc = GetComponent<CharacterController>();
         _events = GetComponent<MotionEventPlayer>();
+        _equipment = GetComponent<PlayerEquipment>();
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
@@ -351,24 +368,26 @@ public class AbilityRuntime : NetworkBehaviour
 
     public bool TryUseSkill(int slotIndex)
     {
-    Debug.Log($"[Skill] TryUse slot={slotIndex}");
+        Debug.Log($"[Skill] TryUse slot={slotIndex}");
 
-    if (!HasStateAuthority) { Debug.Log("  → 권한 없음"); return false; }
-    if (IsSealed) { Debug.Log("  → 봉인"); return false; }
+        if (!HasStateAuthority) { Debug.Log("  → 권한 없음"); return false; }
+        if (IsSealed) { Debug.Log("  → 봉인"); return false; }
 
-    var skill = GetSlot(slotIndex);
-    if (skill == null) { Debug.Log("  → 슬롯 비어있음"); return false; }
+        var skill = GetSlot(slotIndex);
+        if (skill == null) { Debug.Log("  → 슬롯 비어있음"); return false; }
 
-    if (Runner.SimulationTime < CooldownEnd[slotIndex]) { Debug.Log("  → 쿨타임"); return false; }
-    if (_health.Soul < skill.SoulCost) { Debug.Log("  → 소울 부족"); return false; }
+        if (Runner.SimulationTime < CooldownEnd[slotIndex]) { Debug.Log("  → 쿨타임"); return false; }
+        if (_health.Soul < skill.SoulCost) { Debug.Log("  → 소울 부족"); return false; }
 
-    bool handled = false;
-    for (int i = 0; i < _behaviours.Count; i++)
-        if (_behaviours[i].OnSkillUsed(slotIndex, skill)) handled = true;
+        _castingIsUltimate = (slotIndex == (int)SkillSlot.Ultimate);
 
-    Debug.Log($"  → {skill.Name} handled={handled} " +
-              $"motion={(skill.Motion != null ? skill.Motion.Duration.ToString("F2") : "null")} " +
-              $"timing={skill.EffectTiming} effects={skill.Effects?.Length ?? 0}");
+        bool handled = false;
+        for (int i = 0; i < _behaviours.Count; i++)
+            if (_behaviours[i].OnSkillUsed(slotIndex, skill)) handled = true;
+
+        Debug.Log($"  → {skill.Name} handled={handled} " +
+                  $"motion={(skill.Motion != null ? skill.Motion.Duration.ToString("F2") : "null")} " +
+                  $"timing={skill.EffectTiming} effects={skill.Effects?.Length ?? 0}");
 
         float cdr = _stats.Get(StatType.CooldownReduction);
         float cd = skill.Cooldown * (1f - Mathf.Clamp01(cdr));
@@ -581,8 +600,20 @@ public class AbilityRuntime : NetworkBehaviour
     public void RerollRandomAbility()
     {
         if (!HasStateAuthority || database == null) return;
-        var next = database.RollRandom(RandomAbilityId);
+
+        var inUse = new List<int>();
+        foreach (var p in Runner.ActivePlayers)
+        {
+            var obj = Runner.GetPlayerObject(p);
+            if (obj == null) continue;
+            if (obj == Object) continue;   // 자기 자신 제외
+            if (obj.TryGetComponent<AbilityRuntime>(out var ar))
+                inUse.Add(ar.RandomAbilityId);
+        }
+
+        var next = database.RollRandom(RandomAbilityId, inUse);
         if (next != null) RandomAbilityId = next.Id;
+        RandomAbilityKills = 0;
     }
 
     public AbilityData GetRandomAbility() => database?.Get(RandomAbilityId);
@@ -672,10 +703,17 @@ public class AbilityRuntime : NetworkBehaviour
                 break;
 
             case EffectType.Damage:
-                if (target.TryGetComponent<PlayerHealth>(out var h))
-                    h.RPC_TakeDamage(Mathf.RoundToInt(e.GetValue()),
-                                     Object.InputAuthority, transform.position);
-                break;
+                {
+                    if (!target.TryGetComponent<PlayerHealth>(out var h)) break;
+
+                    var src = _castingIsUltimate ? DamageSource.Ultimate : DamageSource.Skill;
+                    float outgoing = DamageCalc.CalcOutgoing(
+                        _stats, e.GetValue(), src, true, out _);
+
+                    h.RPC_TakeDamage(DamageInfo.FromPlayerHit(
+                        Mathf.RoundToInt(outgoing), Object.InputAuthority, transform.position));
+                    break;
+                }
 
             case EffectType.Heal:
                 if (target.TryGetComponent<PlayerHealth>(out var hh))
@@ -748,5 +786,37 @@ public class AbilityRuntime : NetworkBehaviour
     {
         yield return new WaitForSeconds(t);
         if (st != null) st.RemoveBySource(src);
+    }
+
+    public void OnPlayerKill()
+    {
+        if (!HasStateAuthority) return;
+
+        RandomAbilityKills++;
+
+        var cur = database?.Get(RandomAbilityId);
+        if (cur == null || cur.EvolveToId == 0) return;
+        if (cur.EvolveKillCount <= 0) return;
+
+        if (RandomAbilityKills >= cur.EvolveKillCount)
+        {
+            RandomAbilityId = cur.EvolveToId;
+            RandomAbilityKills = 0;
+            RPC_OnEvolved(cur.EvolveToId);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_OnEvolved(int newId)
+    {
+        Debug.Log($"[Ability] 진화! → {database?.Get(newId)?.DisplayName}");
+        // 나중에 화면 연출
+    }
+
+    public void PlayEffectLocal(GameObject prefab, Vector3 pos)
+    {
+        if (prefab == null) return;
+        var go = Instantiate(prefab, pos, Quaternion.identity);
+        Destroy(go, 3f);
     }
 }

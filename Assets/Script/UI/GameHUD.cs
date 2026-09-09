@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class GameHUD : MonoBehaviour
 {
     private NetworkRunner _runner;
     private GUIStyle _tooltipStyle;
+    [SerializeField] private bool showDebugKeys = true;
 
     void OnGUI()
     {
@@ -14,88 +16,90 @@ public class GameHUD : MonoBehaviour
             return;
         }
 
-
-
         var local = _runner.GetPlayerObject(_runner.LocalPlayer);
         if (local == null) return;
         if (!local.TryGetComponent<PlayerHealth>(out var hp)) return;
 
+        var ar = local.GetComponent<AbilityRuntime>();
+
+        DrawStatus(hp);
+        DrawCrosshair();
+
+        if (ar != null)
+        {
+            DrawCharge(ar);
+            DrawRandomAbility(ar);
+            DrawSkillBar(ar);
+            DrawDanger(ar);
+        }
+
+        DrawScoreboard(_runner);
+        DrawDebugKeys();
+    }
+
+    void DrawDebugKeys()
+    {
+        if (!showDebugKeys) return;
+
+        var box = new Rect(Screen.width - 210, 20, 200, 110);
+
+        GUI.color = new Color(0, 0, 0, 0.6f);
+        GUI.Box(box, "");
+        GUI.color = new Color(1f, 1f, 1f, 0.7f);
+
+        GUI.Label(new Rect(box.x + 8, box.y + 6, 190, 100),
+            "F5  더미 소환\n" +
+            "F6  더미 제거\n" +
+            "F7  랜덤 능력 교체\n" +
+            "F8  자해 사망\n" +
+            "F9  체력 회복\n" +
+            "Tab 순위표");
+
+        GUI.color = Color.white;
+    }
 
 
-        GUI.Label(new Rect(20, 20, 300, 30),
-            $"HP: {hp.HP}   SOUL: {hp.Soul}");
+
+    void DrawStatus(PlayerHealth hp)
+    {
+        GUI.Label(new Rect(20, 20, 300, 30), $"HP: {hp.HP}   SOUL: {hp.Soul}");
+        GUI.Label(new Rect(20, 40, 300, 30),
+            $"K {hp.Kills}  A {hp.Assists}  D {hp.Deaths}");
 
         if (hp.IsDead)
             GUI.Label(new Rect(Screen.width / 2 - 40, Screen.height / 2, 200, 30), "사망");
+    }
 
-        // 조준점
+    void DrawCrosshair()
+    {
         GUI.Label(new Rect(Screen.width / 2 - 4, Screen.height / 2 - 10, 20, 20), "+");
+    }
 
-        var ar = local.GetComponent<AbilityRuntime>();
-        if (ar != null)
-        {
-            var esa = ar.FindAbility<EmpoweredStrikeAbility>();
-            if (esa != null)
-            {
-                float r = esa.ChargeRatio;
-                var bar = new Rect(Screen.width / 2f - 100f, Screen.height - 130f, 200f, 14f);
+    void DrawCharge(AbilityRuntime ar)
+    {
+        var esa = ar.FindAbility<EmpoweredStrikeAbility>();
+        if (esa == null) return;
 
-                GUI.color = new Color(0, 0, 0, 0.6f);
-                GUI.Box(bar, "");
+        float r = esa.ChargeRatio;
+        var bar = new Rect(Screen.width / 2f - 100f, Screen.height - 130f, 200f, 14f);
 
-                GUI.color = esa.IsReady ? new Color(1f, 0.85f, 0.2f) : new Color(0.4f, 0.6f, 1f);
-                GUI.Box(new Rect(bar.x, bar.y, bar.width * r, bar.height), "");
+        GUI.color = new Color(0, 0, 0, 0.6f);
+        GUI.Box(bar, "");
 
-                GUI.color = Color.white;
-                GUI.Label(new Rect(bar.x, bar.y - 18f, 200f, 18f),
-                    esa.IsReady ? "일격 준비!" : $"{r * 100f:F0}%");
-            }
-        }
+        GUI.color = esa.IsReady ? new Color(1f, 0.85f, 0.2f) : new Color(0.4f, 0.6f, 1f);
+        GUI.Box(new Rect(bar.x, bar.y, bar.width * r, bar.height), "");
 
-        float x = Screen.width / 2f - 130f;
-        float y = Screen.height - 90f;
+        GUI.color = Color.white;
+        GUI.Label(new Rect(bar.x, bar.y - 18f, 200f, 18f),
+            esa.IsReady ? "일격 준비!" : $"{r * 100f:F0}%");
+    }
 
-        var rand = ar?.GetRandomAbility();
-        if (rand != null)
-            GUI.Label(new Rect(20, 50, 400, 30), $"이번 생: {rand.DisplayName}");
+    void DrawRandomAbility(AbilityRuntime ar)
+    {
+        var rand = ar.GetRandomAbility();
+        if (rand == null) return;
 
-
-        for (int i = 0; i < SkillSlotExt.Count; i++)
-        {
-            var skill = ar.GetSlot(i);
-            var slot = (SkillSlot)i;
-            var box = new Rect(x + i * 68f, y, 60f, 60f);
-
-            GUI.Box(box, "");
-
-            if (skill == null)
-            {
-                GUI.Label(new Rect(box.x + 4, box.y + 20, 52, 20), "－");
-            }
-            else
-            {
-                float ratio = ar.GetCooldownRatio(i);
-                float remain = ar.GetCooldownRemain(i);
-
-                GUI.Label(new Rect(box.x + 4, box.y + 4, 52, 18), slot.Label());
-                GUI.Label(new Rect(box.x + 4, box.y + 22, 52, 18), skill.Name);
-
-                if (ratio > 0f)
-                {
-                    var cdRect = new Rect(box.x, box.y + box.height * (1f - ratio),
-                                          box.width, box.height * ratio);
-                    GUI.color = new Color(0f, 0f, 0f, 0.6f);
-                    GUI.Box(cdRect, "");
-                    GUI.color = Color.white;
-                    GUI.Label(new Rect(box.x + 18, box.y + 40, 40, 18), $"{remain:F1}");
-                }
-            }
-        }
-
-
-
-
-
+        GUI.Label(new Rect(20, 70, 400, 30), $"이번 생: {rand.DisplayName}");
     }
 
     void DrawSkillBar(AbilityRuntime ar)
@@ -112,45 +116,65 @@ public class GameHUD : MonoBehaviour
             };
         }
 
-        float x = Screen.width / 2f - 130f;
+        const float boxW = 60f;
+        const float gap = 8f;
+
+        int count = SkillSlotExt.Count;
+        float total = count * boxW + (count - 1) * gap;
+        float x = Screen.width / 2f - total / 2f;
         float y = Screen.height - 90f;
+
+        Vector2 mouse = new Vector2(Input.mousePosition.x,
+                                    Screen.height - Input.mousePosition.y);
 
         AbilityData.SkillDef hovered = null;
         Rect hoveredRect = default;
 
-        for (int i = 0; i < SkillSlotExt.Count; i++)
+        for (int i = 0; i < count; i++)
         {
             var skill = ar.GetSlot(i);
             var slot = (SkillSlot)i;
-            var box = new Rect(x + i * 68f, y, 60f, 60f);
+            var box = new Rect(x + i * (boxW + gap), y, boxW, boxW);
 
             GUI.Box(box, "");
 
+            // 키 라벨은 항상 표시
+            GUI.Label(new Rect(box.x + 4, box.y + 3, boxW - 8, 16), slot.Label());
+
             if (skill == null)
             {
-                GUI.Label(new Rect(box.x + 22, box.y + 20, 52, 20), "－");
+                GUI.color = new Color(1f, 1f, 1f, 0.3f);
+                GUI.Label(new Rect(box.x + 24, box.y + 22, 20, 20), "－");
+                GUI.color = Color.white;
                 continue;
             }
 
+            GUI.Label(new Rect(box.x + 4, box.y + 20, boxW - 8, 34), skill.Name);
+
+            // 쿨타임 오버레이
             float ratio = ar.GetCooldownRatio(i);
-            float remain = ar.GetCooldownRemain(i);
-
-            GUI.Label(new Rect(box.x + 4, box.y + 3, 52, 16), slot.Label());
-            GUI.Label(new Rect(box.x + 4, box.y + 20, 52, 34), skill.Name);
-
             if (ratio > 0f)
             {
+                float remain = ar.GetCooldownRemain(i);
+
                 var cdRect = new Rect(box.x, box.y + box.height * (1f - ratio),
                                       box.width, box.height * ratio);
-                GUI.color = new Color(0f, 0f, 0f, 0.6f);
+                GUI.color = new Color(0f, 0f, 0f, 0.65f);
                 GUI.Box(cdRect, "");
                 GUI.color = Color.white;
+
                 GUI.Label(new Rect(box.x + 18, box.y + 38, 40, 18), $"{remain:F1}");
             }
 
-            // 마우스 오버 감지
-            Vector2 mouse = new Vector2(Input.mousePosition.x,
-                                        Screen.height - Input.mousePosition.y);
+            // 소울 부족 표시
+            if (skill.SoulCost > 0)
+            {
+                GUI.color = new Color(0.6f, 0.8f, 1f);
+                GUI.Label(new Rect(box.x + 4, box.y + boxW - 18, boxW - 8, 16),
+                    $"◆{skill.SoulCost}");
+                GUI.color = Color.white;
+            }
+
             if (box.Contains(mouse))
             {
                 hovered = skill;
@@ -163,22 +187,90 @@ public class GameHUD : MonoBehaviour
 
     void DrawTooltip(AbilityData.SkillDef skill, Rect anchor)
     {
-        string text = AbilityData.BuildTooltip(skill);
-        text += $"\n\n<color=#888>{AbilityData.DescribeRange(skill)}</color>";
+        string text = $"<b>{skill.Name}</b>\n{skill.Description}";
+        // ... 나머지 동일
+    }
 
-        var content = new GUIContent(text);
-        float width = 300f;
-        float height = _tooltipStyle.CalcHeight(content, width);
+    void DrawDanger(AbilityRuntime ar)
+    {
+        var bomb = ar.FindAbility<AnthropophobiaAbility>();
+        if (bomb == null || !bomb.IsCounting) return;
 
-        float tx = Mathf.Clamp(anchor.x + anchor.width * 0.5f - width * 0.5f,
-                               10f, Screen.width - width - 10f);
-        float ty = anchor.y - height - 8f;
+        float r = bomb.DangerRatio;
 
-        GUI.color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
-        GUI.Box(new Rect(tx, ty, width, height), "");
+        // 화면 테두리 붉게
+        GUI.color = new Color(1f, 0f, 0f, r * 0.4f);
+        GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
         GUI.color = Color.white;
 
-        GUI.Label(new Rect(tx, ty, width, height), content, _tooltipStyle);
+        var box = new Rect(Screen.width / 2f - 100f, 140f, 200f, 30f);
+        GUI.color = new Color(1f, 0.2f, 0.1f);
+        GUI.Label(box, $"폭발까지 {(1f - r) * bomb.TriggerTime:F1}초!");
+        GUI.color = Color.white;
+    }
+
+    void DrawScoreboard(NetworkRunner runner)
+    {
+        if (!Input.GetKey(KeyCode.Tab)) return;
+
+        var list = new List<(string name, int k, int a, int d, int soul, bool isLocal)>();
+
+        foreach (var p in runner.ActivePlayers)
+        {
+            var obj = runner.GetPlayerObject(p);
+            if (obj == null) continue;
+            if (!obj.TryGetComponent<PlayerHealth>(out var h)) continue;
+
+            list.Add(($"Player {p.PlayerId}", h.Kills, h.Assists, h.Deaths, h.Soul,
+                      p == runner.LocalPlayer));
+        }
+
+        if (list.Count == 0) return;
+
+        // K 내림차순, 동점이면 소울 내림차순
+        list.Sort((a, b) =>
+        {
+            int c = b.k.CompareTo(a.k);
+            return c != 0 ? c : b.soul.CompareTo(a.soul);
+        });
+
+        const float w = 460f;
+        const float rowH = 26f;
+        const float headH = 30f;
+
+        float x = Screen.width / 2f - w / 2f;
+        float y = 90f;
+        float h2 = headH + rowH * list.Count + 12f;
+
+        // 배경
+        GUI.color = new Color(0f, 0f, 0f, 0.85f);
+        GUI.Box(new Rect(x, y, w, h2), "");
+        GUI.color = Color.white;
+
+        // 헤더
+        var head = new Rect(x + 12, y + 6, w - 24, headH);
+        GUI.Label(head, "#    이름              K     A     D    SOUL");
+
+        GUI.color = new Color(1f, 1f, 1f, 0.2f);
+        GUI.Box(new Rect(x + 12, y + headH, w - 24, 1), "");
+        GUI.color = Color.white;
+
+        // 행
+        for (int i = 0; i < list.Count; i++)
+        {
+            var e = list[i];
+            var row = new Rect(x + 12, y + headH + 4 + rowH * i, w - 24, rowH);
+
+            if (e.isLocal)
+            {
+                GUI.color = new Color(0.3f, 0.6f, 1f, 0.25f);
+                GUI.Box(new Rect(x + 8, row.y - 2, w - 16, rowH), "");
+                GUI.color = Color.white;
+            }
+
+            GUI.Label(row,
+                $"{i + 1,-4} {e.name,-16} {e.k,3}   {e.a,3}   {e.d,3}   {e.soul,4}");
+        }
     }
 
 

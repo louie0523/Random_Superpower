@@ -9,6 +9,14 @@ public enum StatType
     CritDamage,
     CooldownReduction,
     LifeSteal,
+
+    // ── 배율 계열 (기본 1.0 = 100%) ──
+    DamageDealt,        // 가하는 피해
+    DamageTaken,        // 받는 피해
+    MeleeDamage,        // 근접 무기
+    RangedDamage,       // 원거리 무기
+    SkillDamage,        // 모든 스킬 (궁극기 포함)
+    UltimateDamage,     // 궁극기 전용
 }
 
 public enum ModType

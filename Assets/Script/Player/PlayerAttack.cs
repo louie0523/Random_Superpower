@@ -283,32 +283,43 @@ public class PlayerAttack : NetworkBehaviour
 
     void ApplyHit(PlayerHealth target, GameObject targetObj, ComboStep step)
     {
-        int dmg = CalcDamage(step.DamageMultiplier * _pendingDamageMul);
+        var weapon = _equip.GetWeapon();
+        var src = (weapon != null && weapon.Class == WeaponClass.Ranged)
+            ? DamageSource.RangedWeapon
+            : DamageSource.MeleeWeapon;
 
-        target.RPC_TakeDamage(dmg, Object.InputAuthority, cameraRoot.position);
+        float baseDmg = _stats.Get(StatType.AttackPower)
+                      * step.DamageMultiplier
+                      * _pendingDamageMul;
+
+        float outgoing = DamageCalc.CalcOutgoing(_stats, baseDmg, src, true, out bool crit);
+
+        target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
+            Mathf.RoundToInt(outgoing), Object.InputAuthority, cameraRoot.position));
+
         _ability?.FireTrigger(TriggerType.OnHit, targetObj);
 
-        // 흡혈
         float lifeSteal = _stats.Get(StatType.LifeSteal);
         if (lifeSteal > 0f)
         {
-            int heal = Mathf.RoundToInt(dmg * lifeSteal);
+            int heal = Mathf.RoundToInt(outgoing * lifeSteal);
             if (heal > 0) _health.RPC_Heal(heal);
         }
 
         if (fpsCamera != null) fpsCamera.Shake(step.CameraShake);
-        if (step.HitStopDuration > 0f) HitStop.Do(step.HitStopDuration);
+        if (step.HitStopDuration > 0f)
+            HitStop.Do(crit ? step.HitStopDuration * 1.5f : step.HitStopDuration);
     }
 
-    int CalcDamage(float mult)
-    {
-        float atk = _stats.Get(StatType.AttackPower) * mult;
+    //int CalcDamage(float mult)
+    //{
+    //    float atk = _stats.Get(StatType.AttackPower) * mult;
 
-        if (Random.value < _stats.Get(StatType.CritChance))
-            atk *= _stats.Get(StatType.CritDamage);
+    //    if (Random.value < _stats.Get(StatType.CritChance))
+    //        atk *= _stats.Get(StatType.CritDamage);
 
-        return Mathf.Max(1, Mathf.RoundToInt(atk));
-    }
+    //    return Mathf.Max(1, Mathf.RoundToInt(atk));
+    //}
 
     // ══════════════════ 연출 동기화 ══════════════════
 

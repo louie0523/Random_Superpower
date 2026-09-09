@@ -4,6 +4,7 @@ public enum SkillSlot
     Skill2,     // E
     Skill3,     // ¿ìÅ¬¸¯
     Ultimate,   // Q
+    Random,     // F
 }
 
 public static class SkillSlotExt
@@ -14,9 +15,10 @@ public static class SkillSlotExt
         SkillSlot.Skill2 => "E",
         SkillSlot.Skill3 => "RMB",
         SkillSlot.Ultimate => "Q",
+        SkillSlot.Random => "F",
         _ => "?"
     };
 
     public static int Index(this SkillSlot s) => (int)s;
-    public const int Count = 4;
+    public const int Count = 5;   // 5
 }

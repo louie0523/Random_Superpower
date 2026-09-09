@@ -10,9 +10,15 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkObject playerPrefab;
     private NetworkRunner _runner;
 
-    [Header("Debug")]
-    [SerializeField] private KeyCode spawnDummyKey = KeyCode.F5;
     [SerializeField] private float dummySpawnDistance = 5f;
+
+    [Header("Debug Keys")]
+    [SerializeField] private KeyCode spawnDummyKey = KeyCode.F5;
+    [SerializeField] private KeyCode clearDummyKey = KeyCode.F6;
+    [SerializeField] private KeyCode rerollAbilityKey = KeyCode.F7;
+    [SerializeField] private KeyCode suicideKey = KeyCode.F8;
+    [SerializeField] private KeyCode healKey = KeyCode.F9;
+    NetworkObject GetLocal() => _runner.GetPlayerObject(_runner.LocalPlayer);
 
     private readonly List<NetworkObject> _dummies = new();
 
@@ -56,6 +62,40 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             if (_dummies[last] != null) _runner.Despawn(_dummies[last]);
             _dummies.RemoveAt(last);
         }
+
+        if (Input.GetKeyDown(rerollAbilityKey)) RerollAbility();
+        if (Input.GetKeyDown(suicideKey)) Suicide();
+        if (Input.GetKeyDown(healKey)) FullHeal();
+    }
+    void RerollAbility()
+    {
+        var local = GetLocal();
+        if (local == null) return;
+        if (!local.TryGetComponent<AbilityRuntime>(out var ar)) return;
+
+        ar.RerollRandomAbility();
+        Debug.Log($"[Debug] 랜덤 능력 교체 → {ar.GetRandomAbility()?.DisplayName ?? "없음"}");
+    }
+
+    void Suicide()
+    {
+        var local = GetLocal();
+        if (local == null) return;
+        if (!local.TryGetComponent<PlayerHealth>(out var h)) return;
+        if (h.IsDead) return;
+
+        h.RPC_TakeDamage(DamageInfo.FromEnvironment(99999, local.transform.position));
+        Debug.Log("[Debug] 자해 사망");
+    }
+
+    void FullHeal()
+    {
+        var local = GetLocal();
+        if (local == null) return;
+        if (!local.TryGetComponent<PlayerHealth>(out var h)) return;
+
+        h.RPC_Heal(9999);
+        Debug.Log("[Debug] 체력 회복");
     }
 
     void SpawnDummy()

@@ -10,6 +10,7 @@ public class PlayerSkillInput : MonoBehaviour
     [SerializeField] private KeyCode ultimate = KeyCode.Q;
     [SerializeField] private bool skill3UseRightMouse = true;
     [SerializeField] private KeyCode skill3Alt = KeyCode.LeftControl;
+    [SerializeField] private KeyCode randomSkill = KeyCode.F;
 
     void Update()
     {
@@ -23,6 +24,8 @@ public class PlayerSkillInput : MonoBehaviour
         else if (Input.GetKeyDown(skill3Alt)) Pressed[2] = true;
 
         if (Input.GetKeyDown(ultimate)) Pressed[3] = true;
+
+        if (Input.GetKeyDown(randomSkill)) Pressed[4] = true;
     }
 
     /// <summary>FixedUpdateNetwork에서 소비</summary>

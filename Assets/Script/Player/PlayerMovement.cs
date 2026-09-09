@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using static AbilityRuntime;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -73,6 +74,16 @@ public class PlayerMovement : NetworkBehaviour
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
+
+        if (_ability != null)
+        {
+            switch (_ability.MoveLock)
+            {
+                case MoveLockMode.StrafeOnly: v = 0f; break;   // ²É°Ô
+                case MoveLockMode.ForwardOnly: h = 0f; break;
+            }
+        }
+
         _localMoveDir = new Vector3(h, 0f, v).normalized;
 
         float speed = _stats.Get(StatType.MoveSpeed);

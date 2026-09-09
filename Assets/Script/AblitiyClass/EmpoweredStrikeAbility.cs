@@ -6,7 +6,12 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     [Header("게이지")]
     [Range(0, 3)] public int ChargeSlot = 0;
     public float MaxCharge = 100f;
-    public float ChargePerSecondMoving = 3f;
+
+    [Tooltip("이동 몇 m마다 충전할지")]
+    public float ChargePerDistance = 7.5f;
+    [Tooltip("위 거리를 이동할 때마다 얻는 게이지")]
+    public float ChargeOnDistance = 3f;
+
     public float ChargePerHit = 5f;
 
     [Header("일격")]
@@ -31,8 +36,9 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
 
 
     private float _strikeFlagTimer;
-    private float _moveAccum;
     private int _speedSrc;
+    private Vector3 _lastPos;
+    private float _distAccum;
 
     /// <summary>일격이 방금 적중했는가 (상태 중 만충 판정용)</summary>
     private bool _strikeInProgress;
@@ -46,8 +52,10 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     public override void OnEquip()
     {
         Ctx.SetMaxCharge(ChargeSlot, MaxCharge);
-        _moveAccum = 0f;
+        _distAccum = 0f;
+        _lastPos = Ctx.transform.position;
         _strikeInProgress = false;
+        _strikeFlagTimer = 0f;
     }
 
     public override void OnUnequip()
@@ -63,13 +71,29 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
             if (_strikeFlagTimer <= 0f) _strikeInProgress = false;
         }
 
-        if (!Ctx.IsMoving) { _moveAccum = 0f; return; }
+        TickDistanceCharge();
+    }
 
-        _moveAccum += dt;
-        if (_moveAccum >= 1f)
+    void TickDistanceCharge()
+    {
+        Vector3 now = Ctx.transform.position;
+        Vector3 delta = now - _lastPos;
+        _lastPos = now;
+
+        // 수평 이동만 (낙하는 제외)
+        delta.y = 0f;
+        float moved = delta.magnitude;
+
+        // 순간이동/리스폰 방지
+        if (moved > 3f) return;
+
+        _distAccum += moved;
+
+        float unit = Mathf.Max(0.1f, ChargePerDistance);
+        while (_distAccum >= unit)
         {
-            _moveAccum -= 1f;
-            Ctx.AddCharge(ChargeSlot, ChargePerSecondMoving * ChargeMul);
+            _distAccum -= unit;
+            Ctx.AddCharge(ChargeSlot, ChargeOnDistance * ChargeMul);
         }
     }
 
@@ -110,6 +134,10 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     public override bool TryOverrideAttack(out AttackOverride ovr)
     {
         ovr = AttackOverride.None;
+
+        var weapon = Ctx.Equipment?.GetWeapon();
+        if (weapon == null || weapon.Class != WeaponClass.Melee) return false;
+
 
         if (Ctx.GetCharge(ChargeSlot) < StrikeCost) return false;
         if (!Ctx.SpendCharge(ChargeSlot, StrikeCost)) return false;
