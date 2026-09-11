@@ -80,35 +80,58 @@ public class HandRig : MonoBehaviour
         for (int f = 0; f < HandPose.FingerCount; f++)
             total += Chains[f]?.Length ?? 0;
 
-        bool needCapture = _restEuler == null || _restEuler.Length != total || total == 0;
+        bool needCapture = RestPose == null || !HasValidRest();
 
         if (needCapture)
         {
-            _restEuler = new Vector3[total];
-            Debug.Log($"[HandRig] {name}: Rest 최초 캡처 ({total}개 관절)");
+            RestPose = new HandPose();
+            for (int f = 0; f < HandPose.FingerCount; f++)
+            {
+                var chain = Chains[f];
+                if (chain == null) continue;
+
+                var fp = RestPose.Get(f);
+                fp.EnsureSize(chain.Length);
+
+                for (int j = 0; j < chain.Length; j++)
+                    if (chain[j] != null) fp.Joints[j] = chain[j].localRotation;
+            }
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying) UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
 
-        int idx = 0;
+        // 배열로 펼치기
+        _rest = new Quaternion[HandPose.FingerCount][];
         for (int f = 0; f < HandPose.FingerCount; f++)
         {
             var chain = Chains[f];
-            if (chain == null) continue;
+            int n = chain?.Length ?? 0;
+            _rest[f] = new Quaternion[n];
 
-            _rest[f] = new Quaternion[chain.Length];
+            var fp = RestPose.Get(f);
+            fp.EnsureSize(n);
 
-            for (int j = 0; j < chain.Length; j++)
-            {
-                if (needCapture && chain[j] != null)
-                    _restEuler[idx] = chain[j].localRotation.eulerAngles;
-
-                _rest[f][j] = Quaternion.Euler(_restEuler[idx]);
-                idx++;
-            }
+            for (int j = 0; j < n; j++) _rest[f][j] = fp.Joints[j];
         }
 
         _built = true;
     }
 
+    bool HasValidRest()
+    {
+        if (RestPose == null) return false;
+        RestPose.EnsureValid();
+
+        for (int f = 0; f < HandPose.FingerCount; f++)
+        {
+            int n = Chains[f]?.Length ?? 0;
+            if (n == 0) continue;
+            if (RestPose.Get(f).Joints.Length != n) return false;
+        }
+        return true;
+    }
 
     /// <summary>지정한 마디를 target으로 보냄 (그 앞쪽 관절들만 회전)</summary>
     public void SolveIKPartial(int finger, int jointIndex, Vector3 worldTarget)
@@ -372,9 +395,9 @@ public class HandRig : MonoBehaviour
     [ContextMenu("현재 자세를 Rest로 재설정")]
     public void CaptureRest()
     {
-        _restEuler = null;      // 강제 재캡처
+        RestPose = null;
         _built = false;
         Build();
-        Debug.Log("[HandRig] Rest 자세 갱신됨");
+        Debug.Log($"[HandRig] {name}: Rest 갱신됨");
     }
 }

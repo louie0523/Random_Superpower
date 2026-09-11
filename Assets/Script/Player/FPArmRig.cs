@@ -67,20 +67,31 @@ public class FPArmRig : MonoBehaviour
     {
         var p = IdlePose.Clone();
 
-        if (_weapon != null)
+        if (_weapon == null)
         {
-            if (_weapon.OverrideIdlePose)
-            {
-                p.RightPos = _weapon.RightHandPos;
-                p.RightRot = _weapon.RightHandRot;
-                p.LeftPos = _weapon.LeftHandPos;
-                p.LeftRot = _weapon.LeftHandRot;
-                p.UseLeftHand = _weapon.UseLeftHand;
-            }
-
-            // 양손 무기는 무조건 왼손 표시
-            if (_weapon.Grip == GripType.TwoHand) p.UseLeftHand = true;
+            // 무기 없음 → 양손 다 표시
+            p.UseLeftHand = true;
+            p.UseWeaponGrip = false;
+            p.RightFingers = null;   // rest 유지
+            p.LeftFingers = null;
+            return p;
         }
+
+        if (_weapon.OverrideIdlePose)
+        {
+            p.RightPos = _weapon.RightHandPos;
+            p.RightRot = _weapon.RightHandRot;
+            p.LeftPos = _weapon.LeftHandPos;
+            p.LeftRot = _weapon.LeftHandRot;
+        }
+
+        // 왼손 표시 여부
+        p.UseLeftHand = _weapon.Grip switch
+        {
+            GripType.TwoHand => true,
+            GripType.LeftHand => true,
+            _ => _weapon.UseLeftHand,   // 오른손 무기는 설정 따름
+        };
 
         return p;
     }
@@ -94,7 +105,10 @@ public class FPArmRig : MonoBehaviour
 
         if (weapon == null || weapon.ModelPrefab == null)
         {
-            ApplyPose(IdlePose);
+            // 무기 없음 → 손가락 초기화
+            RightHandRig?.ResetToRest();
+            LeftHandRig?.ResetToRest();
+            ApplyPose(GetEffectiveIdle());
             return;
         }
 
@@ -117,7 +131,7 @@ public class FPArmRig : MonoBehaviour
         var tip = _weaponObj.transform.Find("Tip");
         WeaponTip = tip != null ? tip : _weaponObj.transform;
 
-        ApplyPose(IdlePose);
+        ApplyPose(GetEffectiveIdle());
     }
 
     public void ApplyFloat(float time)
@@ -177,12 +191,10 @@ public class FPArmRig : MonoBehaviour
             left = pose.LeftFingers;
         }
 
-        // 폴백: 무기 그립이 비었으면 리그 기본값
-        right ??= IdleRightFingers;
-        left ??= IdleLeftFingers;
-
+        // null이면 손가락을 건드리지 않음 (현재 상태 유지)
         if (RightHandRig != null && right != null) RightHandRig.Apply(right);
-        if (LeftHandRig != null && left != null && pose.UseLeftHand)
+
+        if (LeftHandRig != null && pose.UseLeftHand && left != null)
             LeftHandRig.Apply(left);
     }
     void DestroyWeapon()

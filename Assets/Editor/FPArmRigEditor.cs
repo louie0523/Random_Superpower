@@ -22,8 +22,16 @@ public class FPArmRigEditor : Editor
         if (GUILayout.Button("손 재생성", GUILayout.Height(26))) rig.RebuildHands();
 
         EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("손 자세 초기화"))
+        {
+            rig.RightHandRig?.ResetToRest();
+            rig.LeftHandRig?.ResetToRest();
+            SceneView.RepaintAll();
+        }
+
         if (GUILayout.Button("기본 자세 적용")) Apply(rig);
-        if (GUILayout.Button("씬 손을 기본값으로")) BakeCurrent(rig);
+
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space(4);

@@ -47,16 +47,21 @@ public class PlayerHealth : NetworkBehaviour
     private PlayerStats _stats;
     private CharacterController _cc;
     private AbilityRuntime _ability;
+
+    [Header("Hit Flash")]
+    [Tooltip("셰이더의 색 프로퍼티 이름. 비우면 자동 탐색")]
+    [SerializeField] private string colorProperty = "";
     private Renderer _renderer;
-    private Color _baseColor;
+    private int _colorId = -1;
+    private Color _baseColor = Color.white;
 
     public override void Spawned()
     {
         _stats = GetComponent<PlayerStats>();
         _cc = GetComponent<CharacterController>();
         _ability = GetComponent<AbilityRuntime>();
-        _renderer = GetComponent<Renderer>();
-        _baseColor = _renderer.material.color;
+        _renderer = GetComponentInChildren<Renderer>();
+        SetupColorProperty();
 
         if (HasStateAuthority)
         {
@@ -65,6 +70,32 @@ public class PlayerHealth : NetworkBehaviour
             IsDead = false;
         }
         _prevHP = HP;
+    }
+
+    void SetupColorProperty()
+    {
+        if (_renderer == null) return;
+
+        var mat = _renderer.sharedMaterial;
+        if (mat == null) return;
+
+        // 후보 이름들
+        string[] candidates = string.IsNullOrEmpty(colorProperty)
+            ? new[] { "_BaseColor", "_Color", "_MainColor", "_Tint", "_ColorTint" }
+            : new[] { colorProperty };
+
+        foreach (var name in candidates)
+        {
+            if (!mat.HasProperty(name)) continue;
+
+            _colorId = Shader.PropertyToID(name);
+            _baseColor = mat.GetColor(_colorId);
+            return;
+        }
+
+        Debug.LogWarning(
+            $"[PlayerHealth] {mat.shader.name}에서 색 프로퍼티를 못 찾았습니다. " +
+            "피격 플래시가 비활성화됩니다.", this);
     }
 
     public override void FixedUpdateNetwork()
@@ -307,8 +338,10 @@ public class PlayerHealth : NetworkBehaviour
 
     System.Collections.IEnumerator FlashRed()
     {
-        _renderer.material.color = Color.red;
+        if (_renderer == null || _colorId < 0) yield break;
+
+        _renderer.material.SetColor(_colorId, Color.red);
         yield return new WaitForSeconds(0.12f);
-        _renderer.material.color = _baseColor;
+        if (_renderer != null) _renderer.material.SetColor(_colorId, _baseColor);
     }
 }
