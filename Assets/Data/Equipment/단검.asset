@@ -15,6 +15,7 @@ MonoBehaviour:
   Id: 1001
   DisplayName: "\uB2E8\uAC80"
   Slot: 0
+  Class: 0
   Icon: {fileID: 0}
   Description: "\uC870\uC57D\uD569\uB2C8\uB2E4."
   BaseStats:
@@ -27,8 +28,50 @@ MonoBehaviour:
   PositionOffset: {x: 0, y: 0, z: 0}
   RotationOffset: {x: 0, y: 0, z: 0}
   ScaleOverride: {x: 1, y: 1, z: 1}
-  FpPositionOffset: {x: 0.007, y: 0.688, z: 0.025}
-  FpRotationOffset: {x: 274.73218, y: 354.08817, z: 277.78012}
+  FpPositionOffset: {x: -0.573, y: 0.747, z: 0.005}
+  FpRotationOffset: {x: -30.185913, y: -101.55716, z: 62.674164}
+  OverrideIdlePose: 1
+  RightHandPos: {x: 0.86, y: -0.8, z: 1.28}
+  RightHandRot: {x: 22.102999, y: -56.82199, z: -30.660004}
+  UseLeftHand: 0
+  LeftHandPos: {x: -0.86, y: -0.8, z: 1.28}
+  LeftHandRot: {x: 22.102999, y: 56.822, z: 30.659996}
+  RightGrip:
+    Fingers:
+    - Joints:
+      - {x: -0.00000029481893, y: 0.00000057675777, z: -0.0000015378059}
+      - {x: 0.0000000013935123, y: 0.0000000023074238, z: 0.00000021332397}
+      - {x: 0.000023838904, y: -0.00001645892, z: -0.000003825718}
+    - Joints:
+      - {x: -0.0000001683566, y: 0.00000023985328, z: -0.0000013756622}
+      - {x: -0, y: 0, z: 0}
+      - {x: -0.00000012686466, y: 0.000001484962, z: 0.0000009196779}
+    - Joints:
+      - {x: -0.00000014883126, y: -0.000000011207528, z: -0.00000023452121}
+      - {x: -0.00000015162442, y: -0.000000006670176, z: 0.000000025452318}
+      - {x: -0, y: 0, z: 0}
+    - Joints:
+      - {x: -0.00000006340884, y: 0.000000049299427, z: 0.0000031684465}
+      - {x: -0.00000019317356, y: 0.00000081769724, z: 0.00000014980733}
+      - {x: 0.000018138595, y: -0.0000025519773, z: 0.00000037734162}
+  LeftGrip:
+    Fingers:
+    - Joints:
+      - {x: -23.918335, y: -4.905945, z: 16.515766}
+      - {x: 0.86433893, y: -1.1606445, z: -20.409882}
+      - {x: -42.55249, y: -3.258606, z: 21.893324}
+    - Joints:
+      - {x: -10.799347, y: -6.5845337, z: 11.877369}
+      - {x: 22.814796, y: 7.151159, z: -42.602875}
+      - {x: -11.999847, y: 24.64155, z: -13.902557}
+    - Joints:
+      - {x: -16.010345, y: 1.000506, z: -19.261475}
+      - {x: 43.446518, y: 3.4460778, z: -13.251068}
+      - {x: -19.134918, y: 8.783837, z: -16.598083}
+    - Joints:
+      - {x: -15.734528, y: -0.96691895, z: -17.854614}
+      - {x: 27.376406, y: 4.664522, z: -0.07702637}
+      - {x: -13.40097, y: -11.113007, z: 0.5716312}
   HitMode: 0
   Range: 3
   HitAngle: 100
@@ -55,10 +98,9 @@ MonoBehaviour:
       Keys:
       - Time: 0
         Pose:
-          RightPos: {x: 0.86, y: -0.7, z: 1.28}
+          RightPos: {x: 0.86, y: -0.8, z: 1.28}
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -66,6 +108,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 6.9502573, y: -6.149811, z: -3.254486}
+              - {x: -3.5869446, y: -7.7227173, z: -7.563263}
+              - {x: -2.2756348, y: -23.220917, z: 10.789833}
+            - Joints:
+              - {x: 0, y: 0, z: -0}
+              - {x: 0, y: 0, z: -0}
+              - {x: 0, y: 0, z: -0}
+            - Joints:
+              - {x: 0, y: 0, z: -0}
+              - {x: 0, y: 0, z: -0}
+              - {x: 0, y: 0, z: -0}
+            - Joints:
+              - {x: 0, y: 0, z: -0}
+              - {x: 0, y: 0, z: -0}
+              - {x: 0, y: 0, z: -0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -95,7 +174,6 @@ MonoBehaviour:
           RightPos: {x: 0.98, y: -0.42, z: 1.16}
           RightRot: {x: -35, y: 42, z: -45}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -103,6 +181,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -132,7 +247,6 @@ MonoBehaviour:
           RightPos: {x: 0.52, y: -0.84, z: 1.38}
           RightRot: {x: 28, y: -42, z: 42}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -140,6 +254,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -169,7 +320,6 @@ MonoBehaviour:
           RightPos: {x: 0.86, y: -0.7, z: 1.28}
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -177,6 +327,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -208,6 +395,7 @@ MonoBehaviour:
     LungeDistance: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
+    Events: []
   - Name: "2\uD0C0"
     Duration: 0.55
     HitStart: 0.52283657
@@ -231,7 +419,6 @@ MonoBehaviour:
           RightPos: {x: 0.86, y: -0.7, z: 1.28}
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -239,6 +426,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -268,7 +492,6 @@ MonoBehaviour:
           RightPos: {x: 0.8, y: -0.19999999, z: 1.0999999}
           RightRot: {x: -75, y: 0, z: -8}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -276,6 +499,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -305,7 +565,6 @@ MonoBehaviour:
           RightPos: {x: 0.8, y: -0.96, z: 1.4}
           RightRot: {x: 62, y: 0, z: 4}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -313,6 +572,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -342,7 +638,6 @@ MonoBehaviour:
           RightPos: {x: 0.86, y: -0.7, z: 1.28}
           RightRot: {x: 0, y: 0, z: 0}
           UseLeftHand: 0
-          LeftFollowsWeapon: 0
           LeftPos: {x: -0.86, y: -0.74999994, z: 1.28}
           LeftRot: {x: -0, y: 0, z: 0}
           WeaponPos: {x: 0, y: 0, z: 0}
@@ -350,6 +645,43 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          UseWeaponGrip: 1
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+            - Joints:
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
+              - {x: 0, y: 0, z: 0}
         Ease:
           serializedVersion: 2
           m_Curve:
@@ -381,6 +713,7 @@ MonoBehaviour:
     LungeDistance: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
+    Events: []
   ProjectilePrefab: {fileID: 0}
   ProjectileSpeed: 40
   ProjectileLifetime: 3

@@ -1,30 +1,54 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-/// <summary>1ÀÎÄª ÆÈ/¹«±â ¹èÄ¡. Ä«¸Ş¶ó ÀÚ½ÄÀ¸·Î µÓ´Ï´Ù.</summary>
+/// <summary>1ì¸ì¹­ íŒ”/ë¬´ê¸° ë°°ì¹˜. ì¹´ë©”ë¼ ìì‹ìœ¼ë¡œ ë‘¡ë‹ˆë‹¤.</summary>
 public class FPArmRig : MonoBehaviour
 {
+    [Header("Editor")]
+    [Tooltip("ì—ë””í„°ì—ì„œ ì™¼ì†ì„ í•­ìƒ í‘œì‹œ (í¸ì§‘ìš©)")]
+    public bool ForceShowLeftHand = false;
+
     [Header("Bones")]
     public Transform ArmRoot;
     public Transform RightHand;
     public Transform LeftHand;
 
+    public HandRig RightHandRig;
+    public HandRig LeftHandRig;
+
     [Header("Idle Pose")]
     public ArmPose IdlePose = new();
 
+    [Header("Idle Fingers")]
+    [Tooltip("ë¬´ê¸°ê°€ ì—†ê±°ë‚˜ ê·¸ë¦½ì´ ì§€ì •ë˜ì§€ ì•Šì•˜ì„ ë•Œì˜ ì† ëª¨ì–‘")]
+    public HandPose IdleRightFingers;
+    public HandPose IdleLeftFingers;
+
+
+
+    [Header("Hand Models")]
+    [Tooltip("ì† ëª¨ë¸ í”„ë¦¬íŒ¹ (ì¬ìƒì„±ìš©)")]
+    public GameObject RightHandPrefab;
+    public GameObject LeftHandPrefab;
+
     [Header("Left Hand IK")]
-    [Tooltip("¾ç¼Õ ¹«±âÀÏ ¶§ ¿Ş¼ÕÀÌ ºÙÀ» ÁöÁ¡. ¹«±â ÇÁ¸®ÆÕÀÇ ÀÚ½Ä")]
+    [Tooltip("ì–‘ì† ë¬´ê¸°ì¼ ë•Œ ì™¼ì†ì´ ë¶™ì„ ì§€ì . ë¬´ê¸° í”„ë¦¬íŒ¹ì˜ ìì‹")]
     public string LeftGripNodeName = "EndGrip";
 
-    [Header("Preview Markers")]
-    [Tooltip("ÀÌ ÀÌ¸§ÀÇ ÀÚ½ÄÀº ¹«±â Á¤¸® ½Ã »èÁ¦ÇÏÁö ¾ÊÀ½")]
-    public string[] KeepChildNames = { "RightHand", "LeftHand" };
+
+
 
     [Header("Camera")]
-    [Tooltip("¸ğ¼Ç Ä«¸Ş¶ó ¿ÀÇÁ¼ÂÀ» Àû¿ëÇÒ ´ë»ó")]
+    [Tooltip("ëª¨ì…˜ ì¹´ë©”ë¼ ì˜¤í”„ì…‹ì„ ì ìš©í•  ëŒ€ìƒ")]
     public FPSCamera Camera;
 
+    [Header("Float")]
+    public bool EnableFloat = true;
+    public float FloatAmount = 0.012f;
+    public float FloatSpeed = 1.4f;
+    public float RotDrift = 2.5f;
+
     [Header("Preview")]
-    [Tooltip("¿¡µğÅÍ ÇÁ¸®ºä¿¡¼­ Ä«¸Ş¶ó ¿ÀÇÁ¼ÂÀ» Àû¿ëÇÒ Transform")]
+    [Tooltip("ì—ë””í„° í”„ë¦¬ë·°ì—ì„œ ì¹´ë©”ë¼ ì˜¤í”„ì…‹ì„ ì ìš©í•  Transform")]
     public Transform PreviewCameraPivot;
 
     private GameObject _weaponObj;
@@ -36,7 +60,30 @@ public class FPArmRig : MonoBehaviour
     public Transform GetWeaponTransform() =>
         _weaponObj != null ? _weaponObj.transform : null;
 
-    // ¦¡¦¡ ¹«±â ÀåÂø ¦¡¦¡
+    // â”€â”€ ë¬´ê¸° ì¥ì°© â”€â”€
+
+    /// <summary>í˜„ì¬ ë¬´ê¸°ë¥¼ ë°˜ì˜í•œ ê¸°ë³¸ ìì„¸</summary>
+    public ArmPose GetEffectiveIdle()
+    {
+        var p = IdlePose.Clone();
+
+        if (_weapon != null)
+        {
+            if (_weapon.OverrideIdlePose)
+            {
+                p.RightPos = _weapon.RightHandPos;
+                p.RightRot = _weapon.RightHandRot;
+                p.LeftPos = _weapon.LeftHandPos;
+                p.LeftRot = _weapon.LeftHandRot;
+                p.UseLeftHand = _weapon.UseLeftHand;
+            }
+
+            // ì–‘ì† ë¬´ê¸°ëŠ” ë¬´ì¡°ê±´ ì™¼ì† í‘œì‹œ
+            if (_weapon.Grip == GripType.TwoHand) p.UseLeftHand = true;
+        }
+
+        return p;
+    }
 
     public void Mount(EquipmentData weapon)
     {
@@ -73,21 +120,70 @@ public class FPArmRig : MonoBehaviour
         ApplyPose(IdlePose);
     }
 
+    public void ApplyFloat(float time)
+    {
+        if (!EnableFloat) return;
+
+        ApplyFloatTo(RightHand, time, 0f);
+        if (LeftHand != null && LeftHand.gameObject.activeSelf)
+            ApplyFloatTo(LeftHand, time, 1.7f);
+    }
+
+    void ApplyFloatTo(Transform hand, float t, float phase)
+    {
+        if (hand == null) return;
+
+        float y = Mathf.Sin(t * FloatSpeed + phase) * FloatAmount;
+        float x = Mathf.Cos(t * FloatSpeed * 0.7f + phase) * FloatAmount * 0.6f;
+
+        hand.localPosition += new Vector3(x, y, 0f);
+
+        float rz = Mathf.Sin(t * FloatSpeed * 0.5f + phase) * RotDrift;
+        float rx = Mathf.Cos(t * FloatSpeed * 0.6f + phase) * RotDrift * 0.5f;
+
+        hand.localRotation *= Quaternion.Euler(rx, 0f, rz);
+    }
+
     void ApplyCameraPose(ArmPose pose)
     {
-        // ·±Å¸ÀÓ: FPSCamera¿¡ À§ÀÓ
+        // ëŸ°íƒ€ì„: FPSCameraì— ìœ„ì„
         if (Application.isPlaying && Camera != null)
         {
             Camera.SetMotionOffset(pose.CamPos, pose.CamRot, pose.CamFov);
             return;
         }
 
-        // ¿¡µğÅÍ: ÇÇ¹şÀ» Á÷Á¢ ÀÌµ¿
+        // ì—ë””í„°: í”¼ë²—ì„ ì§ì ‘ ì´ë™
         if (PreviewCameraPivot != null)
         {
             PreviewCameraPivot.localPosition = pose.CamPos;
             PreviewCameraPivot.localRotation = Quaternion.Euler(pose.CamRot);
         }
+    }
+
+    void ApplyFingers(ArmPose pose)
+    {
+        HandPose right = null;
+        HandPose left = null;
+
+        if (pose.UseWeaponGrip && _weapon != null)
+        {
+            right = _weapon.RightGrip;
+            left = _weapon.LeftGrip;
+        }
+        else
+        {
+            right = pose.RightFingers;
+            left = pose.LeftFingers;
+        }
+
+        // í´ë°±: ë¬´ê¸° ê·¸ë¦½ì´ ë¹„ì—ˆìœ¼ë©´ ë¦¬ê·¸ ê¸°ë³¸ê°’
+        right ??= IdleRightFingers;
+        left ??= IdleLeftFingers;
+
+        if (RightHandRig != null && right != null) RightHandRig.Apply(right);
+        if (LeftHandRig != null && left != null && pose.UseLeftHand)
+            LeftHandRig.Apply(left);
     }
     void DestroyWeapon()
     {
@@ -99,7 +195,7 @@ public class FPArmRig : MonoBehaviour
         _weaponObj = null;
     }
 
-    /// <summary>¼Õ¿¡ ³²Àº ÀÜ¿© ÇÁ¸®ºä Á¤¸® (¿¡µğÅÍ¿ë)</summary>
+    /// <summary>ì†ì— ë‚¨ì€ ì”ì—¬ í”„ë¦¬ë·° ì •ë¦¬ (ì—ë””í„°ìš©)</summary>
     public void CleanHands()
     {
         CleanChildren(RightHand);
@@ -109,26 +205,8 @@ public class FPArmRig : MonoBehaviour
         WeaponTip = null;
     }
 
-    void CleanChildren(Transform hand)
-    {
-        if (hand == null) return;
 
-        for (int i = hand.childCount - 1; i >= 0; i--)
-        {
-            var go = hand.GetChild(i).gameObject;
-
-            // º¸Á¸ ¸ñ·Ï¿¡ ÀÖÀ¸¸é °Ç³Ê¶Ü
-            bool keep = false;
-            foreach (var n in KeepChildNames)
-                if (go.name == n) { keep = true; break; }
-            if (keep) continue;
-
-            if (Application.isPlaying) Destroy(go);
-            else DestroyImmediate(go);
-        }
-    }
-
-    // ¦¡¦¡ Æ÷Áî Àû¿ë ¦¡¦¡
+    // â”€â”€ í¬ì¦ˆ ì ìš© â”€â”€
 
     public void ApplyPose(ArmPose pose)
     {
@@ -140,52 +218,114 @@ public class FPArmRig : MonoBehaviour
             RightHand.localRotation = Quaternion.Euler(pose.RightRot);
         }
 
+        bool showLeft = pose.UseLeftHand;
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying && ForceShowLeftHand) showLeft = true;
+#endif
+
         if (LeftHand != null)
         {
-            LeftHand.gameObject.SetActive(pose.UseLeftHand);
-
-            if (pose.UseLeftHand)
+            LeftHand.gameObject.SetActive(showLeft);
+            if (showLeft)
             {
-                // ¸í½ÃÀûÀ¸·Î Ä×À» ¶§¸¸ ¹«±â¿¡ ºÙÀÓ
-                if (pose.LeftFollowsWeapon && _leftGripNode != null)
-                {
-                    LeftHand.position = _leftGripNode.position;
-                    LeftHand.rotation = _leftGripNode.rotation;
-                }
-                else
-                {
-                    LeftHand.localPosition = pose.LeftPos;
-                    LeftHand.localRotation = Quaternion.Euler(pose.LeftRot);
-                }
+                LeftHand.localPosition = pose.LeftPos;
+                LeftHand.localRotation = Quaternion.Euler(pose.LeftRot);
             }
         }
 
         if (_weaponObj != null && _weapon != null)
         {
-            _weaponObj.transform.localPosition =
-                _weapon.GetPosOffset(true) + pose.WeaponPos;
+            _weaponObj.transform.localPosition = _weapon.GetPosOffset(true) + pose.WeaponPos;
             _weaponObj.transform.localRotation =
                 Quaternion.Euler(_weapon.GetRotOffset(true) + pose.WeaponRot);
+            _weaponObj.transform.localScale = _weapon.ScaleOverride;
         }
 
-        if (Camera != null)
-            Camera.SetMotionOffset(pose.CamPos, pose.CamRot, pose.CamFov);
-
+        ApplyFingers(pose);
         ApplyCameraPose(pose);
     }
 
-    /// <summary>½ºÀ® ÁøÇàµµ Àû¿ë</summary>
+    /// <summary>ìŠ¤ìœ™ ì§„í–‰ë„ ì ìš©</summary>
     public void ApplySwing(SwingMotion motion, float t01)
     {
-        if (motion == null || !motion.IsValid) { ApplyPose(IdlePose); return; }
-        ApplyPose(motion.Evaluate(t01, IdlePose));
+        var idle = GetEffectiveIdle();
+        if (motion == null || !motion.IsValid) { ApplyPose(idle); return; }
+        ApplyPose(motion.Evaluate(t01, idle));
     }
 
-    /// <summary>½º¿şÀÌ/¹ÙºùÀº ArmRoot¿¡ Àû¿ë (Æ÷Áî¿Í ºĞ¸®)</summary>
+    /// <summary>ìŠ¤ì›¨ì´/ë°”ë¹™ì€ ArmRootì— ì ìš© (í¬ì¦ˆì™€ ë¶„ë¦¬)</summary>
     public void ApplyOffset(Vector3 pos, Vector3 rot)
     {
         if (ArmRoot == null) return;
         ArmRoot.localPosition = pos;
         ArmRoot.localRotation = Quaternion.Euler(rot);
+    }
+
+    /// <summary>ë¬´ê¸°ë§Œ ì •ë¦¬ (ì† ë³´ì¡´)</summary>
+    public void CleanWeaponOnly()
+    {
+        DestroyWeapon();
+        _leftGripNode = null;
+        WeaponTip = null;
+    }
+
+    /// <summary>ì†ê¹Œì§€ ì „ë¶€ ì •ë¦¬</summary>
+    public void CleanAll()
+    {
+        CleanChildren(RightHand);
+        CleanChildren(LeftHand);
+        _weaponObj = null;
+        _leftGripNode = null;
+        WeaponTip = null;
+        RightHandRig = null;
+        LeftHandRig = null;
+    }
+
+    void CleanChildren(Transform hand)
+    {
+        if (hand == null) return;
+        for (int i = hand.childCount - 1; i >= 0; i--)
+        {
+            var go = hand.GetChild(i).gameObject;
+            if (Application.isPlaying) Destroy(go);
+            else DestroyImmediate(go);
+        }
+    }
+
+    /// <summary>ì† ëª¨ë¸ì„ í”„ë¦¬íŒ¹ì—ì„œ ë‹¤ì‹œ ìƒì„±</summary>
+    public void RebuildHands()
+    {
+        CleanAll();
+
+        RightHandRig = SpawnHand(RightHandPrefab, RightHand, "R");
+        LeftHandRig = SpawnHand(LeftHandPrefab, LeftHand, "L");
+
+        ApplyPose(IdlePose);
+    }
+
+    HandRig SpawnHand(GameObject prefab, Transform parent, string label)
+    {
+        if (prefab == null || parent == null) return null;
+
+        GameObject go;
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            go = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(prefab, parent);
+        else
+#endif
+            go = Instantiate(prefab, parent);
+
+        go.name = $"Hand_{label}";
+        go.transform.localPosition = Vector3.zero;
+        go.transform.localRotation = Quaternion.identity;
+        go.transform.localScale = Vector3.one;
+
+        var rig = go.GetComponent<HandRig>();
+        if (rig == null) rig = go.AddComponent<HandRig>();
+        rig.Rebuild();
+
+        return rig;
     }
 }

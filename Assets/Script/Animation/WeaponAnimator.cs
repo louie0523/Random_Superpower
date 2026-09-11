@@ -89,6 +89,7 @@ public class WeaponAnimator : MonoBehaviour
         }
 
         armRig.ApplySwing(_step.Motion, _t / _step.TotalTime);
+        armRig.ApplyFloat(Time.time);
     }
 
     // ── 스웨이 / 바빙 (ArmRoot 전체) ──

@@ -44,6 +44,21 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public Vector3 FpPositionOffset;
     public Vector3 FpRotationOffset;
 
+    [Header("─── Weapon: Hand Pose ───")]
+    [Tooltip("이 무기를 들었을 때의 기본 손 위치/회전. 비우면 FPArmRig의 IdlePose 사용")]
+    public bool OverrideIdlePose = false;
+
+    public Vector3 RightHandPos = new(0.22f, -0.18f, 0.42f);
+    public Vector3 RightHandRot = new(5f, -8f, 0f);
+
+    public bool UseLeftHand = false;
+    public Vector3 LeftHandPos = new(-0.18f, -0.20f, 0.38f);
+    public Vector3 LeftHandRot = new(5f, 12f, 0f);
+
+    [Header("─── Weapon: Grip ───")]
+    public HandPose RightGrip;
+    public HandPose LeftGrip;
+
     [Header("─── Weapon: Hit Shape ───")]
     public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;
 

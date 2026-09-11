@@ -1,60 +1,179 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
+/// <summary>ì†ê°€ë½ í•˜ë‚˜ â€” ê´€ì ˆë³„ ë¡œì»¬ íšŒì „ ì˜¤í”„ì…‹</summary>
 [System.Serializable]
-public class ArmPose
+public class FingerPose
 {
-    [Header("Right Hand")]
-    public Vector3 RightPos = new(0.22f, -0.18f, 0.42f);
-    public Vector3 RightRot = new(5f, -8f, 0f);
+    /// <summary>ë¿Œë¦¬ â†’ ë ìˆœì„œ. rest ìì„¸ ê¸°ì¤€ ì˜¤í”„ì…‹(ë„)</summary>
+    public Vector3[] Joints = new Vector3[3];
 
-    [Header("Left Hand")]
-    public bool UseLeftHand = false;
-    public bool LeftFollowsWeapon = false;
-    public Vector3 LeftPos = new(-0.18f, -0.20f, 0.38f);
-    public Vector3 LeftRot = new(5f, 12f, 0f);
+    public FingerPose() { }
 
-    [Header("Weapon")]
-    public Vector3 WeaponPos;
-    public Vector3 WeaponRot;
-
-    [Header("Camera")]
-    [Tooltip("Ä«¸Ş¶ó À§Ä¡ ¿ÀÇÁ¼Â (m). Z-°¡ µÚ·Î ºüÁü")]
-    public Vector3 CamPos;
-    [Tooltip("Ä«¸Ş¶ó È¸Àü ¿ÀÇÁ¼Â (µµ). X-°¡ À§¸¦ º½, Z°¡ ·Ñ")]
-    public Vector3 CamRot;
-    [Tooltip("FOV Ãß°¡·®")]
-    public float CamFov;
-
-    public static ArmPose Lerp(ArmPose a, ArmPose b, float t)
+    public FingerPose(int jointCount)
     {
-        return new ArmPose
-        {
-            RightPos = Vector3.Lerp(a.RightPos, b.RightPos, t),
-            RightRot = LerpEuler(a.RightRot, b.RightRot, t),
-            UseLeftHand = t < 0.5f ? a.UseLeftHand : b.UseLeftHand,
-            LeftFollowsWeapon = t < 0.5f ? a.LeftFollowsWeapon : b.LeftFollowsWeapon,
-            LeftPos = Vector3.Lerp(a.LeftPos, b.LeftPos, t),
-            LeftRot = LerpEuler(a.LeftRot, b.LeftRot, t),
-            WeaponPos = Vector3.Lerp(a.WeaponPos, b.WeaponPos, t),
-            WeaponRot = LerpEuler(a.WeaponRot, b.WeaponRot, t),
-            CamPos = Vector3.Lerp(a.CamPos, b.CamPos, t),
-            CamRot = LerpEuler(a.CamRot, b.CamRot, t),
-            CamFov = Mathf.Lerp(a.CamFov, b.CamFov, t),
-        };
+        Joints = new Vector3[Mathf.Max(1, jointCount)];
     }
 
-    static Vector3 LerpEuler(Vector3 a, Vector3 b, float t) =>
-        Quaternion.Slerp(Quaternion.Euler(a), Quaternion.Euler(b), t).eulerAngles;
+    public void EnsureSize(int n)
+    {
+        if (Joints == null || Joints.Length != n)
+        {
+            var old = Joints;
+            Joints = new Vector3[n];
+            if (old != null)
+                for (int i = 0; i < Mathf.Min(old.Length, n); i++) Joints[i] = old[i];
+        }
+    }
 
-    public ArmPose Clone() => (ArmPose)MemberwiseClone();
+    public static FingerPose Lerp(FingerPose a, FingerPose b, float t)
+    {
+        if (a == null) return b?.Clone();
+        if (b == null) return a.Clone();
+
+        int n = Mathf.Max(a.Joints.Length, b.Joints.Length);
+        var r = new FingerPose(n);
+
+        for (int i = 0; i < n; i++)
+        {
+            Vector3 va = i < a.Joints.Length ? a.Joints[i] : Vector3.zero;
+            Vector3 vb = i < b.Joints.Length ? b.Joints[i] : Vector3.zero;
+            r.Joints[i] = Vector3.Lerp(va, vb, t);
+        }
+        return r;
+    }
+
+    public FingerPose Clone()
+    {
+        var c = new FingerPose(Joints.Length);
+        System.Array.Copy(Joints, c.Joints, Joints.Length);
+        return c;
+    }
+
+    /// <summary>ë‹¨ìˆœ êµ½í˜ (0~1)</summary>
+    public void SetCurl(float curl, Vector3 axis, float[] weights = null)
+    {
+        for (int i = 0; i < Joints.Length; i++)
+        {
+            float w = (weights != null && i < weights.Length) ? weights[i] : 1f;
+            Joints[i] = axis * (curl * w);
+        }
+    }
 }
 
-/// <summary>Å°ÇÁ·¹ÀÓ ÇÏ³ª</summary>
 [System.Serializable]
-public class PoseKey
+public class HandPose
 {
-    [Range(0f, 1f)] public float Time;
-    public ArmPose Pose = new();
-    [Tooltip("ÀÌ Å°·Î ÇâÇÏ´Â º¸°£ °î¼±")]
-    public AnimationCurve Ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    public const int FingerCount = 4;   // ì—„ì§€ ê²€ì§€ ì¤‘ì§€ ì•½ì§€
+
+    public FingerPose[] Fingers = new FingerPose[FingerCount];
+
+    public enum MirrorAxis { X, Y, Z }
+
+    public HandPose()
+    {
+        for (int i = 0; i < FingerCount; i++) Fingers[i] = new FingerPose(3);
+    }
+
+    public FingerPose Get(int i) =>
+        (Fingers != null && i >= 0 && i < Fingers.Length) ? Fingers[i] : null;
+
+    public void EnsureValid()
+    {
+        if (Fingers == null || Fingers.Length != FingerCount)
+        {
+            var old = Fingers;
+            Fingers = new FingerPose[FingerCount];
+            for (int i = 0; i < FingerCount; i++)
+                Fingers[i] = (old != null && i < old.Length && old[i] != null)
+                    ? old[i] : new FingerPose(3);
+        }
+
+        for (int i = 0; i < FingerCount; i++)
+            Fingers[i] ??= new FingerPose(3);
+    }
+
+    public static HandPose Lerp(HandPose a, HandPose b, float t)
+    {
+        if (a == null) return b?.Clone();
+        if (b == null) return a.Clone();
+
+        var r = new HandPose();
+        for (int i = 0; i < FingerCount; i++)
+            r.Fingers[i] = FingerPose.Lerp(a.Get(i), b.Get(i), t);
+        return r;
+    }
+
+    public HandPose Clone()
+    {
+        var c = new HandPose();
+        for (int i = 0; i < FingerCount; i++)
+            c.Fingers[i] = Get(i)?.Clone() ?? new FingerPose(3);
+        return c;
+    }
+
+    
+    public HandPose Mirrored(MirrorAxis axis = MirrorAxis.X)
+    {
+        var m = new HandPose();
+        EnsureValid();
+
+        for (int f = 0; f < FingerCount; f++)
+        {
+            var src = Get(f);
+            var dst = new FingerPose(src.Joints.Length);
+
+            for (int j = 0; j < src.Joints.Length; j++)
+            {
+                Vector3 e = src.Joints[j];
+
+                dst.Joints[j] = axis switch
+                {
+                    MirrorAxis.X => new Vector3(e.x, -e.y, -e.z),
+                    MirrorAxis.Y => new Vector3(-e.x, e.y, -e.z),
+                    _            => new Vector3(-e.x, -e.y, e.z),
+                };
+            }
+
+            m.Fingers[f] = dst;
+        }
+
+        return m;
+    }
+
+    // â”€â”€ í”„ë¦¬ì…‹ â”€â”€
+
+    public static HandPose Uniform(float curl, Vector3 axis)
+    {
+        var h = new HandPose();
+        float[] w = { 1f, 0.95f, 0.85f };
+        for (int i = 0; i < FingerCount; i++)
+            h.Fingers[i].SetCurl(curl, axis, w);
+        return h;
+    }
+
+    public static HandPose Open(Vector3 axis) => Uniform(0f, axis);
+    public static HandPose Relaxed(Vector3 axis) => Uniform(0.25f, axis);
+    public static HandPose Fist(Vector3 axis) => Uniform(1f, axis);
+
+    public static HandPose Grip(Vector3 axis)
+    {
+        var h = new HandPose();
+        float[] w = { 1f, 0.95f, 0.85f };
+        h.Fingers[0].SetCurl(0.55f, axis, w);   // ì—„ì§€
+        h.Fingers[1].SetCurl(0.85f, axis, w);   // ê²€ì§€
+        h.Fingers[2].SetCurl(0.9f, axis, w);    // ì¤‘ì§€
+        h.Fingers[3].SetCurl(0.85f, axis, w);   // ì•½ì§€
+        return h;
+    }
+
+    public static HandPose Point(Vector3 axis)
+    {
+        var h = new HandPose();
+        float[] w = { 1f, 0.95f, 0.85f };
+        h.Fingers[0].SetCurl(0.5f, axis, w);
+        h.Fingers[1].SetCurl(0f, axis, w);
+        h.Fingers[2].SetCurl(1f, axis, w);
+        h.Fingers[3].SetCurl(1f, axis, w);
+        return h;
+    }
 }
