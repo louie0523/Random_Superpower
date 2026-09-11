@@ -29,6 +29,11 @@ public class HandRig : MonoBehaviour
     [SerializeField, HideInInspector]
     private Vector3[] _restEuler;
 
+    [Header("Rest")]
+    [Tooltip("기준 자세. 비어 있으면 첫 Build에서 현재 자세로 캡처")]
+    public HandPose RestPose;
+
+
     void Awake() => Build();
 
     // ══════════════════ 구성 ══════════════════
@@ -218,13 +223,13 @@ public class HandRig : MonoBehaviour
     public void Apply(HandPose pose)
     {
         if (!_built) Build();
-        if (Chains == null) return;
-        if (pose == null) return;
+        if (Chains == null || pose == null) return;
+
         pose.EnsureValid();
 
         for (int f = 0; f < HandPose.FingerCount; f++)
         {
-            var chain = Chains[f];  
+            var chain = Chains[f];
             if (chain == null) continue;
 
             var fp = pose.Get(f);
@@ -234,7 +239,7 @@ public class HandRig : MonoBehaviour
             for (int j = 0; j < chain.Length; j++)
             {
                 if (chain[j] == null) continue;
-                chain[j].localRotation = _rest[f][j] * Quaternion.Euler(fp.Joints[j]);
+                chain[j].localRotation = _rest[f][j] * fp.Joints[j];
             }
         }
     }
@@ -286,10 +291,12 @@ public class HandRig : MonoBehaviour
         BakeToPose(finger, pose);
     }
 
-       /// <summary>현재 본의 로컬 회전을 그대로 저장</summary>
+    /// <summary>현재 본의 로컬 회전을 그대로 저장</summary>
     public void BakeToPose(int finger, HandPose pose)
     {
         if (pose == null || Chains == null) return;
+        if (finger < 0 || finger >= Chains.Length) return;
+
         pose.EnsureValid();
 
         var chain = Chains[finger];
@@ -301,7 +308,7 @@ public class HandRig : MonoBehaviour
         for (int j = 0; j < chain.Length; j++)
         {
             if (chain[j] == null) continue;
-            fp.Joints[j] = NormalizeEuler(chain[j].localRotation.eulerAngles);
+            fp.Joints[j] = Quaternion.Inverse(_rest[finger][j]) * chain[j].localRotation;
         }
     }
 

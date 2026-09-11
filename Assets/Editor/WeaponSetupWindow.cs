@@ -509,16 +509,23 @@ public class WeaponSetupWindow : EditorWindow
         for (int f = 0; f < HandPose.FingerCount; f++)
         {
             var fp = pose.Get(f);
-            if (fp == null || fp.Joints.Length == 0) continue;
+            if (fp == null || fp.Joints == null || fp.Joints.Length == 0) continue;
 
-            float cur = fp.Joints[0].magnitude / Mathf.Max(0.01f, axis.magnitude);
+            float cur = fp.EstimateCurl(axis);
+
+            if (cur > 1.2f)
+            {
+                EditorGUILayout.LabelField(FingerNames[f],
+                    $"{cur:F2}  (IK 편집됨)", EditorStyles.miniLabel);
+                continue;
+            }
 
             EditorGUI.BeginChangeCheck();
             float nv = EditorGUILayout.Slider(FingerNames[f], cur, 0f, 1.2f);
 
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(dirtyTarget, "Finger Curl");
+                Undo.RegisterCompleteObjectUndo(dirtyTarget, "Finger Curl");
                 fp.SetCurl(nv, axis, JointWeights);
                 EditorUtility.SetDirty(dirtyTarget);
                 handRig?.Apply(pose);
@@ -1432,6 +1439,7 @@ public class WeaponSetupWindow : EditorWindow
         var p = new ArmPose();
         if (_rig == null) return p;
 
+        // 손 위치/회전
         if (_rig.RightHand != null)
         {
             p.RightPos = _rig.RightHand.localPosition;
@@ -1445,12 +1453,33 @@ public class WeaponSetupWindow : EditorWindow
             p.LeftRot = NormalizeEuler(_rig.LeftHand.localRotation.eulerAngles);
         }
 
-        // 손가락도 현재 상태로
+        // ★ 무기 추가 오프셋 (기본 오프셋 대비 차이)
+        var weaponT = _rig.GetWeaponTransform();
+        var w = ResolvePreviewWeapon();
+
+        if (weaponT != null && w != null)
+        {
+            Vector3 baseP = w.GetPosOffset(true);
+            Vector3 baseR = w.GetRotOffset(true);
+
+            p.WeaponPos = weaponT.localPosition - baseP;
+            p.WeaponRot = NormalizeEuler(
+                (Quaternion.Inverse(Quaternion.Euler(baseR)) * weaponT.localRotation).eulerAngles);
+        }
+
+        // 손가락
+        p.UseWeaponGrip = false;
+
         if (_rig.RightHandRig != null)
         {
-            p.UseWeaponGrip = false;
             p.RightFingers = new HandPose();
             _rig.RightHandRig.BakeAll(p.RightFingers);
+        }
+
+        if (_rig.LeftHandRig != null)
+        {
+            p.LeftFingers = new HandPose();
+            _rig.LeftHandRig.BakeAll(p.LeftFingers);
         }
 
         return p;

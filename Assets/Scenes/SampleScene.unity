@@ -454,8 +454,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicSpawner
   playerPrefab: {fileID: 1933714763159700364, guid: 2e88d1791f21fe64c9c1d3b2386535b9, type: 3}
-  spawnDummyKey: 286
   dummySpawnDistance: 5
+  spawnDummyKey: 286
+  clearDummyKey: 287
+  rerollAbilityKey: 288
+  suicideKey: 289
+  healKey: 290
 --- !u!114 &1401543695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -468,6 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6986047598763349a616b0513ee6774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameHUD
+  showDebugKeys: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

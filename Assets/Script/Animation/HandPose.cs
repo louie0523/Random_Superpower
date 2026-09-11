@@ -4,25 +4,27 @@
 [System.Serializable]
 public class FingerPose
 {
-    /// <summary>뿌리 → 끝 순서. rest 자세 기준 오프셋(도)</summary>
-    public Vector3[] Joints = new Vector3[3];
+    /// <summary>rest 기준 오프셋 회전</summary>
+    public Quaternion[] Joints = new Quaternion[3];
 
-    public FingerPose() { }
+    public FingerPose() { Init(3); }
+    public FingerPose(int n) { Init(n); }
 
-    public FingerPose(int jointCount)
+    void Init(int n)
     {
-        Joints = new Vector3[Mathf.Max(1, jointCount)];
+        Joints = new Quaternion[Mathf.Max(1, n)];
+        for (int i = 0; i < Joints.Length; i++) Joints[i] = Quaternion.identity;
     }
 
     public void EnsureSize(int n)
     {
-        if (Joints == null || Joints.Length != n)
-        {
-            var old = Joints;
-            Joints = new Vector3[n];
-            if (old != null)
-                for (int i = 0; i < Mathf.Min(old.Length, n); i++) Joints[i] = old[i];
-        }
+        if (Joints != null && Joints.Length == n) return;
+
+        var old = Joints;
+        Joints = new Quaternion[n];
+
+        for (int i = 0; i < n; i++)
+            Joints[i] = (old != null && i < old.Length) ? old[i] : Quaternion.identity;
     }
 
     public static FingerPose Lerp(FingerPose a, FingerPose b, float t)
@@ -35,9 +37,9 @@ public class FingerPose
 
         for (int i = 0; i < n; i++)
         {
-            Vector3 va = i < a.Joints.Length ? a.Joints[i] : Vector3.zero;
-            Vector3 vb = i < b.Joints.Length ? b.Joints[i] : Vector3.zero;
-            r.Joints[i] = Vector3.Lerp(va, vb, t);
+            Quaternion qa = i < a.Joints.Length ? a.Joints[i] : Quaternion.identity;
+            Quaternion qb = i < b.Joints.Length ? b.Joints[i] : Quaternion.identity;
+            r.Joints[i] = Quaternion.Slerp(qa, qb, t);
         }
         return r;
     }
@@ -49,14 +51,22 @@ public class FingerPose
         return c;
     }
 
-    /// <summary>단순 굽힘 (0~1)</summary>
     public void SetCurl(float curl, Vector3 axis, float[] weights = null)
     {
         for (int i = 0; i < Joints.Length; i++)
         {
             float w = (weights != null && i < weights.Length) ? weights[i] : 1f;
-            Joints[i] = axis * (curl * w);
+            Joints[i] = Quaternion.Euler(axis * (curl * w));
         }
+    }
+
+    /// <summary>슬라이더 표시용 대략적인 curl</summary>
+    public float EstimateCurl(Vector3 axis)
+    {
+        if (Joints == null || Joints.Length == 0) return 0f;
+        Joints[0].ToAngleAxis(out float angle, out _);
+        if (angle > 180f) angle -= 360f;
+        return Mathf.Abs(angle) / Mathf.Max(0.01f, axis.magnitude);
     }
 }
 
@@ -112,33 +122,7 @@ public class HandPose
     }
 
     
-    public HandPose Mirrored(MirrorAxis axis = MirrorAxis.X)
-    {
-        var m = new HandPose();
-        EnsureValid();
-
-        for (int f = 0; f < FingerCount; f++)
-        {
-            var src = Get(f);
-            var dst = new FingerPose(src.Joints.Length);
-
-            for (int j = 0; j < src.Joints.Length; j++)
-            {
-                Vector3 e = src.Joints[j];
-
-                dst.Joints[j] = axis switch
-                {
-                    MirrorAxis.X => new Vector3(e.x, -e.y, -e.z),
-                    MirrorAxis.Y => new Vector3(-e.x, e.y, -e.z),
-                    _            => new Vector3(-e.x, -e.y, e.z),
-                };
-            }
-
-            m.Fingers[f] = dst;
-        }
-
-        return m;
-    }
+  
 
     // ── 프리셋 ──
 

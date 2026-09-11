@@ -219,14 +219,21 @@ public class FPArmRigEditor : Editor
             var fp = pose.Get(f);
             if (fp == null || fp.Joints == null || fp.Joints.Length == 0) continue;
 
-            float cur = fp.Joints[0].magnitude / Mathf.Max(0.01f, axis.magnitude);
+            float cur = fp.EstimateCurl(axis);
+
+            if (cur > 1.2f)
+            {
+                EditorGUILayout.LabelField(FingerNames[f],
+                    $"{cur:F2}  (IK 편집됨)", EditorStyles.miniLabel);
+                continue;
+            }
 
             EditorGUI.BeginChangeCheck();
             float nv = EditorGUILayout.Slider(FingerNames[f], cur, 0f, 1.2f);
 
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(rig, "Finger Curl");
+                Undo.RegisterCompleteObjectUndo(rig, "Finger Curl");
                 fp.SetCurl(nv, axis, JointWeights);
                 EditorUtility.SetDirty(rig);
                 handRig.Apply(pose);

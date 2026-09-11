@@ -54,10 +54,10 @@ public class HandRigEditor : Editor
         EditorGUILayout.Space(6);
         EditorGUILayout.LabelField("좌우 복사", EditorStyles.miniBoldLabel);
 
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("→ 미러 복사")) MirrorToOther(rig, true);
-        if (GUILayout.Button("← 미러 가져오기")) MirrorToOther(rig, false);
-        EditorGUILayout.EndHorizontal();
+        //EditorGUILayout.BeginHorizontal();
+        //if (GUILayout.Button("→ 미러 복사")) MirrorToOther(rig, true);
+        //if (GUILayout.Button("← 미러 가져오기")) MirrorToOther(rig, false);
+        //EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("→ 그대로 복사")) CopyToOther(rig, true);
@@ -97,36 +97,36 @@ public class HandRigEditor : Editor
         return null;
     }
 
-    void MirrorToOther(HandRig rig, bool push)
-    {
-        var other = FindOtherHand(rig);
-        if (other == null)
-        {
-            Debug.LogWarning("[HandRig] 반대 손을 못 찾았습니다. FPArmRig 연결 확인.");
-            return;
-        }
+    //void MirrorToOther(HandRig rig, bool push)
+    //{
+    //    var other = FindOtherHand(rig);
+    //    if (other == null)
+    //    {
+    //        Debug.LogWarning("[HandRig] 반대 손을 못 찾았습니다. FPArmRig 연결 확인.");
+    //        return;
+    //    }
 
-        if (push)
-        {
-            var cur = new HandPose();
-            rig.BakeAll(cur);
-            other.Apply(cur.Mirrored());
-        }
-        else
-        {
-            var src = new HandPose();
-            other.BakeAll(src);
-            rig.Apply(src.Mirrored());
+    //    if (push)
+    //    {
+    //        var cur = new HandPose();
+    //        rig.BakeAll(cur);
+    //        other.Apply(cur.Mirrored());
+    //    }
+    //    else
+    //    {
+    //        var src = new HandPose();
+    //        other.BakeAll(src);
+    //        rig.Apply(src.Mirrored());
 
-            if (EditTarget != null)
-            {
-                rig.BakeAll(EditTarget);
-                OnPoseChanged?.Invoke();
-            }
-        }
+    //        if (EditTarget != null)
+    //        {
+    //            rig.BakeAll(EditTarget);
+    //            OnPoseChanged?.Invoke();
+    //        }
+    //    }
 
-        SceneView.RepaintAll();
-    }
+    //    SceneView.RepaintAll();
+    //}
 
     void CopyToOther(HandRig rig, bool push)
     {

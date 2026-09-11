@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.86
+      value: 3.768041
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8
+      value: 0.00000007267849
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.28
+      value: 3.2702138
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4157456459163486426, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 195d91a7d2f27614b8b34de1331538d8, type: 2}
     - target: {fileID: 919132149155446097, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
       propertyPath: m_Name
       value: LeftHand
@@ -105,6 +109,7 @@ MonoBehaviour:
   CurlAxis: {x: 0, y: 0, z: -70}
   IkIterations: 8
   MaxJointAngle: 90
+  _restEuler: []
 --- !u!4 &3605976517873249715 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7236869174330588065, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
