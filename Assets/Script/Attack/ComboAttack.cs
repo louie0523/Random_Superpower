@@ -1,5 +1,13 @@
 using UnityEngine;
 
+public enum HandVisibility
+{
+    Auto,           // 무기 그립 설정을 따름 (기본)
+    RightOnly,      // 오른손만
+    LeftOnly,       // 왼손만
+    Both,           // 양손
+}
+
 [System.Serializable]
 public class ComboStep
 {
@@ -48,6 +56,10 @@ public class ComboStep
     public float CameraShake = 0.3f;
     [Tooltip("전진 거리 (m)")]
     public float LungeDistance = 0f;
+
+    [Header("Hand")]
+    [Tooltip("이 모션 동안 손 표시 방식")]
+    public HandVisibility HandMode = HandVisibility.Auto;
 
     [Header("FX")]
     public AudioClip SwingSound;

@@ -40,6 +40,7 @@ public class PlayerAttack : NetworkBehaviour
     private bool _isDashAttack;
     private bool _dashStarted;
     private AttackOverride _override;
+    public bool IsAttacking => _attackTimer >= 0f;
 
 
     // ══════════════════ 초기화 ══════════════════
@@ -81,6 +82,14 @@ public class PlayerAttack : NetworkBehaviour
             _attackQueued = false;
             return;
         }
+
+        // 스킬 시전 중이면 공격 불가
+        if (_ability != null && _ability.IsCasting)
+        {
+            _attackQueued = false;
+            return;
+        }
+
 
         float dt = Runner.DeltaTime;
         bool pressed = _attackQueued;

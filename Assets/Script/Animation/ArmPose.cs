@@ -21,6 +21,9 @@ public class ArmPose
     public Vector3 CamRot;
     public float CamFov;
 
+    [System.NonSerialized]
+    public HandVisibility HandOverride = HandVisibility.Auto;
+
     [Header("Fingers")]
     public bool UseWeaponGrip = true;
     public HandPose RightFingers;
@@ -46,6 +49,7 @@ public class ArmPose
             UseWeaponGrip = t < 0.5f ? a.UseWeaponGrip : b.UseWeaponGrip,
             RightFingers = HandPose.Lerp(a.RightFingers, b.RightFingers, t),
             LeftFingers = HandPose.Lerp(a.LeftFingers, b.LeftFingers, t),
+            HandOverride = t < 0.5f ? a.HandOverride : b.HandOverride,
         };
     }
 

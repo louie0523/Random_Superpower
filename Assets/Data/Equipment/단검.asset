@@ -29,7 +29,7 @@ MonoBehaviour:
   RotationOffset: {x: 0, y: 0, z: 0}
   ScaleOverride: {x: 1, y: 1, z: 1}
   FpPositionOffset: {x: -0.613, y: 0.678, z: 0.066}
-  FpRotationOffset: {x: -26.891968, y: -94.78641, z: 20.123577}
+  FpRotationOffset: {x: -26.891968, y: -94.78641, z: 46.47866}
   OverrideIdlePose: 1
   RightHandPos: {x: 0.86, y: -0.8, z: 1.28}
   RightHandRot: {x: 22.102999, y: -56.82199, z: -30.660004}

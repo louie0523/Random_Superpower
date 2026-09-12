@@ -29,6 +29,13 @@ public class PlayerEquipment : NetworkBehaviour
         _stats = GetComponent<PlayerStats>();
         if (armRig == null) armRig = GetComponentInChildren<FPArmRig>(true);
 
+        // 손 초기화
+        if (armRig != null)
+        {
+            armRig.RightHandRig?.ResetToRest();
+            armRig.LeftHandRig?.ResetToRest();
+        }
+
         if (HasStateAuthority)
         {
             WeaponId = startWeaponId;

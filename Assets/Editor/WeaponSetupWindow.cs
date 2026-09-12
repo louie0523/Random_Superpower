@@ -355,20 +355,20 @@ public class WeaponSetupWindow : EditorWindow
             EditorGUILayout.EndHorizontal();
         }
 
-        // ★ 리그 기본값 가져오기
-        if (GUILayout.Button("리그 기본 손가락 가져오기"))
-        {
-            Undo.RecordObject(_weapon, "Pull Fingers");
+        //// ★ 리그 기본값 가져오기
+        //if (GUILayout.Button("리그 기본 손가락 가져오기"))
+        //{
+        //    Undo.RecordObject(_weapon, "Pull Fingers");
 
-            if (_rig.IdleRightFingers != null)
-                _weapon.RightGrip = _rig.IdleRightFingers.Clone();
-            if (_rig.IdleLeftFingers != null)
-                _weapon.LeftGrip = _rig.IdleLeftFingers.Clone();
+        //    if (_rig.IdleRightFingers != null)
+        //        _weapon.RightGrip = _rig.IdleRightFingers.Clone();
+        //    if (_rig.IdleLeftFingers != null)
+        //        _weapon.LeftGrip = _rig.IdleLeftFingers.Clone();
 
-            EditorUtility.SetDirty(_weapon);
-            RefreshPreview();
-            Debug.Log("[MotionSetup] 리그 기본 손가락 적용됨");
-        }
+        //    EditorUtility.SetDirty(_weapon);
+        //    RefreshPreview();
+        //    Debug.Log("[MotionSetup] 리그 기본 손가락 적용됨");
+        //}
 
         // ══ 히트 판정 ══
         EditorGUILayout.Space(8);
@@ -408,11 +408,11 @@ public class WeaponSetupWindow : EditorWindow
         _weapon.UseLeftHand = idle.UseLeftHand || _weapon.Grip == GripType.TwoHand;
         _weapon.OverrideIdlePose = true;
 
-        // 손가락
-        if (_rig.IdleRightFingers != null)
-            _weapon.RightGrip = _rig.IdleRightFingers.Clone();
-        if (_rig.IdleLeftFingers != null)
-            _weapon.LeftGrip = _rig.IdleLeftFingers.Clone();
+        //// 손가락
+        //if (_rig.IdleRightFingers != null)
+        //    _weapon.RightGrip = _rig.IdleRightFingers.Clone();
+        //if (_rig.IdleLeftFingers != null)
+        //    _weapon.LeftGrip = _rig.IdleLeftFingers.Clone();
 
         EditorUtility.SetDirty(_weapon);
         SpawnWeapon();
@@ -794,6 +794,7 @@ public class WeaponSetupWindow : EditorWindow
 
         EditorGUILayout.Space(2);
         EditorGUILayout.LabelField("연출", EditorStyles.miniBoldLabel);
+        step.HandMode = (HandVisibility)EditorGUILayout.EnumPopup("손 표시", step.HandMode);
 
         EditorGUILayout.BeginHorizontal();
         step.HitStopDuration = EditorGUILayout.FloatField("히트스톱", step.HitStopDuration);
@@ -1420,7 +1421,7 @@ public class WeaponSetupWindow : EditorWindow
 
         var step = _source.GetStep(_comboIndex);
         if (step?.Motion != null && step.Motion.IsValid)
-            _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime));
+            _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
         else
             _rig.ApplyPose(_rig.GetEffectiveIdle());
 

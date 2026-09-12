@@ -187,7 +187,7 @@ public class HandRigEditor : Editor
         }
     }
 
-       void DrawJointHandles(HandRig rig, int f, Transform[] chain)
+    void DrawJointHandles(HandRig rig, int f, Transform[] chain)
     {
         for (int j = 0; j < chain.Length; j++)
         {

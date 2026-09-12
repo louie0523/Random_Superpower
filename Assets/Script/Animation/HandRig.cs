@@ -270,13 +270,23 @@ public class HandRig : MonoBehaviour
     public void ResetToRest()
     {
         if (!_built) Build();
+        if (Chains == null || RestPose == null) return;
+
+        RestPose.EnsureValid();
 
         for (int f = 0; f < HandPose.FingerCount; f++)
         {
+            if (f >= Chains.Length) break;
+
             var chain = Chains[f];
             if (chain == null) continue;
+
+            var fp = RestPose.Get(f);
+            fp.EnsureSize(chain.Length);
+
             for (int j = 0; j < chain.Length; j++)
-                if (chain[j] != null) chain[j].localRotation = _rest[f][j];
+                if (chain[j] != null)
+                    chain[j].localRotation = fp.Joints[j];
         }
     }
 

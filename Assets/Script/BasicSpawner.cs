@@ -100,11 +100,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     void SpawnDummy()
     {
-        var localObj = _runner.GetPlayerObject(_runner.LocalPlayer);
-        if (localObj == null) return;
+        var local = GetLocal();
+        if (local == null) return;
 
-        Vector3 pos = localObj.transform.position
-                    + localObj.transform.forward * dummySpawnDistance;
+        Vector3 pos = local.transform.position
+                    + local.transform.forward * dummySpawnDistance;
 
         var dummy = _runner.Spawn(playerPrefab, pos, Quaternion.identity);
         dummy.gameObject.name = "Dummy";
@@ -115,11 +115,18 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (dummy.TryGetComponent<PlayerSkillInput>(out var si)) si.enabled = false;
         if (dummy.TryGetComponent<AbilityRuntime>(out var ab)) ab.enabled = false;
 
-        // 카메라 끄기
+        // 카메라는 컴포넌트만 끔 (오브젝트를 끄면 팔까지 사라짐)
         var cam = dummy.GetComponentInChildren<Camera>(true);
-        if (cam != null) cam.gameObject.SetActive(false);
+        if (cam != null) cam.enabled = false;
+
+        var listener = dummy.GetComponentInChildren<AudioListener>(true);
+        if (listener != null) listener.enabled = false;
+
+        var fps = dummy.GetComponentInChildren<FPSCamera>(true);
+        if (fps != null) fps.enabled = false;
 
         _dummies.Add(dummy);
+        Debug.Log("[Debug] 더미 스폰");
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

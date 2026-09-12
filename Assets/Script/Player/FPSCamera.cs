@@ -95,6 +95,11 @@ public class FPSCamera : MonoBehaviour
         HandleFov(speed);
     }
 
+    public void SetMotionFov(float fovAdd)
+    {
+        _motionFov = fovAdd;
+    }
+
     /// <summary>PlayerMovement의 FixedUpdateNetwork가 호출</summary>
     public float ConsumeYaw()
     {
@@ -211,7 +216,7 @@ public class FPSCamera : MonoBehaviour
         float t = Mathf.Clamp01(speed / Mathf.Max(0.01f, fovMaxSpeed));
         _targetFov = baseFov + fovMaxAdd * t + _motionFov;
 
-        _kickFov = Mathf.Lerp(_kickFov, 0f, Time.deltaTime * 8f);
+        _kickFov = Mathf.Lerp(_kickFov, 0f, Time.deltaTime * 4f);
         cam.fieldOfView = Mathf.Lerp(
             cam.fieldOfView, _targetFov + _kickFov, Time.deltaTime * fovLerp);
     }

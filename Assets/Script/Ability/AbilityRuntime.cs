@@ -42,6 +42,8 @@ public class AbilityRuntime : NetworkBehaviour
 
     public const int ChargeSlotCount = 4;
 
+
+
     // ══════════════════ 내부 상태 ══════════════════
 
     private AbilityData.SkillDef _casting;
@@ -76,6 +78,9 @@ public class AbilityRuntime : NetworkBehaviour
 
     private PlayerEquipment _equipment;
     public PlayerEquipment Equipment => _equipment;
+
+    private PlayerAttack _attack;
+
 
 
     // ══════════════════ 능력 고유 효과 관련 ══════════════════
@@ -170,6 +175,7 @@ public class AbilityRuntime : NetworkBehaviour
         _cc = GetComponent<CharacterController>();
         _events = GetComponent<MotionEventPlayer>();
         _equipment = GetComponent<PlayerEquipment>();
+        _attack = GetComponent<PlayerAttack>();
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
@@ -370,8 +376,12 @@ public class AbilityRuntime : NetworkBehaviour
     {
         Debug.Log($"[Skill] TryUse slot={slotIndex}");
 
-        if (!HasStateAuthority) { Debug.Log("  → 권한 없음"); return false; }
-        if (IsSealed) { Debug.Log("  → 봉인"); return false; }
+        if (!HasStateAuthority) return false;
+        if (IsSealed) return false;
+        if (IsCasting) return false;
+
+        // 기본 공격 중이면 스킬 못 씀
+        if (_attack != null && _attack.IsAttacking) return false;
 
         var skill = GetSlot(slotIndex);
         if (skill == null) { Debug.Log("  → 슬롯 비어있음"); return false; }

@@ -585,6 +585,8 @@ GameObject:
   - component: {fileID: 7554477501339804417}
   - component: {fileID: 4156331145891824284}
   - component: {fileID: 6649258101475754144}
+  - component: {fileID: 2089143490382891940}
+  - component: {fileID: 8811776527205630181}
   m_Layer: 3
   m_Name: 'ArmRoot '
   m_TagString: Untagged
@@ -621,12 +623,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7bc830af4117e4db69e1221135f298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FPArmRig
-  ForceShowLeftHand: 0
   ArmRoot: {fileID: 7554477501339804417}
   RightHand: {fileID: 5662185865769058550}
   LeftHand: {fileID: 1146440250616589382}
   RightHandRig: {fileID: 4520119657177768941}
   LeftHandRig: {fileID: 5553267907246839855}
+  RightHandPrefab: {fileID: 919132149155446097, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
+  LeftHandPrefab: {fileID: 919132149155446097, guid: c303a6df0f6d8f545b42f903868526b7, type: 3}
   IdlePose:
     RightPos: {x: 0.86, y: -0.8, z: 1.28}
     RightRot: {x: 22.103, y: -56.822, z: -30.66}
@@ -675,51 +678,12 @@ MonoBehaviour:
         - {x: 0, y: 0, z: 0, w: 9.35e-43}
         - {x: 0, y: 0, z: 0, w: 9.35e-43}
         - {x: 0, y: 0, z: 0, w: 9.35e-43}
-  IdleRightFingers:
-    Fingers:
-    - Joints:
-      - {x: -0.0000000025727802, y: 0.0000000050331606, z: -0.000000013419887, w: 0.99999994}
-      - {x: 0, y: 0, z: 0, w: 1}
-      - {x: 0, y: 0, z: 0, w: 1.0000001}
-    - Joints:
-      - {x: -9.525679e-10, y: 3.0540392e-10, z: -0.0000000120825066, w: 1}
-      - {x: 0, y: 0, z: 0, w: 1}
-      - {x: 0, y: 0, z: 0, w: 1}
-    - Joints:
-      - {x: -0.0000000012921956, y: -1.70644e-11, z: 0.0000000016829205, w: 1}
-      - {x: -0.0000000013231728, y: -5.820845e-11, z: 2.221134e-10, w: 1.0000001}
-      - {x: 0, y: 0, z: 0, w: 0.99999994}
-    - Joints:
-      - {x: 0, y: 0, z: 0, w: 1.0000001}
-      - {x: 0, y: 0, z: 0, w: 1}
-      - {x: -0.000000012159006, y: 0.00000000341004, z: 0.0000000027144422, w: 1}
-  IdleLeftFingers:
-    Fingers:
-    - Joints:
-      - {x: -0.0000000025727802, y: 0.0000000050331606, z: -0.000000013419887, w: 0.99999994}
-      - {x: 0, y: 0, z: 0, w: 1}
-      - {x: 0, y: 0, z: 0, w: 1.0000001}
-    - Joints:
-      - {x: -9.52568e-10, y: 3.0540404e-10, z: -0.0000000120825066, w: 1}
-      - {x: 0, y: 0, z: 0, w: 1}
-      - {x: 0, y: 0, z: 0, w: 1}
-    - Joints:
-      - {x: 0.0000000024291786, y: 7.388963e-12, z: -0.0000000020357447, w: 1}
-      - {x: -0.0000000013231728, y: -5.820845e-11, z: 2.221134e-10, w: 1.0000001}
-      - {x: 0, y: 0, z: 0, w: 0.99999994}
-    - Joints:
-      - {x: 0, y: 0, z: 0, w: 1.0000001}
-      - {x: 0, y: 0, z: 0, w: 1}
-      - {x: -0.000000012159006, y: 0.00000000341004, z: 0.0000000027144422, w: 1}
-  RightHandPrefab: {fileID: 919132149155446097, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
-  LeftHandPrefab: {fileID: 919132149155446097, guid: c303a6df0f6d8f545b42f903868526b7, type: 3}
-  LeftGripNodeName: LeftGrip
+  CamPivot: {fileID: 0}
   Camera: {fileID: 7430700015858829311}
-  EnableFloat: 1
-  FloatAmount: 0.012
-  FloatSpeed: 1.4
-  RotDrift: 2.5
-  PreviewCameraPivot: {fileID: 0}
+  LeftGripNodeName: LeftGrip
+  ForceShowLeftHand: 0
+  RightHandTarget: {fileID: 0}
+  LeftHandTarget: {fileID: 0}
 --- !u!114 &6649258101475754144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,16 +697,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponAnimator
   armRig: {fileID: 4156331145891824284}
-  swayAmount: 0.02
-  swayRotAmount: 4
-  swaySmooth: 8
+  swayAmount: 0.04
+  swayRotAmount: 7
+  swaySmooth: 5
   swayMaxOffset: 0.06
   bobAmount: 0.015
   bobRotAmount: 1.5
-  walkBobFreq: 1.8
+  walkBobFreq: 2.4
   runBobFreq: 3
-  breathAmount: 0.006
+  breathAmount: 0.009
   breathSpeed: 1.2
+--- !u!95 &2089143490382891940
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6430972180286868132}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8811776527205630181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6430972180286868132}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.RigBuilder
+  m_RigLayers:
+  - m_Rig: {fileID: 0}
+    m_Active: 1
+  m_Effectors: []
 --- !u!1 &6774034678307414958
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,7 +929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 539333913238522566, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5000001
+      value: -0.8
       objectReference: {fileID: 0}
     - target: {fileID: 539333913238522566, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1000,7 +1002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5000001
+      value: -0.8
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1016,11 +1018,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.4057793
+      value: -0.40577942
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.14026317
+      value: -0.14026311
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

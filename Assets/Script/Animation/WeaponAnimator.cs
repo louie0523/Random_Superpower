@@ -22,6 +22,17 @@ public class WeaponAnimator : MonoBehaviour
     [SerializeField] private float breathAmount = 0.006f;
     [SerializeField] private float breathSpeed = 1.2f;
 
+    [Header("Blend")]
+    [Tooltip("모션 종료 후 Idle로 돌아오는 시간 (초)")]
+    [SerializeField] private float blendOutTime = 0.15f;
+
+    [Tooltip("모션 시작 시 현재 자세에서 섞이는 시간 (초)")]
+    [SerializeField] private float blendInTime = 0.08f;
+
+    private ArmPose _blendFrom;
+    private float _blendTimer;
+    private float _blendDuration;
+
     private Vector3 _swayPos, _swayRot;
     private float _bobTimer;
 
@@ -38,19 +49,45 @@ public class WeaponAnimator : MonoBehaviour
     }
 
     /// <summary>공격 시작</summary>
+
     public void Play(ComboStep step)
     {
+        // 현재 자세를 시작점으로 저장
+        _blendFrom = CaptureCurrent();
+        _blendTimer = blendInTime;
+        _blendDuration = blendInTime;
+
         _step = step;
         _t = 0f;
     }
 
+    ArmPose CaptureCurrent()
+    {
+        var p = armRig.GetEffectiveIdle().Clone();
+
+        if (armRig.RightHand != null)
+        {
+            p.RightPos = armRig.RightHand.localPosition;
+            p.RightRot = armRig.RightHand.localRotation.eulerAngles;
+        }
+        if (armRig.LeftHand != null)
+        {
+            p.LeftPos = armRig.LeftHand.localPosition;
+            p.LeftRot = armRig.LeftHand.localRotation.eulerAngles;
+        }
+
+        return p;
+    }
+
+
 
     /// <summary>원격 플레이어용. 스윙 포즈만 재생 (스웨이/바빙 제외)</summary>
-    public void TickRemote()
+    public void Tick(Vector3 moveDir, float speed01)
     {
         if (armRig == null) return;
+
         HandleSwingPose();
-        armRig.ApplyOffset(Vector3.zero, Vector3.zero);
+        HandleArmOffset(speed01);
     }
     public void StopSwing()
     {
@@ -59,37 +96,78 @@ public class WeaponAnimator : MonoBehaviour
         if (armRig != null) armRig.ApplyPose(armRig.IdlePose);
     }
 
-    /// <summary>PlayerMovement의 Update에서 호출</summary>
-    public void Tick(Vector3 moveDir, float speed01)
+    public void TickRemote()
     {
         if (armRig == null) return;
 
         HandleSwingPose();
-        HandleArmOffset(speed01);
+        armRig.ApplyOffset(Vector3.zero, Vector3.zero);
     }
 
     // ── 스윙 포즈 (손/무기) ──
 
     void HandleSwingPose()
     {
+        float dt = Time.deltaTime;
+
+        // ── 모션 없음: 블렌드 아웃 중이거나 Idle ──
         if (_t < 0f || _step == null)
         {
-            armRig.ApplyPose(armRig.IdlePose);
+            var idle = armRig.GetEffectiveIdle();
+
+            if (_blendTimer > 0f && _blendFrom != null)
+            {
+                _blendTimer -= dt;
+                float t = 1f - Mathf.Clamp01(_blendTimer / Mathf.Max(0.01f, _blendDuration));
+                t = Mathf.SmoothStep(0f, 1f, t);
+
+                armRig.ApplyPose(ArmPose.Lerp(_blendFrom, idle, t));
+                if (_blendTimer <= 0f) _blendFrom = null;
+            }
+            else
+            {
+                armRig.ApplyPose(idle);
+            }
             return;
         }
 
-        _t += Time.deltaTime;
+        // ── 모션 재생 ──
+        _t += dt;
 
         if (_t >= _step.TotalTime)
         {
+            // 종료 → 블렌드 아웃 시작
+            _blendFrom = CaptureCurrent();
+            _blendTimer = blendOutTime;
+            _blendDuration = blendOutTime;
+
             _t = -1f;
             _step = null;
-            armRig.ApplyPose(armRig.IdlePose);
+
+            armRig.ApplyPose(_blendFrom);
             return;
         }
 
-        armRig.ApplySwing(_step.Motion, _t / _step.TotalTime);
-        armRig.ApplyFloat(Time.time);
+        var pose = _step.Motion != null && _step.Motion.IsValid
+            ? _step.Motion.Evaluate(_t / _step.TotalTime, armRig.GetEffectiveIdle())
+            : armRig.GetEffectiveIdle();
+
+        pose.HandOverride = _step.HandMode;
+
+        // ── 블렌드 인 ──
+        if (_blendTimer > 0f && _blendFrom != null)
+        {
+            _blendTimer -= dt;
+            float t = 1f - Mathf.Clamp01(_blendTimer / Mathf.Max(0.01f, _blendDuration));
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            pose = ArmPose.Lerp(_blendFrom, pose, t);
+            pose.HandOverride = _step.HandMode;
+
+            if (_blendTimer <= 0f) _blendFrom = null;
+        }
+
+        armRig.ApplyPose(pose);
     }
 
     // ── 스웨이 / 바빙 (ArmRoot 전체) ──
