@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Ability Motion")]
 public class AbilityMotionData : ScriptableObject, IMotionSource
 {
     [Header("Info")]
-    public string DisplayName = "ÀÏ°İ";
+    public string DisplayName = "ì¼ê²©";
     [TextArea(1, 3)] public string Note;
 
     [Header("Motion")]
     public ComboStep Step = new();
 
     [Header("Camera")]
-    [Tooltip("½ÃÀü Áß Ä«¸Ş¶ó ·Ñ (µµ)")]
+    [Tooltip("ì‹œì „ ì¤‘ ì¹´ë©”ë¼ ë¡¤ (ë„)")]
     public float CameraRoll;
 
     [Header("Preview")]
-    [Tooltip("Åø¿¡¼­ ¹Ì¸®º¸±â¿ëÀ¸·Î µé ¹«±â")]
+    [Tooltip("íˆ´ì—ì„œ ë¯¸ë¦¬ë³´ê¸°ìš©ìœ¼ë¡œ ë“¤ ë¬´ê¸°")]
     public EquipmentData PreviewWeaponData;
 
     // IMotionSource

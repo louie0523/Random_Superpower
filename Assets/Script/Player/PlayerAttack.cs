@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Fusion;
-using Unity.Entities.UniversalDelegates;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlayerAttack : NetworkBehaviour

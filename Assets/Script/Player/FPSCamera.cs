@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class FPSCamera : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform cameraRoot;   // ÇÇÄ¡ È¸Àü
-    [SerializeField] private Transform cameraHolder; // Çìµå¹ä ¿ÀÇÁ¼Â
+    [SerializeField] private Transform cameraRoot;   // í”¼ì¹˜ íšŒì „
+    [SerializeField] private Transform cameraHolder; // í—¤ë“œë°¥ ì˜¤í”„ì…‹
     [SerializeField] private Camera cam;
 
     [Header("Look")]
@@ -24,9 +24,9 @@ public class FPSCamera : MonoBehaviour
 
     [Header("FOV")]
     [SerializeField] private float baseFov = 75f;
-    [Tooltip("ÀÌ ¼Óµµ¿¡¼­ FOV Ãß°¡·®ÀÌ ÃÖ´ë°¡ µÊ")]
+    [Tooltip("ì´ ì†ë„ì—ì„œ FOV ì¶”ê°€ëŸ‰ì´ ìµœëŒ€ê°€ ë¨")]
     [SerializeField] private float fovMaxSpeed = 12f;
-    [Tooltip("ÃÖ´ë FOV Ãß°¡·®")]
+    [Tooltip("ìµœëŒ€ FOV ì¶”ê°€ëŸ‰")]
     [SerializeField] private float fovMaxAdd = 10f;
     [SerializeField] private float fovLerp = 6f;
 
@@ -40,12 +40,12 @@ public class FPSCamera : MonoBehaviour
     [SerializeField] private float shakeSpeed = 30f;
     [SerializeField] private float hitPunchAmount = 6f;
 
-    // ¸ğ¼Ç Ä«¸Ş¶ó ¿ÀÇÁ¼Â
+    // ëª¨ì…˜ ì¹´ë©”ë¼ ì˜¤í”„ì…‹
     private Vector3 _motionPos;
     private Vector3 _motionRot;
     private float _motionFov;
 
-    // ³»ºÎ »óÅÂ
+    // ë‚´ë¶€ ìƒíƒœ
     private float _pitch;
     private float _yawAccum;
     private float _bobTimer;
@@ -86,8 +86,8 @@ public class FPSCamera : MonoBehaviour
         Cursor.visible = false;
     }
 
-    /// <summary>PlayerMovementÀÇ Update°¡ È£Ãâ</summary>
-    /// <summary>speed´Â ÇöÀç ½ÇÁ¦ ÀÌµ¿ ¼Óµµ (m/s)</summary>
+    /// <summary>PlayerMovementì˜ Updateê°€ í˜¸ì¶œ</summary>
+    /// <summary>speedëŠ” í˜„ì¬ ì‹¤ì œ ì´ë™ ì†ë„ (m/s)</summary>
     public void Tick(Vector3 localMoveDir, float speed, float speed01)
     {
         HandleLook();
@@ -100,7 +100,7 @@ public class FPSCamera : MonoBehaviour
         _motionFov = fovAdd;
     }
 
-    /// <summary>PlayerMovementÀÇ FixedUpdateNetwork°¡ È£Ãâ</summary>
+    /// <summary>PlayerMovementì˜ FixedUpdateNetworkê°€ í˜¸ì¶œ</summary>
     public float ConsumeYaw()
     {
         float y = _yawAccum;
@@ -108,28 +108,28 @@ public class FPSCamera : MonoBehaviour
         return y;
     }
 
-    // ---------------- ½ÃÁ¡ ----------------
+    // ---------------- ì‹œì  ----------------
 
     void HandleLook()
     {
         float mx = Input.GetAxisRaw("Mouse X") * sensitivity * 10f;
         float my = Input.GetAxisRaw("Mouse Y") * sensitivity * 10f;
 
-        _yawAccum += mx;   // ÁÂ¿ì´Â ´©Àû¸¸ (³×Æ®¿öÅ© Æ½¿¡¼­ Àû¿ë)
+        _yawAccum += mx;   // ì¢Œìš°ëŠ” ëˆ„ì ë§Œ (ë„¤íŠ¸ì›Œí¬ í‹±ì—ì„œ ì ìš©)
 
         _pitch = Mathf.Clamp(_pitch - my, pitchMin, pitchMax);
         cameraRoot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
     }
 
 
-    // ---------------- ¸ö±â¿ïÀÓ ----------------
+    // ---------------- ëª¸ê¸°ìš¸ì„ ----------------
     //public void SetLean(float degrees, float speed = 10f)
     //{
     //    _abilityLeanTarget = degrees;
     //    _leanSpeed = speed;
     //}
 
-    /// <summary>¸ğ¼ÇÀÌ ¸Å ÇÁ·¹ÀÓ °»½Å</summary>
+    /// <summary>ëª¨ì…˜ì´ ë§¤ í”„ë ˆì„ ê°±ì‹ </summary>
     public void SetMotionOffset(Vector3 pos, Vector3 rot, float fovAdd)
     {
         _motionPos = pos;
@@ -144,7 +144,7 @@ public class FPSCamera : MonoBehaviour
         _motionFov = 0f;
     }
 
-    // ---------------- Çìµå¹ä ----------------
+    // ---------------- í—¤ë“œë°¥ ----------------
 
     void HandleBob(Vector3 moveDir, float speed01)
     {
@@ -168,15 +168,15 @@ public class FPSCamera : MonoBehaviour
             _bobTimer = Mathf.Lerp(_bobTimer, 0f, Time.deltaTime * 4f);
         }
 
-        // ÂøÁö µö
+        // ì°©ì§€ ë”¥
         _landOffset = Mathf.Lerp(_landOffset, 0f, Time.deltaTime * landRecoverSpeed);
         bob.y += _landOffset;
 
-        // À§Ä¡ Àû¿ë
+        // ìœ„ì¹˜ ì ìš©
         cameraHolder.localPosition = Vector3.Lerp(
                   cameraHolder.localPosition, bob + _motionPos, Time.deltaTime * 12f);
 
-        // ¼ÎÀÌÅ© °¨¼è
+        // ì…°ì´í¬ ê°ì‡ 
         _shakeAmount = Mathf.Lerp(_shakeAmount, 0f, Time.deltaTime * shakeDecay);
         if (_shakeAmount > 0.001f)
         {
@@ -189,17 +189,17 @@ public class FPSCamera : MonoBehaviour
             _shakeOffset = Vector2.zero;
         }
 
-        // ÇÇ°İ ¹İµ¿ (½ºÇÁ¸µ)
+        // í”¼ê²© ë°˜ë™ (ìŠ¤í”„ë§)
         _punchVel = Vector2.Lerp(_punchVel, -_punch * 30f, Time.deltaTime * 12f);
         _punch += _punchVel * Time.deltaTime;
         _punch = Vector2.Lerp(_punch, Vector2.zero, Time.deltaTime * 6f);
 
-        // ·Ñ
+        // ë¡¤
         float stepRoll = Mathf.Cos(_bobTimer * 0.5f) * roll * speed01;
         float targetRoll = -moveDir.x * strafeRoll + stepRoll;
         _roll = Mathf.Lerp(_roll, targetRoll, Time.deltaTime * 6f);
 
-        // ÃÖÁ¾ È¸Àü
+        // ìµœì¢… íšŒì „
         _abilityLean = Mathf.Lerp(_abilityLean, _abilityLeanTarget, Time.deltaTime * _leanSpeed);
 
         cameraHolder.localRotation = Quaternion.Euler(
@@ -221,21 +221,21 @@ public class FPSCamera : MonoBehaviour
             cam.fieldOfView, _targetFov + _kickFov, Time.deltaTime * fovLerp);
     }
 
-    // ---------------- ¿ÜºÎ È£Ãâ ----------------
+    // ---------------- ì™¸ë¶€ í˜¸ì¶œ ----------------
 
-    /// <summary>´ë½Ã, °ø°İ µî</summary>
+    /// <summary>ëŒ€ì‹œ, ê³µê²© ë“±</summary>
     public void FovKick(float amount)
     {
         _kickFov = amount;
     }
 
-    /// <summary>ÂøÁö</summary>
+    /// <summary>ì°©ì§€</summary>
     public void LandDip(float force01)
     {
         _landOffset = -landDipAmount * Mathf.Clamp01(force01);
     }
 
-    /// <summary>ÇÇ°İ. dirLocalÀº ¸ÂÀº ¹æÇâ(-1~1)</summary>
+    /// <summary>í”¼ê²©. dirLocalì€ ë§ì€ ë°©í–¥(-1~1)</summary>
     public void HitReact(float intensity01, Vector2 dirLocal)
     {
         _shakeAmount = Mathf.Max(_shakeAmount, 1.5f * intensity01);
@@ -243,7 +243,7 @@ public class FPSCamera : MonoBehaviour
         FovKick(-5f * intensity01);
     }
 
-    /// <summary>Æø¹ß µî ¹æÇâ ¾ø´Â Èçµé¸²</summary>
+    /// <summary>í­ë°œ ë“± ë°©í–¥ ì—†ëŠ” í”ë“¤ë¦¼</summary>
     public void Shake(float amount)
     {
         _shakeAmount = Mathf.Max(_shakeAmount, amount);

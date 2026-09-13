@@ -138,18 +138,20 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
         var weapon = Ctx.Equipment?.GetWeapon();
         if (weapon == null || weapon.Class != WeaponClass.Melee) return false;
 
+        var step = StrikeMotion != null ? StrikeMotion.Step : null;
+        if (step == null) return false;
 
         if (Ctx.GetCharge(ChargeSlot) < StrikeCost) return false;
         if (!Ctx.SpendCharge(ChargeSlot, StrikeCost)) return false;
 
-        _strikeInProgress = true;   // ★ 이번 공격은 일격
-
-        ovr.Step = StrikeMotion != null ? StrikeMotion.Step : null;
+        ovr.Step = step;
         ovr.DamageMul = StrikeDamageMul;
         ovr.Dash = Dash;
         ovr.HasDash = true;
+
         _strikeInProgress = true;
-        _strikeFlagTimer = 1f;
+        _strikeFlagTimer = step.WindUp + step.ActiveWindow + 0.1f;
+
         return true;
     }
 

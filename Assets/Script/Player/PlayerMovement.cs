@@ -1,4 +1,4 @@
-using Fusion;
+ï»¿using Fusion;
 using UnityEngine;
 using static AbilityRuntime;
 
@@ -16,7 +16,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("Refs")]
     [SerializeField] private FPSCamera fpsCamera;
-    [SerializeField] private GameObject[] hideOnLocal; // ³» ¸öÅë ¸Ş½Ã
+    [SerializeField] private GameObject[] hideOnLocal; // ë‚´ ëª¸í†µ ë©”ì‹œ
 
     [Header("Debug")]
     public bool IsDummy = false;
@@ -47,15 +47,16 @@ public class PlayerMovement : NetworkBehaviour
         _anim = GetComponent<PlayerAnimator>();
         _ability = GetComponent<AbilityRuntime>();
 
-        if (armRoot != null) armRoot.SetActive(true);   // Ç×»ó ÄÔ
+        if (armRoot != null) armRoot.SetActive(true);   // í•­ìƒ ì¼¬
 
         if (HasStateAuthority)
         {
             fpsCamera.Init();
+            HitStop.Register(weaponAnim);
         }
         else
         {
-            // ¿ÀºêÁ§Æ®°¡ ¾Æ´Ï¶ó Camera ÄÄÆ÷³ÍÆ®¸¸ ºñÈ°¼ºÈ­
+            // ì˜¤ë¸Œì íŠ¸ê°€ ì•„ë‹ˆë¼ Camera ì»´í¬ë„ŒíŠ¸ë§Œ ë¹„í™œì„±í™”
             var cam = fpsCamera.GetComponentInChildren<Camera>(true);
             if (cam != null) cam.enabled = false;
 
@@ -79,7 +80,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             switch (_ability.MoveLock)
             {
-                case MoveLockMode.StrafeOnly: v = 0f; break;   // ²É°Ô
+                case MoveLockMode.StrafeOnly: v = 0f; break;   // ê½ƒê²Œ
                 case MoveLockMode.ForwardOnly: h = 0f; break;
             }
         }

@@ -1,28 +1,28 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Anthropophobia")]
 public class AnthropophobiaAbility : AbilityBehaviour
 {
-    [Header("Á¶°Ç")]
-    [Tooltip("ÀÌ °Å¸® ¾È¿¡ ÀûÀÌ ÀÖÀ¸¸é Ä«¿îÆ® ½ÃÀÛ")]
+    [Header("ì¡°ê±´")]
+    [Tooltip("ì´ ê±°ë¦¬ ì•ˆì— ì ì´ ìˆìœ¼ë©´ ì¹´ìš´íŠ¸ ì‹œì‘")]
     public float DetectRange = 5f;
-    [Tooltip("ÀÌ ½Ã°£ÀÌ Áö³ª¸é Æø¹ß")]
+    [Tooltip("ì´ ì‹œê°„ì´ ì§€ë‚˜ë©´ í­ë°œ")]
     public float TriggerTime = 3f;
 
-    [Header("Æø¹ß")]
+    [Header("í­ë°œ")]
     public float ExplodeRadius = 8f;
     public float Damage = 200f;
-    [Tooltip("Æø¹ß ÈÄ ÀÚ½Åµµ »ç¸Á")]
+    [Tooltip("í­ë°œ í›„ ìì‹ ë„ ì‚¬ë§")]
     public bool KillSelf = true;
 
-    [Header("¿¬Ãâ")]
+    [Header("ì—°ì¶œ")]
     public GameObject WarningEffect;
     public GameObject ExplodeEffect;
 
     private float _timer;
     private bool _warned;
 
-    /// <summary>HUD Ç¥½Ã¿ë (0~1)</summary>
+    /// <summary>HUD í‘œì‹œìš© (0~1)</summary>
     public float DangerRatio => Mathf.Clamp01(_timer / Mathf.Max(0.01f, TriggerTime));
     public bool IsCounting => _timer > 0f;
 

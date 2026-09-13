@@ -187,8 +187,15 @@ public class GameHUD : MonoBehaviour
 
     void DrawTooltip(AbilityData.SkillDef skill, Rect anchor)
     {
-        string text = $"<b>{skill.Name}</b>\n{skill.Description}";
-        // ... 나머지 동일
+        string text = AbilityData.BuildTooltip(skill);
+
+        const float w = 320f;
+        float h = _tooltipStyle.CalcHeight(new GUIContent(text), w);
+
+        float x = Mathf.Clamp(anchor.x + anchor.width / 2f - w / 2f, 10f, Screen.width - w - 10f);
+        float y = anchor.y - h - 8f;
+
+        GUI.Box(new Rect(x, y, w, h), text, _tooltipStyle);
     }
 
     void DrawDanger(AbilityRuntime ar)

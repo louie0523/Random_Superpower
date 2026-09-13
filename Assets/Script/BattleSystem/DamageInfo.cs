@@ -1,11 +1,11 @@
-using Fusion;
+ï»¿using Fusion;
 using UnityEngine;
 
 public enum DeathCause
 {
-    Player,         // ÇÃ·¹ÀÌ¾î¿¡°Ô Ã³Ä¡µÊ
-    Environment,    // ÁöÇü/³«»ç/±â¹Í
-    Suicide,        // ÀÚÇØ
+    Player,         // í”Œë ˆì´ì–´ì—ê²Œ ì²˜ì¹˜ë¨
+    Environment,    // ì§€í˜•/ë‚™ì‚¬/ê¸°ë¯¹
+    Suicide,        // ìí•´
     Entity,
     Unknown,
 }
@@ -16,10 +16,10 @@ public struct DamageInfo : INetworkStruct
     public PlayerRef Attacker;
     public Vector3 SourcePos;
 
-    /// <summary>ÇÃ·¹ÀÌ¾î°¡ Á÷Á¢ °¡ÇÑ ÇÇÇØÀÎ°¡</summary>
+    /// <summary>í”Œë ˆì´ì–´ê°€ ì§ì ‘ ê°€í•œ í”¼í•´ì¸ê°€</summary>
     public NetworkBool FromPlayer;
 
-    /// <summary>³Ë¹é µîÀ¸·Î ³«»ç¸¦ À¯¹ßÇÒ ¼ö ÀÖ´Â ÇÇÇØÀÎ°¡</summary>
+    /// <summary>ë„‰ë°± ë“±ìœ¼ë¡œ ë‚™ì‚¬ë¥¼ ìœ ë°œí•  ìˆ˜ ìˆëŠ” í”¼í•´ì¸ê°€</summary>
     public NetworkBool CanCauseFall;
 
     public static DamageInfo FromPlayerHit(int amount, PlayerRef attacker, Vector3 pos,

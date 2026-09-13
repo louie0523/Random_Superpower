@@ -1,4 +1,4 @@
-public struct StatModifier
+﻿public struct StatModifier
 {
     public StatType Stat;
     public ModType Type;

@@ -15,11 +15,10 @@ public class SwingMotion
     /// <summary>t는 0~1</summary>
     public ArmPose Evaluate(float t, ArmPose idle)
     {
-        if (!IsValid) return idle;
+        if (!IsValid) return idle?.Clone();
 
         t = Mathf.Clamp01(t);
 
-        // 구간 찾기
         for (int i = 0; i < Keys.Count - 1; i++)
         {
             var a = Keys[i];
@@ -33,7 +32,7 @@ public class SwingMotion
             return ArmPose.Lerp(a.Pose, b.Pose, eased);
         }
 
-        return t <= Keys[0].Time ? Keys[0].Pose : Keys[^1].Pose;
+        return (t <= Keys[0].Time ? Keys[0].Pose : Keys[^1].Pose).Clone();
     }
 
     public void SortKeys() => Keys.Sort((a, b) => a.Time.CompareTo(b.Time));

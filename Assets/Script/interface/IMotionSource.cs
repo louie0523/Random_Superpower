@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-/// <summary>¸ğ¼Ç ÆíÁı ÅøÀÌ ´Ù·ê ¼ö ÀÖ´Â ´ë»ó</summary>
+/// <summary>ëª¨ì…˜ í¸ì§‘ íˆ´ì´ ë‹¤ë£° ìˆ˜ ìˆëŠ” ëŒ€ìƒ</summary>
 public interface IMotionSource
 {
     string SourceName { get; }
     int ComboLength { get; }
     ComboStep GetStep(int index);
 
-    /// <summary>ÇÁ¸®ºä¿¡ ¶ç¿ï ¹«±â</summary>
+    /// <summary>í”„ë¦¬ë·°ì— ë„ìš¸ ë¬´ê¸°</summary>
     EquipmentData PreviewWeapon { get; }
 
-    /// <summary>ÄŞº¸ Ãß°¡/»èÁ¦ Áö¿ø ¿©ºÎ</summary>
+    /// <summary>ì½¤ë³´ ì¶”ê°€/ì‚­ì œ ì§€ì› ì—¬ë¶€</summary>
     bool SupportsMultiStep { get; }
     void SetSteps(ComboStep[] steps);
     ComboStep[] GetSteps();

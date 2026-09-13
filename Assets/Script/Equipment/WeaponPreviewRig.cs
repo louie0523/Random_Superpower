@@ -1,6 +1,6 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-/// <summary>¹«±â ¹èÄ¡ ÅøÀÌ »ç¿ëÇÏ´Â ÇÁ¸®ºä ¸®±×. ¾À¿¡¸¸ Á¸Àç.</summary>
+/// <summary>ë¬´ê¸° ë°°ì¹˜ íˆ´ì´ ì‚¬ìš©í•˜ëŠ” í”„ë¦¬ë·° ë¦¬ê·¸. ì”¬ì—ë§Œ ì¡´ì¬.</summary>
 [ExecuteAlways]
 public class WeaponPreviewRig : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class WeaponPreviewRig : MonoBehaviour
     public Transform LeftHand;
 
     [Header("View")]
-    public Transform CameraAnchor;   // 1ÀÎÄª ´« À§Ä¡
+    public Transform CameraAnchor;   // 1ì¸ì¹­ ëˆˆ ìœ„ì¹˜
 
     [Header("Runtime")]
     [HideInInspector] public GameObject Spawned;

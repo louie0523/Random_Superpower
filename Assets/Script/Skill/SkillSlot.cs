@@ -1,8 +1,8 @@
-public enum SkillSlot
+Ôªøpublic enum SkillSlot
 {
     Skill1,     // Shift
     Skill2,     // E
-    Skill3,     // øÏ≈¨∏Ø
+    Skill3,     // Ïö∞ÌÅ¥Î¶≠
     Ultimate,   // Q
     Random,     // F
 }

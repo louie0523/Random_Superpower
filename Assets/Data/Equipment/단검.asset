@@ -393,9 +393,25 @@ MonoBehaviour:
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
-    Events: []
+    Events:
+    - Time: 0
+      Type: 0
+      Clip: {fileID: 8300000, guid: 9bc50c4f095ea1c40918161f09cea057, type: 3}
+      Volume: 0.8
+      Pitch: 1
+      Prefab: {fileID: 0}
+      Space: 1
+      PositionOffset: {x: 0, y: 0, z: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      Scale: 1
+      Lifetime: 2
+      ShakeAmount: 0.3
+      Key: 
+      ShowFirstPerson: 1
+      ShowThirdPerson: 1
   - Name: "2\uD0C0"
     Duration: 0.55
     HitStart: 0.53886926
@@ -711,9 +727,25 @@ MonoBehaviour:
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
-    Events: []
+    Events:
+    - Time: 0
+      Type: 0
+      Clip: {fileID: 8300000, guid: 488c2b7daeef4d245a2f9539948c5e3a, type: 3}
+      Volume: 0.8
+      Pitch: 1
+      Prefab: {fileID: 0}
+      Space: 1
+      PositionOffset: {x: 0, y: 0, z: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      Scale: 1
+      Lifetime: 2
+      ShakeAmount: 0.3
+      Key: 
+      ShowFirstPerson: 1
+      ShowThirdPerson: 1
   ProjectilePrefab: {fileID: 0}
   ProjectileSpeed: 40
   ProjectileLifetime: 3

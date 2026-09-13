@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerSkillInput : MonoBehaviour
 {
@@ -28,7 +28,7 @@ public class PlayerSkillInput : MonoBehaviour
         if (Input.GetKeyDown(randomSkill)) Pressed[4] = true;
     }
 
-    /// <summary>FixedUpdateNetwork¿¡¼­ ¼Òºñ</summary>
+    /// <summary>FixedUpdateNetworkì—ì„œ ì†Œë¹„</summary>
     public bool Consume(int slot)
     {
         if (slot < 0 || slot >= Pressed.Length) return false;

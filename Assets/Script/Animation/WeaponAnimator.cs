@@ -43,6 +43,9 @@ public class WeaponAnimator : MonoBehaviour
     public bool IsAttacking => _t >= 0f;
     public float Progress01 => _step == null ? 0f : Mathf.Clamp01(_t / _step.TotalTime);
 
+    private float _freezeTimer;
+    public void Freeze(float d) => _freezeTimer = Mathf.Max(_freezeTimer, d);
+
     void Awake()
     {
         if (armRig == null) armRig = GetComponentInChildren<FPArmRig>();
@@ -52,10 +55,11 @@ public class WeaponAnimator : MonoBehaviour
 
     public void Play(ComboStep step)
     {
-        // 현재 자세를 시작점으로 저장
         _blendFrom = CaptureCurrent();
         _blendTimer = blendInTime;
         _blendDuration = blendInTime;
+
+        _freezeTimer = 0f;      // ← 추가
 
         _step = step;
         _t = 0f;
@@ -132,7 +136,8 @@ public class WeaponAnimator : MonoBehaviour
         }
 
         // ── 모션 재생 ──
-        _t += dt;
+        if (_freezeTimer > 0f) _freezeTimer -= dt;
+        else _t += dt;
 
         if (_t >= _step.TotalTime)
         {
@@ -145,7 +150,7 @@ public class WeaponAnimator : MonoBehaviour
             _step = null;
 
             armRig.ApplyPose(_blendFrom);
-            return;
+            return; 
         }
 
         var pose = _step.Motion != null && _step.Motion.IsValid

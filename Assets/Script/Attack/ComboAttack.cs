@@ -1,36 +1,36 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public enum HandVisibility
 {
-    Auto,           // ¹«±â ±×¸³ ¼³Á¤À» µû¸§ (±âº»)
-    RightOnly,      // ¿À¸¥¼Õ¸¸
-    LeftOnly,       // ¿Ş¼Õ¸¸
-    Both,           // ¾ç¼Õ
+    Auto,           // ë¬´ê¸° ê·¸ë¦½ ì„¤ì •ì„ ë”°ë¦„ (ê¸°ë³¸)
+    RightOnly,      // ì˜¤ë¥¸ì†ë§Œ
+    LeftOnly,       // ì™¼ì†ë§Œ
+    Both,           // ì–‘ì†
 }
 
 [System.Serializable]
 public class ComboStep
 {
     [Header("Info")]
-    public string Name = "1Å¸";
+    public string Name = "1íƒ€";
 
     [Header("Timing")]
-    [Tooltip("°ø°İ ÀüÃ¼ ±æÀÌ (ÃÊ)")]
+    [Tooltip("ê³µê²© ì „ì²´ ê¸¸ì´ (ì´ˆ)")]
     public float Duration = 0.55f;
 
-    [Tooltip("ÆÇÁ¤ ½ÃÀÛ ÁöÁ¡ (0~1, ÀüÃ¼ ´ëºñ ºñÀ²)")]
+    [Tooltip("íŒì • ì‹œì‘ ì§€ì  (0~1, ì „ì²´ ëŒ€ë¹„ ë¹„ìœ¨)")]
     [Range(0f, 1f)] public float HitStart = 0.27f;
 
-    [Tooltip("ÆÇÁ¤ Á¾·á ÁöÁ¡ (0~1)")]
+    [Tooltip("íŒì • ì¢…ë£Œ ì§€ì  (0~1)")]
     [Range(0f, 1f)] public float HitEnd = 0.45f;
 
-    [Tooltip("´ÙÀ½ Å¸·Î ¿¬°á °¡´ÉÇÑ ÁöÁ¡ (0~1)")]
+    [Tooltip("ë‹¤ìŒ íƒ€ë¡œ ì—°ê²° ê°€ëŠ¥í•œ ì§€ì  (0~1)")]
     [Range(0f, 1f)] public float CancelPoint = 0.75f;
-    [Tooltip("ÀÌ ½Ã°£ ¾È¿¡ ÀÔ·Â ¾øÀ¸¸é ÄŞº¸ ÃÊ±âÈ­")]
+    [Tooltip("ì´ ì‹œê°„ ì•ˆì— ì…ë ¥ ì—†ìœ¼ë©´ ì½¤ë³´ ì´ˆê¸°í™”")]
     public float ComboResetTime = 0.8f;
 
     [Header("Hit Override")]
-    [Tooltip("Ã¼Å©ÇÏ¸é ÀÌ Å¸¸¸ º°µµ ÆÇÁ¤ ¹üÀ§ »ç¿ë")]
+    [Tooltip("ì²´í¬í•˜ë©´ ì´ íƒ€ë§Œ ë³„ë„ íŒì • ë²”ìœ„ ì‚¬ìš©")]
     public bool OverrideHitShape = false;
 
     public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;
@@ -40,7 +40,7 @@ public class ComboStep
     public float MinRange = 0f;
 
     [Header("Damage")]
-    [Tooltip("¹«±â °ø°İ·Â ´ëºñ ¹èÀ²")]
+    [Tooltip("ë¬´ê¸° ê³µê²©ë ¥ ëŒ€ë¹„ ë°°ìœ¨")]
     public float DamageMultiplier = 1f;
     public float RangeMultiplier = 1f;
     public float RadiusMultiplier = 1f;
@@ -50,15 +50,15 @@ public class ComboStep
     public SwingMotion Motion = new();
 
     [Header("Feel")]
-    [Tooltip("¸Â¾ÒÀ» ¶§ È­¸é Á¤Áö ½Ã°£")]
+    [Tooltip("ë§ì•˜ì„ ë•Œ í™”ë©´ ì •ì§€ ì‹œê°„")]
     public float HitStopDuration = 0.05f;
     public float CameraKickFov = 4f;
     public float CameraShake = 0.3f;
-    [Tooltip("ÀüÁø °Å¸® (m)")]
+    [Tooltip("ì „ì§„ ê±°ë¦¬ (m)")]
     public float LungeDistance = 0f;
 
     [Header("Hand")]
-    [Tooltip("ÀÌ ¸ğ¼Ç µ¿¾È ¼Õ Ç¥½Ã ¹æ½Ä")]
+    [Tooltip("ì´ ëª¨ì…˜ ë™ì•ˆ ì† í‘œì‹œ ë°©ì‹")]
     public HandVisibility HandMode = HandVisibility.Auto;
 
     [Header("FX")]
@@ -74,7 +74,7 @@ public class ComboStep
     public float Recovery => Duration * (1f - HitEnd);
     public float CancelTime => Duration * CancelPoint;
 
-    /// <summary>ÀÌ Å¸°¡ ½ÇÁ¦·Î ¾µ ÆÇÁ¤ °ª</summary>
+    /// <summary>ì´ íƒ€ê°€ ì‹¤ì œë¡œ ì“¸ íŒì • ê°’</summary>
     public void ResolveHitShape(EquipmentData weapon, out WeaponHitMode mode, out float range, out float angle, out float height, out float minRange)
     {
         if (OverrideHitShape)

@@ -1,7 +1,7 @@
-using Fusion;
+ï»¿using Fusion;
 using UnityEngine;
 
-/// <summary>3ÀÎÄª Ä³¸¯ÅÍ ¾Ö´Ï¸ŞÀÌ¼Ç. ³²µéÀÌ º¸´Â ¸ğ½À¸¸ ´ã´ç.</summary>
+/// <summary>3ì¸ì¹­ ìºë¦­í„° ì• ë‹ˆë©”ì´ì…˜. ë‚¨ë“¤ì´ ë³´ëŠ” ëª¨ìŠµë§Œ ë‹´ë‹¹.</summary>
 public class PlayerAnimator : NetworkBehaviour
 {
     [Header("Refs")]
@@ -27,7 +27,7 @@ public class PlayerAnimator : NetworkBehaviour
         if (animator == null) animator = GetComponentInChildren<Animator>(true);
     }
 
-    /// <summary>PlayerMovement°¡ ¸Å Æ½ È£Ãâ</summary>
+    /// <summary>PlayerMovementê°€ ë§¤ í‹± í˜¸ì¶œ</summary>
     public void SetMovement(float speed01, bool grounded, float pitch)
     {
         if (!HasStateAuthority) return;
@@ -46,7 +46,7 @@ public class PlayerAnimator : NetworkBehaviour
 
     void LateUpdate()
     {
-        // Animator°¡ º»À» ¾´ µÚ¿¡ µ¤¾î½á¾ß ÇÔ
+        // Animatorê°€ ë³¸ì„ ì“´ ë’¤ì— ë®ì–´ì¨ì•¼ í•¨
         if (chestBone == null) return;
         chestBone.localRotation *= Quaternion.Euler(AimPitch * chestPitchScale, 0f, 0f);
     }

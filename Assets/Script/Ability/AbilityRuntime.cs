@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Fusion;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using static AbilityData;
 
@@ -32,9 +31,9 @@ public class AbilityRuntime : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnAbilityChanged))]
     public int RandomAbilityId { get; set; }
 
-    [Networked, Capacity(4)] public NetworkArray<float> CooldownEnd { get; }
-    [Networked, Capacity(4)] public NetworkArray<float> Charges { get; }
-    [Networked, Capacity(4)] public NetworkArray<float> MaxCharges { get; }
+    [Networked, Capacity(5)] public NetworkArray<float> CooldownEnd { get; }
+    [Networked, Capacity(5)] public NetworkArray<float> Charges { get; }
+    [Networked, Capacity(5)] public NetworkArray<float> MaxCharges { get; }
 
     [Networked] public TickTimer StateTimer { get; set; }
     [Networked] public int ActiveStateId { get; set; }
@@ -80,6 +79,7 @@ public class AbilityRuntime : NetworkBehaviour
     public PlayerEquipment Equipment => _equipment;
 
     private PlayerAttack _attack;
+    private static int _buffSeq;
 
 
 
@@ -435,7 +435,6 @@ public class AbilityRuntime : NetworkBehaviour
 
     void FireSkillEffects(AbilityData.SkillDef skill)
     {
-        Debug.Log($"[Skill] FireEffects: {skill.Name} / {skill.Effects?.Length ?? 0}개");
         if (skill.Effects == null || skill.Effects.Length == 0) return;
 
         GameObject target = null;
@@ -447,6 +446,8 @@ public class AbilityRuntime : NetworkBehaviour
 
         foreach (var e in skill.Effects)
             Execute(e, target);
+
+        _castingIsUltimate = false;
     }
 
     public GameObject FindTarget(AbilityData.SkillDef skill)
@@ -696,7 +697,6 @@ public class AbilityRuntime : NetworkBehaviour
         if (target == null && e.Target != TargetType.AreaAroundSelf)
         { Debug.Log($"[Exec] {e.Effect} → 대상 null (Target={e.Target})"); return; }
 
-        Debug.Log($"[Exec] {e.Effect} 실행 → {target.name}, val={e.GetValue()}");
 
         if (e.PerTargetCooldown > 0f && target != null)
         {
@@ -787,7 +787,7 @@ public class AbilityRuntime : NetworkBehaviour
             return;
         }
 
-        int src = SourceId.BuffBase + Runner.Tick;
+        int src = SourceId.BuffBase + (_buffSeq++);
         st.AddModifier(new StatModifier(e.Stat, e.ModType, e.GetValue(), src));
         StartCoroutine(RemoveAfter(st, src, e.Duration));
     }

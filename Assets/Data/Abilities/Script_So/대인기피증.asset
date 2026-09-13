@@ -18,4 +18,4 @@ MonoBehaviour:
   Damage: 200
   KillSelf: 1
   WarningEffect: {fileID: 0}
-  ExplodeEffect: {fileID: 0}
+  ExplodeEffect: {fileID: 3492086563444611750, guid: e74dbb04a4ab47246a2d9006f70a9751, type: 3}

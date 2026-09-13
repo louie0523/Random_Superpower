@@ -1,28 +1,28 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public enum MotionEventType
 {
-    Sound,          // »ç¿îµå Àç»ı
-    Effect,         // ÇÁ¸®ÆÕ »ı¼º
-    TrailStart,     // ¹«±â Æ®·¹ÀÏ ÄÑ±â
-    TrailEnd,       // ¹«±â Æ®·¹ÀÏ ²ô±â
-    CameraShake,    // È­¸é Èçµé¸²
-    Custom,         // ¹®ÀÚ¿­ Å°·Î ÄÚµå¿¡¼­ Ã³¸®
+    Sound,          // ì‚¬ìš´ë“œ ì¬ìƒ
+    Effect,         // í”„ë¦¬íŒ¹ ìƒì„±
+    TrailStart,     // ë¬´ê¸° íŠ¸ë ˆì¼ ì¼œê¸°
+    TrailEnd,       // ë¬´ê¸° íŠ¸ë ˆì¼ ë„ê¸°
+    CameraShake,    // í™”ë©´ í”ë“¤ë¦¼
+    Custom,         // ë¬¸ìì—´ í‚¤ë¡œ ì½”ë“œì—ì„œ ì²˜ë¦¬
 }
 
 public enum EventSpace
 {
-    World,          // »ı¼º ½ÃÁ¡ÀÇ ¿ùµå ÁÂÇ¥¿¡ °íÁ¤
-    AttachToPlayer, // ÇÃ·¹ÀÌ¾î¸¦ µû¶ó°¨
-    AttachToWeapon, // ¹«±â ³¡À» µû¶ó°¨
-    AttachToCamera, // Ä«¸Ş¶ó ±âÁØ (1ÀÎÄª Àü¿ë)
+    World,          // ìƒì„± ì‹œì ì˜ ì›”ë“œ ì¢Œí‘œì— ê³ ì •
+    AttachToPlayer, // í”Œë ˆì´ì–´ë¥¼ ë”°ë¼ê°
+    AttachToWeapon, // ë¬´ê¸° ëì„ ë”°ë¼ê°
+    AttachToCamera, // ì¹´ë©”ë¼ ê¸°ì¤€ (1ì¸ì¹­ ì „ìš©)
 }
 
 [System.Serializable]
 public class MotionEvent
 {
     [Range(0f, 1f)]
-    [Tooltip("¸ğ¼Ç ÁøÇà·ü (0~1)")]
+    [Tooltip("ëª¨ì…˜ ì§„í–‰ë¥  (0~1)")]
     public float Time = 0.5f;
 
     public MotionEventType Type = MotionEventType.Effect;
@@ -38,7 +38,7 @@ public class MotionEvent
     public Vector3 PositionOffset;
     public Vector3 RotationOffset;
     public float Scale = 1f;
-    [Tooltip("0ÀÌ¸é ÇÁ¸®ÆÕÀÌ ½º½º·Î Á¤¸®")]
+    [Tooltip("0ì´ë©´ í”„ë¦¬íŒ¹ì´ ìŠ¤ìŠ¤ë¡œ ì •ë¦¬")]
     public float Lifetime = 2f;
 
     [Header("Shake")]
@@ -48,8 +48,8 @@ public class MotionEvent
     public string Key;
 
     [Header("View")]
-    [Tooltip("1ÀÎÄª(º»ÀÎ)¿¡¼­ Àç»ı")]
+    [Tooltip("1ì¸ì¹­(ë³¸ì¸)ì—ì„œ ì¬ìƒ")]
     public bool ShowFirstPerson = true;
-    [Tooltip("3ÀÎÄª(Å¸ÀÎ)¿¡¼­ Àç»ı")]
+    [Tooltip("3ì¸ì¹­(íƒ€ì¸)ì—ì„œ ì¬ìƒ")]
     public bool ShowThirdPerson = true;
 }

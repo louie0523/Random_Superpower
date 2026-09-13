@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public enum DamageSource
 {
@@ -13,7 +13,7 @@ public static class DamageCalc
 {
     const float DEF_CONSTANT = 100f;
 
-    /// <summary>°ø°İÀÚ ±âÁØ ÃÖÁ¾ °ø°İ·Â °è»ê</summary>
+    /// <summary>ê³µê²©ì ê¸°ì¤€ ìµœì¢… ê³µê²©ë ¥ ê³„ì‚°</summary>
     public static float CalcOutgoing(PlayerStats attacker, float baseDamage,
                                      DamageSource source, bool applyCrit, out bool isCrit)
     {
@@ -22,7 +22,7 @@ public static class DamageCalc
 
         float dmg = baseDamage;
 
-        // ÃâÃ³º° ¹èÀ²
+        // ì¶œì²˜ë³„ ë°°ìœ¨
         switch (source)
         {
             case DamageSource.MeleeWeapon:
@@ -43,20 +43,20 @@ public static class DamageCalc
                 break;
         }
 
-        // Ä¡¸íÅ¸
+        // ì¹˜ëª…íƒ€
         if (applyCrit && Random.value < attacker.Get(StatType.CritChance))
         {
             dmg *= attacker.Get(StatType.CritDamage);
             isCrit = true;
         }
 
-        // ÃÖÁ¾ °¡ÇÇÁõ
+        // ìµœì¢… ê°€í”¼ì¦
         dmg *= attacker.Get(StatType.DamageDealt);
 
         return dmg;
     }
 
-    /// <summary>ÇÇ°İÀÚ ±âÁØ ÃÖÁ¾ ÇÇÇØ °è»ê</summary>
+    /// <summary>í”¼ê²©ì ê¸°ì¤€ ìµœì¢… í”¼í•´ ê³„ì‚°</summary>
     public static int CalcIncoming(PlayerStats target, float incoming, float defPen = 0f)
     {
         if (target == null) return Mathf.Max(1, Mathf.RoundToInt(incoming));
@@ -64,7 +64,7 @@ public static class DamageCalc
         float def = Mathf.Max(0f, target.Get(StatType.Defense) * (1f - defPen));
         float afterDef = incoming * (DEF_CONSTANT / (DEF_CONSTANT + def));
 
-        // ÃÖÁ¾ °¡ÇÇ°¨
+        // ìµœì¢… ê°€í”¼ê°
         afterDef *= target.Get(StatType.DamageTaken);
 
         return Mathf.Max(1, Mathf.RoundToInt(afterDef));

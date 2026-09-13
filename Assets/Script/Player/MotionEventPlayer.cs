@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
 
 public class MotionEventPlayer : MonoBehaviour
@@ -22,7 +22,7 @@ public class MotionEventPlayer : MonoBehaviour
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
     }
 
-    /// <summary>¸ğ¼Ç ½ÃÀÛ ½Ã È£Ãâ</summary>
+    /// <summary>ëª¨ì…˜ ì‹œì‘ ì‹œ í˜¸ì¶œ</summary>
     public void Play(ComboStep step, bool isLocal)
     {
         _step = step;
@@ -62,7 +62,7 @@ public class MotionEventPlayer : MonoBehaviour
 
     void Fire(MotionEvent e)
     {
-        // ½ÃÁ¡ ÇÊÅÍ
+        // ì‹œì  í•„í„°
         if (_isLocal && !e.ShowFirstPerson) return;
         if (!_isLocal && !e.ShowThirdPerson) return;
 
@@ -131,7 +131,7 @@ public class MotionEventPlayer : MonoBehaviour
         var go = Instantiate(e.Prefab, pos, rot);
         go.transform.localScale *= e.Scale;
 
-        // World´Â ºÎ¸ğ ¾È ºÙÀÓ
+        // WorldëŠ” ë¶€ëª¨ ì•ˆ ë¶™ì„
         if (e.Space != EventSpace.World && parent != null)
             go.transform.SetParent(parent, true);
 
