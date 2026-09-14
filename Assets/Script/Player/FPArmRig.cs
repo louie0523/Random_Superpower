@@ -34,8 +34,16 @@ public class FPArmRig : MonoBehaviour
     public Transform RightHandTarget;
     public Transform LeftHandTarget;
 
-    Transform RightPoseTarget => RightHandTarget != null ? RightHandTarget : RightHand;
-    Transform LeftPoseTarget => LeftHandTarget != null ? LeftHandTarget : LeftHand;
+    private Transform _stringBone;
+    private Vector3 _stringRestPos;
+    private Transform _muzzle;
+    private float _drawAmount;
+    private float _handBlend;
+    public float DrawAmount => _drawAmount;
+    public bool HasBowString => _stringBone != null;
+    public Transform StringBone => _stringBone;
+    public Transform Muzzle => _muzzle != null ? _muzzle : WeaponTip;
+
 
     private GameObject _weaponObj;
     private Transform _leftGripNode;
@@ -47,10 +55,16 @@ public class FPArmRig : MonoBehaviour
     public Transform GetWeaponTransform() =>
         _weaponObj != null ? _weaponObj.transform : null;
 
+    public Vector3 StringRestPos => _stringRestPos;
+
+
+
     // ══════════════════ 무기 장착 ══════════════════
 
     public void Mount(EquipmentData weapon)
     {
+        Debug.Log($"[FPArmRig] Mount 호출 — {(weapon == null ? "NULL" : $"{weapon.Id} {weapon.DisplayName}")}", this);
+
         DestroyWeapon();
         _leftGripNode = null;
         WeaponTip = null;
@@ -79,13 +93,64 @@ public class FPArmRig : MonoBehaviour
         _weaponObj.transform.localRotation = Quaternion.Euler(weapon.GetRotOffset(true));
         _weaponObj.transform.localScale = weapon.ScaleOverride;
 
-        _leftGripNode = _weaponObj.transform.Find(LeftGripNodeName);
+        // ★ 부착점 해석
+        _weaponObj.transform.localScale = weapon.ScaleOverride;
 
-        var tip = _weaponObj.transform.Find("Tip");
-        WeaponTip = tip != null ? tip : _weaponObj.transform;
+        // ★ 부착점 해석
+        var rig = _weaponObj.GetComponentInChildren<WeaponRig>(true);
+
+        if (rig == null)
+            Debug.LogWarning(
+                $"[FPArmRig] {weapon.DisplayName}의 모델에 WeaponRig가 없습니다.", this);
+
+        _leftGripNode = rig != null ? rig.LeftGrip : null;
+        _muzzle = rig != null ? rig.Muzzle : null;
+        WeaponTip = rig != null && rig.Tip != null ? rig.Tip : _weaponObj.transform;
+
+        _stringBone = rig != null ? rig.StringBone : null;
+        _drawAmount = 0f;
+        _handBlend = 0f;
+        if (_stringBone != null) _stringRestPos = _stringBone.localPosition;
 
         ApplyPose(GetEffectiveIdle());
     }
+
+    static Transform FindDeep(Transform root, string name)
+    {
+        if (root.name == name) return root;
+        for (int i = 0; i < root.childCount; i++)
+        {
+            var r = FindDeep(root.GetChild(i), name);
+            if (r != null) return r;
+        }
+        return null;
+    }
+    /// <summary>시위 당김 정도 0~1. 매 프레임 호출</summary>
+    public void SetDrawAmount(float t01, float dt = 0f)
+    {
+        _drawAmount = Mathf.Clamp01(t01);
+
+        // 손 블렌드는 부드럽게 추종
+        if (_weapon != null && dt > 0f)
+        {
+            float speed = 1f / Mathf.Max(0.01f, _weapon.StringHandBlendTime);
+            _handBlend = Mathf.MoveTowards(_handBlend, _drawAmount > 0f ? 1f : 0f, dt * speed);
+        }
+        else
+        {
+            _handBlend = _drawAmount > 0f ? 1f : 0f;   // 에디터 미리보기
+        }
+
+        if (_stringBone == null || _weapon == null) return;
+
+        Vector3 dir = _weapon.StringPullDir.sqrMagnitude > 0.0001f
+            ? _weapon.StringPullDir.normalized
+            : Vector3.back;
+
+        _stringBone.localPosition = _stringRestPos
+            + dir * (_weapon.StringPullDistance * _drawAmount);
+    }
+
 
     void DestroyWeapon()
     {
@@ -95,6 +160,10 @@ public class FPArmRig : MonoBehaviour
         else DestroyImmediate(_weaponObj);
 
         _weaponObj = null;
+        _stringBone = null;
+        _muzzle = null;
+        _drawAmount = 0f;
+        _handBlend = 0f;
     }
 
     public void CleanWeaponOnly()
@@ -114,6 +183,10 @@ public class FPArmRig : MonoBehaviour
         _leftGripNode = null;
         WeaponTip = null;
         _weapon = null;
+        _stringBone = null;
+        _muzzle = null;
+        _drawAmount = 0f;
+        _handBlend = 0f;
         RightHandRig = null;
         LeftHandRig = null;
     }
@@ -214,15 +287,27 @@ public class FPArmRig : MonoBehaviour
             }
         }
 
-
         if (LeftHand != null)
         {
             LeftHand.gameObject.SetActive(showLeft);
 
             if (showLeft)
             {
-                LeftHand.localPosition = pose.LeftPos;
-                LeftHand.localRotation = Quaternion.Euler(pose.LeftRot);
+                Vector3 pos = pose.LeftPos;
+                Quaternion rot = Quaternion.Euler(pose.LeftRot);
+
+                // ★ 시위 잡기 — 포즈 위치 ↔ 시위 본 위치 사이 보간
+                if (_stringBone != null && _weapon != null && _handBlend > 0.001f)
+                {
+                    Vector3 stringLocal = LeftHand.parent.InverseTransformPoint(
+                        _stringBone.TransformPoint(_weapon.StringHandOffset));
+
+                    pos = Vector3.Lerp(pos, stringLocal, _handBlend);
+                    rot = Quaternion.Slerp(rot, Quaternion.Euler(_weapon.StringHandRot), _handBlend);
+                }
+
+                LeftHand.localPosition = pos;
+                LeftHand.localRotation = rot;
             }
         }
 
@@ -280,10 +365,15 @@ public class FPArmRig : MonoBehaviour
             left = pose.LeftFingers;
         }
 
+        // ★ 시위 잡는 손 모양
+        if (_handBlend > 0.001f && _weapon != null && _weapon.StringHandPose != null)
+            left = _handBlend >= 0.999f
+                ? _weapon.StringHandPose
+                : HandPose.Lerp(left, _weapon.StringHandPose, _handBlend);
+
         if (RightHandRig != null && right != null) RightHandRig.Apply(right);
         if (LeftHandRig != null && showLeft && left != null) LeftHandRig.Apply(left);
     }
-
     void ApplyCameraPose(ArmPose pose)
     {
         if (CamPivot != null)

@@ -28,8 +28,8 @@ MonoBehaviour:
   PositionOffset: {x: 0, y: 0, z: 0}
   RotationOffset: {x: 0, y: 0, z: 0}
   ScaleOverride: {x: 1, y: 1, z: 1}
-  FpPositionOffset: {x: -0.613, y: 0.678, z: 0.066}
-  FpRotationOffset: {x: -26.891968, y: -94.78641, z: 46.47866}
+  FpPositionOffset: {x: -0.662, y: 0.576, z: 0.172}
+  FpRotationOffset: {x: -22.032349, y: -88.24701, z: 31.146297}
   OverrideIdlePose: 1
   RightHandPos: {x: 0.86, y: -0.8, z: 1.28}
   RightHandRot: {x: 22.102999, y: -56.82199, z: -30.660004}
@@ -746,7 +746,39 @@ MonoBehaviour:
       Key: 
       ShowFirstPerson: 1
       ShowThirdPerson: 1
+  RangedKind: 0
   ProjectilePrefab: {fileID: 0}
-  ProjectileSpeed: 40
   ProjectileLifetime: 3
   MuzzleNodeName: Muzzle
+  MinDrawTime: 0.25
+  MaxDrawTime: 1.2
+  MinDrawDamageMul: 0.4
+  MaxDrawDamageMul: 2.5
+  MinDrawSpeed: 25
+  MaxDrawSpeed: 70
+  StringPullDir: {x: 0, y: 0, z: -1}
+  StringPullDistance: 0.35
+  StringHandOffset: {x: 0, y: 0, z: 0}
+  StringHandRot: {x: 0, y: 0, z: 0}
+  StringHandPose:
+    Fingers:
+    - Joints:
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+    - Joints:
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+    - Joints:
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+    - Joints:
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+  StringHandBlendTime: 0.12
+  ProjectileGravity: 12
+  PierceCount: 0
+  PierceDamageFalloff: 0.3

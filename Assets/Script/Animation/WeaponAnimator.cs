@@ -44,6 +44,12 @@ public class WeaponAnimator : MonoBehaviour
     public float Progress01 => _step == null ? 0f : Mathf.Clamp01(_t / _step.TotalTime);
 
     private float _freezeTimer;
+
+    private float _drawAmount;
+
+    public FPArmRig ArmRig => armRig;
+    public void SetDraw(float t01) => _drawAmount = t01;
+
     public void Freeze(float d) => _freezeTimer = Mathf.Max(_freezeTimer, d);
 
     void Awake()
@@ -64,6 +70,7 @@ public class WeaponAnimator : MonoBehaviour
         _step = step;
         _t = 0f;
     }
+
 
     ArmPose CaptureCurrent()
     {
@@ -119,6 +126,10 @@ public class WeaponAnimator : MonoBehaviour
         {
             var idle = armRig.GetEffectiveIdle();
 
+            Debug.Log($"[Swing] draw={_drawAmount:F2} " +
+          $"left={idle.LeftPos} right={idle.RightPos} " +
+          $"blendTimer={_blendTimer:F2}");
+
             if (_blendTimer > 0f && _blendFrom != null)
             {
                 _blendTimer -= dt;
@@ -130,6 +141,7 @@ public class WeaponAnimator : MonoBehaviour
             }
             else
             {
+                armRig.SetDrawAmount(_drawAmount, dt);
                 armRig.ApplyPose(idle);
             }
             return;
@@ -172,6 +184,7 @@ public class WeaponAnimator : MonoBehaviour
             if (_blendTimer <= 0f) _blendFrom = null;
         }
 
+        armRig.SetDrawAmount(_drawAmount, dt);
         armRig.ApplyPose(pose);
     }
 

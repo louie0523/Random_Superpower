@@ -39,6 +39,7 @@ public class WeaponSetupWindow : EditorWindow
     private bool _showTrail = true;
     private bool _showOnlyDuringActive;
     private readonly List<Vector3> _tipTrail = new();
+    private float _previewDraw;
 
     private static readonly string[] FingerNames = { "엄지", "검지", "중지", "약지" };
     private static readonly float[] JointWeights = { 1f, 0.95f, 0.85f };
@@ -377,6 +378,75 @@ public class WeaponSetupWindow : EditorWindow
         EditorGUI.BeginChangeCheck();
 
         _weapon.Class = (WeaponClass)EditorGUILayout.EnumPopup("무기 계열", _weapon.Class);
+        // ══ 원거리 ══
+        if (_weapon.Class == WeaponClass.Ranged)
+        {
+            EditorGUI.indentLevel++;
+
+            _weapon.RangedKind = (RangedType)EditorGUILayout.EnumPopup("발사 방식", _weapon.RangedKind);
+            _weapon.ProjectilePrefab = (GameObject)EditorGUILayout.ObjectField(
+                "투사체 프리팹", _weapon.ProjectilePrefab, typeof(GameObject), false);
+            _weapon.ProjectileLifetime = EditorGUILayout.FloatField("투사체 수명 (초)", _weapon.ProjectileLifetime);
+
+
+            // 부착점 상태
+            var wr = _rig?.GetWeaponTransform()?.GetComponent<WeaponRig>();
+            if (wr == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "무기 모델 프리팹에 WeaponRig 컴포넌트가 없습니다.\n" +
+                    "프리팹을 열고 루트에 추가한 뒤, Muzzle·StringBone을 지정하세요.",
+                    MessageType.Warning);
+
+                if (_rig?.GetWeaponTransform() != null && GUILayout.Button("모델 프리팹 열기"))
+                    AssetDatabase.OpenAsset(_weapon.ModelPrefab);
+            }
+            else
+            {
+                EditorGUILayout.LabelField("발사 지점",
+                    wr.Muzzle != null ? wr.Muzzle.name : "없음 (Tip 사용)", EditorStyles.miniLabel);
+
+                if (_weapon.RangedKind == RangedType.Bow)
+                    EditorGUILayout.LabelField("시위 본",
+                        wr.StringBone != null ? wr.StringBone.name : "없음", EditorStyles.miniLabel);
+            }
+
+            if (_weapon.RangedKind == RangedType.Bow)
+            {
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("시위", EditorStyles.miniBoldLabel);
+
+                _weapon.StringPullDir = EditorGUILayout.Vector3Field("당기는 방향", _weapon.StringPullDir);
+                _weapon.StringPullDistance = EditorGUILayout.FloatField("당기는 거리 (m)", _weapon.StringPullDistance);
+
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("-Z (뒤)", EditorStyles.miniButtonLeft))
+                    _weapon.StringPullDir = Vector3.back;
+                if (GUILayout.Button("-X", EditorStyles.miniButtonMid))
+                    _weapon.StringPullDir = Vector3.left;
+                if (GUILayout.Button("-Y", EditorStyles.miniButtonMid))
+                    _weapon.StringPullDir = Vector3.down;
+                if (GUILayout.Button("씬에서 읽기", EditorStyles.miniButtonRight))
+                    CaptureStringPull();
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("시위 잡는 손", EditorStyles.miniBoldLabel);
+
+                _weapon.StringHandOffset = EditorGUILayout.Vector3Field("손 오프셋", _weapon.StringHandOffset);
+                _weapon.StringHandRot = EditorGUILayout.Vector3Field("손 회전", _weapon.StringHandRot);
+                _weapon.StringHandBlendTime = EditorGUILayout.FloatField("블렌드 시간 (초)", _weapon.StringHandBlendTime);
+
+                if (GUILayout.Button("씬 왼손 위치를 시위 손으로 저장"))
+                    CaptureStringHand();
+
+                DrawBowPreview();
+            }
+
+            EditorGUI.indentLevel--;
+            EditorGUILayout.Space(4);
+        }
+
         _weapon.HitMode = (WeaponHitMode)EditorGUILayout.EnumPopup("판정 방식", _weapon.HitMode);
         _weapon.Range = EditorGUILayout.FloatField("사거리 (m)", _weapon.Range);
 
@@ -392,6 +462,95 @@ public class WeaponSetupWindow : EditorWindow
             SceneView.RepaintAll();
         }
     }
+
+    void CaptureStringPull()
+    {
+        var bone = _rig?.StringBone;
+        if (bone == null)
+        {
+            Debug.LogWarning("[MotionSetup] 시위 본이 없습니다. WeaponRig의 StringBone을 확인하세요.");
+            return;
+        }
+
+        Vector3 delta = bone.localPosition - _rig.StringRestPos;
+
+        if (delta.sqrMagnitude < 1e-6f)
+        {
+            Debug.LogWarning("[MotionSetup] 시위를 먼저 씬에서 당겨 주세요.");
+            return;
+        }
+
+        Undo.RecordObject(_weapon, "Capture String Pull");
+        _weapon.StringPullDir = delta.normalized;
+        _weapon.StringPullDistance = delta.magnitude;
+        EditorUtility.SetDirty(_weapon);
+
+        Debug.Log($"[MotionSetup] 시위 — 방향 {_weapon.StringPullDir}, " +
+                  $"거리 {_weapon.StringPullDistance:F3}m");
+    }
+
+    void CaptureStringHand()
+    {
+        var bone = _rig?.StringBone;
+        if (bone == null || _rig.LeftHand == null)
+        {
+            Debug.LogWarning("[MotionSetup] 시위 본 또는 왼손이 없습니다.");
+            return;
+        }
+
+        Undo.RecordObject(_weapon, "Capture String Hand");
+
+        _weapon.StringHandOffset = bone.InverseTransformPoint(_rig.LeftHand.position);
+        _weapon.StringHandRot = NormalizeEuler(_rig.LeftHand.localRotation.eulerAngles);
+
+        if (_rig.LeftHandRig != null)
+        {
+            _weapon.StringHandPose = new HandPose();
+            _rig.LeftHandRig.BakeAll(_weapon.StringHandPose);
+        }
+
+        EditorUtility.SetDirty(_weapon);
+        Debug.Log($"[MotionSetup] 시위 손 저장 — 오프셋 {_weapon.StringHandOffset}");
+    }
+
+    void DrawBowPreview()
+    {
+        if (_rig == null) return;
+
+        EditorGUILayout.Space(4);
+
+        EditorGUI.BeginChangeCheck();
+        _previewDraw = EditorGUILayout.Slider("시위 미리보기", _previewDraw, 0f, 1f);
+        if (EditorGUI.EndChangeCheck())
+        {
+            _rig.SetDrawAmount(_previewDraw);
+            _rig.ApplyPose(_rig.GetEffectiveIdle());
+            SceneView.RepaintAll();
+        }
+
+        EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("씬 시위를 방향·거리로 읽기", GUILayout.Height(22)))
+            CaptureStringPull();
+
+        if (GUILayout.Button("놓기", GUILayout.Width(50), GUILayout.Height(22)))
+        {
+            _previewDraw = 0f;
+            _rig.SetDrawAmount(0f);
+            _rig.ApplyPose(_rig.GetEffectiveIdle());
+            SceneView.RepaintAll();
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        if (!_rig.HasBowString)
+            EditorGUILayout.HelpBox(
+                "시위 본이 없습니다. 무기 모델 프리팹의 WeaponRig에서 " +
+                "StringBone을 지정하세요.",
+                MessageType.Warning);
+    }
+
+
 
     void PullFromRigDefaults()
     {
@@ -1397,7 +1556,7 @@ public class WeaponSetupWindow : EditorWindow
         _playing = false;
         _playT = 0f;
         _selectedKey = -1;
-
+        _previewDraw = 0f;
         _rig.ApplyPose(_rig.GetEffectiveIdle());
         SceneView.RepaintAll();
     }

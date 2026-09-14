@@ -96,9 +96,11 @@ public class PlayerEquipment : NetworkBehaviour
         if (_mountedWeaponId == WeaponId) return;
 
         _mountedWeaponId = WeaponId;
-
         var data = database?.Get(WeaponId);
-        armRig.Mount(data);   // null이면 Mount가 알아서 초기화
+
+        Debug.Log($"[Equip] Mount 시도 — WeaponId={WeaponId}, data={(data == null ? "NULL" : data.DisplayName)}");
+
+        armRig.Mount(data);
     }
 
     public void Equip(int id)

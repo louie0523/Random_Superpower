@@ -65,6 +65,8 @@ public class PlayerMovement : NetworkBehaviour
 
             fpsCamera.enabled = false;
         }
+
+        Debug.Log($"[Movement] weaponAnim id={weaponAnim?.GetInstanceID()}");
     }
 
     public override void FixedUpdateNetwork()

@@ -9,6 +9,7 @@ public class PlayerAttack : NetworkBehaviour
     [SerializeField] private FPSCamera fpsCamera;
     [SerializeField] private WeaponAnimator weaponAnim;
     [SerializeField] private LayerMask hitMask;
+    [SerializeField] private LayerMask projectileMask;
 
     [Header("Debug")]
     [SerializeField] private bool drawGizmos = true;
@@ -40,6 +41,11 @@ public class PlayerAttack : NetworkBehaviour
     private AttackOverride _override;
     public bool IsAttacking => _attackTimer >= 0f;
 
+    // 원거리 상태
+    private float _drawTime = -1f;      // 시위 당긴 시간. -1이면 안 당기는 중
+    private bool _releaseQueued;
+    public bool IsDrawing => _drawTime >= 0f;
+
 
     // ══════════════════ 초기화 ══════════════════
 
@@ -58,6 +64,8 @@ public class PlayerAttack : NetworkBehaviour
         if (cameraRoot == null) Debug.LogError("[Attack] cameraRoot 비었음", this);
         if (fpsCamera == null) Debug.LogError("[Attack] fpsCamera 비었음", this);
         if (_stats == null) Debug.LogError("[Attack] PlayerStats 없음", this);
+
+        Debug.Log($"[Attack] weaponAnim id={weaponAnim?.GetInstanceID()}");
     }
 
 
@@ -65,7 +73,18 @@ public class PlayerAttack : NetworkBehaviour
     void Update()
     {
         if (!HasStateAuthority) return;
-        if (Input.GetMouseButtonDown(0)) _attackQueued = true;
+
+        var weapon = _equip != null ? _equip.GetWeapon() : null;
+        bool ranged = weapon != null && weapon.Class == WeaponClass.Ranged;
+
+        if (ranged)
+        {
+            if (Input.GetMouseButtonUp(0)) _releaseQueued = true;
+        }
+        else
+        {
+            if (Input.GetMouseButtonDown(0)) _attackQueued = true;
+        }
     }
 
     // ══════════════════ 메인 루프 ══════════════════
@@ -78,6 +97,7 @@ public class PlayerAttack : NetworkBehaviour
         {
             ResetCombo();
             _attackQueued = false;
+            CancelDraw();
             return;
         }
 
@@ -90,6 +110,16 @@ public class PlayerAttack : NetworkBehaviour
 
 
         float dt = Runner.DeltaTime;
+
+        // ── 원거리 ──
+        var wpn = _equip.GetWeapon();
+        if (wpn != null && wpn.Class == WeaponClass.Ranged)
+        {
+            TickRanged(wpn, dt);
+            return;
+        }
+
+        // ── 근거리 ──
         bool pressed = _attackQueued;
         _attackQueued = false;
 
@@ -100,6 +130,167 @@ public class PlayerAttack : NetworkBehaviour
         if (_attackTimer >= 0f) TickAttack(dt, pressed);
         else if (pressed) StartAttack();
     }
+
+    void TickRanged(EquipmentData weapon, float dt)
+    {
+        // ── 발사 (홀드 해제보다 먼저 처리) ──
+        if (_releaseQueued)
+        {
+            _releaseQueued = false;
+
+            if (_drawTime >= 0f)
+            {
+                if (weapon.CanRelease(_drawTime)) Fire(weapon);
+                CancelDraw();
+            }
+            return;
+        }
+
+        // ── 시위 당기는 중 ──
+        if (Input.GetMouseButton(0))
+        {
+            if (_drawTime < 0f) _drawTime = 0f;
+            _drawTime += dt;
+        }
+
+        weaponAnim?.SetDraw(DrawRatio01);
+        Debug.Log($"[SetDraw] ratio={DrawRatio01:F2} anim={(weaponAnim == null ? "NULL" : "OK")}");
+    }
+
+    void CancelDraw()
+    {
+        _drawTime = -1f;
+        _releaseQueued = false;
+        weaponAnim?.SetDraw(0f);
+    }
+
+    void Fire(EquipmentData weapon)
+    {
+        if (weapon.ProjectilePrefab == null)
+        {
+            Debug.LogWarning($"[Attack] {weapon.DisplayName}에 투사체 프리팹이 없습니다.");
+            return;
+        }
+
+        float ratio = weapon.GetDrawRatio(_drawTime);
+        float speed = weapon.GetDrawSpeed(ratio);
+        float dmgMul = weapon.GetDrawDamageMul(ratio);
+
+        Vector3 origin = GetMuzzlePos();
+        Vector3 dir = GetAimDirection(origin);      // ★
+
+        float baseDmg = _stats.Get(StatType.AttackPower) * dmgMul;
+
+        SpawnProjectile(weapon, origin, dir, speed, baseDmg, true);
+        RPC_PlayProjectile(origin, dir, speed);
+
+        if (fpsCamera != null) fpsCamera.FovKick(-3f * ratio);
+    }
+
+    /// <summary>화면 중앙이 가리키는 지점을 향하는 방향</summary>
+    Vector3 GetAimDirection(Vector3 from)
+    {
+        Vector3 camPos = cameraRoot.position;
+        Vector3 camFwd = cameraRoot.forward;
+
+        const float maxAim = 200f;
+
+        Vector3 aimPoint;
+
+        if (Physics.Raycast(camPos, camFwd, out var hit, maxAim,
+                            projectileMask, QueryTriggerInteraction.Ignore)
+            && hit.collider.gameObject != gameObject)
+        {
+            aimPoint = hit.point;
+        }
+        else
+        {
+            aimPoint = camPos + camFwd * maxAim;
+        }
+
+        Vector3 dir = aimPoint - from;
+        return dir.sqrMagnitude > 0.0001f ? dir.normalized : camFwd;
+    }
+
+    Vector3 GetMuzzlePos()
+    {
+        var armRig = weaponAnim != null ? weaponAnim.ArmRig : null;
+        var muzzle = armRig != null ? armRig.Muzzle : null;
+        return muzzle != null ? muzzle.position : cameraRoot.position + cameraRoot.forward * 0.5f;
+    }
+
+    void SpawnProjectile(EquipmentData weapon, Vector3 pos, Vector3 dir,
+                     float speed, float baseDmg, bool authoritative)
+    {
+        var go = Instantiate(weapon.ProjectilePrefab, pos, Quaternion.LookRotation(dir));
+        var proj = go.GetComponent<Projectile>();
+
+        if (proj == null)
+        {
+            Debug.LogWarning($"[Attack] {weapon.ProjectilePrefab.name}에 Projectile이 없습니다.");
+            Destroy(go, 3f);
+            return;
+        }
+
+        proj.Launch(
+            pos, dir, speed,
+            weapon.ProjectileGravity,
+            weapon.ProjectileLifetime,
+            authoritative,
+            projectileMask,
+            weapon.PierceCount,
+            weapon.PierceDamageFalloff,
+            _cc,
+            authoritative
+                ? (col, point, mul) => OnProjectileHit(col, point, baseDmg * mul)
+                : null);
+    }
+
+    void OnProjectileHit(Collider col, Vector3 point, float baseDmg)
+    {
+        if (col == null) return;
+        if (!col.TryGetComponent<PlayerHealth>(out var target)) return;   // 지형이면 그냥 멈춤
+        if (target.IsDead) return;
+        if (col.gameObject == gameObject) return;
+
+        float outgoing = DamageCalc.CalcOutgoing(
+            _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
+
+        target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
+            Mathf.RoundToInt(outgoing), Object.InputAuthority, point));
+
+        _ability?.FireTrigger(TriggerType.OnHit, col.gameObject);
+
+        float lifeSteal = _stats.Get(StatType.LifeSteal);
+        if (lifeSteal > 0f)
+        {
+            int heal = Mathf.RoundToInt(outgoing * lifeSteal);
+            if (heal > 0) _health.RPC_Heal(heal);
+        }
+
+        if (fpsCamera != null) fpsCamera.Shake(0.2f);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_PlayProjectile(Vector3 pos, Vector3 dir, float speed)
+    {
+        if (HasStateAuthority) return;   // 발사자는 이미 로컬로 만들었음
+
+        var weapon = _equip != null ? _equip.GetWeapon() : null;
+        if (weapon == null) return;
+
+        SpawnProjectile(weapon, pos, dir, speed, 0f, false);
+    }
+
+    public float DrawRatio01
+    {
+        get
+        {
+            var w = _equip != null ? _equip.GetWeapon() : null;
+            if (w == null || _drawTime < 0f) return 0f;
+            return Mathf.Clamp01(_drawTime / Mathf.Max(0.01f, w.MaxDrawTime));
+        }
+    }   
 
     void TickAttack(float dt, bool pressed)
     {
