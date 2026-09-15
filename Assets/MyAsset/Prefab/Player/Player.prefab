@@ -349,7 +349,7 @@ MonoBehaviour:
   _ArmorId: 0
   _HelmetId: 0
   _BootsId: 0
-  startWeaponId: 1002
+  startWeaponId: 1003
 --- !u!114 &-1179119024802948346
 MonoBehaviour:
   m_ObjectHideFlags: 0

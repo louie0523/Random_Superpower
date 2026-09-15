@@ -124,6 +124,7 @@ public class WeaponAnimator : MonoBehaviour
         // ── 모션 없음: 블렌드 아웃 중이거나 Idle ──
         if (_t < 0f || _step == null)
         {
+            armRig.SetDrawAmount(_drawAmount, dt);
             var idle = armRig.GetEffectiveIdle();
 
             Debug.Log($"[Swing] draw={_drawAmount:F2} " +

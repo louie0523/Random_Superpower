@@ -38,6 +38,7 @@ public class FPArmRig : MonoBehaviour
     private Vector3 _stringRestPos;
     private Transform _muzzle;
     private float _drawAmount;
+    private float _drawTarget;
     private float _handBlend;
     public float DrawAmount => _drawAmount;
     public bool HasBowString => _stringBone != null;
@@ -48,6 +49,7 @@ public class FPArmRig : MonoBehaviour
     private GameObject _weaponObj;
     private Transform _leftGripNode;
     private EquipmentData _weapon;
+    private ChargeVisual _chargeVisual;
 
     public Transform WeaponTip { get; private set; }
     public EquipmentData CurrentWeapon => _weapon;
@@ -87,17 +89,17 @@ public class FPArmRig : MonoBehaviour
                 weapon.ModelPrefab, hand);
         else
 #endif
-            _weaponObj = Instantiate(weapon.ModelPrefab, hand);
+         _weaponObj = Instantiate(weapon.ModelPrefab, hand);
 
         _weaponObj.transform.localPosition = weapon.GetPosOffset(true);
         _weaponObj.transform.localRotation = Quaternion.Euler(weapon.GetRotOffset(true));
         _weaponObj.transform.localScale = weapon.ScaleOverride;
 
-        // ★ 부착점 해석
         _weaponObj.transform.localScale = weapon.ScaleOverride;
 
-        // ★ 부착점 해석
         var rig = _weaponObj.GetComponentInChildren<WeaponRig>(true);
+
+        _chargeVisual = _weaponObj.GetComponentInChildren<ChargeVisual>(true);
 
         if (rig == null)
             Debug.LogWarning(
@@ -128,9 +130,23 @@ public class FPArmRig : MonoBehaviour
     /// <summary>시위 당김 정도 0~1. 매 프레임 호출</summary>
     public void SetDrawAmount(float t01, float dt = 0f)
     {
-        _drawAmount = Mathf.Clamp01(t01);
+        _drawTarget = Mathf.Clamp01(t01);
 
-        // 손 블렌드는 부드럽게 추종
+        if (dt > 0f)
+        {
+            // 올라갈 땐 즉시, 내려올 땐 부드럽게
+            if (_drawTarget >= _drawAmount)
+                _drawAmount = _drawTarget;
+            else
+                _drawAmount = Mathf.MoveTowards(_drawAmount, _drawTarget, dt * 4f);
+        }
+        else
+        {
+            _drawAmount = _drawTarget;   // 에디터 미리보기는 즉시
+        }
+
+
+
         if (_weapon != null && dt > 0f)
         {
             float speed = 1f / Mathf.Max(0.01f, _weapon.StringHandBlendTime);
@@ -138,8 +154,13 @@ public class FPArmRig : MonoBehaviour
         }
         else
         {
-            _handBlend = _drawAmount > 0f ? 1f : 0f;   // 에디터 미리보기
+            _handBlend = _drawAmount > 0f ? 1f : 0f;
         }
+
+        Debug.Log($"[Charge] amount={_drawAmount:F2} visual={(_chargeVisual == null ? "NULL" : "OK")}");
+
+        // ★ 차징 연출 — 시위 유무와 무관
+        if (_chargeVisual != null) _chargeVisual.SetAmount(_drawAmount);
 
         if (_stringBone == null || _weapon == null) return;
 
@@ -259,14 +280,26 @@ public class FPArmRig : MonoBehaviour
             p.RightRot = _weapon.RightHandRot;
             p.LeftPos = _weapon.LeftHandPos;
             p.LeftRot = _weapon.LeftHandRot;
-            p.UseLeftHand = _weapon.UseLeftHand;   // ★ 추가
+            p.UseLeftHand = _weapon.UseLeftHand;
         }
         else
         {
-            p.UseLeftHand = _weapon.UseLeftHand;   // ★ 추가
+            p.UseLeftHand = _weapon.UseLeftHand;
         }
 
         p.UseWeaponGrip = true;
+
+        // ★ 차징 자세 보간
+        if (_weapon.UseChargePose && _drawAmount > 0.001f && _weapon.ChargePose != null)
+        {
+            float t = _weapon.ChargeCurve != null
+                ? _weapon.ChargeCurve.Evaluate(_drawAmount)
+                : _drawAmount;
+
+            p = ArmPose.Lerp(p, _weapon.ChargePose, t);
+            p.UseWeaponGrip = true;      // ★ 손가락은 ApplyFingers가 따로 처리
+        }
+
         return p;
     }
 
@@ -365,7 +398,27 @@ public class FPArmRig : MonoBehaviour
             left = pose.LeftFingers;
         }
 
-        // ★ 시위 잡는 손 모양
+        // ★ 차징 손가락 — 그립에서 차징 포즈로 부드럽게
+        if (_weapon != null && _weapon.UseChargePose && _drawAmount > 0.001f)
+        {
+            var cp = _weapon.ChargePose;
+            if (cp != null && !cp.UseWeaponGrip)
+            {
+                float t = _weapon.ChargeCurve != null
+                    ? _weapon.ChargeCurve.Evaluate(_drawAmount)
+                    : _drawAmount;
+
+                if (cp.RightFingers != null)
+                    right = t >= 0.999f ? cp.RightFingers
+                                        : HandPose.Lerp(_weapon.RightGrip, cp.RightFingers, t);
+
+                if (cp.LeftFingers != null)
+                    left = t >= 0.999f ? cp.LeftFingers
+                                       : HandPose.Lerp(_weapon.LeftGrip, cp.LeftFingers, t);
+            }
+        }
+
+        // 시위 잡는 손 (활)
         if (_handBlend > 0.001f && _weapon != null && _weapon.StringHandPose != null)
             left = _handBlend >= 0.999f
                 ? _weapon.StringHandPose

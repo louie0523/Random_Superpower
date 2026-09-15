@@ -411,6 +411,120 @@ public class WeaponSetupWindow : EditorWindow
                         wr.StringBone != null ? wr.StringBone.name : "없음", EditorStyles.miniLabel);
             }
 
+            if (_weapon.RangedKind == RangedType.Bow ||
+      _weapon.RangedKind == RangedType.Staff)
+            {
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("차징", EditorStyles.miniBoldLabel);
+
+                _weapon.MinDrawTime = EditorGUILayout.FloatField("최소 차징 (초)", _weapon.MinDrawTime);
+                _weapon.MaxDrawTime = EditorGUILayout.FloatField("최대 차징 (초)", _weapon.MaxDrawTime);
+
+                EditorGUILayout.BeginHorizontal();
+                _weapon.MinDrawDamageMul = EditorGUILayout.FloatField("피해× 최소", _weapon.MinDrawDamageMul);
+                _weapon.MaxDrawDamageMul = EditorGUILayout.FloatField("최대", _weapon.MaxDrawDamageMul);
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
+                _weapon.MinDrawSpeed = EditorGUILayout.FloatField("속도 최소", _weapon.MinDrawSpeed);
+                _weapon.MaxDrawSpeed = EditorGUILayout.FloatField("최대", _weapon.MaxDrawSpeed);
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(2);
+                _weapon.ProjectileGravity = EditorGUILayout.FloatField("투사체 중력", _weapon.ProjectileGravity);
+
+                EditorGUILayout.BeginHorizontal();
+                _weapon.PierceCount = EditorGUILayout.IntSlider("관통", _weapon.PierceCount, 0, 1);
+                using (new EditorGUI.DisabledScope(_weapon.PierceCount == 0))
+                    _weapon.PierceDamageFalloff = EditorGUILayout.Slider(
+                        "감쇠", _weapon.PierceDamageFalloff, 0f, 1f);
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(4);
+                _weapon.UseChargePose = EditorGUILayout.Toggle("차징 자세 사용", _weapon.UseChargePose);
+
+                if (_weapon.UseChargePose)
+                {
+                    EditorGUI.indentLevel++;
+
+                    _weapon.ChargeCurve = EditorGUILayout.CurveField("보간 곡선", _weapon.ChargeCurve);
+
+                    EditorGUILayout.BeginHorizontal();
+                    using (new EditorGUI.DisabledScope(_previewDraw < 0.999f))
+                    if (GUILayout.Button("씬 자세를 차징 자세로 저장", GUILayout.Height(22)))
+                    {
+                        Undo.RecordObject(_weapon, "Capture Charge Pose");
+                        _weapon.ChargePose = CaptureCurrentPose();
+                        EditorUtility.SetDirty(_weapon);
+                        ApplyPreviewDraw();
+                    }
+                    if (GUILayout.Button("기본 자세 복사", GUILayout.Width(100)))
+                    {
+                        Undo.RecordObject(_weapon, "Copy Idle to Charge");
+                        _weapon.ChargePose = _rig.GetEffectiveIdle().Clone();
+                        EditorUtility.SetDirty(_weapon);
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    if (_weapon.ChargePose != null)
+                    {
+                        EditorGUI.BeginChangeCheck();
+
+                        var cp = _weapon.ChargePose;
+
+                        EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
+                        cp.RightPos = EditorGUILayout.Vector3Field("위치", cp.RightPos);
+                        cp.RightRot = EditorGUILayout.Vector3Field("회전", cp.RightRot);
+
+                        cp.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", cp.UseLeftHand);
+                        if (cp.UseLeftHand)
+                        {
+                            EditorGUILayout.LabelField("왼손", EditorStyles.miniBoldLabel);
+                            cp.LeftPos = EditorGUILayout.Vector3Field("위치", cp.LeftPos);
+                            cp.LeftRot = EditorGUILayout.Vector3Field("회전", cp.LeftRot);
+                        }
+
+                        EditorGUILayout.LabelField("무기 오프셋", EditorStyles.miniBoldLabel);
+                        cp.WeaponPos = EditorGUILayout.Vector3Field("위치", cp.WeaponPos);
+                        cp.WeaponRot = EditorGUILayout.Vector3Field("회전", cp.WeaponRot);
+
+                        EditorGUILayout.LabelField("카메라", EditorStyles.miniBoldLabel);
+                        cp.CamRot = EditorGUILayout.Vector3Field("회전", cp.CamRot);
+                        cp.CamFov = EditorGUILayout.FloatField("FOV 추가", cp.CamFov);
+
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            EditorUtility.SetDirty(_weapon);
+                            ApplyPreviewDraw();
+                        }
+                    }
+
+                    // 손가락 편집
+                    if (_rig.RightHandRig != null && _weapon.ChargePose != null)
+                    {
+                        _weapon.ChargePose.UseWeaponGrip = EditorGUILayout.Toggle(
+                            new GUIContent("무기 그립 사용", "끄면 차징 중 손 모양을 따로 지정"),
+                            _weapon.ChargePose.UseWeaponGrip);
+
+                        if (!_weapon.ChargePose.UseWeaponGrip)
+                        {
+                            Vector3 ax = GetCurlAxis();
+                            _weapon.ChargePose.RightFingers ??= HandPose.Grip(ax);
+                            DrawSceneEditToggle(_weapon.ChargePose.RightFingers, _rig.RightHandRig, _weapon);
+                            DrawFingerSliders(_weapon.ChargePose.RightFingers, ax, _rig.RightHandRig, _weapon);
+                        }
+                    }
+
+                    DrawChargePreview();
+
+                    EditorGUI.indentLevel--;
+                }
+
+            }
+
+
+
+            // ── 시위 (활만) ──
             if (_weapon.RangedKind == RangedType.Bow)
             {
                 EditorGUILayout.Space(4);
@@ -424,10 +538,8 @@ public class WeaponSetupWindow : EditorWindow
                     _weapon.StringPullDir = Vector3.back;
                 if (GUILayout.Button("-X", EditorStyles.miniButtonMid))
                     _weapon.StringPullDir = Vector3.left;
-                if (GUILayout.Button("-Y", EditorStyles.miniButtonMid))
+                if (GUILayout.Button("-Y", EditorStyles.miniButtonRight))
                     _weapon.StringPullDir = Vector3.down;
-                if (GUILayout.Button("씬에서 읽기", EditorStyles.miniButtonRight))
-                    CaptureStringPull();
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.Space(4);
@@ -461,6 +573,43 @@ public class WeaponSetupWindow : EditorWindow
             EditorUtility.SetDirty(_weapon);
             SceneView.RepaintAll();
         }
+    }
+
+    void DrawChargePreview()
+    {
+        if (_rig == null) return;
+
+        EditorGUILayout.Space(4);
+
+        EditorGUI.BeginChangeCheck();
+        _previewDraw = EditorGUILayout.Slider("차징 미리보기", _previewDraw, 0f, 1f);
+        if (EditorGUI.EndChangeCheck()) ApplyPreviewDraw();
+
+        EditorGUILayout.BeginHorizontal();
+
+        if (_weapon.RangedKind == RangedType.Bow &&
+            GUILayout.Button("씬 시위를 방향·거리로 읽기", GUILayout.Height(22)))
+            CaptureStringPull();
+
+        if (GUILayout.Button("놓기", GUILayout.Width(50), GUILayout.Height(22)))
+        {
+            _previewDraw = 0f;
+            ApplyPreviewDraw();
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        if (_weapon.RangedKind == RangedType.Bow && !_rig.HasBowString)
+            EditorGUILayout.HelpBox(
+                "시위 본이 없습니다. 무기 모델 프리팹의 WeaponRig에서 StringBone을 지정하세요.",
+                MessageType.Warning);
+    }
+
+    void ApplyPreviewDraw()
+    {
+        _rig.SetDrawAmount(_previewDraw);
+        _rig.ApplyPose(_rig.GetEffectiveIdle());
+        SceneView.RepaintAll();
     }
 
     void CaptureStringPull()

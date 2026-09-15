@@ -6,11 +6,11 @@ public enum WeaponClass { Melee, Ranged }
 
 public enum RangedType
 {
-    Bow,        // 시위를 당김 — 차지 비례 피해
+    Bow,        // 시위를 당김
+    Staff,      // 차징 후 발사 (시위 없음)
     Gun,        // 즉발
-    Thrown,     // 던지기 (수류탄, 단검 등)
+    Thrown,     // 던지기
 }
-
 public enum WeaponHitMode
 {
     ForwardArc,      // 정면 부채꼴 (근접 기본)
@@ -97,7 +97,7 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Tooltip("총구/시위 위치. 모델 프리팹 내부 오브젝트 이름")]
     public string MuzzleNodeName = "Muzzle";
 
-    [Header("─── Ranged: 활 (Bow 전용) ───")]
+    [Header("─── Ranged: 차징 ───")]
     [Tooltip("이 시간 미만에 떼면 발사되지 않음")]
     public float MinDrawTime = 0.25f;
     [Tooltip("이 시간에 최대 위력. 더 당겨도 늘지 않음")]
@@ -112,6 +112,16 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public float MinDrawSpeed = 25f;
     [Tooltip("최대 시위 시 투사체 속도")]
     public float MaxDrawSpeed = 70f;
+
+    [Header("─── Ranged: 차징 자세 ───")]
+    [Tooltip("차징 중 자세를 바꿀지. 끄면 기본 자세 유지")]
+    public bool UseChargePose = false;
+
+    [Tooltip("완전히 차징했을 때의 자세")]
+    public ArmPose ChargePose = new();
+
+    [Tooltip("자세 보간 곡선. 비우면 선형")]
+    public AnimationCurve ChargeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Header("─── Ranged: 시위 ───")]
     [Tooltip("시위가 당겨지는 방향. 시위 본의 로컬 기준")]

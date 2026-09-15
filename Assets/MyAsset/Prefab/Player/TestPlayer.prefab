@@ -340,8 +340,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5570682534846719283}
-  - {fileID: 1872944648697653369}
+  - {fileID: 6791197608767708747}
+  - {fileID: 2520778070149761435}
   m_Father: {fileID: 7025007751488925499}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8252702204826120861
@@ -356,12 +356,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7bc830af4117e4db69e1221135f298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FPArmRig
-  ForceShowLeftHand: 0
   ArmRoot: {fileID: 5907108311383919493}
-  RightHand: {fileID: 5570682534846719283}
-  LeftHand: {fileID: 1872944648697653369}
-  RightHandRig: {fileID: 4422986366660544040}
-  LeftHandRig: {fileID: 6559453087372139536}
+  RightHand: {fileID: 6791197608767708747}
+  LeftHand: {fileID: 2520778070149761435}
+  RightHandRig: {fileID: 3319644221834837328}
+  LeftHandRig: {fileID: 6918171850445913586}
+  RightHandPrefab: {fileID: 919132149155446097, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
+  LeftHandPrefab: {fileID: 919132149155446097, guid: c303a6df0f6d8f545b42f903868526b7, type: 3}
   IdlePose:
     RightPos: {x: 0.86, y: -0.8, z: 1.28}
     RightRot: {x: 22.103, y: -56.822, z: -30.66}
@@ -377,85 +378,46 @@ MonoBehaviour:
     RightFingers:
       Fingers:
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
     LeftFingers:
       Fingers:
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
       - Joints:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-  IdleRightFingers:
-    Fingers:
-    - Joints:
-      - {x: -0.00000029481893, y: 0.00000057675777, z: -0.0000015378059}
-      - {x: 0.0000000013935123, y: 0.0000000023074238, z: 0.00000021332397}
-      - {x: 0.000023838904, y: -0.00001645892, z: -0.000003825718}
-    - Joints:
-      - {x: -0.0000001683566, y: 0.00000023985328, z: -0.0000013756622}
-      - {x: -0, y: 0, z: 0}
-      - {x: -0.00000012686466, y: 0.000001484962, z: 0.0000009196779}
-    - Joints:
-      - {x: -0.00000014883126, y: -0.000000011207528, z: -0.00000023452121}
-      - {x: -0.00000015162442, y: -0.000000006670176, z: 0.000000025452318}
-      - {x: -0, y: 0, z: 0}
-    - Joints:
-      - {x: -0.00000006340884, y: 0.000000049299427, z: 0.0000031684465}
-      - {x: -0.00000019317356, y: 0.00000081769724, z: 0.00000014980733}
-      - {x: 0.000018138595, y: -0.0000025519773, z: 0.00000037734162}
-  IdleLeftFingers:
-    Fingers:
-    - Joints:
-      - {x: -23.918335, y: -4.905945, z: 16.515766}
-      - {x: 0.86433893, y: -1.1606445, z: -20.409882}
-      - {x: -42.55249, y: -3.258606, z: 21.893324}
-    - Joints:
-      - {x: -10.799347, y: -6.5845337, z: 11.877369}
-      - {x: 22.814796, y: 7.151159, z: -42.602875}
-      - {x: -11.999847, y: 24.64155, z: -13.902557}
-    - Joints:
-      - {x: -16.010345, y: 1.000506, z: -19.261475}
-      - {x: 43.446518, y: 3.4460778, z: -13.251068}
-      - {x: -19.134918, y: 8.783837, z: -16.598083}
-    - Joints:
-      - {x: -15.734528, y: -0.96691895, z: -17.854614}
-      - {x: 27.376406, y: 4.664522, z: -0.07702637}
-      - {x: -13.40097, y: -11.113007, z: 0.5716312}
-  RightHandPrefab: {fileID: 919132149155446097, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
-  LeftHandPrefab: {fileID: 919132149155446097, guid: c303a6df0f6d8f545b42f903868526b7, type: 3}
-  LeftGripNodeName: LeftGrip
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+        - {x: 0, y: 0, z: 0, w: 6.98e-43}
+  CamPivot: {fileID: 0}
   Camera: {fileID: 0}
-  EnableFloat: 1
-  FloatAmount: 0.012
-  FloatSpeed: 1.4
-  RotDrift: 2.5
-  PreviewCameraPivot: {fileID: 0}
---- !u!1001 &2198337616576832191
+  LeftGripNodeName: LeftGrip
+  ForceShowLeftHand: 0
+  RightHandTarget: {fileID: 0}
+  LeftHandTarget: {fileID: 0}
+--- !u!1001 &2704274252126241629
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -469,7 +431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 539333913238522566, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8
+      value: -0.79999995
       objectReference: {fileID: 0}
     - target: {fileID: 539333913238522566, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -507,20 +469,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hand_L
       objectReference: {fileID: 0}
+    - target: {fileID: 8920729283212384856, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
---- !u!4 &1872944648697653369 stripped
+--- !u!4 &2520778070149761435 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 539333913238522566, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
-  m_PrefabInstance: {fileID: 2198337616576832191}
+  m_PrefabInstance: {fileID: 2704274252126241629}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6559453087372139536 stripped
+--- !u!114 &6918171850445913586 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5009634179132374703, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
-  m_PrefabInstance: {fileID: 2198337616576832191}
+  m_PrefabInstance: {fileID: 2704274252126241629}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -528,7 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3bf480ae5f05e54cb519bd614b2c90d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandRig
---- !u!1001 &9205214034584133238
+--- !u!1001 &7840583448317519118
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -542,7 +508,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8
+      value: -0.79999995
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -558,11 +524,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.4057793
+      value: -0.40577942
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.14026317
+      value: -0.14026311
       objectReference: {fileID: 0}
     - target: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -580,35 +546,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hand_R
       objectReference: {fileID: 0}
-    - target: {fileID: 4818543524286912606, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-      propertyPath: _restEuler.Array.data[1].z
-      value: 3.5424027
-      objectReference: {fileID: 0}
-    - target: {fileID: 4818543524286912606, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-      propertyPath: _restEuler.Array.data[2].z
-      value: 36.005547
-      objectReference: {fileID: 0}
-    - target: {fileID: 4818543524286912606, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-      propertyPath: _restEuler.Array.data[3].y
-      value: 2.8023615
-      objectReference: {fileID: 0}
-    - target: {fileID: 4818543524286912606, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-      propertyPath: _restEuler.Array.data[6].z
-      value: 3.9248953
-      objectReference: {fileID: 0}
-    - target: {fileID: 4818543524286912606, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-      propertyPath: _restEuler.Array.data[10].y
-      value: 7.9983864
+    - target: {fileID: 5638685363246132187, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
---- !u!114 &4422986366660544040 stripped
+--- !u!114 &3319644221834837328 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4818543524286912606, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-  m_PrefabInstance: {fileID: 9205214034584133238}
+  m_PrefabInstance: {fileID: 7840583448317519118}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -616,8 +566,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3bf480ae5f05e54cb519bd614b2c90d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandRig
---- !u!4 &5570682534846719283 stripped
+--- !u!4 &6791197608767708747 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-  m_PrefabInstance: {fileID: 9205214034584133238}
+  m_PrefabInstance: {fileID: 7840583448317519118}
   m_PrefabAsset: {fileID: 0}

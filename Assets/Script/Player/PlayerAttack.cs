@@ -45,6 +45,8 @@ public class PlayerAttack : NetworkBehaviour
     private float _drawTime = -1f;      // 시위 당긴 시간. -1이면 안 당기는 중
     private bool _releaseQueued;
     public bool IsDrawing => _drawTime >= 0f;
+    static bool IsChargeType(RangedType t) =>
+    t == RangedType.Bow || t == RangedType.Staff;
 
 
     // ══════════════════ 초기화 ══════════════════
@@ -184,7 +186,12 @@ public class PlayerAttack : NetworkBehaviour
         SpawnProjectile(weapon, origin, dir, speed, baseDmg, true);
         RPC_PlayProjectile(origin, dir, speed);
 
-        if (fpsCamera != null) fpsCamera.FovKick(-3f * ratio);
+        if (fpsCamera != null)
+        {
+            fpsCamera.FovKick(-3f * ratio);
+            fpsCamera.Shake(0.15f * ratio);
+        }
+
     }
 
     /// <summary>화면 중앙이 가리키는 지점을 향하는 방향</summary>
