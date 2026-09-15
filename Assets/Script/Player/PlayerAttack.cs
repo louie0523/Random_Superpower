@@ -15,6 +15,7 @@ public class PlayerAttack : NetworkBehaviour
     [SerializeField] private bool drawGizmos = true;
     [SerializeField] private bool logHits = false;
 
+
     // 컴포넌트
     private PlayerStats _stats;
     private PlayerHealth _health;
@@ -32,6 +33,14 @@ public class PlayerAttack : NetworkBehaviour
     private bool _attackQueued;
     private bool _hitApplied;
     private ComboStep _current;
+
+    // 총기 상태
+    private float _fireTimer;
+    private int _shotsInBurst;      // 연사 반동 누적용
+    private float _burstResetTimer;
+
+
+    [SerializeField] private GameObject tracerPrefab;
 
     private float _pendingDamageMul = 1f;
 
@@ -79,13 +88,23 @@ public class PlayerAttack : NetworkBehaviour
         var weapon = _equip != null ? _equip.GetWeapon() : null;
         bool ranged = weapon != null && weapon.Class == WeaponClass.Ranged;
 
-        if (ranged)
+        if (!ranged)
         {
-            if (Input.GetMouseButtonUp(0)) _releaseQueued = true;
+            if (Input.GetMouseButtonDown(0)) _attackQueued = true;
+            return;
+        }
+
+        if (weapon.RangedKind == RangedType.Gun)
+        {
+            if (weapon.FullAuto)
+            {
+                if (Input.GetMouseButton(0)) _attackQueued = true;
+            }
+            else if (Input.GetMouseButtonDown(0)) _attackQueued = true;
         }
         else
         {
-            if (Input.GetMouseButtonDown(0)) _attackQueued = true;
+            if (Input.GetMouseButtonUp(0)) _releaseQueued = true;
         }
     }
 
@@ -135,6 +154,12 @@ public class PlayerAttack : NetworkBehaviour
 
     void TickRanged(EquipmentData weapon, float dt)
     {
+        if (weapon.RangedKind == RangedType.Gun)
+        {
+            TickGun(weapon, dt);
+            return;
+        }
+
         // ── 발사 (홀드 해제보다 먼저 처리) ──
         if (_releaseQueued)
         {
@@ -157,6 +182,129 @@ public class PlayerAttack : NetworkBehaviour
 
         weaponAnim?.SetDraw(DrawRatio01);
         Debug.Log($"[SetDraw] ratio={DrawRatio01:F2} anim={(weaponAnim == null ? "NULL" : "OK")}");
+    }
+
+
+    void TickGun(EquipmentData weapon, float dt)
+    {
+        _fireTimer -= dt;
+
+        // 연사 끊기면 반동 누적 초기화
+        _burstResetTimer -= dt;
+        if (_burstResetTimer <= 0f) _shotsInBurst = 0;
+
+        if (!_attackQueued) return;
+        _attackQueued = false;
+
+        if (_fireTimer > 0f) return;
+        if (!_equip.ConsumeAmmo()) return;      // 탄약 없으면 발사 안 됨
+
+        FireGun(weapon);
+
+        _fireTimer = 60f / Mathf.Max(1f, weapon.RoundsPerMinute);
+        _shotsInBurst++;
+        _burstResetTimer = 0.35f;
+    }
+
+    void FireGun(EquipmentData weapon)
+    {
+        if (weapon.FireMode == GunFireMode.Hitscan)
+            FireHitscan(weapon);
+        else
+            FireGunProjectile(weapon);
+
+        ApplyGunRecoil(weapon);
+    }
+
+    void ApplyGunRecoil(EquipmentData weapon)
+    {
+        if (fpsCamera == null) return;
+
+        float mul = Mathf.Min(
+            Mathf.Pow(weapon.RecoilRamp, _shotsInBurst), weapon.RecoilMaxMul);
+
+        fpsCamera.Recoil(weapon.RecoilVertical * mul, weapon.RecoilHorizontal * mul);
+        fpsCamera.FovKick(-2f);
+    }
+
+    void FireGunProjectile(EquipmentData weapon)
+    {
+        if (weapon.ProjectilePrefab == null)
+        {
+            Debug.LogWarning($"[Attack] {weapon.DisplayName}에 투사체 프리팹이 없습니다.");
+            return;
+        }
+
+        Vector3 origin = GetMuzzlePos();
+        Vector3 dir = GetAimDirection(origin);
+        float baseDmg = _stats.Get(StatType.AttackPower);
+
+        SpawnProjectile(weapon, origin, dir, weapon.ProjectileSpeed, baseDmg, true);
+        RPC_PlayProjectile(origin, dir, weapon.ProjectileSpeed);
+    }
+
+    void OnHitscanHit(RaycastHit hit, EquipmentData weapon)
+    {
+        if (!hit.collider.TryGetComponent<PlayerHealth>(out var target)) return;
+        if (target.IsDead) return;
+
+        float baseDmg = _stats.Get(StatType.AttackPower);
+        float outgoing = DamageCalc.CalcOutgoing(
+            _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
+
+        target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
+            Mathf.RoundToInt(outgoing), Object.InputAuthority, hit.point));
+
+        _ability?.FireTrigger(TriggerType.OnHit, hit.collider.gameObject);
+
+        float lifeSteal = _stats.Get(StatType.LifeSteal);
+        if (lifeSteal > 0f)
+        {
+            int heal = Mathf.RoundToInt(outgoing * lifeSteal);
+            if (heal > 0) _health.RPC_Heal(heal);
+        }
+
+        if (fpsCamera != null) fpsCamera.Shake(0.15f);
+    }
+
+    void FireHitscan(EquipmentData weapon)
+    {
+        Vector3 origin = GetMuzzlePos();
+        Vector3 camPos = cameraRoot.position;
+        Vector3 dir = cameraRoot.forward;
+
+        float range = Mathf.Max(1f, weapon.HitscanRange);
+        Vector3 endPoint = camPos + dir * range;
+
+        // 판정은 카메라 기준 — 조준선과 정확히 일치
+        if (Physics.Raycast(camPos, dir, out var hit, range,
+                            projectileMask, QueryTriggerInteraction.Ignore)
+            && hit.collider.gameObject != gameObject)
+        {
+            endPoint = hit.point;
+            OnHitscanHit(hit, weapon);
+        }
+
+        // 연출은 총구에서 착탄점까지
+        SpawnTracer(weapon, origin, endPoint);
+        RPC_PlayHitscan(origin, endPoint);
+    }
+
+    void SpawnTracer(EquipmentData weapon, Vector3 from, Vector3 to)
+    {
+        if (weapon == null || weapon.TracerPrefab == null) return;
+
+        var go = Instantiate(weapon.TracerPrefab);
+        go.GetComponent<Tracer>()?.Show(from, to);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_PlayHitscan(Vector3 from, Vector3 to)
+    {
+        if (HasStateAuthority) return;   // 발사자는 이미 로컬로 만들었음
+
+        var weapon = _equip != null ? _equip.GetWeapon() : null;
+        SpawnTracer(weapon, from, to);
     }
 
     void CancelDraw()
@@ -651,4 +799,6 @@ public class PlayerAttack : NetworkBehaviour
             Gizmos.DrawWireSphere(o, minRange);
         }
     }
+
+
 }

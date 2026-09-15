@@ -17,6 +17,12 @@ public enum WeaponHitMode
     ForwardSphere,   // 정면 구체 (각도 제한 없음, 범위기)
 }
 
+public enum GunFireMode
+{
+    Hitscan,        // 즉시 판정 (권총, 소총)
+    Projectile,     // 투사체 (유탄, 로켓)
+}
+
 
 [CreateAssetMenu(menuName = "Game/Equipment")]
 public class EquipmentData : ScriptableObject, IMotionSource
@@ -123,6 +129,31 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Tooltip("자세 보간 곡선. 비우면 선형")]
     public AnimationCurve ChargeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+    [Header("─── Ranged: 총기 ───")]
+    [Tooltip("판정 방식")]
+    public GunFireMode FireMode = GunFireMode.Hitscan;
+
+    [Tooltip("최대 탄약. 장전 없음")]
+    public int MaxAmmo = 12;
+
+    public float RoundsPerMinute = 500f;
+    public bool FullAuto = false;
+
+    [Header("반동")]
+    public float RecoilVertical = 2f;
+    public float RecoilHorizontal = 0.5f;
+    public float RecoilRamp = 1.15f;
+    public float RecoilMaxMul = 3f;
+
+    [Header("히트스캔 전용")]
+    [Tooltip("최대 사거리 (m)")]
+    public float HitscanRange = 200f;
+    [Tooltip("예광탄 프리팹")]
+    public GameObject TracerPrefab;
+
+    [Tooltip("투사체 속도. 차징 무기는 min/max를 사용")]
+    public float ProjectileSpeed = 60f;
+
     [Header("─── Ranged: 시위 ───")]
     [Tooltip("시위가 당겨지는 방향. 시위 본의 로컬 기준")]
     public Vector3 StringPullDir = new(0f, 0f, -1f);
@@ -151,6 +182,8 @@ public class EquipmentData : ScriptableObject, IMotionSource
 
     [Tooltip("관통 시 피해 감소 비율")]
     [Range(0f, 1f)] public float PierceDamageFalloff = 0.3f;
+
+
 
 
 

@@ -18,6 +18,8 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int BootsId { get; set; }
 
+    [Networked] public int Ammo { get; set; }
+
     [Header("Starting Gear")]
     [SerializeField] private int startWeaponId = 1001;
 
@@ -42,9 +44,26 @@ public class PlayerEquipment : NetworkBehaviour
             ArmorId = 0;
             HelmetId = 0;
             BootsId = 0;
+            RefillAmmo();
         }
 
         ApplyAll();
+    }
+
+    public void RefillAmmo()
+    {
+        if (!HasStateAuthority) return;
+        var w = GetWeapon();
+        Ammo = (w != null && w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun)
+            ? w.MaxAmmo : 0;
+    }
+
+    public bool ConsumeAmmo()
+    {
+        if (!HasStateAuthority) return false;
+        if (Ammo <= 0) return false;
+        Ammo--;
+        return true;
     }
 
     void MountThirdPersonWeapon()
@@ -112,7 +131,7 @@ public class PlayerEquipment : NetworkBehaviour
 
         switch (data.Slot)
         {
-            case EquipSlot.Weapon: WeaponId = id; break;
+            case EquipSlot.Weapon: WeaponId = id; RefillAmmo(); break;
             case EquipSlot.Armor: ArmorId = id; break;
             case EquipSlot.Helmet: HelmetId = id; break;
             case EquipSlot.Boots: BootsId = id; break;

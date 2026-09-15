@@ -209,6 +209,8 @@ public class FPSCamera : MonoBehaviour
         );
     }
 
+
+
     // ---------------- FOV ----------------
 
     void HandleFov(float speed)
@@ -247,5 +249,14 @@ public class FPSCamera : MonoBehaviour
     public void Shake(float amount)
     {
         _shakeAmount = Mathf.Max(_shakeAmount, amount);
+    }
+
+    /// <summary>총기 반동. 위로 튀고 좌우로 흔들림</summary>
+    public void Recoil(float vertical, float horizontal)
+    {
+        _punchVel.y += vertical;
+        _punchVel.x += Random.Range(-horizontal, horizontal);
+
+        _pitch = Mathf.Clamp(_pitch - vertical * 0.35f, pitchMin, pitchMax);
     }
 }

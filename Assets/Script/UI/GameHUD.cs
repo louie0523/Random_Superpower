@@ -63,8 +63,20 @@ public class GameHUD : MonoBehaviour
     void DrawStatus(PlayerHealth hp)
     {
         GUI.Label(new Rect(20, 20, 300, 30), $"HP: {hp.HP}   SOUL: {hp.Soul}");
-        GUI.Label(new Rect(20, 40, 300, 30),
-            $"K {hp.Kills}  A {hp.Assists}  D {hp.Deaths}");
+        GUI.Label(new Rect(20, 40, 300, 30), $"K {hp.Kills}  A {hp.Assists}  D {hp.Deaths}");
+
+        // 탄약
+        if (hp.TryGetComponent<PlayerEquipment>(out var eq))
+        {
+            var w = eq.GetWeapon();
+            if (w != null && w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun)
+            {
+                GUI.color = eq.Ammo > 0 ? Color.white : new Color(1f, 0.3f, 0.3f);
+                GUI.Label(new Rect(Screen.width - 140, Screen.height - 60, 120, 30),
+                    $"{eq.Ammo} / {w.MaxAmmo}");
+                GUI.color = Color.white;
+            }
+        }
 
         if (hp.IsDead)
             GUI.Label(new Rect(Screen.width / 2 - 40, Screen.height / 2, 200, 30), "사망");
@@ -101,6 +113,7 @@ public class GameHUD : MonoBehaviour
 
         GUI.Label(new Rect(20, 70, 400, 30), $"이번 생: {rand.DisplayName}");
     }
+
 
     void DrawSkillBar(AbilityRuntime ar)
     {

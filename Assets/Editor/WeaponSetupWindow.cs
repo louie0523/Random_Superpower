@@ -522,6 +522,33 @@ public class WeaponSetupWindow : EditorWindow
 
             }
 
+            if (_weapon.RangedKind == RangedType.Gun)
+            {
+                _weapon.FireMode = (GunFireMode)EditorGUILayout.EnumPopup("판정 방식", _weapon.FireMode);
+                _weapon.MaxAmmo = EditorGUILayout.IntField("탄약", _weapon.MaxAmmo);
+                _weapon.RoundsPerMinute = EditorGUILayout.FloatField("분당 발사", _weapon.RoundsPerMinute);
+                _weapon.FullAuto = EditorGUILayout.Toggle("연사", _weapon.FullAuto);
+
+                EditorGUILayout.Space(2);
+                EditorGUILayout.LabelField("반동", EditorStyles.miniBoldLabel);
+                _weapon.RecoilVertical = EditorGUILayout.FloatField("수직", _weapon.RecoilVertical);
+                _weapon.RecoilHorizontal = EditorGUILayout.FloatField("수평", _weapon.RecoilHorizontal);
+                _weapon.RecoilRamp = EditorGUILayout.FloatField("누적 배율", _weapon.RecoilRamp);
+                _weapon.RecoilMaxMul = EditorGUILayout.FloatField("누적 상한", _weapon.RecoilMaxMul);
+
+                EditorGUILayout.Space(2);
+                if (_weapon.FireMode == GunFireMode.Hitscan)
+                {
+                    _weapon.HitscanRange = EditorGUILayout.FloatField("사거리 (m)", _weapon.HitscanRange);
+                    _weapon.TracerPrefab = (GameObject)EditorGUILayout.ObjectField(
+                        "예광탄", _weapon.TracerPrefab, typeof(GameObject), false);
+                }
+                else
+                {
+                    _weapon.ProjectileSpeed = EditorGUILayout.FloatField("투사체 속도", _weapon.ProjectileSpeed);
+                    _weapon.ProjectileGravity = EditorGUILayout.FloatField("투사체 중력", _weapon.ProjectileGravity);
+                }
+            }
 
 
             // ── 시위 (활만) ──
