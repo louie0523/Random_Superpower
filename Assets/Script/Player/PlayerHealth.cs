@@ -98,6 +98,29 @@ public class PlayerHealth : NetworkBehaviour
             "피격 플래시가 비활성화됩니다.", this);
     }
 
+    /// <summary>새 라운드 시작 시 초기화</summary>
+    public void ResetForNewRound()
+    {
+        if (!HasStateAuthority) return;
+
+        Soul = 0;
+        Kills = 0;
+        Assists = 0;
+        Deaths = 0;
+
+        _recentDamage.Clear();
+
+        if (IsDead)
+        {
+            IsDead = false;
+            Respawn();
+        }
+        else
+        {
+            HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
+        }
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
@@ -295,6 +318,8 @@ public class PlayerHealth : NetworkBehaviour
         HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         IsDead = false;
 
+
+
         Vector3 pos = new Vector3(Random.Range(-8f, 8f), 1f, Random.Range(-8f, 8f));
         _cc.enabled = false;
         transform.position = pos;
@@ -334,6 +359,8 @@ public class PlayerHealth : NetworkBehaviour
     void OnDeadChanged()
     {
         _renderer.enabled = !IsDead;
+
+        if (_cc != null) _cc.enabled = !IsDead;
     }
 
     System.Collections.IEnumerator FlashRed()

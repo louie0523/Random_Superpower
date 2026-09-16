@@ -47,6 +47,8 @@ public class WeaponAnimator : MonoBehaviour
 
     private float _drawAmount;
 
+    private float _bobWeight;
+
     public FPArmRig ArmRig => armRig;
     public void SetDraw(float t01) => _drawAmount = t01;
 
@@ -209,23 +211,29 @@ public class WeaponAnimator : MonoBehaviour
         _swayPos = Vector3.Lerp(_swayPos, targetSwayPos, Time.deltaTime * swaySmooth);
         _swayRot = Vector3.Lerp(_swayRot, targetSwayRot, Time.deltaTime * swaySmooth);
 
+        float targetWeight = speed01 > 0.1f ? 1f : 0f;
+        _bobWeight = Mathf.MoveTowards(_bobWeight, targetWeight, Time.deltaTime * 4f);
+
         Vector3 bobPos = Vector3.zero;
         Vector3 bobRot = Vector3.zero;
 
-        if (speed01 > 0.1f)
+        if (_bobWeight > 0.001f)
         {
             _bobTimer += Time.deltaTime * walkBobFreq * Mathf.PI * 2f;
 
-            bobPos.x = Mathf.Cos(_bobTimer * 0.5f) * bobAmount;
-            bobPos.y = Mathf.Sin(_bobTimer) * bobAmount * 0.6f;
-            bobRot.z = Mathf.Cos(_bobTimer * 0.5f) * bobRotAmount;
-            bobRot.x = Mathf.Sin(_bobTimer) * bobRotAmount * 0.4f;
+            bobPos.x = Mathf.Cos(_bobTimer * 0.5f) * bobAmount * _bobWeight;
+            bobPos.y = Mathf.Sin(_bobTimer) * bobAmount * 0.6f * _bobWeight;
+            bobRot.z = Mathf.Cos(_bobTimer * 0.5f) * bobRotAmount * _bobWeight;
+            bobRot.x = Mathf.Sin(_bobTimer) * bobRotAmount * 0.4f * _bobWeight;
         }
-        else
+
+        // 숨쉬기는 바빙이 약할 때만
+        float breathWeight = 1f - _bobWeight;
+        if (breathWeight > 0.001f)
         {
             float t = Time.time * breathSpeed;
-            bobPos.y = Mathf.Sin(t) * breathAmount;
-            bobRot.x = Mathf.Sin(t * 0.8f) * 0.5f;
+            bobPos.y += Mathf.Sin(t) * breathAmount * breathWeight;
+            bobRot.x += Mathf.Sin(t * 0.8f) * 0.5f * breathWeight;
         }
 
         armRig.ApplyOffset(_swayPos + bobPos, _swayRot + bobRot);

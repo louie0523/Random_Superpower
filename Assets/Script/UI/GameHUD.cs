@@ -35,6 +35,35 @@ public class GameHUD : MonoBehaviour
 
         DrawScoreboard(_runner);
         DrawDebugKeys();
+        DrawRoundState();
+    }
+
+    void DrawRoundState()
+    {
+        var rm = RoundManager.Instance;
+        if (rm == null) return;
+
+        if (rm.GameOver)
+        {
+            var box = new Rect(Screen.width / 2f - 180f, Screen.height / 2f - 60f, 360f, 120f);
+
+            GUI.color = new Color(0f, 0f, 0f, 0.85f);
+            GUI.Box(box, "");
+            GUI.color = Color.white;
+
+            GUI.Label(new Rect(box.x, box.y + 20f, box.width, 30f),
+                $"Player {rm.Winner.PlayerId} 승리!");
+            GUI.Label(new Rect(box.x, box.y + 55f, box.width, 30f),
+                $"{rm.WinnerSoul} 소울");
+            GUI.Label(new Rect(box.x, box.y + 85f, box.width, 30f),
+                "곧 새 라운드가 시작됩니다");
+        }
+        else
+        {
+            // 목표 진행도
+            GUI.Label(new Rect(Screen.width / 2f - 60f, 20f, 200f, 24f),
+                $"목표 {rm.TargetSoul}  ·  1위 {rm.GetTopSoul()}");
+        }
     }
 
     void DrawDebugKeys()

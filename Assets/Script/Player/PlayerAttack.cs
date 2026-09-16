@@ -116,6 +116,14 @@ public class PlayerAttack : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
+        if (RoundManager.Instance != null && RoundManager.Instance.GameOver)
+        {
+            ResetCombo();
+            _attackQueued = false;
+            CancelDraw();
+            return;
+        }
+
         if (_health.IsDead)
         {
             ResetCombo();

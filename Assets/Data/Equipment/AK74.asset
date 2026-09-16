@@ -817,7 +817,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   FireMode: 0
-  MaxAmmo: 500
+  MaxAmmo: 999999
   RoundsPerMinute: 800
   FullAuto: 1
   RecoilVertical: 1.5

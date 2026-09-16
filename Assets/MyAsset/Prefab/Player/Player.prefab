@@ -238,7 +238,7 @@ MonoBehaviour:
   pitchMin: -85
   pitchMax: 85
   walkBobFreq: 1.8
-  walkBobAmpY: 0.04
+  walkBobAmpY: 0.03
   walkBobAmpX: 0.02
   runBobFreq: 2.6
   runBobAmpY: 0.07
@@ -247,8 +247,8 @@ MonoBehaviour:
   runBobRoll: 2
   baseFov: 70
   fovMaxSpeed: 12
-  fovMaxAdd: 10
-  fovLerp: 8
+  fovMaxAdd: 3
+  fovLerp: 4
   strafeRoll: 1
   landDipAmount: 0.15
   landRecoverSpeed: 6

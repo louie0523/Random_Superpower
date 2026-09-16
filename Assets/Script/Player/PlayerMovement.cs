@@ -73,7 +73,11 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        transform.Rotate(Vector3.up * fpsCamera.ConsumeYaw());
+        //transform.Rotate(Vector3.up * fpsCamera.ConsumeYaw());
+
+        float yaw = fpsCamera.ConsumeYaw();
+        transform.Rotate(Vector3.up * yaw);
+        fpsCamera.OnBodyRotated(yaw);
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");

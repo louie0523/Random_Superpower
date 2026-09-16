@@ -46,6 +46,7 @@ public class FPSCamera : MonoBehaviour
     private Vector3 _motionPos;
     private Vector3 _motionRot;
     private float _motionFov;
+    private float _visualYaw;
 
     // 내부 상태
     private float _pitch;
@@ -112,6 +113,12 @@ public class FPSCamera : MonoBehaviour
         return y;
     }
 
+    /// <summary>몸통이 회전한 만큼 시각 요에서 빼기</summary>
+    public void OnBodyRotated(float degrees)
+    {
+        _visualYaw -= degrees;
+    }
+
     // ---------------- 시점 ----------------
 
     void HandleLook()
@@ -128,7 +135,8 @@ public class FPSCamera : MonoBehaviour
 
         if (my > 0f) _recoilPitch = Mathf.Max(0f, _recoilPitch - my);
 
-        _yawAccum += mx;   // 좌우는 누적만 (네트워크 틱에서 적용)
+        _yawAccum += mx;
+        _visualYaw += mx;
 
         _pitch = Mathf.Clamp(_pitch - my, pitchMin, pitchMax);
         cameraRoot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
