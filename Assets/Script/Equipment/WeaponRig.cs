@@ -13,6 +13,7 @@ public class WeaponRig : MonoBehaviour
     [Header("원거리")]
     [Tooltip("투사체가 나가는 위치")]
     public Transform Muzzle;
+    public MuzzleFlash MuzzleFlash;
 
     [Header("활")]
     [Tooltip("당겨지는 시위 본")]

@@ -40,6 +40,7 @@ public class WeaponSetupWindow : EditorWindow
     private bool _showOnlyDuringActive;
     private readonly List<Vector3> _tipTrail = new();
     private float _previewDraw;
+    private float _previewRecoil;
 
     private static readonly string[] FingerNames = { "엄지", "검지", "중지", "약지" };
     private static readonly float[] JointWeights = { 1f, 0.95f, 0.85f };
@@ -91,6 +92,8 @@ public class WeaponSetupWindow : EditorWindow
 
     void OnGUI()
     {
+
+
         if (Application.isPlaying)
         {
             EditorGUILayout.HelpBox(
@@ -98,6 +101,9 @@ public class WeaponSetupWindow : EditorWindow
                 MessageType.Warning);
             return;
         }
+
+        EditorGUI.indentLevel = 0;
+
 
         _scroll = EditorGUILayout.BeginScrollView(_scroll);
 
@@ -466,6 +472,7 @@ public class WeaponSetupWindow : EditorWindow
                     }
                     EditorGUILayout.EndHorizontal();
 
+
                     if (_weapon.ChargePose != null)
                     {
                         EditorGUI.BeginChangeCheck();
@@ -548,6 +555,76 @@ public class WeaponSetupWindow : EditorWindow
                     _weapon.ProjectileSpeed = EditorGUILayout.FloatField("투사체 속도", _weapon.ProjectileSpeed);
                     _weapon.ProjectileGravity = EditorGUILayout.FloatField("투사체 중력", _weapon.ProjectileGravity);
                 }
+
+                EditorGUILayout.Space(4);
+                _weapon.UseRecoilPose = EditorGUILayout.Toggle("반동 자세 사용", _weapon.UseRecoilPose);
+
+                if (_weapon.UseRecoilPose)
+                {
+                    EditorGUI.indentLevel++;
+
+                    _weapon.RecoilRiseTime = EditorGUILayout.FloatField("올라가는 시간", _weapon.RecoilRiseTime);
+                    _weapon.RecoilFallTime = EditorGUILayout.FloatField("돌아오는 시간", _weapon.RecoilFallTime);
+                    _weapon.RecoilPoseMaxStack = EditorGUILayout.Slider("연사 누적 상한", _weapon.RecoilPoseMaxStack, 1f, 3f);
+                    _weapon.RecoilSwayAmount = EditorGUILayout.FloatField("흔들림 폭 (수평)", _weapon.RecoilSwayAmount);
+                    _weapon.RecoilSwayVertical = EditorGUILayout.FloatField("흔들림 폭 (수직)", _weapon.RecoilSwayVertical);
+                    _weapon.RecoilSwaySpeed = EditorGUILayout.FloatField("흔들림 속도", _weapon.RecoilSwaySpeed);
+
+                    EditorGUILayout.BeginHorizontal();
+                    using (new EditorGUI.DisabledScope(_previewRecoil < 0.999f))
+                        if (GUILayout.Button("씬 자세를 반동 자세로 저장", GUILayout.Height(22)))
+                        {
+                            Undo.RecordObject(_weapon, "Capture Recoil Pose");
+                            _weapon.RecoilPose = CaptureCurrentPose();
+                            EditorUtility.SetDirty(_weapon);
+                            ApplyPreviewRecoil();
+                        }
+                    if (GUILayout.Button("기본 자세 복사", GUILayout.Width(100)))
+                    {
+                        Undo.RecordObject(_weapon, "Copy Idle to Recoil");
+                        _weapon.RecoilPose = _rig.GetEffectiveIdle().Clone();
+                        EditorUtility.SetDirty(_weapon);
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    // ── 반동 자세 값 직접 편집 ──
+                    if (_weapon.RecoilPose != null)
+                    {
+                        EditorGUI.BeginChangeCheck();
+                        var rp = _weapon.RecoilPose;
+
+                        EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
+                        rp.RightPos = EditorGUILayout.Vector3Field("위치", rp.RightPos);
+                        rp.RightRot = EditorGUILayout.Vector3Field("회전", rp.RightRot);
+
+                        rp.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", rp.UseLeftHand);
+                        if (rp.UseLeftHand)
+                        {
+                            rp.LeftPos = EditorGUILayout.Vector3Field("왼손 위치", rp.LeftPos);
+                            rp.LeftRot = EditorGUILayout.Vector3Field("왼손 회전", rp.LeftRot);
+                        }
+
+                        EditorGUILayout.LabelField("무기 오프셋", EditorStyles.miniBoldLabel);
+                        rp.WeaponPos = EditorGUILayout.Vector3Field("위치", rp.WeaponPos);
+                        rp.WeaponRot = EditorGUILayout.Vector3Field("회전", rp.WeaponRot);
+
+                        EditorGUILayout.LabelField("카메라", EditorStyles.miniBoldLabel);
+                        rp.CamRot = EditorGUILayout.Vector3Field("회전", rp.CamRot);
+                        rp.CamFov = EditorGUILayout.FloatField("FOV 추가", rp.CamFov);
+
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            EditorUtility.SetDirty(_weapon);
+                            ApplyPreviewRecoil();
+                        }
+                    }
+
+                    EditorGUI.BeginChangeCheck();
+                    _previewRecoil = EditorGUILayout.Slider("반동 미리보기", _previewRecoil, 0f, 1f);
+                    if (EditorGUI.EndChangeCheck()) ApplyPreviewRecoil();
+
+                    EditorGUI.indentLevel--;
+                }
             }
 
 
@@ -579,7 +656,6 @@ public class WeaponSetupWindow : EditorWindow
                 if (GUILayout.Button("씬 왼손 위치를 시위 손으로 저장"))
                     CaptureStringHand();
 
-                DrawBowPreview();
             }
 
             EditorGUI.indentLevel--;
@@ -601,6 +677,14 @@ public class WeaponSetupWindow : EditorWindow
             SceneView.RepaintAll();
         }
     }
+
+    void ApplyPreviewRecoil()
+    {
+        _rig.SetRecoilPreview(_previewRecoil);
+        _rig.ApplyPose(_rig.GetEffectiveIdle());
+        SceneView.RepaintAll();
+    }
+
 
     void DrawChargePreview()
     {
@@ -689,42 +773,42 @@ public class WeaponSetupWindow : EditorWindow
         Debug.Log($"[MotionSetup] 시위 손 저장 — 오프셋 {_weapon.StringHandOffset}");
     }
 
-    void DrawBowPreview()
-    {
-        if (_rig == null) return;
+    //void DrawBowPreview()
+    //{
+    //    if (_rig == null) return;
 
-        EditorGUILayout.Space(4);
+    //    EditorGUILayout.Space(4);
 
-        EditorGUI.BeginChangeCheck();
-        _previewDraw = EditorGUILayout.Slider("시위 미리보기", _previewDraw, 0f, 1f);
-        if (EditorGUI.EndChangeCheck())
-        {
-            _rig.SetDrawAmount(_previewDraw);
-            _rig.ApplyPose(_rig.GetEffectiveIdle());
-            SceneView.RepaintAll();
-        }
+    //    EditorGUI.BeginChangeCheck();
+    //    _previewDraw = EditorGUILayout.Slider("시위 미리보기", _previewDraw, 0f, 1f);
+    //    if (EditorGUI.EndChangeCheck())
+    //    {
+    //        _rig.SetDrawAmount(_previewDraw);
+    //        _rig.ApplyPose(_rig.GetEffectiveIdle());
+    //        SceneView.RepaintAll();
+    //    }
 
-        EditorGUILayout.BeginHorizontal();
+    //    EditorGUILayout.BeginHorizontal();
 
-        if (GUILayout.Button("씬 시위를 방향·거리로 읽기", GUILayout.Height(22)))
-            CaptureStringPull();
+    //    if (GUILayout.Button("씬 시위를 방향·거리로 읽기", GUILayout.Height(22)))
+    //        CaptureStringPull();
 
-        if (GUILayout.Button("놓기", GUILayout.Width(50), GUILayout.Height(22)))
-        {
-            _previewDraw = 0f;
-            _rig.SetDrawAmount(0f);
-            _rig.ApplyPose(_rig.GetEffectiveIdle());
-            SceneView.RepaintAll();
-        }
+    //    if (GUILayout.Button("놓기", GUILayout.Width(50), GUILayout.Height(22)))
+    //    {
+    //        _previewDraw = 0f;
+    //        _rig.SetDrawAmount(0f);
+    //        _rig.ApplyPose(_rig.GetEffectiveIdle());
+    //        SceneView.RepaintAll();
+    //    }
 
-        EditorGUILayout.EndHorizontal();
+    //    EditorGUILayout.EndHorizontal();
 
-        if (!_rig.HasBowString)
-            EditorGUILayout.HelpBox(
-                "시위 본이 없습니다. 무기 모델 프리팹의 WeaponRig에서 " +
-                "StringBone을 지정하세요.",
-                MessageType.Warning);
-    }
+    //    if (!_rig.HasBowString)
+    //        EditorGUILayout.HelpBox(
+    //            "시위 본이 없습니다. 무기 모델 프리팹의 WeaponRig에서 " +
+    //            "StringBone을 지정하세요.",
+    //            MessageType.Warning);
+    //}
 
 
 

@@ -40,6 +40,12 @@ public class FPArmRig : MonoBehaviour
     private float _drawAmount;
     private float _drawTarget;
     private float _handBlend;
+
+    private float _recoilAmount;      // 현재 반동 자세 강도 0~N
+    private float _recoilTarget;      // 목표 (발사 시 튀어오름)
+    private float _recoilSeed;
+
+    public float RecoilAmount => _recoilAmount;
     public float DrawAmount => _drawAmount;
     public bool HasBowString => _stringBone != null;
     public Transform StringBone => _stringBone;
@@ -50,6 +56,8 @@ public class FPArmRig : MonoBehaviour
     private Transform _leftGripNode;
     private EquipmentData _weapon;
     private ChargeVisual _chargeVisual;
+    private MuzzleFlash _muzzleFlash;
+    public MuzzleFlash MuzzleFlash => _muzzleFlash;
 
     public Transform WeaponTip { get; private set; }
     public EquipmentData CurrentWeapon => _weapon;
@@ -101,6 +109,8 @@ public class FPArmRig : MonoBehaviour
 
         _chargeVisual = _weaponObj.GetComponentInChildren<ChargeVisual>(true);
 
+        _muzzleFlash = rig != null ? rig.MuzzleFlash : null;
+
         if (rig == null)
             Debug.LogWarning(
                 $"[FPArmRig] {weapon.DisplayName}의 모델에 WeaponRig가 없습니다.", this);
@@ -130,7 +140,10 @@ public class FPArmRig : MonoBehaviour
     /// <summary>시위 당김 정도 0~1. 매 프레임 호출</summary>
     public void SetDrawAmount(float t01, float dt = 0f)
     {
+        TickRecoil(dt);
+
         _drawTarget = Mathf.Clamp01(t01);
+
 
         if (dt > 0f)
         {
@@ -289,18 +302,40 @@ public class FPArmRig : MonoBehaviour
 
         p.UseWeaponGrip = true;
 
-        // ★ 차징 자세 보간
-        if (_weapon.UseChargePose && _drawAmount > 0.001f && _weapon.ChargePose != null)
+        if (_weapon.UseRecoilPose && _recoilAmount > 0.001f && _weapon.RecoilPose != null)
         {
-            float t = _weapon.ChargeCurve != null
-                ? _weapon.ChargeCurve.Evaluate(_drawAmount)
-                : _drawAmount;
+            float r = Mathf.Min(_recoilAmount, 1f);
+            p = ArmPose.Lerp(p, _weapon.RecoilPose, r);
+            p.UseWeaponGrip = true;
 
-            p = ArmPose.Lerp(p, _weapon.ChargePose, t);
-            p.UseWeaponGrip = true;      // ★ 손가락은 ApplyFingers가 따로 처리
+            // 1을 넘는 누적분은 위치만 더 밀어냄
+            if (_recoilAmount > 1f)
+            {
+                Vector3 extra = (_weapon.RecoilPose.RightPos - p.RightPos) * (_recoilAmount - 1f);
+                p.RightPos += extra;
+                p.LeftPos += extra;
+            }
+
+            float phase = (_recoilSeed + Time.time) * _weapon.RecoilSwaySpeed;
+
+            float swayX = Mathf.Sin(phase) * _weapon.RecoilSwayAmount * _recoilAmount;
+            float swayY = Mathf.Sin(phase * 1.7f + 1.3f) * _weapon.RecoilSwayVertical * _recoilAmount;
+
+            Vector3 sway = new Vector3(swayX, swayY, 0f);
+            p.RightPos += sway;
+            p.LeftPos += sway;
+
+            p.RightRot.z += swayX * 60f;
+            p.RightRot.x += swayY * 80f;
         }
 
         return p;
+    }
+
+    public void SetRecoilPreview(float amount)
+    {
+        _recoilAmount = amount;
+        _recoilTarget = 0f;
     }
 
     public void ApplyPose(ArmPose pose)
@@ -457,5 +492,33 @@ public class FPArmRig : MonoBehaviour
         if (ArmRoot == null) return;
         ArmRoot.localPosition = pos;
         ArmRoot.localRotation = Quaternion.Euler(rot);
+    }
+
+    /// <summary>발사 시 호출. stack은 연사 누적 배율</summary>
+    public void AddRecoil(float stack = 1f)
+    {
+        if (_weapon == null) return;
+        _recoilTarget = Mathf.Min(stack, _weapon.RecoilPoseMaxStack);
+        _recoilSeed = Random.Range(0f, 100f);
+    }
+
+    void TickRecoil(float dt)
+    {
+        if (_weapon == null || dt <= 0f) return;
+
+        // 목표까지 빠르게 올라갔다가 천천히 내려옴
+        if (_recoilAmount < _recoilTarget)
+        {
+            float rise = 1f / Mathf.Max(0.005f, _weapon.RecoilRiseTime);
+            _recoilAmount = Mathf.MoveTowards(_recoilAmount, _recoilTarget, dt * rise);
+
+            if (_recoilAmount >= _recoilTarget) _recoilTarget = 0f;   // 정점 찍으면 하강 시작
+        }
+        else
+        {
+            float fall = 1f / Mathf.Max(0.01f, _weapon.RecoilFallTime);
+            _recoilAmount = Mathf.MoveTowards(_recoilAmount, 0f, dt * fall);
+            _recoilTarget = 0f;
+        }
     }
 }

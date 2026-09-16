@@ -40,6 +40,8 @@ public class FPSCamera : MonoBehaviour
     [SerializeField] private float shakeSpeed = 30f;
     [SerializeField] private float hitPunchAmount = 6f;
 
+
+
     // 모션 카메라 오프셋
     private Vector3 _motionPos;
     private Vector3 _motionRot;
@@ -61,6 +63,8 @@ public class FPSCamera : MonoBehaviour
     private float _abilityLean;
     private float _abilityLeanTarget;
     private float _leanSpeed = 10f;
+
+    private float _recoilPitch;
 
     public float Pitch => _pitch;
 
@@ -114,6 +118,15 @@ public class FPSCamera : MonoBehaviour
     {
         float mx = Input.GetAxisRaw("Mouse X") * sensitivity * 10f;
         float my = Input.GetAxisRaw("Mouse Y") * sensitivity * 10f;
+
+        if (_recoilPitch > 0.01f)
+        {
+            float back = Mathf.Min(_recoilPitch, Time.deltaTime * 12f);
+            _pitch += back;
+            _recoilPitch -= back;
+        }
+
+        if (my > 0f) _recoilPitch = Mathf.Max(0f, _recoilPitch - my);
 
         _yawAccum += mx;   // 좌우는 누적만 (네트워크 틱에서 적용)
 
@@ -257,6 +270,8 @@ public class FPSCamera : MonoBehaviour
         _punchVel.y += vertical;
         _punchVel.x += Random.Range(-horizontal, horizontal);
 
-        _pitch = Mathf.Clamp(_pitch - vertical * 0.35f, pitchMin, pitchMax);
+        float add = vertical * 0.35f;
+        _pitch = Mathf.Clamp(_pitch - add, pitchMin, pitchMax);
+        _recoilPitch += add;
     }
 }

@@ -9,6 +9,7 @@ public class MotionEventPlayer : MonoBehaviour
     [SerializeField] private FPArmRig armRig;
     [SerializeField] private FPSCamera fpsCamera;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource weaponAudio;
 
     private ComboStep _step;
     private float _duration;
@@ -154,6 +155,31 @@ public class MotionEventPlayer : MonoBehaviour
 
         var trail = tip.GetComponentInChildren<TrailRenderer>(true);
         if (trail != null) trail.emitting = on;
+    }
+
+    public void PlayOneShot(AudioClip clip, float volume, float pitch = 1f)
+    {
+        if (clip == null) return;
+
+        if (audioSource != null)
+        {
+            audioSource.pitch = pitch;
+            audioSource.PlayOneShot(clip, volume);
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(clip, transform.position, volume);
+        }
+    }
+
+    public void PlayWeaponSound(AudioClip clip, float volume, float pitch = 1f)
+    {
+        if (clip == null) return;
+        var src = weaponAudio != null ? weaponAudio : audioSource;
+        if (src == null) { AudioSource.PlayClipAtPoint(clip, transform.position, volume); return; }
+
+        src.pitch = pitch;
+        src.PlayOneShot(clip, volume);
     }
 
     public System.Action<string> OnCustomEvent;

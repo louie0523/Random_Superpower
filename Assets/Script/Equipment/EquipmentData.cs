@@ -154,6 +154,43 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Tooltip("투사체 속도. 차징 무기는 min/max를 사용")]
     public float ProjectileSpeed = 60f;
 
+    [Header("─── Ranged: 발사 연출 ───")]
+
+    [Tooltip("발사음")]
+    public AudioClip FireSound;
+    [Range(0f, 1f)] public float FireVolume = 0.8f;
+    [Tooltip("피치 랜덤 범위 (±)")]
+    [Range(0f, 0.3f)] public float FirePitchVariance = 0.08f;
+
+    [Tooltip("탄약이 없을 때 소리")]
+    public AudioClip EmptySound;
+
+    [Header("─── Ranged: 반동 자세 ───")]
+    [Tooltip("반동 시 자세를 바꿀지")]
+    public bool UseRecoilPose = false;
+
+    [Tooltip("반동이 최대일 때의 자세")]
+    public ArmPose RecoilPose = new();
+
+    [Tooltip("반동이 최대까지 오르는 시간 (초)")]
+    public float RecoilRiseTime = 0.03f;
+
+    [Tooltip("원래 자세로 돌아오는 시간 (초)")]
+    public float RecoilFallTime = 0.12f;
+
+    [Tooltip("연사 시 반동 자세 누적 상한 (1이면 누적 없음)")]
+    [Range(1f, 3f)] public float RecoilPoseMaxStack = 1.6f;
+
+    [Header("반동 흔들림")]
+    [Tooltip("수평 흔들림 폭 (m)")]
+    public float RecoilSwayAmount = 0.015f;
+
+    [Tooltip("수직 흔들림 폭 (m)")]
+    public float RecoilSwayVertical = 0.008f;
+
+    [Tooltip("흔들림 속도")]
+    public float RecoilSwaySpeed = 30f;
+
     [Header("─── Ranged: 시위 ───")]
     [Tooltip("시위가 당겨지는 방향. 시위 본의 로컬 기준")]
     public Vector3 StringPullDir = new(0f, 0f, -1f);

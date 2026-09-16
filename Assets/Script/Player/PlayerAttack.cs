@@ -10,10 +10,12 @@ public class PlayerAttack : NetworkBehaviour
     [SerializeField] private WeaponAnimator weaponAnim;
     [SerializeField] private LayerMask hitMask;
     [SerializeField] private LayerMask projectileMask;
+    [SerializeField] private AudioSource weaponAudio;
 
     [Header("Debug")]
     [SerializeField] private bool drawGizmos = true;
     [SerializeField] private bool logHits = false;
+
 
 
     // 컴포넌트
@@ -197,7 +199,14 @@ public class PlayerAttack : NetworkBehaviour
         _attackQueued = false;
 
         if (_fireTimer > 0f) return;
-        if (!_equip.ConsumeAmmo()) return;      // 탄약 없으면 발사 안 됨
+        if (!_equip.ConsumeAmmo())
+        {
+            if (weapon.EmptySound != null && weaponAudio != null)
+                weaponAudio.PlayOneShot(weapon.EmptySound, 0.5f);
+            _fireTimer = 0.3f;      // 딸깍 소리가 연타되지 않게
+            return;
+        }
+
 
         FireGun(weapon);
 
@@ -213,18 +222,24 @@ public class PlayerAttack : NetworkBehaviour
         else
             FireGunProjectile(weapon);
 
+        PlayFireFx(weapon);
         ApplyGunRecoil(weapon);
     }
 
     void ApplyGunRecoil(EquipmentData weapon)
     {
-        if (fpsCamera == null) return;
-
         float mul = Mathf.Min(
             Mathf.Pow(weapon.RecoilRamp, _shotsInBurst), weapon.RecoilMaxMul);
 
-        fpsCamera.Recoil(weapon.RecoilVertical * mul, weapon.RecoilHorizontal * mul);
-        fpsCamera.FovKick(-2f);
+        if (fpsCamera != null)
+        {
+            fpsCamera.Recoil(weapon.RecoilVertical * mul, weapon.RecoilHorizontal * mul);
+            fpsCamera.FovKick(-2f);
+        }
+
+        // 팔 반동
+        var armRig = weaponAnim != null ? weaponAnim.ArmRig : null;
+        armRig?.AddRecoil(mul);      // ★
     }
 
     void FireGunProjectile(EquipmentData weapon)
@@ -294,8 +309,11 @@ public class PlayerAttack : NetworkBehaviour
     {
         if (weapon == null || weapon.TracerPrefab == null) return;
 
+        var armRig = weaponAnim != null ? weaponAnim.ArmRig : null;
+        var muzzle = armRig != null ? armRig.Muzzle : null;
+
         var go = Instantiate(weapon.TracerPrefab);
-        go.GetComponent<Tracer>()?.Show(from, to);
+        go.GetComponent<Tracer>()?.Show(from, to, muzzle);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -305,6 +323,20 @@ public class PlayerAttack : NetworkBehaviour
 
         var weapon = _equip != null ? _equip.GetWeapon() : null;
         SpawnTracer(weapon, from, to);
+        PlayFireFx(weapon);
+    }
+
+    void PlayFireFx(EquipmentData weapon)
+    {
+        var armRig = weaponAnim != null ? weaponAnim.ArmRig : null;
+        armRig?.MuzzleFlash?.Play();
+
+        if (weapon.FireSound != null)
+        {
+            float pitch = 1f + Random.Range(
+                -weapon.FirePitchVariance, weapon.FirePitchVariance);
+            _events?.PlayWeaponSound(weapon.FireSound, weapon.FireVolume, pitch);
+        }
     }
 
     void CancelDraw()
