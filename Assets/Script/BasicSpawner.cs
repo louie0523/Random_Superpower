@@ -18,6 +18,9 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private KeyCode rerollAbilityKey = KeyCode.F7;
     [SerializeField] private KeyCode suicideKey = KeyCode.F8;
     [SerializeField] private KeyCode healKey = KeyCode.F9;
+    [SerializeField] private KeyCode soulGainKey = KeyCode.F1;
+    [SerializeField] private KeyCode soulLoseKey = KeyCode.F2;
+    [SerializeField] private int soulCheatAmount = 50;
     NetworkObject GetLocal() => _runner.GetPlayerObject(_runner.LocalPlayer);
 
     private readonly List<NetworkObject> _dummies = new();
@@ -56,16 +59,12 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKeyDown(spawnDummyKey))
             SpawnDummy();
 
-        if (Input.GetKeyDown(KeyCode.F6) && _dummies.Count > 0)
-        {
-            int last = _dummies.Count - 1;
-            if (_dummies[last] != null) _runner.Despawn(_dummies[last]);
-            _dummies.RemoveAt(last);
-        }
-
+        if (Input.GetKeyDown(clearDummyKey) && _dummies.Count > 0)
         if (Input.GetKeyDown(rerollAbilityKey)) RerollAbility();
         if (Input.GetKeyDown(suicideKey)) Suicide();
         if (Input.GetKeyDown(healKey)) FullHeal();
+        if (Input.GetKeyDown(soulGainKey)) GainSoul(soulCheatAmount);
+        if (Input.GetKeyDown(soulLoseKey)) GainSoul(-soulCheatAmount / 2);
     }
     void RerollAbility()
     {
@@ -75,6 +74,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         ar.RerollRandomAbility();
         Debug.Log($"[Debug] 랜덤 능력 교체 → {ar.GetRandomAbility()?.DisplayName ?? "없음"}");
+    }
+
+    void GainSoul(int amount)
+    {
+        var local = GetLocal();
+        if (local == null) return;
+        if (!local.TryGetComponent<PlayerHealth>(out var h)) return;
+
+        h.RPC_GainSoul(amount);
+        Debug.Log($"[Debug] 소울 {amount:+#;-#;0}");
     }
 
     void Suicide()

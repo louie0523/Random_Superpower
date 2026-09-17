@@ -21,6 +21,13 @@ public class PlayerHealth : NetworkBehaviour
     [Tooltip("자해/환경사 소울 손실 비율")]
     [SerializeField] private float soulLossBySelf = 0.10f;
 
+    [Header("전투 상태")]
+    [Tooltip("피해를 주고받은 뒤 전투 중으로 유지되는 시간")]
+    [SerializeField] private float combatDuration = 8f;
+
+    [Networked] private TickTimer CombatTimer { get; set; }
+    public bool InCombat => CombatTimer.IsRunning && !CombatTimer.Expired(Runner);
+
     [Networked, OnChangedRender(nameof(OnHPChanged))] public int HP { get; set; }
     [Networked, OnChangedRender(nameof(OnDeadChanged))] public NetworkBool IsDead { get; set; }
     [Networked] public int Soul { get; set; }
@@ -125,6 +132,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
+
         if (IsDead && RespawnTimer.Expired(Runner)) Respawn();
 
         // 오래된 피해 기록 정리
@@ -141,6 +149,9 @@ public class PlayerHealth : NetworkBehaviour
     // ══════════════════ 피해 ══════════════════
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_MarkCombat() => MarkCombat();
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_TakeDamage(DamageInfo info)
     {
         if (IsDead) return;
@@ -152,7 +163,15 @@ public class PlayerHealth : NetworkBehaviour
 
         // 피해 기록
         if (info.FromPlayer && info.Attacker != PlayerRef.None)
+        {
             RecordDamage(info.Attacker, final, info.CanCauseFall);
+            MarkCombat();
+
+            // 공격자도 전투 중
+            var atk = Runner.GetPlayerObject(info.Attacker);
+            if (atk != null && atk.TryGetComponent<PlayerHealth>(out var ah))
+                ah.RPC_MarkCombat();
+        }
 
         _ability?.FireTrigger(TriggerType.OnHitTaken, null);
 
@@ -231,11 +250,13 @@ public class PlayerHealth : NetworkBehaviour
             RespawnTimer = TickTimer.CreateFromSeconds(Runner, delay);
         }
 
+        CombatTimer = default;
+
         // 사망 원인과 무관하게 랜덤 능력 재추첨
         _ability?.RerollRandomAbility();
-
         _ability?.FireTrigger(TriggerType.OnDeath, null);
         _recentDamage.Clear();
+
     }
 
     PlayerRef FindFallCredit()
@@ -311,6 +332,13 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
         Soul = Mathf.Max(0, Soul - amount);
+    }
+
+    /// <summary>전투 중 상태 갱신</summary>
+    public void MarkCombat()
+    {
+        if (!HasStateAuthority) return;
+        CombatTimer = TickTimer.CreateFromSeconds(Runner, combatDuration);
     }
 
     void Respawn()

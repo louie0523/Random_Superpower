@@ -36,6 +36,88 @@ public class GameHUD : MonoBehaviour
         DrawScoreboard(_runner);
         DrawDebugKeys();
         DrawRoundState();
+        DrawShop(local.GetComponent<PlayerShop>(), hp);
+        DrawInteract(local);
+    }
+
+    void DrawInteract(NetworkObject local)
+    {
+        if (!local.TryGetComponent<PlayerInteract>(out var pi)) return;
+
+        var chest = pi.CurrentTarget;
+        if (chest == null || chest.IsOpened) return;
+
+        float cx = Screen.width / 2f;
+        float y = Screen.height / 2f + 60f;
+
+        GUI.Label(new Rect(cx - 100f, y, 200f, 24f), $"[E] 열기  ({chest.Tier})");
+
+        // 진행도 바
+        var bar = new Rect(cx - 90f, y + 26f, 180f, 10f);
+        GUI.color = new Color(0f, 0f, 0f, 0.6f);
+        GUI.Box(bar, "");
+        GUI.color = new Color(1f, 0.85f, 0.3f);
+        GUI.Box(new Rect(bar.x, bar.y, bar.width * chest.Progress, bar.height), "");
+        GUI.color = Color.white;
+    }
+
+    void DrawShop(PlayerShop shop, PlayerHealth hp)
+    {
+        if (shop == null) return;
+
+        var db = shop.Database;
+        if (db == null) return;
+
+        // 열기 안내
+        if (!shop.IsShopping)
+        {
+            bool blocked = hp.InCombat && !hp.IsDead;
+            GUI.color = blocked ? new Color(1f, 0.5f, 0.5f) : Color.white;
+            GUI.Label(new Rect(20, Screen.height - 40, 300, 24),
+                blocked ? "전투 중 — 상점 이용 불가" : "[B] 상점");
+            GUI.color = Color.white;
+            return;
+        }
+
+        const float w = 420f;
+        float h = 60f + db.Count * 40f;
+        float x = Screen.width / 2f - w / 2f;
+        float y = 120f;
+
+        GUI.color = new Color(0f, 0f, 0f, 0.9f);
+        GUI.Box(new Rect(x, y, w, h), "");
+        GUI.color = Color.white;
+
+        GUI.Label(new Rect(x + 16, y + 10, w, 24), "상점  —  [B] 닫기  ·  이동/공격 불가");
+
+        for (int i = 0; i < db.Count; i++)
+        {
+            var item = db.GetByIndex(i);
+            if (item == null) continue;
+
+            float ry = y + 44f + i * 40f;
+            int lv = shop.GetLevel(i);
+            bool ok = shop.CanBuy(i, out int price, out string reason);
+
+            GUI.Label(new Rect(x + 16, ry, 200, 22),
+                item.IsRepeatable ? item.DisplayName : $"{item.DisplayName}  Lv.{lv}/{item.MaxLevel}");
+
+            GUI.Label(new Rect(x + 220, ry, 120, 22),
+                ok ? $"◆{price}" : reason);
+
+            using (new GUIEnabledScope(ok))
+            {
+                if (GUI.Button(new Rect(x + w - 90, ry - 2, 70, 26), "구매"))
+                    shop.RPC_Buy(i);
+            }
+        }
+    }
+
+    struct GUIEnabledScope : System.IDisposable
+    {
+        private readonly bool _prev;
+        public GUIEnabledScope(bool on) { _prev = GUI.enabled; GUI.enabled = on; }
+        public void Dispose() => GUI.enabled = _prev;
     }
 
     void DrawRoundState()
@@ -70,13 +152,15 @@ public class GameHUD : MonoBehaviour
     {
         if (!showDebugKeys) return;
 
-        var box = new Rect(Screen.width - 210, 20, 200, 110);
+        var box = new Rect(Screen.width - 210, 20, 200, 200);
 
         GUI.color = new Color(0, 0, 0, 0.6f);
         GUI.Box(box, "");
         GUI.color = new Color(1f, 1f, 1f, 0.7f);
 
-        GUI.Label(new Rect(box.x + 8, box.y + 6, 190, 100),
+        GUI.Label(new Rect(box.x + 8, box.y + 6, 190, 140),
+            "F1  소울 +50\n" +
+            "F2  소울 -25\n" +
             "F5  더미 소환\n" +
             "F6  더미 제거\n" +
             "F7  랜덤 능력 교체\n" +

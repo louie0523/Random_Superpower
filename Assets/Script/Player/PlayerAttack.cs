@@ -26,6 +26,7 @@ public class PlayerAttack : NetworkBehaviour
     private PlayerAnimator _anim;
     private CharacterController _cc;
     private MotionEventPlayer _events;
+    private PlayerShop _shop;
 
     // 콤보 상태
     private int _comboIndex;
@@ -71,6 +72,7 @@ public class PlayerAttack : NetworkBehaviour
         _anim = GetComponent<PlayerAnimator>();
         _cc = GetComponent<CharacterController>();
         _events = GetComponent<MotionEventPlayer>();
+        _shop = GetComponent<PlayerShop>();
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
@@ -117,6 +119,14 @@ public class PlayerAttack : NetworkBehaviour
         if (!HasStateAuthority) return;
 
         if (RoundManager.Instance != null && RoundManager.Instance.GameOver)
+        {
+            ResetCombo();
+            _attackQueued = false;
+            CancelDraw();
+            return;
+        }
+
+        if (_shop != null && _shop.IsShopping)
         {
             ResetCombo();
             _attackQueued = false;

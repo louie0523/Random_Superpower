@@ -40,9 +40,8 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Header("Base Stats")]
     public StatEntry[] BaseStats;
 
-    [Header("Options")]
-    [Tooltip("강화 옵션 부착 가능 슬롯 수")]
-    public int MaxOptionSlots = 3;
+    [Header("─── Weapon: 인챈트 ───")]
+    public EnchantTable EnchantTable;
 
     // ══════════ 무기 전용 ══════════
 

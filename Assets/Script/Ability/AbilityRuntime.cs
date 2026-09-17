@@ -40,6 +40,7 @@ public class AbilityRuntime : NetworkBehaviour
     [Networked] public TickTimer SealTimer { get; set; }
 
     public const int ChargeSlotCount = 4;
+    private int _skillRank;
 
 
 
@@ -163,6 +164,8 @@ public class AbilityRuntime : NetworkBehaviour
         Charges.Set(slot, Charges[slot] - amount);
         return true;
     }
+
+    public void SetSkillRank(int rank) => _skillRank = Mathf.Max(0, rank);
 
     // ══════════════════ 초기화 ══════════════════
 

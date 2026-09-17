@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: -1179119024802948346}
   - component: {fileID: -6314287215948934650}
   - component: {fileID: 6879911572735546874}
+  - component: {fileID: 6143414690035071440}
   - component: {fileID: 433004572054489072}
   - component: {fileID: 1140823715662527484}
   m_Layer: 3
@@ -131,6 +132,7 @@ MonoBehaviour:
   - {fileID: -4611531175301071505}
   - {fileID: 2170944513226956342}
   - {fileID: -6314287215948934650}
+  - {fileID: 6143414690035071440}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &927725796463626508
 MonoBehaviour:
@@ -348,7 +350,9 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: fab1b4881b0d24544923c3252d281a4a, type: 2}
   armRig: {fileID: 4156331145891824284}
   tpWeaponSocket: {fileID: 0}
-  _WeaponId: 0
+  pickupPrefab: {fileID: 2764452217985399308, guid: 739c7ce734b87f144ae12706be957dc7, type: 3}
+  _WeaponIds: 
+  _ActiveWeaponSlot: 0
   _ArmorId: 0
   _HelmetId: 0
   _BootsId: 0
@@ -422,6 +426,22 @@ MonoBehaviour:
   fpsCamera: {fileID: 7430700015858829311}
   audioSource: {fileID: 433004572054489072}
   weaponAudio: {fileID: 1140823715662527484}
+--- !u!114 &6143414690035071440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd1efaca96796a4abd7753f960620de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShop
+  database: {fileID: 11400000, guid: 941ddd8072b147f499a37079e3aad7a5, type: 2}
+  _Levels: 
+  _IsShopping:
+    RawValue: 0
 --- !u!82 &433004572054489072
 AudioSource:
   m_ObjectHideFlags: 0

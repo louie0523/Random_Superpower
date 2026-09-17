@@ -39,6 +39,9 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 _smoothMoveDir;
     public Vector3 SmoothMoveDir => _smoothMoveDir;
 
+    private PlayerShop _shop;
+    private PlayerEquipment _equip;
+
 
     public override void Spawned()
     {
@@ -46,6 +49,8 @@ public class PlayerMovement : NetworkBehaviour
         _stats = GetComponent<PlayerStats>();
         _anim = GetComponent<PlayerAnimator>();
         _ability = GetComponent<AbilityRuntime>();
+        _shop = GetComponent<PlayerShop>();
+        _equip = GetComponent<PlayerEquipment>();
 
         if (armRoot != null) armRoot.SetActive(true);   // 항상 켬
 
@@ -78,6 +83,16 @@ public class PlayerMovement : NetworkBehaviour
         float yaw = fpsCamera.ConsumeYaw();
         transform.Rotate(Vector3.up * yaw);
         fpsCamera.OnBodyRotated(yaw);
+
+        if (_shop != null && _shop.IsShopping)
+        {
+            _localMoveDir = Vector3.zero;
+            _speed01 = 0f;
+            _currentSpeed = 0f;
+            _verticalVel += gravity * Runner.DeltaTime;
+            _cc.Move(Vector3.up * _verticalVel * Runner.DeltaTime);
+            return;
+        }
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -136,11 +151,33 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (HasStateAuthority)
         {
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                _shop?.Toggle();
+
+                bool open = _shop != null && _shop.IsShopping;
+                Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
+                Cursor.visible = open;
+            }
+
+            if (Input.GetKeyDown(KeyCode.G)) _equip?.DropActiveWeapon();
+
+            if (Input.GetKeyDown(KeyCode.Alpha1)) _equip?.SwitchWeapon(0);
+            if (Input.GetKeyDown(KeyCode.Alpha2)) _equip?.SwitchWeapon(1);
+            if (Input.GetKeyDown(KeyCode.Alpha3)) _equip?.SwitchWeapon(2);
+
+
+
+            float wheel = Input.GetAxisRaw("Mouse ScrollWheel");
+            if (wheel > 0.01f) _equip?.CycleWeapon(1);
+            else if (wheel < -0.01f) _equip?.CycleWeapon(-1);
+
             _smoothMoveDir = Vector3.Lerp(_smoothMoveDir, _localMoveDir,
                                           Time.deltaTime * 8f);
 
             fpsCamera.Tick(_smoothMoveDir, _currentSpeed, _speed01);
             weaponAnim?.Tick(_smoothMoveDir, _speed01);
+
         }
         else
         {

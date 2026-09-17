@@ -5,12 +5,22 @@ public class PlayerEquipment : NetworkBehaviour
 {
     [SerializeField] private EquipmentDatabase database;
     [SerializeField] private FPArmRig armRig;
-    [SerializeField] private Transform tpWeaponSocket;   // B-handProp.R
+    [SerializeField] private Transform tpWeaponSocket;
+    [SerializeField] private NetworkObject pickupPrefab;
     private GameObject _tpWeaponObj;
     private int _tpMountedId = -1;
 
+    public const int WeaponSlots = 3;
+
+    [Networked, Capacity(WeaponSlots), OnChangedRender(nameof(OnEquipChanged))]
+    public NetworkArray<int> WeaponIds { get; }
+
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
-    public int WeaponId { get; set; }
+    public int ActiveWeaponSlot { get; set; }
+
+    public int WeaponId => WeaponIds[Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1)];
+
+
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int ArmorId { get; set; }
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
@@ -40,7 +50,7 @@ public class PlayerEquipment : NetworkBehaviour
 
         if (HasStateAuthority)
         {
-            WeaponId = startWeaponId;
+            WeaponIds.Set(0, startWeaponId);
             ArmorId = 0;
             HelmetId = 0;
             BootsId = 0;
@@ -131,11 +141,87 @@ public class PlayerEquipment : NetworkBehaviour
 
         switch (data.Slot)
         {
-            case EquipSlot.Weapon: WeaponId = id; RefillAmmo(); break;
+            case EquipSlot.Weapon:
+                WeaponIds.Set(ActiveWeaponSlot, id);
+                RefillAmmo();
+                //_enchant?.OnWeaponChanged(id);
+                break;
             case EquipSlot.Armor: ArmorId = id; break;
             case EquipSlot.Helmet: HelmetId = id; break;
             case EquipSlot.Boots: BootsId = id; break;
         }
+    }
+
+    public bool PickUpWeapon(int id)
+    {
+        if (!HasStateAuthority) return false;
+
+        var data = database?.Get(id);
+        if (data == null || data.Slot != EquipSlot.Weapon) return false;
+
+        for (int i = 0; i < WeaponSlots; i++)
+        {
+            if (WeaponIds[i] != 0) continue;
+
+            WeaponIds.Set(i, id);
+            ActiveWeaponSlot = i;
+            RefillAmmo();
+            return true;
+        }
+
+        return false;      // 슬롯이 꽉 차면 안 먹음
+    }
+
+    public void DropWeapon(int id)
+    {
+        if (!HasStateAuthority) return;
+        if (pickupPrefab == null) return;
+
+        Vector3 pos = transform.position + transform.forward * 1.5f + Vector3.up * 0.5f;
+
+        var obj = Runner.Spawn(pickupPrefab, pos, Quaternion.identity);
+        if (obj.TryGetComponent<Pickup>(out var pk))
+        {
+            pk.Init(PickupKind.Weapon, id);
+            pk.SetPickupDelay(1.5f);
+        }
+    }
+
+    public void DropActiveWeapon()
+    {
+        if (!HasStateAuthority) return;
+
+        int id = WeaponIds[ActiveWeaponSlot];
+        if (id == 0) return;
+
+        WeaponIds.Set(ActiveWeaponSlot, 0);
+        DropWeapon(id);
+    }
+
+    public void SwapWithPickup(int id)
+    {
+        if (!HasStateAuthority) return;
+
+        int old = WeaponIds[ActiveWeaponSlot];
+        WeaponIds.Set(ActiveWeaponSlot, id);
+        RefillAmmo();
+
+        if (old != 0) DropWeapon(old);
+    }
+
+    public void SwitchWeapon(int slot)
+    {
+        if (!HasStateAuthority) return;
+        if (slot < 0 || slot >= WeaponSlots) return;
+        if (slot == ActiveWeaponSlot) return;
+
+        ActiveWeaponSlot = slot;
+    }
+
+    public void CycleWeapon(int dir)
+    {
+        if (!HasStateAuthority) return;
+        SwitchWeapon((ActiveWeaponSlot + dir + WeaponSlots) % WeaponSlots);
     }
 
     public EquipmentData GetWeapon() => database != null ? database.Get(WeaponId) : null;

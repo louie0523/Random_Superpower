@@ -82,6 +82,7 @@ public class RoundManager : NetworkBehaviour
             if (!obj.TryGetComponent<PlayerHealth>(out var h)) continue;
 
             h.ResetForNewRound();
+            if (obj.TryGetComponent<PlayerShop>(out var shop)) shop.ResetForNewRound();
         }
 
         GameOver = false;
