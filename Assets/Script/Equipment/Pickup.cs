@@ -17,6 +17,15 @@ public class Pickup : NetworkBehaviour
     [SerializeField] private float bobSpeed = 2f;
     [SerializeField] private Transform visualRoot;
 
+    [Header("수명")]
+    [Tooltip("이 시간이 지나면 사라짐. 0이면 영구")]
+    [SerializeField] private float lifetime = 60f;
+
+    [Tooltip("사라지기 전 깜빡이는 시간")]
+    [SerializeField] private float blinkTime = 5f;
+
+    [Networked] private TickTimer LifeTimer { get; set; }
+
     [Header("무기 표시")]
     [SerializeField] private EquipmentDatabase equipDatabase;
     [SerializeField] private float modelScale = 0.6f;
@@ -33,6 +42,9 @@ public class Pickup : NetworkBehaviour
     {
         if (visualRoot == null) visualRoot = transform;
         _baseLocalPos = visualRoot.localPosition;
+
+        if (HasStateAuthority && lifetime > 0f)
+            LifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
 
         BuildVisual();
     }
@@ -61,7 +73,11 @@ public class Pickup : NetworkBehaviour
         _model = Instantiate(data.ModelPrefab, visualRoot);
         _model.transform.localPosition = Vector3.zero;
         _model.transform.localRotation = Quaternion.identity;
-        _model.transform.localScale = Vector3.one * modelScale;
+        Vector3 baseScale = data.ScaleOverride.sqrMagnitude > 0.0001f
+            ? data.ScaleOverride
+            : Vector3.one;
+
+        _model.transform.localScale = baseScale * modelScale;
 
         // 무기 프리팹의 판정용 컴포넌트 제거
         foreach (var c in _model.GetComponentsInChildren<Collider>(true))
@@ -76,6 +92,18 @@ public class Pickup : NetworkBehaviour
         visualRoot.Rotate(Vector3.up * spinSpeed * Time.deltaTime, Space.Self);
         visualRoot.localPosition = _baseLocalPos +
             Vector3.up * Mathf.Sin(Time.time * bobSpeed) * bobAmount;
+
+        // ★ 수명이 얼마 안 남으면 깜빡
+        if (lifetime > 0f && blinkTime > 0f && _model != null)
+        {
+            float? remain = LifeTimer.RemainingTime(Runner);
+            bool show = true;
+
+            if (remain.HasValue && remain.Value < blinkTime)
+                show = Mathf.Repeat(Time.time * 6f, 1f) > 0.4f;
+
+            if (_model.activeSelf != show) _model.SetActive(show);
+        }
     }
 
     // ══════════════════ 획득 ══════════════════
@@ -83,6 +111,13 @@ public class Pickup : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
+
+        if (lifetime > 0f && LifeTimer.Expired(Runner))
+        {
+            Runner.Despawn(Object);
+            return;
+        }
+
         if (_consumed) return;
         if (NoPickupTimer.IsRunning && !NoPickupTimer.Expired(Runner)) return;
 
@@ -116,7 +151,7 @@ public class Pickup : NetworkBehaviour
             case PickupKind.Soul:
                 if (!player.TryGetComponent<PlayerHealth>(out var hp)) return false;
                 hp.RPC_GainSoul(Amount);
-                return true;
+                return   true;
 
             case PickupKind.EnchantStone:
                 if (!player.TryGetComponent<PlayerEnchant>(out var en)) return false;
@@ -135,4 +170,6 @@ public class Pickup : NetworkBehaviour
         ItemId = itemId;
         Amount = amount;
     }
+
+
 }

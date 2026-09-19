@@ -16,14 +16,23 @@ MonoBehaviour:
   - Label: "1\uAC15"
     Pool:
     - {fileID: 11400000, guid: 1abc0e2a916d53a4aaaf02501988dc0b, type: 2}
-    - {fileID: 11400000, guid: 9695241646b3de942a591240e1b350c6, type: 2}
     - {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
   - Label: "2\uAC15"
     Pool:
     - {fileID: 11400000, guid: 1abc0e2a916d53a4aaaf02501988dc0b, type: 2}
-    - {fileID: 11400000, guid: 9695241646b3de942a591240e1b350c6, type: 2}
     - {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
     - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
   - Label: "3\uAC15"
     Pool:
+    - {fileID: 11400000, guid: 48a5b838eee414d44b8275d9b44bf22e, type: 2}
+  - Label: "4\uAC15"
+    Pool:
+    - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
+  - Label: "5\uAC15"
+    Pool:
+    - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
+    - {fileID: 11400000, guid: 48a5b838eee414d44b8275d9b44bf22e, type: 2}
+  - Label: "6\uAC15"
+    Pool:
+    - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
     - {fileID: 11400000, guid: 48a5b838eee414d44b8275d9b44bf22e, type: 2}

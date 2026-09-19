@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
+  m_Name: "\uAC74 \uB9C8\uC2A4\uD130"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  Id: 6003
+  DisplayName: "\uAC74\uB9C8\uC2A4\uD130"
+  Kind: 0
+  Tier: 0
+  Tags: 01000000
+  ExclusiveShopItems:
+  - {fileID: 0}
+  Icon: {fileID: 0}
+  Flavor: "\uB2F9\uC2E0\uC740 \uBAA8\uB4E0 \uCD1D\uAE30\uB958\uC758 \uB9C8\uC2A4\uD130\uC785\uB2C8\uB2E4.
+    \uAC74 \uB9C8\uC2A4\uD130\uB294 \uBAA8\uB4E0 \uCD1D\uAE30\uB958\uB97C \uC778\uCCB8\uD2B8
+    \uD560 \uC218 \uC788\uC73C\uBA70, \uCD1D\uAE30\uC5D0 \uB300\uD55C \uBCF4\uC815\uC744
+    \uBC1B\uC2B5\uB2C8\uB2E4."
+  Passives:
+  - Name: "\uCD1D\uAE30 \uC778\uCCB8\uD2B8"
+    Icon: {fileID: 0}
+    Description: "\uCD1D\uAE30\uB97C \uC774\uC81C \uC778\uCCB8\uD2B8\uD560 \uC218
+      \uC788\uC2B5\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Effects: []
+  - Name: "\uCD1D\uAE30\uC758 \uB2EC\uC778"
+    Icon: {fileID: 0}
+    Description: "\uCD1D\uAE30\uB97C \uC7A5\uCC29\uD558\uACE0 \uC788\uC73C\uBA74
+      \uACF5\uACA9 \uC18D\uB3C4 \uBC0F \uC774\uB3D9\uC18D\uB3C4\uAC00 \uC99D\uAC00\uD558\uBA70,
+      \uCE58\uBA85\uD0C0 \uD655\uB960\uC774 20% \uC99D\uAC00\uD569\uB2C8\uB2E4. \uB610\uD55C
+      \uAE30\uCD08 \uBB34\uAE30\uB85C \uAE00\uB85D\uC744 \uC0AC\uC6A9\uD560 \uC218
+      \uC788\uC2B5\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Effects: []
+  Skills: []
+  Behaviour: {fileID: 11400000, guid: 79944463ae022c048b3fa4d98263ccaf, type: 2}
+  MaxConcurrent: 0
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
+  Charges: []

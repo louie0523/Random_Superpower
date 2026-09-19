@@ -135,8 +135,9 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     {
         ovr = AttackOverride.None;
 
+
         var weapon = Ctx.Equipment?.GetWeapon();
-        if (weapon == null || weapon.Class != WeaponClass.Melee) return false;
+        if (weapon == null || !weapon.IsArmedMelee) return false;
 
         var step = StrikeMotion != null ? StrikeMotion.Step : null;
         if (step == null) return false;

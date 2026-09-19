@@ -11,6 +11,10 @@ public class AbilityData : ScriptableObject
     public SubTier Tier = SubTier.Silver;   // Sub만 사용
     public AbilityTag[] Tags;
 
+    [Header("전용 상점")]
+    [Tooltip("이 능력을 가졌을 때만 상점에 나타나는 항목들")]
+    public ShopItemData[] ExclusiveShopItems;
+
     [Header("Presentation")]
     public Sprite Icon;
     [TextArea(2, 3)]
@@ -101,6 +105,10 @@ public class AbilityData : ScriptableObject
 
         [Header("Slot")]
         public SkillSlot Slot = SkillSlot.Skill1;
+
+        [Header("무기 조건")]
+        [Tooltip("이 무기를 들었을 때만 사용 가능. None이면 제한 없음")]
+        public WeaponRequirement RequiredWeapon = WeaponRequirement.None;
 
         [Header("Cost / Timing")]
         public float Cooldown = 8f;

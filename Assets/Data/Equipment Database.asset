@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentDatabase
   searchFolder: Assets/Data/Equipment
   All:
+  - {fileID: 11400000, guid: f70e2922b23f8f84780388d3ff70b359, type: 2}
   - {fileID: 11400000, guid: eeb1ceeac6d45e24c8f7c5b8b12a6ed3, type: 2}
   - {fileID: 11400000, guid: e833f51a835c46d4198f516ca595432e, type: 2}
   - {fileID: 11400000, guid: 708eaf810798c3b4886399edafa09e78, type: 2}

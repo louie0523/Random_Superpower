@@ -4,11 +4,16 @@ using UnityEngine;
 public class PlayerShop : NetworkBehaviour
 {
     public const int MaxItems = 16;
-
-    [SerializeField] private ShopDatabase database;
+    public const int MaxExclusive = 8;
 
     [Networked, Capacity(MaxItems)]
     public NetworkArray<int> Levels { get; }
+
+    [Networked, Capacity(MaxExclusive)]
+    public NetworkArray<int> ExclusiveLevels { get; }
+
+    [SerializeField] private ShopDatabase database;
+
 
     [Networked] public NetworkBool IsShopping { get; set; }
 
@@ -52,39 +57,59 @@ public class PlayerShop : NetworkBehaviour
         var item = database?.GetByIndex(index);
         if (item == null) { reason = "없음"; return false; }
 
+        // ── 인챈트 리셋 ──
+        if (item.Kind == ShopItemKind.ResetEnchant)
+        {
+            var en = GetComponent<PlayerEnchant>();
+            int stage = en != null ? en.ActiveStage : 0;
+
+            if (stage == 0) { reason = "인챈트 없음"; return false; }
+
+            price = item.BasePrice + item.PricePerStage * stage;
+
+            if (_health == null || _health.Soul < price) { reason = "소울 부족"; return false; }
+            return true;
+        }
+
+        // ── 탄약 충전 ──
+        if (item.Kind == ShopItemKind.RefillAmmo)
+        {   
+            var en = GetComponent<PlayerEnchant>();
+            if (en == null || !en.IsGunsmith) { reason = "능력 필요"; return false; }
+
+            var eq = GetComponent<PlayerEquipment>();
+            var w = eq?.GetWeapon();
+
+            if (w == null || w.Class != WeaponClass.Ranged || w.RangedKind != RangedType.Gun)
+            {
+                reason = "총 아님";
+                return false;
+            }
+
+            if (eq.Ammo >= w.MaxAmmo) { reason = "가득참"; return false; }
+
+            price = item.BasePrice;
+            if (_health == null || _health.Soul < price) { reason = "소울 부족"; return false; }
+            return true;
+        }
+
+        // ── 일반 ──
         int lv = GetLevel(index);
 
-        if (!item.IsRepeatable && lv >= item.MaxLevel)
-        {
-            reason = "최대";
-            return false;
-        }
+        if (!item.IsRepeatable && lv >= item.MaxLevel) { reason = "최대"; return false; }
 
         price = item.GetPrice(item.IsRepeatable ? 0 : lv);
 
-        if (_health == null || _health.Soul < price)
-        {
-            reason = "소울 부족";
-            return false;
-        }
-
+        if (_health == null || _health.Soul < price) { reason = "소울 부족"; return false; }
         return true;
     }
-
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_Buy(int index)
     {
         var item = database?.GetByIndex(index);
         if (item == null) return;
 
-        int lv = Levels[index];
-
-        if (!item.IsRepeatable && lv >= item.MaxLevel) return;
-
-        int price = item.GetPrice(item.IsRepeatable ? 0 : lv);
-        if (_health.Soul < price) return;
-
-        _health.SpendSoul(price);
+        // ── 특수 항목 (레벨 없음) ──
 
         if (item.Kind == ShopItemKind.ResetEnchant)
         {
@@ -101,6 +126,42 @@ public class PlayerShop : NetworkBehaviour
             _health.SpendSoul(cost);
             en.ClearSlot(eq.ActiveWeaponSlot);
             return;
+        }
+
+        if (item.Kind == ShopItemKind.RefillAmmo)
+        {
+            var eq = GetComponent<PlayerEquipment>();
+            if (eq == null) return;
+
+            var en = GetComponent<PlayerEnchant>();
+            if (en == null || !en.IsGunsmith) return;
+
+            var w = eq.GetWeapon();
+            if (w == null || w.Class != WeaponClass.Ranged || w.RangedKind != RangedType.Gun)
+                return;
+
+            if (eq.Ammo >= w.MaxAmmo) return;
+            if (_health.Soul < item.BasePrice) return;
+
+            _health.SpendSoul(item.BasePrice);
+            eq.AddAmmo(Mathf.CeilToInt(w.MaxAmmo * item.AmmoRatio));
+            return;
+        }
+
+        // ── 일반 항목 ──
+
+        int lv = Levels[index];
+        if (!item.IsRepeatable && lv >= item.MaxLevel) return;
+
+        int price = item.GetPrice(item.IsRepeatable ? 0 : lv);
+        if (_health.Soul < price) return;
+
+        _health.SpendSoul(price);
+
+        if (item.Kind == ShopItemKind.InstantHeal)
+        {
+            _health.RPC_Heal(item.HealAmount);
+            return;                          // 레벨 안 올림
         }
 
         Levels.Set(index, lv + 1);

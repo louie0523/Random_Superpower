@@ -51,14 +51,14 @@ public class PlayerAnimator : NetworkBehaviour
         chestBone.localRotation *= Quaternion.Euler(AimPitch * chestPitchScale, 0f, 0f);
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_PlayAttack(int comboIndex, float attackSpeed)
-    {
-        if (animator == null) return;
-        animator.SetInteger(PCombo, comboIndex);
-        animator.SetFloat(PAtkSpd, attackSpeed);
-        animator.SetTrigger(TAttack);
-    }
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        public void RPC_PlayAttack(int comboIndex, float attackSpeed)
+        {
+            if (animator == null) return;
+            animator.SetInteger(PCombo, comboIndex);
+            animator.SetFloat(PAtkSpd, attackSpeed);
+            animator.SetTrigger(TAttack);
+        }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_PlayDeath()

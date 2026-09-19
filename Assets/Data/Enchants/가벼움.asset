@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnchantData
   Id: 9002
   DisplayName: "\uAC00\uBCBC\uC6C0"
-  Description: "\uACF5\uACA9 \uC18D\uB3C4 + 8%"
+  Description: "\uACF5\uACA9 \uC18D\uB3C4 + 10%"
   TierColor: {r: 1, g: 1, b: 1, a: 1}
   Stats:
   - Stat: 4

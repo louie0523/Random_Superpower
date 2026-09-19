@@ -386,8 +386,10 @@ public class AbilityRuntime : NetworkBehaviour
         // 기본 공격 중이면 스킬 못 씀
         if (_attack != null && _attack.IsAttacking) return false;
 
-        var skill = GetSlot(slotIndex);
-        if (skill == null) { Debug.Log("  → 슬롯 비어있음"); return false; }
+        var skill = _slots[slotIndex];
+        if (skill == null) return false;
+
+        if (!MeetsWeaponRequirement(skill)) return false;   // ★
 
         if (Runner.SimulationTime < CooldownEnd[slotIndex]) { Debug.Log("  → 쿨타임"); return false; }
         if (_health.Soul < skill.SoulCost) { Debug.Log("  → 소울 부족"); return false; }
@@ -434,6 +436,23 @@ public class AbilityRuntime : NetworkBehaviour
         // 스킬 사용 트리거 (다른 능력의 OnSkillUse 반응용)
         FireTrigger(TriggerType.OnSkillUse, null, skill);
         return true;
+    }
+
+    bool MeetsWeaponRequirement(AbilityData.SkillDef skill)
+    {
+        if (skill.RequiredWeapon == WeaponRequirement.None) return true;
+
+        var w = Equipment?.GetWeapon();
+        if (w == null) return false;
+
+        return (skill.RequiredWeapon & w.ToRequirementFlag()) != 0;
+    }
+
+    public bool CanUseWeapon(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= _slots.Length) return false;
+        var s = _slots[slotIndex];
+        return s == null || MeetsWeaponRequirement(s);
     }
 
     void FireSkillEffects(AbilityData.SkillDef skill)
@@ -640,6 +659,8 @@ public class AbilityRuntime : NetworkBehaviour
     {
         ovr = AttackOverride.None;
         if (!HasStateAuthority) return false;
+
+
 
         for (int i = 0; i < _behaviours.Count; i++)
             if (_behaviours[i].TryOverrideAttack(out ovr))

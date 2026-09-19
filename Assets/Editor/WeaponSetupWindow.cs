@@ -1480,12 +1480,44 @@ public class WeaponSetupWindow : EditorWindow
         if (GUILayout.Button("+ 현재 포즈로 키 추가"))
         {
             Undo.RecordObject(TargetAsset, "Add Key");
-            float t = Mathf.Clamp01(_playT / Mathf.Max(0.01f, step.TotalTime));
+
+            float t;
+
+            if (motion.Keys.Count == 0)
+            {
+                t = 0f;
+            }
+            else if (_selectedKey >= 0 && _selectedKey < motion.Keys.Count)
+            {
+                float cur = motion.Keys[_selectedKey].Time;
+
+                // 다음 키가 있으면 그 사이, 없으면 1.0
+                if (_selectedKey + 1 < motion.Keys.Count)
+                    t = (cur + motion.Keys[_selectedKey + 1].Time) * 0.5f;
+                else
+                    t = 1f;
+            }
+            else
+            {
+                // 선택 없으면 맨 끝
+                t = 1f;
+            }
+
+            // 1.0 자리가 이미 차 있으면 기존 키들을 앞으로 밀어 자리 확보
+            if (t >= 0.999f && motion.Keys.Count > 0 && motion.Keys[^1].Time >= 0.999f)
+            {
+                foreach (var kk in motion.Keys) kk.Time *= 0.9f;
+                t = 1f;
+            }
+
             var nk = new PoseKey { Time = t, Pose = CaptureCurrentPose() };
             motion.Keys.Add(nk);
             motion.SortKeys();
+
             EditorUtility.SetDirty(TargetAsset);
             _selectedKey = motion.Keys.IndexOf(nk);
+            _playT = t * step.TotalTime;
+            PreviewPose(nk.Pose);
         }
 
         if (GUILayout.Button("정렬", GUILayout.Width(50)))
@@ -1516,13 +1548,14 @@ public class WeaponSetupWindow : EditorWindow
     {
         Undo.RecordObject(TargetAsset, "Reorder Keys");
 
-        var poseA = motion.Keys[a].Pose;
-        var easeA = motion.Keys[a].Ease;
+        // 요소를 통째로 교환 (Time 포함)
+        (motion.Keys[a], motion.Keys[b]) = (motion.Keys[b], motion.Keys[a]);
 
-        motion.Keys[a].Pose = motion.Keys[b].Pose;
-        motion.Keys[a].Ease = motion.Keys[b].Ease;
-        motion.Keys[b].Pose = poseA;
-        motion.Keys[b].Ease = easeA;
+        // Time도 함께 갔으므로 시간 순서를 다시 맞춤
+        float ta = motion.Keys[a].Time;
+        float tb = motion.Keys[b].Time;
+        motion.Keys[a].Time = Mathf.Min(ta, tb);
+        motion.Keys[b].Time = Mathf.Max(ta, tb);
 
         EditorUtility.SetDirty(TargetAsset);
         RefreshPreview();
@@ -1600,23 +1633,59 @@ public class WeaponSetupWindow : EditorWindow
             EditorGUI.indentLevel++;
 
             Vector3 axis = GetCurlAxis();
+
+            // ── 오른손 ──
+            EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
             p.RightFingers ??= HandPose.Relaxed(axis);
 
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("펌", EditorStyles.miniButtonLeft))
-                SetKeyFingers(p, HandPose.Open(axis));
+                SetKeyFingers(p, HandPose.Open(axis), true);
             if (GUILayout.Button("자연", EditorStyles.miniButtonMid))
-                SetKeyFingers(p, HandPose.Relaxed(axis));
+                SetKeyFingers(p, HandPose.Relaxed(axis), true);
             if (GUILayout.Button("쥠", EditorStyles.miniButtonMid))
-                SetKeyFingers(p, HandPose.Grip(axis));
+                SetKeyFingers(p, HandPose.Grip(axis), true);
             if (GUILayout.Button("주먹", EditorStyles.miniButtonRight))
-                SetKeyFingers(p, HandPose.Fist(axis));
+                SetKeyFingers(p, HandPose.Fist(axis), true);
             EditorGUILayout.EndHorizontal();
 
             if (_rig.RightHandRig != null)
             {
                 DrawSceneEditToggle(p.RightFingers, _rig.RightHandRig, TargetAsset);
                 DrawFingerSliders(p.RightFingers, axis, _rig.RightHandRig, TargetAsset);
+            }
+
+            // ── 왼손 ──
+            if (p.UseLeftHand)
+            {
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("왼손", EditorStyles.miniBoldLabel);
+                p.LeftFingers ??= HandPose.Relaxed(axis);
+
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("펌", EditorStyles.miniButtonLeft))
+                    SetKeyFingers(p, HandPose.Open(axis), false);
+                if (GUILayout.Button("자연", EditorStyles.miniButtonMid))
+                    SetKeyFingers(p, HandPose.Relaxed(axis), false);
+                if (GUILayout.Button("쥠", EditorStyles.miniButtonMid))
+                    SetKeyFingers(p, HandPose.Grip(axis), false);
+                if (GUILayout.Button("주먹", EditorStyles.miniButtonRight))
+                    SetKeyFingers(p, HandPose.Fist(axis), false);
+                EditorGUILayout.EndHorizontal();
+
+                if (_rig.LeftHandRig != null)
+                {
+                    DrawSceneEditToggle(p.LeftFingers, _rig.LeftHandRig, TargetAsset);
+                    DrawFingerSliders(p.LeftFingers, axis, _rig.LeftHandRig, TargetAsset);
+                }
+
+                if (GUILayout.Button("오른손 손가락 복사", EditorStyles.miniButton))
+                {
+                    Undo.RecordObject(TargetAsset, "Copy Fingers");
+                    p.LeftFingers = p.RightFingers?.Clone() ?? HandPose.Relaxed(axis);
+                    EditorUtility.SetDirty(TargetAsset);
+                    PreviewPose(p);
+                }
             }
 
             EditorGUI.indentLevel--;
@@ -1646,10 +1715,13 @@ public class WeaponSetupWindow : EditorWindow
         EditorGUI.indentLevel--;
     }
 
-    void SetKeyFingers(ArmPose p, HandPose hp)
+    void SetKeyFingers(ArmPose p, HandPose hp, bool right)
     {
         Undo.RecordObject(TargetAsset, "Set Key Fingers");
-        p.RightFingers = hp;
+
+        if (right) p.RightFingers = hp;
+        else p.LeftFingers = hp;
+
         EditorUtility.SetDirty(TargetAsset);
         PreviewPose(p);
         SceneView.RepaintAll();

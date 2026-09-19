@@ -190,6 +190,8 @@ public class GameHUD : MonoBehaviour
         GUI.color = Color.white;
 
         DrawEnchantSection(local, x, enchantY, w);
+
+        DrawStatPanel(local);
     }
 
     void DrawEnchantSection(NetworkObject local, float x, float y, float w)
@@ -301,26 +303,109 @@ public class GameHUD : MonoBehaviour
 
     void DrawStatus(PlayerHealth hp)
     {
-        GUI.Label(new Rect(20f, 20f, 300f, 30f), $"HP: {hp.HP}   SOUL: {hp.Soul}");
-        GUI.Label(new Rect(20f, 40f, 300f, 30f),
-            $"K {hp.Kills}  A {hp.Assists}  D {hp.Deaths}");
+        // ── HP 바 ──
+        float maxHp = 100f;
+        if (hp.TryGetComponent<PlayerStats>(out var st))
+            maxHp = Mathf.Max(1f, st.Get(StatType.MaxHP));
 
+        float ratio = Mathf.Clamp01(hp.HP / maxHp);
+
+        var barBg = new Rect(20f, RefHeight - 90f, 280f, 22f);
+
+        GUI.color = new Color(0f, 0f, 0f, 0.7f);
+        GUI.Box(barBg, "");
+
+        GUI.color = ratio > 0.5f ? new Color(0.3f, 0.85f, 0.4f)
+                  : ratio > 0.25f ? new Color(0.95f, 0.8f, 0.2f)
+                                  : new Color(0.9f, 0.25f, 0.2f);
+        GUI.Box(new Rect(barBg.x, barBg.y, barBg.width * ratio, barBg.height), "");
+
+        GUI.color = Color.white;
+        GUI.Label(new Rect(barBg.x + 8f, barBg.y + 1f, 280f, 22f),
+            $"{hp.HP} / {Mathf.RoundToInt(maxHp)}");
+
+        // ── 소울 ──
+        GUI.Label(new Rect(20f, RefHeight - 116f, 300f, 24f), $"◆ SOUL  {hp.Soul}");
+
+        // ── 탄약 (왼쪽 아래) ──
         if (hp.TryGetComponent<PlayerEquipment>(out var eq))
         {
             var w = eq.GetWeapon();
             if (w != null && w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun)
             {
-                GUI.color = eq.Ammo > 0 ? Color.white : new Color(1f, 0.3f, 0.3f);
-                GUI.Label(new Rect(RefWidth - 140f, RefHeight - 60f, 120f, 30f),
+                GUI.color = eq.Ammo > 0 ? Color.white : new Color(1f, 0.35f, 0.3f);
+                GUI.Label(new Rect(20f, RefHeight - 62f, 200f, 30f),
                     $"{eq.Ammo} / {w.MaxAmmo}");
                 GUI.color = Color.white;
             }
         }
 
+        // ── KDA (좌상단) ──
+        GUI.Label(new Rect(20f, 20f, 300f, 24f),
+            $"K {hp.Kills}  A {hp.Assists}  D {hp.Deaths}");
+
         if (hp.IsDead)
             GUI.Label(new Rect(RefWidth / 2f - 40f, RefHeight / 2f, 200f, 30f), "사망");
     }
 
+    static readonly (StatType stat, string label, string fmt)[] StatRows =
+{
+    (StatType.MaxHP,             "최대 체력",   "0"),
+    (StatType.AttackPower,       "공격력",      "0.#"),
+    (StatType.Defense,           "방어력",      "0.#"),
+    (StatType.MoveSpeed,         "이동 속도",   "0.##"),
+    (StatType.AttackSpeed,       "공격 속도",   "0.##"),
+    (StatType.CritChance,        "치명타 확률", "P1"),
+    (StatType.CritDamage,        "치명타 피해", "P0"),
+    (StatType.CooldownReduction, "쿨타임 감소", "P1"),
+    (StatType.LifeSteal,         "흡혈",        "P1"),
+    (StatType.DamageDealt,       "가하는 피해", "P0"),
+    (StatType.DamageTaken,       "받는 피해",   "P0"),
+    (StatType.MeleeDamage,       "근접 피해",   "P0"),
+    (StatType.RangedDamage,      "원거리 피해", "P0"),
+    (StatType.SkillDamage,       "스킬 피해",   "P0"),
+    (StatType.UltimateDamage,    "궁극기 피해", "P0"),
+};
+
+    void DrawStatPanel(NetworkObject local)
+    {
+        if (!local.TryGetComponent<PlayerStats>(out var st)) return;
+
+        const float w = 260f;
+        float h = 40f + StatRows.Length * 20f;
+        float x = 40f;
+        float y = 120f;
+
+        GUI.color = new Color(0f, 0f, 0f, 0.9f);
+        GUI.Box(new Rect(x, y, w, h), "");
+        GUI.color = Color.white;
+
+        GUI.Label(new Rect(x + 12f, y + 8f, w, 22f), "현재 스탯");
+
+        for (int i = 0; i < StatRows.Length; i++)
+        {
+            var (stat, label, fmt) = StatRows[i];
+            float v = st.Get(stat);
+            float ry = y + 32f + i * 20f;
+
+            GUI.Label(new Rect(x + 12f, ry, 140f, 20f), label);
+
+            // 배율 스탯은 1.0이 기준이라 색으로 구분
+            bool isMul = stat == StatType.DamageDealt || stat == StatType.DamageTaken
+                      || stat == StatType.MeleeDamage || stat == StatType.RangedDamage
+                      || stat == StatType.SkillDamage || stat == StatType.UltimateDamage;
+
+            if (isMul)
+            {
+                if (v > 1.001f) GUI.color = new Color(0.5f, 1f, 0.6f);
+                else if (v < 0.999f) GUI.color = new Color(1f, 0.6f, 0.5f);
+            }
+            else if (v > 0f) GUI.color = new Color(0.8f, 0.9f, 1f);
+
+            GUI.Label(new Rect(x + 150f, ry, 100f, 20f), v.ToString(fmt));
+            GUI.color = Color.white;
+        }
+    }
     void DrawCrosshair()
     {
         GUI.Label(new Rect(RefWidth / 2f - 4f, RefHeight / 2f - 10f, 20f, 20f), "+");
@@ -399,7 +484,11 @@ public class GameHUD : MonoBehaviour
                 continue;
             }
 
+            bool weaponOk = ar.CanUseWeapon(i);
+
+            if (!weaponOk) GUI.color = new Color(1f, 0.5f, 0.4f, 0.7f);
             GUI.Label(new Rect(box.x + 4f, box.y + 20f, boxW - 8f, 34f), skill.Name);
+            GUI.color = Color.white;
 
             float ratio = ar.GetCooldownRatio(i);
             if (ratio > 0f)

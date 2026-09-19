@@ -23,6 +23,8 @@ MonoBehaviour:
     Type: 0
     Value: 5
   EnchantTable: {fileID: 0}
+  EnchantStoneCost: 1
+  EnchantCostPerStage: 0
   ModelPrefab: {fileID: 8185943983538654940, guid: 4a6c275dd301eab408f00590a65e4e1f, type: 3}
   Grip: 0
   PositionOffset: {x: 0, y: 0, z: 0}
@@ -618,3 +620,4 @@ MonoBehaviour:
   ProjectileGravity: 0
   PierceCount: 0
   PierceDamageFalloff: 0.3
+  IsUnarmed: 0

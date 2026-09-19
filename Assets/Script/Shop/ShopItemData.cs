@@ -6,6 +6,7 @@ public enum ShopItemKind
     SkillRank,     // 능력 스킬 랭크업
     InstantHeal,   // 즉시 회복 (레벨 없음, 반복 구매)
     ResetEnchant,  // 인첸트 초기화
+    RefillAmmo,    // 탄약 보충
 }
 
 [CreateAssetMenu(menuName = "Game/Shop Item")]
@@ -37,6 +38,10 @@ public class ShopItemData : ScriptableObject
     [Header("ResetEnchant 전용")]
     [Tooltip("단계당 추가 비용")]
     public int PricePerStage = 8;
+
+    [Header("RefillAmmo 전용")]
+    [Tooltip("채울 탄약 비율 (0.25 = 25%)")]
+    [Range(0.1f, 1f)] public float AmmoRatio = 0.25f;
 
     public int GetPrice(int currentLevel) =>
         Mathf.RoundToInt(BasePrice * Mathf.Pow(PriceGrowth, currentLevel));

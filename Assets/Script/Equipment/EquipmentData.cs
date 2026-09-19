@@ -24,6 +24,8 @@ public enum GunFireMode
 }
 
 
+
+
 [CreateAssetMenu(menuName = "Game/Equipment")]
 public class EquipmentData : ScriptableObject, IMotionSource
 {
@@ -234,7 +236,14 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Tooltip("관통 시 피해 감소 비율")]
     [Range(0f, 1f)] public float PierceDamageFalloff = 0.3f;
 
+    [Header("─── Weapon: 분류 ───")]
+    [Tooltip("맨손 계열. 무기 없이 싸우는 상태")]
+    public bool IsUnarmed = false;
 
+    /// <summary>실제 무기를 들고 있는 근접 (맨손 제외)</summary>
+    public bool IsArmedMelee => Slot == EquipSlot.Weapon
+                             && Class == WeaponClass.Melee
+                             && !IsUnarmed;
 
 
 
@@ -288,6 +297,23 @@ public class EquipmentData : ScriptableObject, IMotionSource
 
     public float GetDrawSpeed(float ratio01) =>
         Mathf.Lerp(MinDrawSpeed, MaxDrawSpeed, ratio01);
+
+    public WeaponRequirement ToRequirementFlag()
+    {
+        if (Slot != EquipSlot.Weapon) return WeaponRequirement.None;
+        if (IsUnarmed) return WeaponRequirement.Unarmed;
+
+        if (Class == WeaponClass.Melee) return WeaponRequirement.Melee;
+
+        return RangedKind switch
+        {
+            RangedType.Bow => WeaponRequirement.Bow,
+            RangedType.Staff => WeaponRequirement.Staff,
+            RangedType.Gun => WeaponRequirement.Gun,
+            RangedType.Thrown => WeaponRequirement.Thrown,
+            _ => WeaponRequirement.None,
+        };
+    }
 
 #if UNITY_EDITOR
     void OnValidate()

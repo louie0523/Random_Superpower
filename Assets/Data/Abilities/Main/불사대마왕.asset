@@ -16,7 +16,8 @@ MonoBehaviour:
   DisplayName: "\uBD88\uC0AC\uC790"
   Kind: 0
   Tier: 0
-  Tags: 03000000
+  Tags: 04000000
+  ExclusiveShopItems: []
   Icon: {fileID: 0}
   Flavor: "\uB2F9\uC2E0\uC740 \uBD88\uC0AC\uC758 \uC874\uC7AC\uC785\uB2C8\uB2E4.
     \uC804\uD22C\uC911 \uC0AC\uB9DD\uD558\uC5EC\uB3C4 \uBD80\uD65C\uD560 \uC218 \uC788\uC73C\uBA70,
@@ -57,35 +58,12 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 0
+    RequiredWeapon: 0
     Cooldown: 0
     SoulCost: 0
     UltimateChargeCost: 0
-    Motion:
-      Name: "1\uD0C0"
-      Duration: 0.55
-      HitStart: 0.27
-      HitEnd: 0.45
-      CancelPoint: 0.75
-      ComboResetTime: 0.8
-      OverrideHitShape: 0
-      HitMode: 0
-      Range: 3
-      HitAngle: 120
-      HitHeight: 1.2
-      MinRange: 0
-      DamageMultiplier: 1
-      RangeMultiplier: 1
-      RadiusMultiplier: 1
-      MaxTargets: 1
-      Motion:
-        Keys: []
-        Amplitude: 1
-      HitStopDuration: 0.05
-      CameraKickFov: 4
-      CameraShake: 0.3
-      LungeDistance: 0
-      SwingSound: {fileID: 0}
-      TrailPrefab: {fileID: 0}
+    MotionData: {fileID: 0}
+    EffectTiming: 0
     NeedsTarget: 0
     HitMode: 0
     Range: 6
@@ -103,35 +81,12 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 3
+    RequiredWeapon: 0
     Cooldown: 15
     SoulCost: 0
     UltimateChargeCost: 0
-    Motion:
-      Name: "1\uD0C0"
-      Duration: 0.55
-      HitStart: 0.27
-      HitEnd: 0.45
-      CancelPoint: 0.75
-      ComboResetTime: 0.8
-      OverrideHitShape: 0
-      HitMode: 0
-      Range: 3
-      HitAngle: 120
-      HitHeight: 1.2
-      MinRange: 0
-      DamageMultiplier: 1
-      RangeMultiplier: 1
-      RadiusMultiplier: 1
-      MaxTargets: 1
-      Motion:
-        Keys: []
-        Amplitude: 1
-      HitStopDuration: 0.05
-      CameraKickFov: 4
-      CameraShake: 0.3
-      LungeDistance: 0
-      SwingSound: {fileID: 0}
-      TrailPrefab: {fileID: 0}
+    MotionData: {fileID: 0}
+    EffectTiming: 0
     NeedsTarget: 0
     HitMode: 1
     Range: 6
@@ -139,3 +94,10 @@ MonoBehaviour:
     HitHeight: 1.5
     MaxTargets: 1
     Effects: []
+  Behaviour: {fileID: 0}
+  MaxConcurrent: 1
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
+  Charges: []

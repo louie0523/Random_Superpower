@@ -362,7 +362,8 @@ MonoBehaviour:
   _HelmetId: 0
   _BootsId: 0
   _SlotAmmo: 
-  startWeaponId: 1001
+  startWeaponId: 1002
+  swapTime: 0.6
 --- !u!114 &-1179119024802948346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,6 +465,8 @@ MonoBehaviour:
     m_Bits: 4294967295
   searchRadius: 3
   interactKey: 101
+  _AllowGunEnchant:
+    RawValue: 0
 --- !u!114 &959149403550185092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,12 +480,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEnchant
   database: {fileID: 11400000, guid: fd84a8c6e8e780342a8b7281e6e6c019, type: 2}
-  enchantsPerStone: 1
   _SlotEnchants: 
   _EnchantedWeaponIds: 
   _Stones: 0
   _LastRolled: 0
   _LastRollTick: 0
+  _AllowGunEnchant:
+    RawValue: 0
 --- !u!82 &433004572054489072
 AudioSource:
   m_ObjectHideFlags: 0

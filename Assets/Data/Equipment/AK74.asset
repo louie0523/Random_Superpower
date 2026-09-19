@@ -24,7 +24,9 @@ MonoBehaviour:
   - Stat: 1
     Type: 0
     Value: 10
-  MaxOptionSlots: 3
+  EnchantTable: {fileID: 0}
+  EnchantStoneCost: 1
+  EnchantCostPerStage: 0
   ModelPrefab: {fileID: 6518945834294003907, guid: f2a71c2ee2f538447a3bde44c6b59859, type: 3}
   Grip: 0
   PositionOffset: {x: 0, y: 0, z: 0}
@@ -912,3 +914,4 @@ MonoBehaviour:
   ProjectileGravity: 45
   PierceCount: 0
   PierceDamageFalloff: 0.3
+  IsUnarmed: 0

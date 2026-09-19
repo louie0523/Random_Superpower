@@ -46,3 +46,18 @@ public enum TargetType
     AimTarget,      // 조준 방향
     AreaAroundSelf,
 }
+
+[System.Flags]
+public enum WeaponRequirement
+{
+    None = 0,
+    Unarmed = 1 << 0,
+    Melee = 1 << 1,      // 맨손 제외 근접
+    Bow = 1 << 2,
+    Staff = 1 << 3,
+    Gun = 1 << 4,
+    Thrown = 1 << 5,
+
+    AnyRanged = Bow | Staff | Gun | Thrown,
+    Any = Unarmed | Melee | AnyRanged,
+}

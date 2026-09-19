@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
+using static UnityEngine.InputSystem.Controls.AxisControl;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -75,8 +76,23 @@ public class PlayerHealth : NetworkBehaviour
             HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
             Soul = 0;
             IsDead = false;
+            _stats.OnStatsChanged += ClampHP;
         }
         _prevHP = HP;
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        if (_stats != null) _stats.OnStatsChanged -= ClampHP;
+    }
+
+    void ClampHP()
+    {
+        if (!HasStateAuthority) return;
+        if (IsDead) return;
+
+        int max = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
+        if (HP > max) HP = max;
     }
 
     void SetupColorProperty()

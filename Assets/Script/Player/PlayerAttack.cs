@@ -149,6 +149,14 @@ public class PlayerAttack : NetworkBehaviour
             return;
         }
 
+        if (_equip != null && _equip.IsSwapping)
+        {
+            ResetCombo();
+            _attackQueued = false;
+            CancelDraw();
+            return;
+        }
+
 
         float dt = Runner.DeltaTime;
 
@@ -174,13 +182,10 @@ public class PlayerAttack : NetworkBehaviour
 
     void TickRanged(EquipmentData weapon, float dt)
     {
-        if (weapon.RangedKind == RangedType.Gun)
-        {
-            TickGun(weapon, dt);
-            return;
-        }
+        if (weapon.RangedKind == RangedType.Gun) { TickGun(weapon, dt); return; }
 
-        // ── 발사 (홀드 해제보다 먼저 처리) ──
+        float spd = Mathf.Max(0.1f, _stats.Get(StatType.AttackSpeed));
+
         if (_releaseQueued)
         {
             _releaseQueued = false;
@@ -193,15 +198,13 @@ public class PlayerAttack : NetworkBehaviour
             return;
         }
 
-        // ── 시위 당기는 중 ──
         if (Input.GetMouseButton(0))
         {
             if (_drawTime < 0f) _drawTime = 0f;
-            _drawTime += dt;
+            _drawTime += dt * spd;        // ★ 공속만큼 빨리 참
         }
 
         weaponAnim?.SetDraw(DrawRatio01);
-        Debug.Log($"[SetDraw] ratio={DrawRatio01:F2} anim={(weaponAnim == null ? "NULL" : "OK")}");
     }
 
 
@@ -228,7 +231,8 @@ public class PlayerAttack : NetworkBehaviour
 
         FireGun(weapon);
 
-        _fireTimer = 60f / Mathf.Max(1f, weapon.RoundsPerMinute);
+        float spd = Mathf.Max(0.1f, _stats.Get(StatType.AttackSpeed));
+        _fireTimer = 60f / Mathf.Max(1f, weapon.RoundsPerMinute * spd);
         _shotsInBurst++;
         _burstResetTimer = 0.35f;
     }

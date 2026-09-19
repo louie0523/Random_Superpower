@@ -24,7 +24,13 @@ public class PlayerEnchant : NetworkBehaviour
     [Networked] public int LastRolled { get; set; }
     [Networked] public int LastRollTick { get; set; }
 
-    [Networked] public NetworkBool AllowGunEnchant { get; set; }
+    [Networked] public NetworkBool IsGunsmith { get; set; }
+
+    public void SetGunsmith(bool on)
+    {
+        if (!HasStateAuthority) return;
+        IsGunsmith = on;
+    }
 
     private PlayerEquipment _equip;
     private PlayerStats _stats;
@@ -68,7 +74,7 @@ public class PlayerEnchant : NetworkBehaviour
 
         // 총은 특정 능력이 있어야 인챈트 가능
         if (w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun
-            && !AllowGunEnchant)
+            && !IsGunsmith)
         {
             reason = "총기 인챈트 불가";
             return false;
@@ -94,7 +100,7 @@ public class PlayerEnchant : NetworkBehaviour
     public void SetGunEnchant(bool on)
     {
         if (!HasStateAuthority) return;
-        AllowGunEnchant = on;
+        IsGunsmith = on;
     }
 
     // ══════════════════ 인챈트 ══════════════════
@@ -182,6 +188,6 @@ public class PlayerEnchant : NetworkBehaviour
 
         for (int s = 0; s < PlayerEquipment.WeaponSlots; s++) ClearSlot(s);
         Stones = 0;
-        AllowGunEnchant = false;      // ★ 능력이 다시 OnEquip하면 켜짐
+        IsGunsmith = false;      // ★ 능력이 다시 OnEquip하면 켜짐
     }
 }

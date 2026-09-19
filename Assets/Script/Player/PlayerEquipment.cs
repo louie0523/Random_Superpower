@@ -18,7 +18,14 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int ActiveWeaponSlot { get; set; }
 
-    public int WeaponId => WeaponIds[Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1)];
+    public int WeaponId
+    {
+        get
+        {
+            int id = WeaponIds[Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1)];
+            return id != 0 ? id : fistWeaponId;
+        }
+    }
 
 
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
@@ -35,11 +42,18 @@ public class PlayerEquipment : NetworkBehaviour
 
     [Header("Starting Gear")]
     [SerializeField] private int startWeaponId = 1001;
+    [SerializeField] private int fistWeaponId = 1000;
 
     private PlayerStats _stats;
     private int _mountedWeaponId = -1;
 
     private PlayerEnchant _enchant;
+
+    [SerializeField] private float swapTime = 0.6f;
+
+
+    [Networked] private TickTimer SwapTimer { get; set; }
+    public bool IsSwapping => SwapTimer.IsRunning && !SwapTimer.Expired(Runner);
 
     public override void Spawned()
     {
@@ -64,6 +78,17 @@ public class PlayerEquipment : NetworkBehaviour
             RefillAmmo(0);
         }
         ApplyAll();
+    }
+
+    public void AddAmmo(int amount)
+    {
+        if (!HasStateAuthority) return;
+
+        int slot = Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1);
+        var w = database?.Get(WeaponIds[slot]);
+        if (w == null) return;
+
+        SlotAmmo.Set(slot, Mathf.Min(SlotAmmo[slot] + amount, w.MaxAmmo));
     }
 
     public void RefillAmmo(int slot)
@@ -232,8 +257,11 @@ public class PlayerEquipment : NetworkBehaviour
         if (!HasStateAuthority) return;
         if (slot < 0 || slot >= WeaponSlots) return;
         if (slot == ActiveWeaponSlot) return;
+        if (IsSwapping) return;
+        if (WeaponIds[slot] == 0) return;      // 빈 슬롯은 무시
 
         ActiveWeaponSlot = slot;
+        SwapTimer = TickTimer.CreateFromSeconds(Runner, swapTime);
         _enchant?.ApplyAll();
     }
 
