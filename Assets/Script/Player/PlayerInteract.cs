@@ -6,6 +6,7 @@ public class PlayerInteract : NetworkBehaviour
     [SerializeField] private LayerMask interactMask = ~0;
     [SerializeField] private float searchRadius = 3f;
     [SerializeField] private KeyCode interactKey = KeyCode.E;
+    [Networked] public NetworkBool AllowGunEnchant { get; set; }    
 
     private bool _holding;
     private LootChest _target;
@@ -24,6 +25,7 @@ public class PlayerInteract : NetworkBehaviour
         _holding = Input.GetKey(interactKey);
     }
 
+
     public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
@@ -40,6 +42,9 @@ public class PlayerInteract : NetworkBehaviour
         if (_target != null && _target != chest) Release();
 
         _target = chest;
+
+        Debug.Log($"[Interact] target={(_target == null ? "NULL" : _target.name)} " +
+              $"holding={_holding} progress={_target?.Progress:F2}");
 
         if (_target == null) return;
 

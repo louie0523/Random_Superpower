@@ -24,6 +24,8 @@ GameObject:
   - component: {fileID: -6314287215948934650}
   - component: {fileID: 6879911572735546874}
   - component: {fileID: 6143414690035071440}
+  - component: {fileID: 8318037346556842547}
+  - component: {fileID: 959149403550185092}
   - component: {fileID: 433004572054489072}
   - component: {fileID: 1140823715662527484}
   m_Layer: 3
@@ -133,6 +135,8 @@ MonoBehaviour:
   - {fileID: 2170944513226956342}
   - {fileID: -6314287215948934650}
   - {fileID: 6143414690035071440}
+  - {fileID: 8318037346556842547}
+  - {fileID: 959149403550185092}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &927725796463626508
 MonoBehaviour:
@@ -300,6 +304,7 @@ MonoBehaviour:
   assistSoulRatio: 0.15
   soulLossByPlayer: 0.35
   soulLossBySelf: 0.1
+  combatDuration: 8
   _HP: 0
   _IsDead:
     RawValue: 0
@@ -356,8 +361,8 @@ MonoBehaviour:
   _ArmorId: 0
   _HelmetId: 0
   _BootsId: 0
-  _Ammo: 0
-  startWeaponId: 1004
+  _SlotAmmo: 
+  startWeaponId: 1001
 --- !u!114 &-1179119024802948346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,6 +447,42 @@ MonoBehaviour:
   _Levels: 
   _IsShopping:
     RawValue: 0
+--- !u!114 &8318037346556842547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c9d32764ea20c409deb196a4fd78c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
+  interactMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  searchRadius: 3
+  interactKey: 101
+--- !u!114 &959149403550185092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9e309ffa3725a845a351c208a736dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEnchant
+  database: {fileID: 11400000, guid: fd84a8c6e8e780342a8b7281e6e6c019, type: 2}
+  enchantsPerStone: 1
+  _SlotEnchants: 
+  _EnchantedWeaponIds: 
+  _Stones: 0
+  _LastRolled: 0
+  _LastRollTick: 0
 --- !u!82 &433004572054489072
 AudioSource:
   m_ObjectHideFlags: 0

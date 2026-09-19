@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0ba764fd1e2bf42801c96e9b968fba, type: 3}
   m_Name: Shop Database
   m_EditorClassIdentifier: Assembly-CSharp::ShopDatabase
+  searchFolder: Assets/Data/ShopItemData
   Items:
   - {fileID: 11400000, guid: ec9ba5367cae2c34bb7b07baca5648f6, type: 2}
   - {fileID: 11400000, guid: 113450ee6c8489f4cbed14133976f479, type: 2}
   - {fileID: 11400000, guid: 90657038ec0c6ff45a5e512b35d7d213, type: 2}
   - {fileID: 11400000, guid: 1ba78fb8f3280d74b8619cdbe52ac451, type: 2}
+  - {fileID: 11400000, guid: 94b861374a589f245b458601a4620c1c, type: 2}

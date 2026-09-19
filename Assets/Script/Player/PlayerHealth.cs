@@ -309,6 +309,7 @@ public class PlayerHealth : NetworkBehaviour
         Kills++;
         Soul += soul;
         GetComponent<AbilityRuntime>()?.FireTrigger(TriggerType.OnKill, null);
+        GetComponent<PlayerEnchant>()?.RPC_AddStones(1);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

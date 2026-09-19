@@ -8,6 +8,17 @@ public class GameHUD : MonoBehaviour
     private GUIStyle _tooltipStyle;
     [SerializeField] private bool showDebugKeys = true;
 
+    private int _lastStones = -1;
+    private int _stoneDelta;
+    private float _stoneFlash;
+
+    const float RefWidth = 1920f;
+    const float RefHeight = 1080f;
+
+    private float _scale = 1f;
+
+    // ══════════════════ 진입점 ══════════════════
+
     void OnGUI()
     {
         if (_runner == null)
@@ -20,6 +31,20 @@ public class GameHUD : MonoBehaviour
         if (local == null) return;
         if (!local.TryGetComponent<PlayerHealth>(out var hp)) return;
 
+        // 기준 해상도(1920x1080)로 스케일
+        _scale = Mathf.Min(Screen.width / RefWidth, Screen.height / RefHeight);
+
+        var prevMatrix = GUI.matrix;
+        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity,
+                                   new Vector3(_scale, _scale, 1f));
+
+        DrawAll(local, hp);
+
+        GUI.matrix = prevMatrix;
+    }
+
+    void DrawAll(NetworkObject local, PlayerHealth hp)
+    {
         var ar = local.GetComponent<AbilityRuntime>();
 
         DrawStatus(hp);
@@ -36,9 +61,19 @@ public class GameHUD : MonoBehaviour
         DrawScoreboard(_runner);
         DrawDebugKeys();
         DrawRoundState();
-        DrawShop(local.GetComponent<PlayerShop>(), hp);
+        DrawShop(local, local.GetComponent<PlayerShop>(), hp);
         DrawInteract(local);
+        DrawStoneGain(local.GetComponent<PlayerEnchant>());
     }
+
+    /// <summary>스크린 좌표를 기준 해상도 좌표로</summary>
+    Vector2 GuiMousePos()
+    {
+        return new Vector2(Input.mousePosition.x / _scale,
+                           (Screen.height - Input.mousePosition.y) / _scale);
+    }
+
+    // ══════════════════ 상호작용 ══════════════════
 
     void DrawInteract(NetworkObject local)
     {
@@ -47,12 +82,11 @@ public class GameHUD : MonoBehaviour
         var chest = pi.CurrentTarget;
         if (chest == null || chest.IsOpened) return;
 
-        float cx = Screen.width / 2f;
-        float y = Screen.height / 2f + 60f;
+        float cx = RefWidth / 2f;
+        float y = RefHeight / 2f + 60f;
 
         GUI.Label(new Rect(cx - 100f, y, 200f, 24f), $"[E] 열기  ({chest.Tier})");
 
-        // 진행도 바
         var bar = new Rect(cx - 90f, y + 26f, 180f, 10f);
         GUI.color = new Color(0f, 0f, 0f, 0.6f);
         GUI.Box(bar, "");
@@ -61,34 +95,70 @@ public class GameHUD : MonoBehaviour
         GUI.color = Color.white;
     }
 
-    void DrawShop(PlayerShop shop, PlayerHealth hp)
+    // ══════════════════ 스톤 획득 ══════════════════
+
+    void DrawStoneGain(PlayerEnchant en)
+    {
+        if (en == null) return;
+
+        if (Event.current.type != EventType.Repaint)
+        {
+            if (_stoneFlash > 0f) DrawStoneLabel();
+            return;
+        }
+
+        if (_lastStones >= 0 && en.Stones > _lastStones)
+        {
+            _stoneDelta = en.Stones - _lastStones;
+            _stoneFlash = 1.5f;
+        }
+        _lastStones = en.Stones;
+
+        if (_stoneFlash <= 0f) return;
+        _stoneFlash -= Time.deltaTime;
+
+        DrawStoneLabel();
+    }
+
+    void DrawStoneLabel()
+    {
+        GUI.color = new Color(0.6f, 0.9f, 1f, Mathf.Clamp01(_stoneFlash));
+        GUI.Label(new Rect(RefWidth / 2f - 60f, RefHeight / 2f + 100f, 200f, 24f),
+            $"인챈트 스톤 +{_stoneDelta}");
+        GUI.color = Color.white;
+    }
+
+    // ══════════════════ 상점 ══════════════════
+
+    void DrawShop(NetworkObject local, PlayerShop shop, PlayerHealth hp)
     {
         if (shop == null) return;
 
         var db = shop.Database;
         if (db == null) return;
 
-        // 열기 안내
         if (!shop.IsShopping)
         {
             bool blocked = hp.InCombat && !hp.IsDead;
             GUI.color = blocked ? new Color(1f, 0.5f, 0.5f) : Color.white;
-            GUI.Label(new Rect(20, Screen.height - 40, 300, 24),
+            GUI.Label(new Rect(20f, RefHeight - 40f, 300f, 24f),
                 blocked ? "전투 중 — 상점 이용 불가" : "[B] 상점");
             GUI.color = Color.white;
             return;
         }
 
         const float w = 420f;
-        float h = 60f + db.Count * 40f;
-        float x = Screen.width / 2f - w / 2f;
+        float listH = 44f + db.Count * 40f;
+        float h = listH + 260f;
+        float x = RefWidth / 2f - w / 2f;
         float y = 120f;
 
         GUI.color = new Color(0f, 0f, 0f, 0.9f);
         GUI.Box(new Rect(x, y, w, h), "");
         GUI.color = Color.white;
 
-        GUI.Label(new Rect(x + 16, y + 10, w, 24), "상점  —  [B] 닫기  ·  이동/공격 불가");
+        GUI.Label(new Rect(x + 16f, y + 10f, w, 24f),
+            "상점  —  [B] 닫기  ·  이동/공격 불가");
 
         for (int i = 0; i < db.Count; i++)
         {
@@ -99,17 +169,70 @@ public class GameHUD : MonoBehaviour
             int lv = shop.GetLevel(i);
             bool ok = shop.CanBuy(i, out int price, out string reason);
 
-            GUI.Label(new Rect(x + 16, ry, 200, 22),
-                item.IsRepeatable ? item.DisplayName : $"{item.DisplayName}  Lv.{lv}/{item.MaxLevel}");
+            GUI.Label(new Rect(x + 16f, ry, 200f, 22f),
+                item.IsRepeatable
+                    ? item.DisplayName
+                    : $"{item.DisplayName}  Lv.{lv}/{item.MaxLevel}");
 
-            GUI.Label(new Rect(x + 220, ry, 120, 22),
-                ok ? $"◆{price}" : reason);
+            GUI.Label(new Rect(x + 220f, ry, 120f, 22f), ok ? $"◆{price}" : reason);
 
             using (new GUIEnabledScope(ok))
             {
-                if (GUI.Button(new Rect(x + w - 90, ry - 2, 70, 26), "구매"))
+                if (GUI.Button(new Rect(x + w - 90f, ry - 2f, 70f, 26f), "구매"))
                     shop.RPC_Buy(i);
             }
+        }
+
+        float enchantY = y + listH + 16f;
+
+        GUI.color = new Color(1f, 1f, 1f, 0.2f);
+        GUI.Box(new Rect(x + 16f, enchantY - 8f, w - 32f, 1f), "");
+        GUI.color = Color.white;
+
+        DrawEnchantSection(local, x, enchantY, w);
+    }
+
+    void DrawEnchantSection(NetworkObject local, float x, float y, float w)
+    {
+        if (!local.TryGetComponent<PlayerEnchant>(out var en)) return;
+        if (!local.TryGetComponent<PlayerEquipment>(out var eq)) return;
+
+        var weapon = eq.GetWeapon();
+
+        GUI.Label(new Rect(x + 16f, y, 300f, 22f), $"인챈트  ·  스톤 {en.Stones}개");
+
+        if (weapon == null || !weapon.CanEnchant)
+        {
+            GUI.Label(new Rect(x + 16f, y + 24f, 300f, 22f), "이 무기는 인챈트 불가");
+            return;
+        }
+
+        int stage = en.ActiveStage;
+        int max = Mathf.Min(weapon.MaxEnchantStage, PlayerEnchant.MaxEnchants);
+
+        GUI.Label(new Rect(x + 16f, y + 24f, 300f, 22f),
+            $"{weapon.DisplayName}  {stage}/{max}단계");
+
+        var db = en.Database;
+        for (int i = 0; i < stage; i++)
+        {
+            int id = en.GetEnchantId(eq.ActiveWeaponSlot, i);
+            var e = db?.Get(id);
+            if (e == null) continue;
+
+            GUI.color = e.TierColor;
+            GUI.Label(new Rect(x + 30f, y + 48f + i * 20f, w - 60f, 20f), e.BuildLine());
+            GUI.color = Color.white;
+        }
+
+        float by = y + 56f + stage * 20f;
+
+        bool ok = en.CanEnchant(out string reason, out int cost);
+        using (new GUIEnabledScope(ok))
+        {
+            if (GUI.Button(new Rect(x + 16f, by, 180f, 28f),
+                ok ? $"인챈트 (스톤 {cost})" : reason))             
+                en.RPC_Enchant();
         }
     }
 
@@ -120,6 +243,8 @@ public class GameHUD : MonoBehaviour
         public void Dispose() => GUI.enabled = _prev;
     }
 
+    // ══════════════════ 라운드 ══════════════════
+
     void DrawRoundState()
     {
         var rm = RoundManager.Instance;
@@ -127,38 +252,39 @@ public class GameHUD : MonoBehaviour
 
         if (rm.GameOver)
         {
-            var box = new Rect(Screen.width / 2f - 180f, Screen.height / 2f - 60f, 360f, 120f);
+            var box = new Rect(RefWidth / 2f - 180f, RefHeight / 2f - 60f, 360f, 120f);
 
             GUI.color = new Color(0f, 0f, 0f, 0.85f);
             GUI.Box(box, "");
             GUI.color = Color.white;
 
-            GUI.Label(new Rect(box.x, box.y + 20f, box.width, 30f),
+            GUI.Label(new Rect(box.x + 20f, box.y + 20f, box.width - 40f, 30f),
                 $"Player {rm.Winner.PlayerId} 승리!");
-            GUI.Label(new Rect(box.x, box.y + 55f, box.width, 30f),
+            GUI.Label(new Rect(box.x + 20f, box.y + 55f, box.width - 40f, 30f),
                 $"{rm.WinnerSoul} 소울");
-            GUI.Label(new Rect(box.x, box.y + 85f, box.width, 30f),
+            GUI.Label(new Rect(box.x + 20f, box.y + 85f, box.width - 40f, 30f),
                 "곧 새 라운드가 시작됩니다");
         }
         else
         {
-            // 목표 진행도
-            GUI.Label(new Rect(Screen.width / 2f - 60f, 20f, 200f, 24f),
+            GUI.Label(new Rect(RefWidth / 2f - 100f, 20f, 300f, 24f),
                 $"목표 {rm.TargetSoul}  ·  1위 {rm.GetTopSoul()}");
         }
     }
+
+    // ══════════════════ 디버그 ══════════════════
 
     void DrawDebugKeys()
     {
         if (!showDebugKeys) return;
 
-        var box = new Rect(Screen.width - 210, 20, 200, 200);
+        var box = new Rect(RefWidth - 210f, 20f, 200f, 170f);
 
-        GUI.color = new Color(0, 0, 0, 0.6f);
+        GUI.color = new Color(0f, 0f, 0f, 0.6f);
         GUI.Box(box, "");
         GUI.color = new Color(1f, 1f, 1f, 0.7f);
 
-        GUI.Label(new Rect(box.x + 8, box.y + 6, 190, 140),
+        GUI.Label(new Rect(box.x + 8f, box.y + 6f, 190f, 160f),
             "F1  소울 +50\n" +
             "F2  소울 -25\n" +
             "F5  더미 소환\n" +
@@ -171,33 +297,33 @@ public class GameHUD : MonoBehaviour
         GUI.color = Color.white;
     }
 
-
+    // ══════════════════ 상태 ══════════════════
 
     void DrawStatus(PlayerHealth hp)
     {
-        GUI.Label(new Rect(20, 20, 300, 30), $"HP: {hp.HP}   SOUL: {hp.Soul}");
-        GUI.Label(new Rect(20, 40, 300, 30), $"K {hp.Kills}  A {hp.Assists}  D {hp.Deaths}");
+        GUI.Label(new Rect(20f, 20f, 300f, 30f), $"HP: {hp.HP}   SOUL: {hp.Soul}");
+        GUI.Label(new Rect(20f, 40f, 300f, 30f),
+            $"K {hp.Kills}  A {hp.Assists}  D {hp.Deaths}");
 
-        // 탄약
         if (hp.TryGetComponent<PlayerEquipment>(out var eq))
         {
             var w = eq.GetWeapon();
             if (w != null && w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun)
             {
                 GUI.color = eq.Ammo > 0 ? Color.white : new Color(1f, 0.3f, 0.3f);
-                GUI.Label(new Rect(Screen.width - 140, Screen.height - 60, 120, 30),
+                GUI.Label(new Rect(RefWidth - 140f, RefHeight - 60f, 120f, 30f),
                     $"{eq.Ammo} / {w.MaxAmmo}");
                 GUI.color = Color.white;
             }
         }
 
         if (hp.IsDead)
-            GUI.Label(new Rect(Screen.width / 2 - 40, Screen.height / 2, 200, 30), "사망");
+            GUI.Label(new Rect(RefWidth / 2f - 40f, RefHeight / 2f, 200f, 30f), "사망");
     }
 
     void DrawCrosshair()
     {
-        GUI.Label(new Rect(Screen.width / 2 - 4, Screen.height / 2 - 10, 20, 20), "+");
+        GUI.Label(new Rect(RefWidth / 2f - 4f, RefHeight / 2f - 10f, 20f, 20f), "+");
     }
 
     void DrawCharge(AbilityRuntime ar)
@@ -206,9 +332,9 @@ public class GameHUD : MonoBehaviour
         if (esa == null) return;
 
         float r = esa.ChargeRatio;
-        var bar = new Rect(Screen.width / 2f - 100f, Screen.height - 130f, 200f, 14f);
+        var bar = new Rect(RefWidth / 2f - 100f, RefHeight - 130f, 200f, 14f);
 
-        GUI.color = new Color(0, 0, 0, 0.6f);
+        GUI.color = new Color(0f, 0f, 0f, 0.6f);
         GUI.Box(bar, "");
 
         GUI.color = esa.IsReady ? new Color(1f, 0.85f, 0.2f) : new Color(0.4f, 0.6f, 1f);
@@ -224,9 +350,10 @@ public class GameHUD : MonoBehaviour
         var rand = ar.GetRandomAbility();
         if (rand == null) return;
 
-        GUI.Label(new Rect(20, 70, 400, 30), $"이번 생: {rand.DisplayName}");
+        GUI.Label(new Rect(20f, 70f, 400f, 30f), $"이번 생: {rand.DisplayName}");
     }
 
+    // ══════════════════ 스킬바 ══════════════════
 
     void DrawSkillBar(AbilityRuntime ar)
     {
@@ -247,11 +374,10 @@ public class GameHUD : MonoBehaviour
 
         int count = SkillSlotExt.Count;
         float total = count * boxW + (count - 1) * gap;
-        float x = Screen.width / 2f - total / 2f;
-        float y = Screen.height - 90f;
+        float x = RefWidth / 2f - total / 2f;
+        float y = RefHeight - 90f;
 
-        Vector2 mouse = new Vector2(Input.mousePosition.x,
-                                    Screen.height - Input.mousePosition.y);
+        Vector2 mouse = GuiMousePos();
 
         AbilityData.SkillDef hovered = null;
         Rect hoveredRect = default;
@@ -263,21 +389,18 @@ public class GameHUD : MonoBehaviour
             var box = new Rect(x + i * (boxW + gap), y, boxW, boxW);
 
             GUI.Box(box, "");
-
-            // 키 라벨은 항상 표시
-            GUI.Label(new Rect(box.x + 4, box.y + 3, boxW - 8, 16), slot.Label());
+            GUI.Label(new Rect(box.x + 4f, box.y + 3f, boxW - 8f, 16f), slot.Label());
 
             if (skill == null)
             {
                 GUI.color = new Color(1f, 1f, 1f, 0.3f);
-                GUI.Label(new Rect(box.x + 24, box.y + 22, 20, 20), "－");
+                GUI.Label(new Rect(box.x + 24f, box.y + 22f, 20f, 20f), "－");
                 GUI.color = Color.white;
                 continue;
             }
 
-            GUI.Label(new Rect(box.x + 4, box.y + 20, boxW - 8, 34), skill.Name);
+            GUI.Label(new Rect(box.x + 4f, box.y + 20f, boxW - 8f, 34f), skill.Name);
 
-            // 쿨타임 오버레이
             float ratio = ar.GetCooldownRatio(i);
             if (ratio > 0f)
             {
@@ -289,14 +412,13 @@ public class GameHUD : MonoBehaviour
                 GUI.Box(cdRect, "");
                 GUI.color = Color.white;
 
-                GUI.Label(new Rect(box.x + 18, box.y + 38, 40, 18), $"{remain:F1}");
+                GUI.Label(new Rect(box.x + 18f, box.y + 38f, 40f, 18f), $"{remain:F1}");
             }
 
-            // 소울 부족 표시
             if (skill.SoulCost > 0)
             {
                 GUI.color = new Color(0.6f, 0.8f, 1f);
-                GUI.Label(new Rect(box.x + 4, box.y + boxW - 18, boxW - 8, 16),
+                GUI.Label(new Rect(box.x + 4f, box.y + boxW - 18f, boxW - 8f, 16f),
                     $"◆{skill.SoulCost}");
                 GUI.color = Color.white;
             }
@@ -318,7 +440,7 @@ public class GameHUD : MonoBehaviour
         const float w = 320f;
         float h = _tooltipStyle.CalcHeight(new GUIContent(text), w);
 
-        float x = Mathf.Clamp(anchor.x + anchor.width / 2f - w / 2f, 10f, Screen.width - w - 10f);
+        float x = Mathf.Clamp(anchor.x + anchor.width / 2f - w / 2f, 10f, RefWidth - w - 10f);
         float y = anchor.y - h - 8f;
 
         GUI.Box(new Rect(x, y, w, h), text, _tooltipStyle);
@@ -331,16 +453,23 @@ public class GameHUD : MonoBehaviour
 
         float r = bomb.DangerRatio;
 
-        // 화면 테두리 붉게
+        // 화면 전체를 덮어야 하므로 스케일을 되돌려 그린다
+        var prev = GUI.matrix;
+        GUI.matrix = Matrix4x4.identity;
+
         GUI.color = new Color(1f, 0f, 0f, r * 0.4f);
-        GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
+        GUI.Box(new Rect(0f, 0f, Screen.width, Screen.height), "");
         GUI.color = Color.white;
 
-        var box = new Rect(Screen.width / 2f - 100f, 140f, 200f, 30f);
+        GUI.matrix = prev;
+
+        var box = new Rect(RefWidth / 2f - 100f, 140f, 200f, 30f);
         GUI.color = new Color(1f, 0.2f, 0.1f);
         GUI.Label(box, $"폭발까지 {(1f - r) * bomb.TriggerTime:F1}초!");
         GUI.color = Color.white;
     }
+
+    // ══════════════════ 순위표 ══════════════════
 
     void DrawScoreboard(NetworkRunner runner)
     {
@@ -360,44 +489,40 @@ public class GameHUD : MonoBehaviour
 
         if (list.Count == 0) return;
 
-        // K 내림차순, 동점이면 소울 내림차순
         list.Sort((a, b) =>
         {
-            int c = b.k.CompareTo(a.k);
-            return c != 0 ? c : b.soul.CompareTo(a.soul);
+            int c = b.soul.CompareTo(a.soul);
+            return c != 0 ? c : b.k.CompareTo(a.k);
         });
 
         const float w = 460f;
         const float rowH = 26f;
         const float headH = 30f;
 
-        float x = Screen.width / 2f - w / 2f;
+        float x = RefWidth / 2f - w / 2f;
         float y = 90f;
         float h2 = headH + rowH * list.Count + 12f;
 
-        // 배경
         GUI.color = new Color(0f, 0f, 0f, 0.85f);
         GUI.Box(new Rect(x, y, w, h2), "");
         GUI.color = Color.white;
 
-        // 헤더
-        var head = new Rect(x + 12, y + 6, w - 24, headH);
+        var head = new Rect(x + 12f, y + 6f, w - 24f, headH);
         GUI.Label(head, "#    이름              K     A     D    SOUL");
 
         GUI.color = new Color(1f, 1f, 1f, 0.2f);
-        GUI.Box(new Rect(x + 12, y + headH, w - 24, 1), "");
+        GUI.Box(new Rect(x + 12f, y + headH, w - 24f, 1f), "");
         GUI.color = Color.white;
 
-        // 행
         for (int i = 0; i < list.Count; i++)
         {
             var e = list[i];
-            var row = new Rect(x + 12, y + headH + 4 + rowH * i, w - 24, rowH);
+            var row = new Rect(x + 12f, y + headH + 4f + rowH * i, w - 24f, rowH);
 
             if (e.isLocal)
             {
                 GUI.color = new Color(0.3f, 0.6f, 1f, 0.25f);
-                GUI.Box(new Rect(x + 8, row.y - 2, w - 16, rowH), "");
+                GUI.Box(new Rect(x + 8f, row.y - 2f, w - 16f, rowH), "");
                 GUI.color = Color.white;
             }
 
@@ -405,6 +530,4 @@ public class GameHUD : MonoBehaviour
                 $"{i + 1,-4} {e.name,-16} {e.k,3}   {e.a,3}   {e.d,3}   {e.soul,4}");
         }
     }
-
-
 }

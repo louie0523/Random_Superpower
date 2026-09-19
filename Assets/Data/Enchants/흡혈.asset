@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e2b5392d15828440aa604b5e19c64af, type: 3}
+  m_Name: "\uD761\uD608"
+  m_EditorClassIdentifier: Assembly-CSharp::EnchantData
+  Id: 9005
+  DisplayName: "\uD761\uD608"
+  Description: "\uD761\uD608 + 8%"
+  TierColor: {r: 0, g: 0.9013953, b: 1, a: 1}
+  Stats:
+  - Stat: 8
+    Type: 0
+    Value: 0.08
+  RollWeight: 1

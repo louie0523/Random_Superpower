@@ -22,6 +22,11 @@ public class LootChest : NetworkBehaviour
     [SerializeField] private int dropCount = 1;
     [SerializeField] private float dropSpread = 1.2f;
 
+    [Header("드롭 — 스톤")]
+    [Tooltip("여는 사람이 받는 인챈트 스톤 개수. 0이면 없음")]
+    [SerializeField] private int stoneCountMin = 3;
+    [SerializeField] private int stoneCountMax = 10;
+
     [Header("연출")]
     [SerializeField] private Transform lid;
     [SerializeField] private Vector3 lidOpenRot = new(-100f, 0f, 0f);
@@ -46,6 +51,10 @@ public class LootChest : NetworkBehaviour
     // ══════════════════ 상호작용 ══════════════════
 
     /// <summary>플레이어가 키를 누르고 있는 동안 매 틱 호출</summary>
+    /// 
+    //[Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    //public void RPC_Hold(PlayerRef player, Vector3 playerPos) => Hold(player, playerPos);
+
     public void Hold(PlayerRef player, Vector3 playerPos)
     {
         if (!HasStateAuthority) return;
@@ -78,15 +87,33 @@ public class LootChest : NetworkBehaviour
 
     void Open()
     {
+        var opener = Opener;      // ★ 초기화 전에 저장
+
         IsOpened = true;
         Progress = 1f;
         Opener = PlayerRef.None;
 
+
+
         for (int i = 0; i < dropCount; i++) DropOne(i);
+
+        int num = Random.Range(stoneCountMin, stoneCountMax + 1);
+
+        Debug.Log($"[Chest] 열림 — opener={opener.PlayerId}, stones={num}");
+
+        // 스톤은 연 사람에게 직접
+        if (num > 0 && opener != PlayerRef.None)
+        {
+            var obj = Runner.GetPlayerObject(opener);
+            if (obj != null && obj.TryGetComponent<PlayerEnchant>(out var en))
+                en.RPC_AddStones(num);
+        }
 
         if (refillTime > 0f)
             RefillTimer = TickTimer.CreateFromSeconds(Runner, refillTime);
     }
+
+    
 
     void DropOne(int index)
     {

@@ -41,7 +41,22 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public StatEntry[] BaseStats;
 
     [Header("─── Weapon: 인챈트 ───")]
+    [Tooltip("비우면 이 무기는 인챈트 불가")]
     public EnchantTable EnchantTable;
+
+    [Tooltip("인챈트 1회당 스톤 소모량")]
+    public int EnchantStoneCost = 1;
+
+    [Tooltip("단계마다 추가되는 스톤 비용")]
+    public int EnchantCostPerStage = 0;
+
+    public bool CanEnchant => EnchantTable != null && EnchantTable.MaxStage > 0;
+    public int MaxEnchantStage => EnchantTable != null ? EnchantTable.MaxStage : 0;
+
+    public int GetEnchantCost(int currentStage) =>
+        Mathf.Max(1, EnchantStoneCost + EnchantCostPerStage * currentStage);
+
+
 
     // ══════════ 무기 전용 ══════════
 

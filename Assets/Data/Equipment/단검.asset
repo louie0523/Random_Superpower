@@ -22,7 +22,7 @@ MonoBehaviour:
   - Stat: 1
     Type: 0
     Value: 25
-  MaxOptionSlots: 3
+  EnchantTable: {fileID: 11400000, guid: 8e5fc6c0f1f48634e8caeee667b64deb, type: 2}
   ModelPrefab: {fileID: 100000, guid: 550a61d9929e19749851330ea8c46ecd, type: 3}
   Grip: 0
   PositionOffset: {x: 0, y: 0, z: 0}
@@ -756,6 +756,149 @@ MonoBehaviour:
   MaxDrawDamageMul: 2.5
   MinDrawSpeed: 25
   MaxDrawSpeed: 70
+  UseChargePose: 0
+  ChargePose:
+    RightPos: {x: 0.22, y: -0.18, z: 0.42}
+    RightRot: {x: 5, y: -8, z: 0}
+    UseLeftHand: 0
+    LeftPos: {x: -0.18, y: -0.2, z: 0.38}
+    LeftRot: {x: 5, y: 12, z: 0}
+    WeaponPos: {x: 0, y: 0, z: 0}
+    WeaponRot: {x: 0, y: 0, z: 0}
+    CamPos: {x: 0, y: 0, z: 0}
+    CamRot: {x: 0, y: 0, z: 0}
+    CamFov: 0
+    UseWeaponGrip: 1
+    RightFingers:
+      Fingers:
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+    LeftFingers:
+      Fingers:
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+  ChargeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  FireMode: 0
+  MaxAmmo: 12
+  RoundsPerMinute: 500
+  FullAuto: 0
+  RecoilVertical: 2
+  RecoilHorizontal: 0.5
+  RecoilRamp: 1.15
+  RecoilMaxMul: 3
+  HitscanRange: 200
+  TracerPrefab: {fileID: 0}
+  ProjectileSpeed: 60
+  FireSound: {fileID: 0}
+  FireVolume: 0.8
+  FirePitchVariance: 0.08
+  EmptySound: {fileID: 0}
+  UseRecoilPose: 0
+  RecoilPose:
+    RightPos: {x: 0.22, y: -0.18, z: 0.42}
+    RightRot: {x: 5, y: -8, z: 0}
+    UseLeftHand: 0
+    LeftPos: {x: -0.18, y: -0.2, z: 0.38}
+    LeftRot: {x: 5, y: 12, z: 0}
+    WeaponPos: {x: 0, y: 0, z: 0}
+    WeaponRot: {x: 0, y: 0, z: 0}
+    CamPos: {x: 0, y: 0, z: 0}
+    CamRot: {x: 0, y: 0, z: 0}
+    CamFov: 0
+    UseWeaponGrip: 1
+    RightFingers:
+      Fingers:
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+    LeftFingers:
+      Fingers:
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+      - Joints:
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+        - {x: 0, y: 0, z: 0, w: 1}
+  RecoilRiseTime: 0.03
+  RecoilFallTime: 0.12
+  RecoilPoseMaxStack: 1.6
+  RecoilSwayAmount: 0.015
+  RecoilSwayVertical: 0.008
+  RecoilSwaySpeed: 30
   StringPullDir: {x: 0, y: 0, z: -1}
   StringPullDistance: 0.35
   StringHandOffset: {x: 0, y: 0, z: 0}

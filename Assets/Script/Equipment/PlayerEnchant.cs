@@ -1,14 +1,187 @@
-using Fusion;
+﻿using Fusion;
+using UnityEngine;
 
 public class PlayerEnchant : NetworkBehaviour
 {
     public const int MaxEnchants = 8;
 
+    [SerializeField] private EnchantDatabase database;
+
+    //[Tooltip("스톤 하나로 거는 인챈트 수")]
+    //[SerializeField] private int enchantsPerStone = 1;
+
+    // 슬롯 s의 인챈트 i → [s * MaxEnchants + i]
     [Networked, Capacity(PlayerEquipment.WeaponSlots * MaxEnchants)]
     public NetworkArray<int> SlotEnchants { get; }
 
+    // 각 슬롯에 인챈트가 걸린 무기 ID
     [Networked, Capacity(PlayerEquipment.WeaponSlots)]
     public NetworkArray<int> EnchantedWeaponIds { get; }
 
     [Networked] public int Stones { get; set; }
+
+    /// <summary>최근 인챈트 결과. HUD 연출용</summary>
+    [Networked] public int LastRolled { get; set; }
+    [Networked] public int LastRollTick { get; set; }
+
+    [Networked] public NetworkBool AllowGunEnchant { get; set; }
+
+    private PlayerEquipment _equip;
+    private PlayerStats _stats;
+
+    public EnchantDatabase Database => database;
+
+    public override void Spawned()
+    {
+        _equip = GetComponent<PlayerEquipment>();
+        _stats = GetComponent<PlayerStats>();
+
+        ApplyAll();
+    }
+
+    // ══════════════════ 조회 ══════════════════
+
+    public int GetEnchantId(int slot, int index)
+    {
+        if (slot < 0 || slot >= PlayerEquipment.WeaponSlots) return 0;
+        if (index < 0 || index >= MaxEnchants) return 0;
+        return SlotEnchants[slot * MaxEnchants + index];
+    }
+
+    public int GetStage(int slot)
+    {
+        int n = 0;
+        for (int i = 0; i < MaxEnchants; i++)
+            if (GetEnchantId(slot, i) != 0) n++;
+        return n;
+    }
+
+    public int ActiveStage => _equip != null ? GetStage(_equip.ActiveWeaponSlot) : 0;
+
+    public bool CanEnchant(out string reason, out int cost)
+    {
+        reason = "";
+        cost = 0;
+
+        var w = _equip?.GetWeapon();
+        if (w == null) { reason = "무기 없음"; return false; }
+
+        // 총은 특정 능력이 있어야 인챈트 가능
+        if (w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun
+            && !AllowGunEnchant)
+        {
+            reason = "총기 인챈트 불가";
+            return false;
+        }
+
+        if (!w.CanEnchant) { reason = "인챈트 불가"; return false; }
+
+        int slot = _equip.ActiveWeaponSlot;
+        int stage = GetStage(slot);
+
+        if (stage >= Mathf.Min(w.MaxEnchantStage, MaxEnchants))
+        {
+            reason = "최대 단계";
+            return false;
+        }
+
+        cost = w.GetEnchantCost(stage);
+        if (Stones < cost) { reason = $"스톤 부족 ({cost}개)"; return false; }
+
+        return true;
+    }
+
+    public void SetGunEnchant(bool on)
+    {
+        if (!HasStateAuthority) return;
+        AllowGunEnchant = on;
+    }
+
+    // ══════════════════ 인챈트 ══════════════════
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_Enchant()
+    {
+        if (!CanEnchant(out _, out int cost)) return;
+
+        var w = _equip.GetWeapon();
+        int slot = _equip.ActiveWeaponSlot;
+        int stage = GetStage(slot);
+
+        var rolled = w.EnchantTable.Roll(stage);
+        if (rolled == null) return;
+            
+        Stones -= cost;
+
+        SlotEnchants.Set(slot * MaxEnchants + stage, rolled.Id);
+        EnchantedWeaponIds.Set(slot, w.Id);
+        LastRolled = rolled.Id;
+        LastRollTick = Runner.Tick;
+
+        ApplyAll();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddStones(int amount)
+    {
+        Stones = Mathf.Max(0, Stones + amount);
+    }
+
+    /// <summary>해당 슬롯의 인챈트 전부 제거</summary>
+    public void ClearSlot(int slot)
+    {
+        if (!HasStateAuthority) return;
+        if (slot < 0 || slot >= PlayerEquipment.WeaponSlots) return;
+
+        for (int i = 0; i < MaxEnchants; i++)
+            SlotEnchants.Set(slot * MaxEnchants + i, 0);
+
+        EnchantedWeaponIds.Set(slot, 0);
+        ApplyAll();
+    }
+
+    /// <summary>무기가 바뀌면 그 슬롯 인챈트 초기화</summary>
+    public void OnWeaponChanged(int slot, int newWeaponId)
+    {
+        if (!HasStateAuthority) return;
+        if (EnchantedWeaponIds[slot] == newWeaponId) return;
+
+        ClearSlot(slot);
+    }
+
+    // ══════════════════ 적용 ══════════════════
+
+    public void ApplyAll()
+    {
+        if (!HasStateAuthority) return;
+        if (_stats == null || _equip == null || database == null) return;
+
+        for (int i = 0; i < MaxEnchants; i++)
+            _stats.RemoveBySource(SourceId.EnchantBase + i);
+
+        int slot = _equip.ActiveWeaponSlot;
+
+        for (int i = 0; i < MaxEnchants; i++)
+        {
+            int id = GetEnchantId(slot, i);
+            if (id == 0) continue;
+
+            var e = database.Get(id);
+            if (e == null || e.Stats == null) continue;
+
+            int src = SourceId.EnchantBase + i;
+
+            foreach (var s in e.Stats)
+                _stats.AddModifier(new StatModifier(s.Stat, s.Type, s.Value, src));
+        }
+    }
+
+    public void ResetForNewRound()
+    {
+        if (!HasStateAuthority) return;
+
+        for (int s = 0; s < PlayerEquipment.WeaponSlots; s++) ClearSlot(s);
+        Stones = 0;
+        AllowGunEnchant = false;      // ★ 능력이 다시 OnEquip하면 켜짐
+    }
 }

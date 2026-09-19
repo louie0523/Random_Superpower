@@ -12,10 +12,15 @@ public static class SourceId
     public const int SubAbility = 100011;
     public const int RandomAbility = 100012;
 
-    // 상점 (영구)
+    // 상점 (영구)  
     public const int ShopPurchase = 100020;
+
+    // 
+    public const int EnchantBase = 100030;
 
     // 임시 효과 — 베이스에 고유값을 더해서 사용
     public const int CurseBase = 200000;
     public const int BuffBase = 300000;
+
+
 }

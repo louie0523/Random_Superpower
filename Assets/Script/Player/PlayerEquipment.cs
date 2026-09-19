@@ -28,7 +28,10 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int BootsId { get; set; }
 
-    [Networked] public int Ammo { get; set; }
+    [Networked, Capacity(WeaponSlots)]
+    public NetworkArray<int> SlotAmmo { get; }
+
+    public int Ammo => SlotAmmo[Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1)];
 
     [Header("Starting Gear")]
     [SerializeField] private int startWeaponId = 1001;
@@ -36,9 +39,12 @@ public class PlayerEquipment : NetworkBehaviour
     private PlayerStats _stats;
     private int _mountedWeaponId = -1;
 
+    private PlayerEnchant _enchant;
+
     public override void Spawned()
     {
         _stats = GetComponent<PlayerStats>();
+        _enchant = GetComponent<PlayerEnchant>();
         if (armRig == null) armRig = GetComponentInChildren<FPArmRig>(true);
 
         // 손 초기화
@@ -54,25 +60,32 @@ public class PlayerEquipment : NetworkBehaviour
             ArmorId = 0;
             HelmetId = 0;
             BootsId = 0;
-            RefillAmmo();
-        }
 
+            RefillAmmo(0);
+        }
         ApplyAll();
     }
 
-    public void RefillAmmo()
+    public void RefillAmmo(int slot)
     {
         if (!HasStateAuthority) return;
-        var w = GetWeapon();
-        Ammo = (w != null && w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun)
+
+        var w = database?.Get(WeaponIds[slot]);
+        int max = (w != null && w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun)
             ? w.MaxAmmo : 0;
+
+        SlotAmmo.Set(slot, max);
     }
 
     public bool ConsumeAmmo()
     {
         if (!HasStateAuthority) return false;
-        if (Ammo <= 0) return false;
-        Ammo--;
+
+        int slot = Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1);
+        int cur = SlotAmmo[slot];
+        if (cur <= 0) return false;
+
+        SlotAmmo.Set(slot, cur - 1);
         return true;
     }
 
@@ -143,8 +156,8 @@ public class PlayerEquipment : NetworkBehaviour
         {
             case EquipSlot.Weapon:
                 WeaponIds.Set(ActiveWeaponSlot, id);
-                RefillAmmo();
-                //_enchant?.OnWeaponChanged(id);
+                RefillAmmo(ActiveWeaponSlot);
+                _enchant?.OnWeaponChanged(ActiveWeaponSlot, id);
                 break;
             case EquipSlot.Armor: ArmorId = id; break;
             case EquipSlot.Helmet: HelmetId = id; break;
@@ -165,7 +178,8 @@ public class PlayerEquipment : NetworkBehaviour
 
             WeaponIds.Set(i, id);
             ActiveWeaponSlot = i;
-            RefillAmmo();
+            RefillAmmo(i);
+            _enchant?.OnWeaponChanged(i, id);
             return true;
         }
 
@@ -195,6 +209,7 @@ public class PlayerEquipment : NetworkBehaviour
         if (id == 0) return;
 
         WeaponIds.Set(ActiveWeaponSlot, 0);
+        _enchant?.ClearSlot(ActiveWeaponSlot);
         DropWeapon(id);
     }
 
@@ -202,9 +217,12 @@ public class PlayerEquipment : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        int old = WeaponIds[ActiveWeaponSlot];
-        WeaponIds.Set(ActiveWeaponSlot, id);
-        RefillAmmo();
+        int slot = Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1);
+
+        int old = WeaponIds[slot];
+        WeaponIds.Set(slot, id);
+        RefillAmmo(slot);
+        _enchant?.OnWeaponChanged(slot, id);
 
         if (old != 0) DropWeapon(old);
     }
@@ -216,6 +234,7 @@ public class PlayerEquipment : NetworkBehaviour
         if (slot == ActiveWeaponSlot) return;
 
         ActiveWeaponSlot = slot;
+        _enchant?.ApplyAll();
     }
 
     public void CycleWeapon(int dir)

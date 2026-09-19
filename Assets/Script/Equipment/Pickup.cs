@@ -119,8 +119,9 @@ public class Pickup : NetworkBehaviour
                 return true;
 
             case PickupKind.EnchantStone:
-                // PlayerEnchant가 생기면 연결
-                return false;
+                if (!player.TryGetComponent<PlayerEnchant>(out var en)) return false;
+                en.RPC_AddStones(Amount);
+                return true;
         }
         return false;
     }

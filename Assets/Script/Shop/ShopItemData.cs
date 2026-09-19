@@ -5,6 +5,7 @@ public enum ShopItemKind
     Stat,          // 스탯 영구 증가
     SkillRank,     // 능력 스킬 랭크업
     InstantHeal,   // 즉시 회복 (레벨 없음, 반복 구매)
+    ResetEnchant,  // 인첸트 초기화
 }
 
 [CreateAssetMenu(menuName = "Game/Shop Item")]
@@ -32,6 +33,10 @@ public class ShopItemData : ScriptableObject
 
     [Header("InstantHeal 전용")]
     public int HealAmount = 40;
+
+    [Header("ResetEnchant 전용")]
+    [Tooltip("단계당 추가 비용")]
+    public int PricePerStage = 8;
 
     public int GetPrice(int currentLevel) =>
         Mathf.RoundToInt(BasePrice * Mathf.Pow(PriceGrowth, currentLevel));

@@ -302,6 +302,16 @@ public class FPArmRig : MonoBehaviour
 
         p.UseWeaponGrip = true;
 
+        if (_weapon.UseChargePose && _drawAmount > 0.001f && _weapon.ChargePose != null)
+        {
+            float t = _weapon.ChargeCurve != null
+                ? _weapon.ChargeCurve.Evaluate(_drawAmount)
+                : _drawAmount;
+
+            p = ArmPose.Lerp(p, _weapon.ChargePose, t);
+            p.UseWeaponGrip = true;
+        }
+
         if (_weapon.UseRecoilPose && _recoilAmount > 0.001f && _weapon.RecoilPose != null)
         {
             float r = Mathf.Min(_recoilAmount, 1f);

@@ -86,10 +86,21 @@ public class PlayerShop : NetworkBehaviour
 
         _health.SpendSoul(price);
 
-        if (item.Kind == ShopItemKind.InstantHeal)
+        if (item.Kind == ShopItemKind.ResetEnchant)
         {
-            _health.RPC_Heal(item.HealAmount);
-            return;                          // 레벨 안 올림
+            var en = GetComponent<PlayerEnchant>();
+            var eq = GetComponent<PlayerEquipment>();
+            if (en == null || eq == null) return;
+
+            int stage = en.ActiveStage;
+            if (stage == 0) return;
+
+            int cost = item.BasePrice + item.PricePerStage * stage;
+            if (_health.Soul < cost) return;
+
+            _health.SpendSoul(cost);
+            en.ClearSlot(eq.ActiveWeaponSlot);
+            return;
         }
 
         Levels.Set(index, lv + 1);
