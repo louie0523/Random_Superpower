@@ -6,11 +6,12 @@ using UnityEngine.Rendering.Universal;
 namespace ToonShadersPro.URP
 {
     [System.Serializable, VolumeComponentMenu("Toon Shaders Pro/Outlines")]
+    [DisplayInfo(name = "Outlines")] // <-- Unity 6+ 권장 방식으로 표시 이름 설정
     public sealed class OutlineSettings : VolumeComponent, IPostProcessComponent
     {
         public OutlineSettings()
         {
-            displayName = "Outlines";
+            // CS0618 경고 원인이었던 displayName = "Outlines"; 제거
         }
 
         [Tooltip("Choose where to insert this pass in URP's render loop.\n" +
@@ -18,7 +19,7 @@ namespace ToonShadersPro.URP
             "\nFor example, with the Before setting, high-intensity HDR colors will be impacted by Bloom.")]
         public RenderPassEventParameter renderPassEvent = new RenderPassEventParameter(PostProcessRenderPassEvent.AfterURPPostProcessing);
 
-        [Tooltip("Which outline-drawing algorithm to use.\n" + 
+        [Tooltip("Which outline-drawing algorithm to use.\n" +
             "\n<b>No Outlines</b>" +
             "\n  Draws no outlines.\n" +
             "\n<b>Depth Normal Outlines</b>" +
@@ -60,7 +61,7 @@ namespace ToonShadersPro.URP
         [Tooltip("Apply to the following regular layers.")]
         public LayerMaskParameter objectMask = new LayerMaskParameter(0);
 
-        [Tooltip("How should the masking pass detect unique maskable areas?\n" + 
+        [Tooltip("How should the masking pass detect unique maskable areas?\n" +
             "\n<b>Per Object</b>" +
             "\n  Use the world-space position of the mesh origin as a seed value.\n" +
             "\n<b>Per Triangle</b>" +
@@ -74,7 +75,7 @@ namespace ToonShadersPro.URP
         public MaskDrawingParameter maskDrawingMode = new MaskDrawingParameter(MaskDrawingMode.PerObject);
 
         [Tooltip("Which LightMode tags should be included in the mask?\n" +
-            "\n  <b>UniversalForwardOnly</b> includes the base Toon shader." + 
+            "\n  <b>UniversalForwardOnly</b> includes the base Toon shader." +
             "\n  <b>UniversalForward</b> includes most lit shaders, including Shader Graphs." +
             "\n  <b>SRPDefaultUnlit</b> includes most unlit shaders, including Shader Graphs." +
             "\n  Most other settings will capture almost all shaders.\n" +
@@ -126,15 +127,15 @@ namespace ToonShadersPro.URP
         [Tooltip("Should the outline effect use a Perlin noise offset? (Warning: this might be a bit expensive).")]
         public BoolParameter useNoiseOffsets = new BoolParameter(false);
 
-        [Tooltip("Scale to use for the Perlin noise generator. Higher values result in more noise variation over UV space.")] 
+        [Tooltip("Scale to use for the Perlin noise generator. Higher values result in more noise variation over UV space.")]
         public ClampedFloatParameter noiseScale = new ClampedFloatParameter(1.0f, 1.0f, 500.0f);
-        
+
         [Tooltip("Offset value to use for the Perlin noise generator. You can manually change this to tweak the appearance of the noise pattern.")]
         public FloatParameter noiseOffset = new FloatParameter(0.0f);
 
-        [Tooltip("How strongly the noise values offset the outline UV calculations.")] 
+        [Tooltip("How strongly the noise values offset the outline UV calculations.")]
         public ClampedFloatParameter noiseStrength = new ClampedFloatParameter(0.05f, 0.0f, 0.1f);
-        
+
         /*
         [Tooltip("A custom list of renderers to include in outline rendering.")]
         public RendererListParameter overrideIncludeRenderers = new RendererListParameter(new List<Renderer>());

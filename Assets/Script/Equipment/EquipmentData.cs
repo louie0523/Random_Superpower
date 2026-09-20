@@ -1,3 +1,5 @@
+using UnityEngine.Localization;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine;
 
 public enum EquipSlot { Weapon, Armor, Helmet, Boots }
@@ -34,6 +36,8 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Header("Identity")]
     public int Id;
     public string DisplayName;
+    public LocalizedString NameEntry;
+    public LocalizedString DescEntry;
     public EquipSlot Slot;
     public WeaponClass Class = WeaponClass.Melee;
     public Sprite Icon;
@@ -262,6 +266,16 @@ public class EquipmentData : ScriptableObject, IMotionSource
     {
         if (Combo == null || Combo.Length == 0) return null;
         return Combo[Mathf.Abs(index) % Combo.Length];
+    }
+
+    public string GetName() 
+    {
+        if (!NameEntry.IsEmpty)
+        {
+            string s = NameEntry.GetLocalizedString();
+            if (!string.IsNullOrEmpty(s)) return s;
+        }
+        return DisplayName;
     }
 
     public Vector3 GetPosOffset(bool firstPerson) =>
