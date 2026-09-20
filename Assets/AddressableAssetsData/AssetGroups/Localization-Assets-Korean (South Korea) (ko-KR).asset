@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-Assets-Korean (South Korea) (ko-KR)
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Localization-Assets-Korean (South Korea) (ko-KR)
+  m_GUID: a46f03cbd79ba6b4799a922c73d16836
+  m_SerializeEntries:
+  - m_GUID: d6996bfddc8f9344b892c6bea04f98e7
+    m_Address: NEXON Football Gothic L SDF
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 6eb1f2e967b807f4aa65635f641eeaa6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b1b6c7ee40376c043bd5c7f8b81e58e3, type: 2}
+    - {fileID: 11400000, guid: 8d3b6be6d0baed94cb6a41034b3e10e0, type: 2}
+    - {fileID: 11400000, guid: 5f016f10394d52343925ccb817fd010d, type: 2}

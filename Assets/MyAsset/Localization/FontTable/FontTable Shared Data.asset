@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: FontTable Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: FontTable
+  m_TableCollectionNameGuidString: c2a8be4cad798684fbddb5b11ab4eb05
+  m_Entries:
+  - m_Id: 33297117184
+    m_Key: MainFont
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items:
+    - rid: 8024582676952645744
+  m_KeyGenerator:
+    rid: 8024582676952645743
+  references:
+    version: 2
+    RefIds:
+    - rid: 8024582676952645743
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1789937505503
+    - rid: 8024582676952645744
+      type: {class: AssetTypeMetadata, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries:
+        - m_KeyId: 33297117184
+          m_TableCodes:
+          - ko-KR
+          - en
+          - ru
+          - de
+          - fr
+          - es-ES
+          - pt-BR
+          - vi
+          - zh-Hans
+          - zh-Hant
+          - ja-JP
+        m_TypeString: TMPro.TMP_FontAsset, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null

@@ -15,6 +15,23 @@ MonoBehaviour:
   m_GroupName: Localization-Assets-Shared
   m_GUID: fea0520c0140b4640ba574fa74c55c80
   m_SerializeEntries:
+  - m_GUID: 0e58f8eec4b95444081d0408cf574f81
+    m_Address: Tektur-VariableFont_wdth,wght SDF
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de
+    - Locale-en
+    - Locale-es-ES
+    - Locale-fr
+    - Locale-pt-BR
+    - Locale-ru
+    - Locale-vi
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2a8be4cad798684fbddb5b11ab4eb05
+    m_Address: Assets/MyAsset/Localization/FontTable/FontTable Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: feecb8642e1ad1b41a1d75dbfebe05b1
     m_Address: Assets/Data/Localization/Table/LangTable Shared Data.asset
     m_ReadOnly: 1

@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 3cf9f947e2e07694497798a08f71ee58
   m_currentHash:
     serializedVersion: 2
-    Hash: e314301701d8533b0d264b818796a47d
+    Hash: 3ef60631d687768b179cfeb201f6e273
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -24,11 +24,11 @@ MonoBehaviour:
   m_InternalBundleIdMode: 1
   m_AssetLoadMode: 0
   m_BundledAssetProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider
   m_AssetBundleProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider
   m_IgnoreUnsupportedFilesInBuild: 0
   m_UniqueBundleIds: 0
   m_EnableJsonCatalog: 0
@@ -61,20 +61,39 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: 4533081d1acda7547bc7c452c9a4e098, type: 2}
+  - {fileID: 11400000, guid: c023f4c977be34348ac9a7d07ed51d7d, type: 2}
+  - {fileID: 11400000, guid: 3a0df7e4f80391347a1c3d64477757f5, type: 2}
+  - {fileID: 11400000, guid: 7d1bb0e2b4eab0c4a8679050af8f5ef9, type: 2}
   - {fileID: 11400000, guid: 05d4eab800bc35f4593d641b8534c2d5, type: 2}
   - {fileID: 11400000, guid: c719aea007534ec44a576fc71539c601, type: 2}
   - {fileID: 11400000, guid: b23fae1c89ea108459d6b5af67d7fab2, type: 2}
   - {fileID: 11400000, guid: 57b6298c41b20a94888b19ff1d42729a, type: 2}
+  - {fileID: 11400000, guid: 73a8408a48f74f04b8189a0c794676cc, type: 2}
   - {fileID: 11400000, guid: 8e5b21a14fe9059458b8383f17eb95a5, type: 2}
   - {fileID: 11400000, guid: fba77a3a8140d224585c6b3248ef2b0d, type: 2}
+  - {fileID: 11400000, guid: 6f6c8f5f2207f1f4bb9fc8fb78e6c845, type: 2}
+  - {fileID: 11400000, guid: 1c5f33f21aa19c24b909dda85d8237ac, type: 2}
+  - {fileID: 11400000, guid: 1e28b985ee16e934880e7de24518ec0a, type: 2}
   - {fileID: 11400000, guid: 12e25ada88707154382c477ca68c37f8, type: 2}
   - {fileID: 11400000, guid: 4f8b2e8d897561c4f86361940b67e76b, type: 2}
   - {fileID: 11400000, guid: 32463880798b0eb4d90fe1716123ed71, type: 2}
+  - {fileID: 11400000, guid: cc107bfe5d6352e4ebf567cdc8449c59, type: 2}
+  - {fileID: 11400000, guid: 694024c4bbb8ade479a6b2ab71780e61, type: 2}
   - {fileID: 11400000, guid: 8ce8900769e71b84d9af9c40bce6fc1a, type: 2}
+  - {fileID: 11400000, guid: 55c40fddd73fb9548b5a362b839e1d6a, type: 2}
+  - {fileID: 11400000, guid: 5e961392bc1bbab46a518deb077e4321, type: 2}
   - {fileID: 11400000, guid: 1627768cbe136744480c367dd9342730, type: 2}
+  - {fileID: 11400000, guid: 1314c92bd10a0a1438d301d65dc2de94, type: 2}
+  - {fileID: 11400000, guid: cedbfb726c1724242bd525d57d92109d, type: 2}
+  - {fileID: 11400000, guid: e0b30555305516a4bbd342837dc48615, type: 2}
   - {fileID: 11400000, guid: 36bf93b6aae6932419a677e893ddced4, type: 2}
   - {fileID: 11400000, guid: a9c7d1751dd233c4f989032bad87a84b, type: 2}
+  - {fileID: 11400000, guid: e42be86b32bfd0444bbed1fc22d80abe, type: 2}
   - {fileID: 11400000, guid: e10fe091e949fd343b943947bbcce83f, type: 2}
+  - {fileID: 11400000, guid: 829fc54a5ba4a984598cb2faa0e78d78, type: 2}
+  - {fileID: 11400000, guid: 890b772da58c2e349b3dd2ee8c34cc5b, type: 2}
+  - {fileID: 11400000, guid: c8c1fe7e4d2fa2144964483f883d50bc, type: 2}
   - {fileID: 11400000, guid: ee695f60e8a6465459b9168b9918554c, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
@@ -128,6 +147,7 @@ MonoBehaviour:
     - Locale-es-ES
     - Locale-th
     - Locale-vi
+    - Locale-en
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 707d0fa975fb11f419eaf00b70cc41fd, type: 2}

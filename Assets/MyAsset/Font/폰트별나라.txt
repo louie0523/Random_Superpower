@@ -1,0 +1,14 @@
+smiley-sans : 중국어 간체 
+Noto Sans Traditional Chinese : 중국어 번체
+넥슨 풋볼고딕 : 한국어
+Tektur : English(en) Russian(ru) German(de) French(fr) Spanish(Spain)(es-ES) Portuguese (Brazil)(pt-BR) Vietnamese(vi) Indonesian(id)
+Chakra Petch : Thai(th)
+RocknRoll One : Japanese(Japan)(ja-JP)
+
+
+
+
+
+
+
+
