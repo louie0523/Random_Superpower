@@ -49,9 +49,15 @@ public class PlayerEquipment : NetworkBehaviour
 
     private PlayerEnchant _enchant;
 
+    public EquipmentDatabase Database => database;
+
+    public int GetWeaponIdAt(int slot)
+        => (slot >= 0 && slot < WeaponSlots) ? WeaponIds[slot] : 0;
+
+    public int GetAmmoAt(int slot)
+        => (slot >= 0 && slot < WeaponSlots) ? SlotAmmo[slot] : 0;
+
     [SerializeField] private float swapTime = 0.6f;
-
-
     [Networked] private TickTimer SwapTimer { get; set; }
     public bool IsSwapping => SwapTimer.IsRunning && !SwapTimer.Expired(Runner);
 

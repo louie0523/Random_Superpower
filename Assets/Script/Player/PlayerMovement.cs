@@ -54,10 +54,12 @@ public class PlayerMovement : NetworkBehaviour
 
         if (armRoot != null) armRoot.SetActive(true);   // 항상 켬
 
-        if (HasStateAuthority)
+        if (HasInputAuthority)
         {
             fpsCamera.Init();
             HitStop.Register(weaponAnim);
+            var cam = fpsCamera.GetComponentInChildren<Camera>(true);
+            UIManager.Instance?.BindLocalPlayer(Object, cam);
         }
         else
         {
@@ -147,18 +149,25 @@ public class PlayerMovement : NetworkBehaviour
 
     }
 
+
+
     void Update()
     {
         if (HasStateAuthority)
         {
+            var ui = UIManager.Instance;
+
+            if (Input.GetKeyDown(KeyCode.F1)) ui?.ToggleAbility();
+            if (Input.GetKeyDown(KeyCode.I)) ui?.ToggleInventory();
+
             if (Input.GetKeyDown(KeyCode.B))
             {
-                _shop?.Toggle();
-
-                bool open = _shop != null && _shop.IsShopping;
-                Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
-                Cursor.visible = open;
+                // 상점은 전투 중 제한
+                if (_shop != null && _shop.CanOpenShop) ui?.ToggleShop();
             }
+
+            if (Input.GetKeyDown(KeyCode.Escape) && ui != null && ui.AnyPanelOpen)
+                ui.CloseAll();
 
             if (Input.GetKeyDown(KeyCode.G)) _equip?.DropActiveWeapon();
 

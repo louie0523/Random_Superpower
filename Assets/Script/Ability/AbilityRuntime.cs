@@ -46,6 +46,9 @@ public class AbilityRuntime : NetworkBehaviour
 
     // ══════════════════ 내부 상태 ══════════════════
 
+    //public AbilityData GetMainAbility() => _main;
+    public int SkillRank => _skillRank;
+
     private AbilityData.SkillDef _casting;
     private float _castTimer = -1f;
     private bool _castHitApplied;

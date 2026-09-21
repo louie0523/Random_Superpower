@@ -83,7 +83,7 @@ public class PlayerHealth : NetworkBehaviour
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        if (_stats != null) _stats.OnStatsChanged -= ClampHP;
+        if (HasInputAuthority) UIManager.Instance?.UnbindLocalPlayer();
     }
 
     void ClampHP()

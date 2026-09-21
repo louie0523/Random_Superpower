@@ -19,11 +19,387 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 70844526592
-    m_Localized: Belati
+    m_Localized: '[ESC] Tutup'
     m_Metadata:
       m_Items: []
   - m_Id: 19732001042432
-    m_Localized: Sebuah belati dasar. Senjata ini cepat tetapi jangkauannya pendek.
+    m_Localized: Detail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167485640704
+    m_Localized: Melipat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167552749568
+    m_Localized: Jiwa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943872
+    m_Localized: Selama pertempuran
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943873
+    m_Localized: Klik untuk detail selengkapnya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943874
+    m_Localized: pembukaan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943875
+    m_Localized: Kotak biasa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943876
+    m_Localized: Kotak langka
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943877
+    m_Localized: Peti Pahlawan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943878
+    m_Localized: Kotak Mantra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943879
+    m_Localized: kelas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943880
+    m_Localized: hidup ini
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943881
+    m_Localized: tidak ada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943882
+    m_Localized: Pasif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943883
+    m_Localized: Waktu pendinginan {0} detik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943884
+    m_Localized: Jiwa 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943885
+    m_Localized: Pengukur Utama {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943886
+    m_Localized: "Sektor anterior {0}\xB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943887
+    m_Localized: Seluruh area sekitarnya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943888
+    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943889
+    m_Localized: Terapkan pada diri Anda sendiri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943890
+    m_Localized: 'Senjata yang Diperlukan: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943891
+    m_Localized: 'tip:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943892
+    m_Localized: tangan kosong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943893
+    m_Localized: senjata jarak dekat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943894
+    m_Localized: busur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943895
+    m_Localized: tebu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943896
+    m_Localized: senjata api
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943897
+    m_Localized: Senjata lempar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943898
+    m_Localized: Senjata jarak jauh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943899
+    m_Localized: Semua senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943900
+    m_Localized: toko
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943901
+    m_Localized: '[B] Toko'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943902
+    m_Localized: "Selama pertempuran \u2014 Toko tidak tersedia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943903
+    m_Localized: melaksanakan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943904
+    m_Localized: Mempesona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943905
+    m_Localized: Spesial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943906
+    m_Localized: pembelian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943907
+    m_Localized: Kemampuan ini tidak memiliki toko khusus.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943908
+    m_Localized: Pulihkan stamina {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943909
+    m_Localized: Isi ulang {0}% amunisi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943910
+    m_Localized: Tidak tersedia untuk dibeli
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943911
+    m_Localized: maksimum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943912
+    m_Localized: Kekurangan jiwa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943913
+    m_Localized: Hanya Senjata Api
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943914
+    m_Localized: Amunisi penuh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943915
+    m_Localized: Kemampuan yang dibutuhkan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943916
+    m_Localized: Tidak ada pesona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943917
+    m_Localized: Batu Ajaib
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943918
+    m_Localized: Mempesona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943919
+    m_Localized: Kosong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943920
+    m_Localized: Tidak ada senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943921
+    m_Localized: Batu Ajaib +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943922
+    m_Localized: Tidak ada senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943923
+    m_Localized: Tidak bisa disihir.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943924
+    m_Localized: Pesona senjata tidak mungkin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943925
+    m_Localized: Tingkat maksimum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943926
+    m_Localized: Kekurangan batu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943927
+    m_Localized: Inventaris
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943928
+    m_Localized: senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943929
+    m_Localized: peralatan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943930
+    m_Localized: Kosong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943931
+    m_Localized: '[G] Buang senjata saat ini'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138176
+    m_Localized: Persimpangan {0}m
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138177
+    m_Localized: "Sudut keputusan {0}\xB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138178
+    m_Localized: '{0} butir amunisi'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138179
+    m_Localized: '{0} tembakan per menit'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138180
+    m_Localized: Pengisian daya {0}~{1} detik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138181
+    m_Localized: Kerusakan {0}~{1}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138182
+    m_Localized: Mempesona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138183
+    m_Localized: Belum ada pesona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138184
+    m_Localized: Senjata yang tidak bisa disihir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138185
+    m_Localized: busur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138186
+    m_Localized: tebu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138187
+    m_Localized: senjata api
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138188
+    m_Localized: Melemparkan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138189
+    m_Localized: Tujuan {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138190
+    m_Localized: Tempat pertama {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138191
+    m_Localized: Kemenangan!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138192
+    m_Localized: Babak baru akan segera dimulai.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138193
+    m_Localized: HP Maksimum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138194
+    m_Localized: Kekuatan serangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138195
+    m_Localized: Pertahanan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138196
+    m_Localized: Kecepatan gerakan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138197
+    m_Localized: Kecepatan serangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138198
+    m_Localized: Peluang Serangan Kritis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138199
+    m_Localized: Kerusakan kritis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138200
+    m_Localized: Pengurangan waktu pendinginan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138201
+    m_Localized: Penghisap darah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138202
+    m_Localized: kerusakan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138203
+    m_Localized: Kerusakan yang diterima
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138204
+    m_Localized: Kerusakan jarak dekat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138205
+    m_Localized: Kerusakan jarak jauh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138206
+    m_Localized: Kerusakan skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138207
+    m_Localized: Kerusakan maksimum
     m_Metadata:
       m_Items: []
   references:

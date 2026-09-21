@@ -47,8 +47,8 @@ public class GameHUD : MonoBehaviour
     {
         var ar = local.GetComponent<AbilityRuntime>();
 
-        DrawStatus(hp);
-        DrawCrosshair();
+        //DrawStatus(hp);
+        //DrawCrosshair();
 
         if (ar != null)
         {
@@ -62,7 +62,7 @@ public class GameHUD : MonoBehaviour
         DrawDebugKeys();
         DrawRoundState();
         DrawShop(local, local.GetComponent<PlayerShop>(), hp);
-        DrawInteract(local);
+        //DrawInteract(local);
         DrawStoneGain(local.GetComponent<PlayerEnchant>());
     }
 

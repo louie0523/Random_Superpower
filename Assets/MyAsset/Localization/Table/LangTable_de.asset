@@ -19,11 +19,387 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 70844526592
-    m_Localized: Dolch
+    m_Localized: "[ESC] Schlie\xDFen"
     m_Metadata:
       m_Items: []
   - m_Id: 19732001042432
-    m_Localized: Ein einfacher Dolch. Er ist schnell, hat aber eine geringe Reichweite.
+    m_Localized: Details
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167485640704
+    m_Localized: Falten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167552749568
+    m_Localized: Seele
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943872
+    m_Localized: "W\xE4hrend des Kampfes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943873
+    m_Localized: "Klicken Sie hier f\xFCr weitere Details"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943874
+    m_Localized: "\xD6ffnung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943875
+    m_Localized: Standardbox
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943876
+    m_Localized: Seltene Box
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943877
+    m_Localized: Heldentruhe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943878
+    m_Localized: Verzauberungsbox
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943879
+    m_Localized: Klasse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943880
+    m_Localized: Dieses Leben
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943881
+    m_Localized: existiert nicht
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943882
+    m_Localized: Passiv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943883
+    m_Localized: Abklingzeit {0} Sekunden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943884
+    m_Localized: Seele {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943885
+    m_Localized: "Ultimatives Messger\xE4t {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943886
+    m_Localized: "Vorderer {0}\xB0 Sektor"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943887
+    m_Localized: Das gesamte Umland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943888
+    m_Localized: '{0}, Reichweite {1}m, max. {2} Personen'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943889
+    m_Localized: Wenden Sie dies auf sich selbst an
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943890
+    m_Localized: "Ben\xF6tigte Waffen: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943891
+    m_Localized: 'Tipp:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943892
+    m_Localized: "blo\xDFe H\xE4nde"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943893
+    m_Localized: Nahkampfwaffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943894
+    m_Localized: Bogen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943895
+    m_Localized: Stock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943896
+    m_Localized: Schusswaffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943897
+    m_Localized: Wurfwaffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943898
+    m_Localized: Fernkampfwaffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943899
+    m_Localized: Alle Waffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943900
+    m_Localized: speichern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943901
+    m_Localized: '[B] Laden'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943902
+    m_Localized: "W\xE4hrend des Kampfes \u2013 Shop nicht verf\xFCgbar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943903
+    m_Localized: erzwingen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943904
+    m_Localized: Verzaubern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943905
+    m_Localized: Besonders
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943906
+    m_Localized: kaufen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943907
+    m_Localized: "Diese F\xE4higkeit hat keinen speziellen Shop."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943908
+    m_Localized: Ausdauer wiederherstellen {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943909
+    m_Localized: Munitionsladung {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943910
+    m_Localized: "Nicht zum Kauf verf\xFCgbar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943911
+    m_Localized: maximal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943912
+    m_Localized: Seelenmangel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943913
+    m_Localized: Nur Schusswaffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943914
+    m_Localized: Volle Munition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943915
+    m_Localized: "Erforderliche F\xE4higkeiten"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943916
+    m_Localized: Keine Verzauberung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943917
+    m_Localized: Verzauberungsstein
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943918
+    m_Localized: Verzaubern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943919
+    m_Localized: Leer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943920
+    m_Localized: Keine Waffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943921
+    m_Localized: Verzauberungsstein +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943922
+    m_Localized: Keine Waffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943923
+    m_Localized: Kann nicht verzaubert werden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943924
+    m_Localized: "Waffenverzauberung unm\xF6glich"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943925
+    m_Localized: Maximale Stufe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943926
+    m_Localized: Steinmangel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943927
+    m_Localized: Inventar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943928
+    m_Localized: Waffe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943929
+    m_Localized: "Ausr\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943930
+    m_Localized: Leer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943931
+    m_Localized: '[G] Aktuelle Waffe ablegen'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138176
+    m_Localized: Kreuzung {0}m
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138177
+    m_Localized: "Entscheidungswinkel {0}\xB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138178
+    m_Localized: '{0} Schuss Munition'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138179
+    m_Localized: "{0} Sch\xFCsse pro Minute"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138180
+    m_Localized: Ladevorgang {0}~{1} Sekunden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138181
+    m_Localized: Schaden {0}~{1}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138182
+    m_Localized: Verzaubern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138183
+    m_Localized: Noch keine Verzauberung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138184
+    m_Localized: "Waffen, die nicht verzaubert werden k\xF6nnen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138185
+    m_Localized: Bogen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138186
+    m_Localized: Stock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138187
+    m_Localized: Schusswaffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138188
+    m_Localized: Werfen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138189
+    m_Localized: Tor {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138190
+    m_Localized: 1. Platz {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138191
+    m_Localized: '{0} Sieg!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138192
+    m_Localized: "Eine neue Runde beginnt in K\xFCrze."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138193
+    m_Localized: Maximale PS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138194
+    m_Localized: Angriffskraft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138195
+    m_Localized: Verteidigung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138196
+    m_Localized: Bewegungsgeschwindigkeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138197
+    m_Localized: Angriffsgeschwindigkeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138198
+    m_Localized: Chance auf einen kritischen Treffer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138199
+    m_Localized: Kritischer Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138200
+    m_Localized: Abklingzeitreduzierung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138201
+    m_Localized: Blutsaugen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138202
+    m_Localized: Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138203
+    m_Localized: Schaden erhalten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138204
+    m_Localized: Nahkampfschaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138205
+    m_Localized: Fernkampfschaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138206
+    m_Localized: Fertigkeitsschaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138207
+    m_Localized: Ultimativer Schaden
     m_Metadata:
       m_Items: []
   references:

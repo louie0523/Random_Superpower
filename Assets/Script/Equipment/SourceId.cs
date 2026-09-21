@@ -12,15 +12,16 @@ public static class SourceId
     public const int SubAbility = 100011;
     public const int RandomAbility = 100012;
 
-    // 상점 (영구)  
-    public const int ShopPurchase = 100020;
+    // 인챈트 (무기 슬롯별 8칸)
+    public const int EnchantBase = 100100;
 
-    // 
-    public const int EnchantBase = 100030;
+    // 상점
+    public const int ShopBase = 110000; // + 공용 인덱스
+    public const int ShopExclusiveBase = 110500; // + 전용 인덱스
 
-    // 임시 효과 — 베이스에 고유값을 더해서 사용
+    // 임시 효과
     public const int CurseBase = 200000;
     public const int BuffBase = 300000;
-
-
+    public const int StateBase = 400000;
+    public const int AbilityBase = 500000;
 }

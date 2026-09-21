@@ -363,6 +363,7 @@ MonoBehaviour:
   _BootsId: 0
   _SlotAmmo: 
   startWeaponId: 1002
+  fistWeaponId: 1000
   swapTime: 0.6
 --- !u!114 &-1179119024802948346
 MonoBehaviour:
@@ -444,8 +445,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd1efaca96796a4abd7753f960620de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShop
-  database: {fileID: 11400000, guid: 941ddd8072b147f499a37079e3aad7a5, type: 2}
   _Levels: 
+  _ExclusiveLevels: 
+  database: {fileID: 11400000, guid: 941ddd8072b147f499a37079e3aad7a5, type: 2}
   _IsShopping:
     RawValue: 0
 --- !u!114 &8318037346556842547
@@ -485,7 +487,7 @@ MonoBehaviour:
   _Stones: 0
   _LastRolled: 0
   _LastRollTick: 0
-  _AllowGunEnchant:
+  _IsGunsmith:
     RawValue: 0
 --- !u!82 &433004572054489072
 AudioSource:
@@ -1023,7 +1025,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 479
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1066,7 +1068,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0

@@ -19,11 +19,387 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 70844526592
-    m_Localized: Daga
+    m_Localized: '[ESC] Cerrar'
     m_Metadata:
       m_Items: []
   - m_Id: 19732001042432
-    m_Localized: "Una daga b\xE1sica. Es r\xE1pida, pero tiene un alcance corto."
+    m_Localized: Detalles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167485640704
+    m_Localized: Doblar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167552749568
+    m_Localized: Alma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943872
+    m_Localized: Durante el combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943873
+    m_Localized: "Haz clic para obtener m\xE1s detalles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943874
+    m_Localized: apertura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943875
+    m_Localized: Caja normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943876
+    m_Localized: Caja rara
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943877
+    m_Localized: "Cofre de h\xE9roe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943878
+    m_Localized: Caja de encantamientos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943879
+    m_Localized: clase
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943880
+    m_Localized: Esta vida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943881
+    m_Localized: no existe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943882
+    m_Localized: Pasivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943883
+    m_Localized: "Tiempo de reutilizaci\xF3n {0} segundos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943884
+    m_Localized: Alma {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943885
+    m_Localized: Medidor definitivo {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943886
+    m_Localized: "Sector anterior {0}\xB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943887
+    m_Localized: Toda la zona circundante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943888
+    m_Localized: "{0}, alcance {1}m, m\xE1ximo {2} personas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943889
+    m_Localized: "Apl\xEDcatelo a ti mismo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943890
+    m_Localized: 'Armas requeridas: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943891
+    m_Localized: 'consejo:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943892
+    m_Localized: manos desnudas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943893
+    m_Localized: armas cuerpo a cuerpo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943894
+    m_Localized: arco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943895
+    m_Localized: "ca\xF1a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943896
+    m_Localized: armas de fuego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943897
+    m_Localized: Armas arrojadizas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943898
+    m_Localized: Armas de largo alcance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943899
+    m_Localized: Todas las armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943900
+    m_Localized: almacenar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943901
+    m_Localized: '[B] Tienda'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943902
+    m_Localized: 'Durante el combate: tienda no disponible'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943903
+    m_Localized: hacer cumplir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943904
+    m_Localized: Encantar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943905
+    m_Localized: Especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943906
+    m_Localized: compra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943907
+    m_Localized: Esta habilidad no tiene una tienda especial.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943908
+    m_Localized: Recuperar resistencia {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943909
+    m_Localized: "Carga {0}% de munici\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943910
+    m_Localized: No disponible para la compra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943911
+    m_Localized: "m\xE1ximo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943912
+    m_Localized: escasez de almas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943913
+    m_Localized: Solo armas de fuego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943914
+    m_Localized: "Munici\xF3n completa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943915
+    m_Localized: Habilidad requerida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943916
+    m_Localized: Sin encantamientos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943917
+    m_Localized: Piedra encantada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943918
+    m_Localized: Encantar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943919
+    m_Localized: "Vac\xEDo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943920
+    m_Localized: No se permiten armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943921
+    m_Localized: Piedra encantada +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943922
+    m_Localized: No se permiten armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943923
+    m_Localized: No puede ser encantado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943924
+    m_Localized: Encantamiento de armas imposible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943925
+    m_Localized: "Nivel m\xE1ximo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943926
+    m_Localized: escasez de piedras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943927
+    m_Localized: Inventario
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943928
+    m_Localized: arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943929
+    m_Localized: equipo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943930
+    m_Localized: "Vac\xEDo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943931
+    m_Localized: '[G] Desechar el arma actual'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138176
+    m_Localized: "Intersecci\xF3n {0}m"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138177
+    m_Localized: "\xC1ngulo de decisi\xF3n {0}\xB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138178
+    m_Localized: "{0} rondas de munici\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138179
+    m_Localized: '{0} disparos por minuto'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138180
+    m_Localized: Cargando {0}~{1} segundos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138181
+    m_Localized: "Da\xF1o {0}~{1}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138182
+    m_Localized: Encantar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138183
+    m_Localized: "A\xFAn no hay ning\xFAn encantamiento"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138184
+    m_Localized: Armas que no pueden ser encantadas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138185
+    m_Localized: arco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138186
+    m_Localized: "ca\xF1a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138187
+    m_Localized: armas de fuego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138188
+    m_Localized: Tirar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138189
+    m_Localized: Objetivo {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138190
+    m_Localized: 1er lugar {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138191
+    m_Localized: "{0} \xA1Victoria!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138192
+    m_Localized: "Pronto comenzar\xE1 una nueva ronda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138193
+    m_Localized: "Potencia m\xE1xima"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138194
+    m_Localized: Poder de ataque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138195
+    m_Localized: Defensa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138196
+    m_Localized: Velocidad de movimiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138197
+    m_Localized: Velocidad de ataque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138198
+    m_Localized: "Probabilidad de golpe cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138199
+    m_Localized: "Da\xF1os cr\xEDticos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138200
+    m_Localized: "Reducci\xF3n del tiempo de reutilizaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138201
+    m_Localized: Chupasangre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138202
+    m_Localized: "da\xF1o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138203
+    m_Localized: "Da\xF1os sufridos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138204
+    m_Localized: "da\xF1o cuerpo a cuerpo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138205
+    m_Localized: "Da\xF1o a distancia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138206
+    m_Localized: "Da\xF1o de habilidad"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138207
+    m_Localized: "Da\xF1o m\xE1ximo"
     m_Metadata:
       m_Items: []
   references:

@@ -25,6 +25,12 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private readonly List<NetworkObject> _dummies = new();
 
+    void Awake()
+    {
+        if (!SceneManager.GetSceneByName("UI").isLoaded)
+            SceneManager.LoadScene("UI", LoadSceneMode.Additive);
+    }
+
     async void StartGame()
     {
         _runner = gameObject.AddComponent<NetworkRunner>();
@@ -56,10 +62,15 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (_runner == null || !_runner.IsRunning) return;
 
-        if (Input.GetKeyDown(spawnDummyKey))
-            SpawnDummy();
+        if (Input.GetKeyDown(spawnDummyKey)) SpawnDummy();
 
         if (Input.GetKeyDown(clearDummyKey) && _dummies.Count > 0)
+        {
+            int last = _dummies.Count - 1;
+            if (_dummies[last] != null) _runner.Despawn(_dummies[last]);
+            _dummies.RemoveAt(last);
+        }
+
         if (Input.GetKeyDown(rerollAbilityKey)) RerollAbility();
         if (Input.GetKeyDown(suicideKey)) Suicide();
         if (Input.GetKeyDown(healKey)) FullHeal();

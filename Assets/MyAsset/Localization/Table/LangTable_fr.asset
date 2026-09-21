@@ -19,11 +19,387 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 70844526592
-    m_Localized: Dague
+    m_Localized: "[\xC9CHAP] Fermer"
     m_Metadata:
       m_Items: []
   - m_Id: 19732001042432
-    m_Localized: "Une dague basique. Elle est rapide mais a une courte port\xE9e."
+    m_Localized: "D\xE9tails"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167485640704
+    m_Localized: Pli
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167552749568
+    m_Localized: "\xC2me"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943872
+    m_Localized: Au cours du combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943873
+    m_Localized: "Cliquez pour plus de d\xE9tails"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943874
+    m_Localized: ouverture
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943875
+    m_Localized: "Bo\xEEte standard"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943876
+    m_Localized: "Bo\xEEte rare"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943877
+    m_Localized: "Coffre de h\xE9ros"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943878
+    m_Localized: "Bo\xEEte \xE0 enchantements"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943879
+    m_Localized: classe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943880
+    m_Localized: Cette vie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943881
+    m_Localized: n'existe pas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943882
+    m_Localized: Passif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943883
+    m_Localized: "D\xE9lai de r\xE9cup\xE9ration {0} secondes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943884
+    m_Localized: "\xC2me {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943885
+    m_Localized: Jauge ultime {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943886
+    m_Localized: "Secteur ant\xE9rieur {0}\xB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943887
+    m_Localized: Toute la zone environnante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943888
+    m_Localized: "{0}, port\xE9e {1}m, max {2} personnes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943889
+    m_Localized: "Appliquez-le \xE0 vous-m\xEAme"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943890
+    m_Localized: 'Armes requises : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943891
+    m_Localized: 'conseil:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943892
+    m_Localized: mains nues
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943893
+    m_Localized: "armes de m\xEAl\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943894
+    m_Localized: arc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943895
+    m_Localized: canne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943896
+    m_Localized: "armes \xE0 feu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943897
+    m_Localized: armes de jet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943898
+    m_Localized: "Armes \xE0 distance"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943899
+    m_Localized: Toutes les armes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943900
+    m_Localized: magasin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943901
+    m_Localized: '[B] Magasin'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943902
+    m_Localized: "En combat \u2014 Boutique indisponible"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943903
+    m_Localized: imposer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943904
+    m_Localized: Enchanter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943905
+    m_Localized: "Sp\xE9cial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943906
+    m_Localized: achat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943907
+    m_Localized: "Cette capacit\xE9 ne dispose pas d'une boutique d\xE9di\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943908
+    m_Localized: "R\xE9cup\xE9rer de l'endurance {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943909
+    m_Localized: Chargez {0}% des munitions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943910
+    m_Localized: "Indisponible \xE0 l'achat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943911
+    m_Localized: maximum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943912
+    m_Localized: "p\xE9nurie d'\xE2me"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943913
+    m_Localized: "Armes \xE0 feu uniquement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943914
+    m_Localized: "Munitions compl\xE8tes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943915
+    m_Localized: Aptitudes requises
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943916
+    m_Localized: Pas d'enchantement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943917
+    m_Localized: Pierre enchanteresse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943918
+    m_Localized: Enchanter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943919
+    m_Localized: Vide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943920
+    m_Localized: Pas d'armes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943921
+    m_Localized: Pierre d'enchantement +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943922
+    m_Localized: Pas d'armes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943923
+    m_Localized: "Ne peut \xEAtre enchant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943924
+    m_Localized: Enchantement d'arme impossible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943925
+    m_Localized: Niveau maximum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943926
+    m_Localized: "P\xE9nurie de pierres"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943927
+    m_Localized: Inventaire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943928
+    m_Localized: arme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943929
+    m_Localized: "\xE9quipement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943930
+    m_Localized: Vide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943931
+    m_Localized: "[G] D\xE9faussez votre arme actuelle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138176
+    m_Localized: Intersection {0}m
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138177
+    m_Localized: "Angle de d\xE9cision {0}\xB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138178
+    m_Localized: '{0} cartouches de munitions'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138179
+    m_Localized: '{0} coups par minute'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138180
+    m_Localized: Chargement {0}~{1} secondes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138181
+    m_Localized: "D\xE9g\xE2ts {0}~{1}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138182
+    m_Localized: Enchanter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138183
+    m_Localized: Pas encore d'enchantement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138184
+    m_Localized: "Armes qui ne peuvent pas \xEAtre enchant\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138185
+    m_Localized: arc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138186
+    m_Localized: canne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138187
+    m_Localized: "armes \xE0 feu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138188
+    m_Localized: Lancer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138189
+    m_Localized: Objectif {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138190
+    m_Localized: "1\xE8re place {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138191
+    m_Localized: '{0} Victoire !'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138192
+    m_Localized: "Une nouvelle manche commence bient\xF4t."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138193
+    m_Localized: Puissance maximale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138194
+    m_Localized: puissance d'attaque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138195
+    m_Localized: "D\xE9fense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138196
+    m_Localized: "vitesse de d\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138197
+    m_Localized: vitesse d'attaque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138198
+    m_Localized: Chances de coup critique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138199
+    m_Localized: Dommages critiques
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138200
+    m_Localized: "R\xE9duction du temps de recharge"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138201
+    m_Localized: suceur de sang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138202
+    m_Localized: dommage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138203
+    m_Localized: "Dommages re\xE7us"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138204
+    m_Localized: "d\xE9g\xE2ts de m\xEAl\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138205
+    m_Localized: "D\xE9g\xE2ts \xE0 distance"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138206
+    m_Localized: "d\xE9g\xE2ts de comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138207
+    m_Localized: "D\xE9g\xE2ts ultimes"
     m_Metadata:
       m_Items: []
   references:

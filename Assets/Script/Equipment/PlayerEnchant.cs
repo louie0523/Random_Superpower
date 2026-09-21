@@ -70,29 +70,29 @@ public class PlayerEnchant : NetworkBehaviour
         cost = 0;
 
         var w = _equip?.GetWeapon();
-        if (w == null) { reason = "무기 없음"; return false; }
+        if (w == null) { reason = "ui.enchant.reason.no_weapon"; return false; }
 
         // 총은 특정 능력이 있어야 인챈트 가능
         if (w.Class == WeaponClass.Ranged && w.RangedKind == RangedType.Gun
             && !IsGunsmith)
         {
-            reason = "총기 인챈트 불가";
+            reason = "ui.enchant.reason.gun_locked";
             return false;
         }
 
-        if (!w.CanEnchant) { reason = "인챈트 불가"; return false; }
+        if (!w.CanEnchant) { reason = "ui.enchant.reason.cannot"; return false; }
 
         int slot = _equip.ActiveWeaponSlot;
         int stage = GetStage(slot);
 
         if (stage >= Mathf.Min(w.MaxEnchantStage, MaxEnchants))
         {
-            reason = "최대 단계";
+            reason = "ui.enchant.reason.max_stage";
             return false;
         }
 
         cost = w.GetEnchantCost(stage);
-        if (Stones < cost) { reason = $"스톤 부족 ({cost}개)"; return false; }
+        if (Stones < cost) { reason = "ui.enchant.reason.no_stone"; return false; }
 
         return true;
     }
