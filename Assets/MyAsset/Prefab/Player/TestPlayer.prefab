@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5746520347215475144}
   - component: {fileID: 1189460214559579660}
   - component: {fileID: 7578152378368501491}
+  - component: {fileID: 2506636330769724638}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Untagged
@@ -108,6 +109,42 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 386891598792767094}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2506636330769724638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386891598792767094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0475b67d6d9e764e9c6a60ee541b539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FPSCamera
+  cameraRoot: {fileID: 7025007751488925499}
+  cameraHolder: {fileID: 7704905672278001533}
+  cam: {fileID: 7803066444294826711}
+  sensitivity: 0.3
+  pitchMin: -85
+  pitchMax: 85
+  walkBobFreq: 1.8
+  walkBobAmpY: 0.05
+  walkBobAmpX: 0.05
+  runBobFreq: 3
+  runBobAmpY: 0.09
+  runBobAmpX: 0.09
+  walkBobRoll: 0.5
+  runBobRoll: 2
+  baseFov: 75
+  fovMaxSpeed: 12
+  fovMaxAdd: 10
+  fovLerp: 6
+  strafeRoll: 2
+  landDipAmount: 0.15
+  landRecoverSpeed: 6
+  shakeDecay: 5
+  shakeSpeed: 30
+  hitPunchAmount: 6
 --- !u!1 &662826683221375620
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,7 +204,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5906669269675330194}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -340,8 +377,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6791197608767708747}
-  - {fileID: 2520778070149761435}
+  - {fileID: 833214667820684022}
+  - {fileID: 2269900724038257958}
   m_Father: {fileID: 7025007751488925499}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8252702204826120861
@@ -357,12 +394,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FPArmRig
   ArmRoot: {fileID: 5907108311383919493}
-  RightHand: {fileID: 6791197608767708747}
-  LeftHand: {fileID: 2520778070149761435}
-  RightHandRig: {fileID: 3319644221834837328}
-  LeftHandRig: {fileID: 6918171850445913586}
-  RightHandPrefab: {fileID: 919132149155446097, guid: 9de9879aaa82e91469b04187b6ad8c42, type: 3}
-  LeftHandPrefab: {fileID: 919132149155446097, guid: c303a6df0f6d8f545b42f903868526b7, type: 3}
+  RightHand: {fileID: 833214667820684022}
+  LeftHand: {fileID: 2269900724038257958}
+  RightHandRig: {fileID: 8137048186177981219}
+  LeftHandRig: {fileID: 8137048186177981219}
+  RightHandPrefab: {fileID: 3552246198162937025, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
+  LeftHandPrefab: {fileID: 7788032058989571394, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
   IdlePose:
     RightPos: {x: 0.86, y: -0.8, z: 1.28}
     RightRot: {x: 22.103, y: -56.822, z: -30.66}
@@ -411,7 +448,7 @@ MonoBehaviour:
         - {x: 0, y: 0, z: 0, w: 6.98e-43}
         - {x: 0, y: 0, z: 0, w: 6.98e-43}
         - {x: 0, y: 0, z: 0, w: 6.98e-43}
-  CamPivot: {fileID: 0}
+  CamPivot: {fileID: 7704905672278001533}
   Camera: {fileID: 0}
   LeftGripNodeName: LeftGrip
   ForceShowLeftHand: 0
@@ -478,22 +515,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
---- !u!4 &2520778070149761435 stripped
+--- !u!4 &2269900724038257958 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 539333913238522566, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4181536952661282427, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
   m_PrefabInstance: {fileID: 2704274252126241629}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6918171850445913586 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5009634179132374703, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
-  m_PrefabInstance: {fileID: 2704274252126241629}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3bf480ae5f05e54cb519bd614b2c90d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandRig
 --- !u!1001 &7840583448317519118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -555,9 +581,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
---- !u!114 &3319644221834837328 stripped
+--- !u!4 &833214667820684022 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7448801267467237368, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
+  m_PrefabInstance: {fileID: 7840583448317519118}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8137048186177981219 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4818543524286912606, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2027678852161334829, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
   m_PrefabInstance: {fileID: 7840583448317519118}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -566,8 +597,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3bf480ae5f05e54cb519bd614b2c90d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandRig
---- !u!4 &6791197608767708747 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3670564695138450245, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
-  m_PrefabInstance: {fileID: 7840583448317519118}
-  m_PrefabAsset: {fileID: 0}
