@@ -16,6 +16,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private InspectorBar inspectorBar;
     [SerializeField] private AmmoDisplay ammoDisplay;
     [SerializeField] private InteractPrompt interactPrompt;
+    [SerializeField] private SkillBar skillBar;
+    [SerializeField] private ChargeGauge chargeGauge;
 
     [Header("패널 (없으면 비워둬도 됨)")]
     [SerializeField] private UIPanel abilityPanel;
@@ -134,6 +136,10 @@ public class UIManager : MonoBehaviour
         inspectorBar?.Bind(hp, stats, $"Player {player.InputAuthority.PlayerId}");
         ammoDisplay?.Bind(player.GetComponent<PlayerEquipment>());
         interactPrompt?.Bind(player.GetComponent<PlayerInteract>());
+
+        var ability = player.GetComponent<AbilityRuntime>();
+        skillBar?.Bind(ability, hp);
+        chargeGauge?.Bind(ability);
 
     }
 

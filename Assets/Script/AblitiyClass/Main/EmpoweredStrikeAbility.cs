@@ -176,5 +176,18 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
         _strikeFlagTimer = 0f;
     }
 
+    /// <summary>근접 무기(맨손 제외)를 들고 있는가</summary>
+    bool HasMeleeWeapon
+    {
+        get
+        {
+            var w = Ctx.Equipment?.GetWeapon();
+            return w != null && w.IsArmedMelee;
+        }
+    }
+
+    /// <summary>지금 일격을 쓸 수 있는 무기인가 — HUD 표시용</summary>
+    public bool CanUseNow => HasMeleeWeapon;
+
     public ComboStep GetStrikeStep() => StrikeMotion?.Step;
 }
