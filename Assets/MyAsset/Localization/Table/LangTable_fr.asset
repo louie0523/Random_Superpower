@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943880
-    m_Localized: Cette vie
+    m_Localized: "Capacit\xE9 al\xE9atoire"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943881
@@ -400,6 +400,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 442167561138207
     m_Localized: "D\xE9g\xE2ts ultimes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2615060709617664
+    m_Localized: "Ma\xEEtre du one-shot"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2616682693111808
+    m_Localized: souffler
     m_Metadata:
       m_Items: []
   references:

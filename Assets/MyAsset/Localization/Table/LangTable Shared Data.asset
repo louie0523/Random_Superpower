@@ -399,6 +399,14 @@ MonoBehaviour:
     m_Key: stat.UltimateDamage
     m_Metadata:
       m_Items: []
+  - m_Id: 2615060709617664
+    m_Key: ability.EmpoweredStrikeAbility.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2616682693111808
+    m_Key: ability.EmpoweredStrikeAbility.Charge
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

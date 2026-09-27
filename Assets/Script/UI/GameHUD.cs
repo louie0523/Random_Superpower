@@ -52,10 +52,10 @@ public class GameHUD : MonoBehaviour
 
         if (ar != null)
         {
-            DrawCharge(ar);
-            DrawRandomAbility(ar);
-            DrawSkillBar(ar);
-            DrawDanger(ar);
+            //DrawCharge(ar);
+            //DrawRandomAbility(ar);
+            //DrawSkillBar(ar);
+            //DrawDanger(ar);
         }
 
         DrawScoreboard(_runner);

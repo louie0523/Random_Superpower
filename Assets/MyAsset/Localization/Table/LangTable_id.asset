@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943880
-    m_Localized: hidup ini
+    m_Localized: Kemampuan acak
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943881
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
@@ -400,6 +400,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 442167561138207
     m_Localized: Kerusakan maksimum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2615060709617664
+    m_Localized: Ahli Cerita Satu Kali Tayang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2616682693111808
+    m_Localized: meniup
     m_Metadata:
       m_Items: []
   references:

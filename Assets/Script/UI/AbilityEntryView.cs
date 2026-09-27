@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class AbilityEntryView : MonoBehaviour
+public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
+                                IPointerEnterHandler, IPointerExitHandler
 {
     public struct Model
     {
@@ -13,57 +15,88 @@ public class AbilityEntryView : MonoBehaviour
         public string Detail;
     }
 
+    [SerializeField] private Image background;
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text slotLabel;
     [SerializeField] private TMP_Text title;
     [SerializeField] private TMP_Text body;
+    [SerializeField] private TMP_Text expandIcon;      // ▼ / ▲
     [SerializeField] private GameObject detailRoot;
     [SerializeField] private TMP_Text detailText;
-    [SerializeField] private Button expandButton;
-    [SerializeField] private LocText expandLabel;
 
-    private bool _expanded;
-    private Model _model;
+    [Header("색")]
+    [SerializeField] private Color normalColor = new(1f, 1f, 1f, 0.04f);
+    [SerializeField] private Color hoverColor = new(1f, 1f, 1f, 0.10f);
 
-    void Awake()
-    {
-        expandButton?.onClick.AddListener(Toggle);
-    }
+    public event System.Action<AbilityEntryView> Clicked;
+
+    public bool IsExpanded { get; private set; }
+    public bool CanExpand { get; private set; }
 
     public void Bind(Model m)
     {
-        _model = m;
-
         if (icon != null)
         {
             icon.enabled = m.Icon != null;
             icon.sprite = m.Icon;
         }
 
-        if (slotLabel != null) slotLabel.text = m.SlotLabel;
-        if (title != null) title.text = m.Title;
-        if (body != null) body.text = m.Body;
+        SetText(slotLabel, m.SlotLabel);
+        SetText(title, m.Title);
+        SetText(body, m.Body);
 
-        bool hasDetail = !string.IsNullOrWhiteSpace(m.Detail);
-
-        if (expandButton != null) expandButton.gameObject.SetActive(hasDetail);
+        CanExpand = !string.IsNullOrWhiteSpace(m.Detail);
         if (detailText != null) detailText.text = m.Detail ?? "";
+        if (expandIcon != null) expandIcon.gameObject.SetActive(CanExpand);
 
-        _expanded = false;
-        if (detailRoot != null) detailRoot.SetActive(false);
-
-        UpdateExpandLabel();
+        SetExpanded(false);
+        SetHover(false);
     }
 
-    void Toggle()
+    public void SetExpanded(bool on)
     {
-        _expanded = !_expanded;
-        if (detailRoot != null) detailRoot.SetActive(_expanded);
-        UpdateExpandLabel();
+        IsExpanded = CanExpand && on;
+
+        if (detailRoot != null) detailRoot.SetActive(IsExpanded);
+        if (expandIcon != null) expandIcon.text = IsExpanded ? "▲" : "▼";
+
+        RebuildLayout();
     }
 
-    void UpdateExpandLabel()
+    // ── 입력 ──
+
+    public void OnPointerClick(PointerEventData e)
     {
-        expandLabel?.SetKey(_expanded ? "ui.common.collapse" : "ui.common.expand");
+        if (e.button != PointerEventData.InputButton.Left) return;
+        if (!CanExpand) return;
+
+        Clicked?.Invoke(this);          // 실제 토글은 패널이 결정
+    }
+
+    public void OnPointerEnter(PointerEventData e) { if (CanExpand) SetHover(true); }
+    public void OnPointerExit(PointerEventData e) => SetHover(false);
+
+    void SetHover(bool on)
+    {
+        if (background != null) background.color = on ? hoverColor : normalColor;
+    }
+
+    // ── 유틸 ──
+
+    static void SetText(TMP_Text t, string s)
+    {
+        if (t == null) return;
+        bool has = !string.IsNullOrWhiteSpace(s);
+        t.text = s ?? "";
+        t.gameObject.SetActive(has);
+    }
+
+    void RebuildLayout()
+    {
+        var rt = transform as RectTransform;
+        if (rt != null) LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+
+        var parent = transform.parent as RectTransform;
+        if (parent != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parent);
     }
 }

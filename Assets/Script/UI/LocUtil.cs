@@ -19,6 +19,14 @@ public static class LocUtil
         return string.IsNullOrEmpty(s) ? $"#{key}" : s;
     }
 
+    // LocUtil
+    public static string Resolve(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return string.Empty;
+        bool looksLikeKey = s.IndexOf(' ') < 0 && s.IndexOf('.') > 0;
+        return looksLikeKey ? GetOr(s, s) : s;
+    }
+
     public static string Get(string key, params object[] args)
     {
         string s = Get(key);

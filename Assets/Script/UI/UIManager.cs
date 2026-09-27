@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private ChargeGauge chargeGauge;
 
     [Header("패널 (없으면 비워둬도 됨)")]
-    [SerializeField] private UIPanel abilityPanel;
+    [SerializeField] private AbilityPanel abilityPanel;
     [SerializeField] private UIPanel shopPanel;
     [SerializeField] private UIPanel inventoryPanel;
 
@@ -140,6 +140,7 @@ public class UIManager : MonoBehaviour
         var ability = player.GetComponent<AbilityRuntime>();
         skillBar?.Bind(ability, hp);
         chargeGauge?.Bind(ability);
+        abilityPanel?.Bind(ability);
 
     }
 

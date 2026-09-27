@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\uC77C\uACA9\uC758 \uB300\uAC00"
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   Id: 6001
-  DisplayName: "\uC77C\uACA9\uC758 \uB300\uAC00"
+  DisplayName: ability.EmpoweredStrikeAbility.Name
   Kind: 0
   Tier: 0
   Tags: 00000000
@@ -158,6 +158,6 @@ MonoBehaviour:
   EvolveKillCount: 0
   Charges:
   - Slot: 0
-    DisplayName: "\uC77C\uACA9\uC758 \uB300\uAC00"
+    DisplayName: ability.EmpoweredStrikeAbility.Charge
     BarColor: {r: 0, g: 0.8842337, b: 1, a: 1}
     Max: 100

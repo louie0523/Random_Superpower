@@ -45,7 +45,10 @@ public class ChargeGauge : MonoBehaviour
             _cachedMainId = main.Id;
             _cachedLocale = locale;
             if (label != null)
-                label.text = LocUtil.GetOr($"ability.{main.Id}.charge.{info.Slot}", info.DisplayName);
+            {
+                string key = info.DisplayName;                 // 이 필드 자체를 키로 사용
+                label.text = string.IsNullOrEmpty(key) ? "" : LocUtil.GetOr(key, key);
+            }
         }
 
         float ratio = _ar.GetChargeRatio(info.Slot);

@@ -1,30 +1,43 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.Localization.Settings;
+
+public enum AbilityTab { Main, Sub, Random }
+
+[System.Serializable]
+class TabEntry
+{
+    public AbilityTab Tab;
+    public Button Button;
+    public LocText Label;
+    public string LabelKey;      // Ïòà: ui.ability.tab_main
+}
 
 public class AbilityPanel : UIPanel
 {
-    [Header("≈«")]
-    [SerializeField] private Button mainTabButton;
-    [SerializeField] private Button randomTabButton;
-    [SerializeField] private LocText mainTabLabel;
-    [SerializeField] private LocText randomTabLabel;
+    [Header("ÌÉ≠")]
+    [SerializeField] private List<TabEntry> tabs = new();
 
-    [Header("«Ï¥ı")]
+    private AbilityTab _tab = AbilityTab.Main;
+
+    [Header("Ìó§Îçî")]
     [SerializeField] private Image abilityIcon;
     [SerializeField] private TMP_Text abilityName;
     [SerializeField] private TMP_Text abilityFlavor;
 
-    [Header("∏Ò∑œ")]
+    [Header("Î™©Î°ù")]
     [SerializeField] private Transform entryParent;
     [SerializeField] private AbilityEntryView entryPrefab;
+    [SerializeField] private ScrollRect scroll;          // ÏóÜÏúºÎ©¥ ÎπÑÏõåÎëêÏÑ∏Ïöî
 
-    [Header("¥›±‚")]
+    [Header("Îã´Í∏∞")]
     [SerializeField] private Button closeButton;
     [SerializeField] private LocText closeHint;
 
     private readonly List<AbilityEntryView> _entries = new();
+    private AbilityEntryView _expanded;
     private AbilityRuntime _runtime;
     private bool _showingMain = true;
 
@@ -32,73 +45,130 @@ public class AbilityPanel : UIPanel
     {
         base.Awake();
 
-        mainTabButton?.onClick.AddListener(() => { _showingMain = true; Rebuild(); });
-        randomTabButton?.onClick.AddListener(() => { _showingMain = false; Rebuild(); });
-        closeButton?.onClick.AddListener(() => UIManager.Instance?.CloseAll());
+        foreach (var t in tabs)
+        {
+            var captured = t.Tab;                       // ÌÅ¥Î°úÏ†Ä Ï∫°Ï≤ò Ï£ºÏùò
+            t.Button?.onClick.AddListener(() => SelectTab(captured));
+            if (!string.IsNullOrEmpty(t.LabelKey)) t.Label?.SetKey(t.LabelKey);
+        }
 
-        mainTabLabel?.SetKey("ui.ability.tab_main");
-        randomTabLabel?.SetKey("ui.ability.tab_random");
+        closeButton?.onClick.AddListener(() => UIManager.Instance?.CloseAll());
         closeHint?.SetKey("ui.common.close_hint");
     }
 
-    public void Bind(AbilityRuntime runtime) => _runtime = runtime;
+    void OnEnable() => LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+    void OnDisable() => LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+    void OnLocaleChanged(UnityEngine.Localization.Locale _) { if (IsOpen) Rebuild(); }
 
-    protected override void OnOpened()
+    public void Bind(AbilityRuntime runtime)
     {
-        _showingMain = true;
-        Rebuild();
+        _runtime = runtime;
+        if (IsOpen) Rebuild();               // ‚ë°
     }
+
+    protected override void OnOpened() => SelectTab(AbilityTab.Main);
+
+    void SelectTab(AbilityTab tab)
+    {
+        _tab = tab;
+        UpdateTabVisual();
+        Rebuild();
+        if (scroll != null) scroll.verticalNormalizedPosition = 1f;
+    }
+
+    void UpdateTabVisual()
+    {
+        foreach (var t in tabs)
+            if (t.Button != null) t.Button.interactable = t.Tab != _tab;
+    }
+
+    AbilityData GetTabData() => _tab switch
+    {
+        AbilityTab.Main => _runtime.GetMainAbility(),
+        AbilityTab.Sub => _runtime.GetSubAbility(),
+        AbilityTab.Random => _runtime.GetRandomAbility(),
+        _ => null,
+    };
 
     void Rebuild()
     {
-        foreach (var e in _entries) Destroy(e.gameObject);
+        _expanded = null;
+        foreach (var e in _entries)
+        {
+            if (e == null) continue;
+            e.gameObject.SetActive(false);   // ‚ë§ Í∞ôÏùÄ ÌîÑÎ†àÏûÑÏóê Ï¶âÏãú ÏÇ¨ÎùºÏßÄÍ≤å
+            Destroy(e.gameObject);
+        }
         _entries.Clear();
 
         if (_runtime == null) return;
 
-        var data = _showingMain ? _runtime.GetMainAbility() : _runtime.GetRandomAbility();
+        var data = GetTabData();
 
         if (data == null)
         {
-            if (abilityName != null)
-                abilityName.text = LocUtil.Get("ui.ability.none");
+            if (abilityName != null) abilityName.text = LocUtil.Get("ui.ability.none");
             if (abilityFlavor != null) abilityFlavor.text = "";
             if (abilityIcon != null) abilityIcon.enabled = false;
             return;
         }
 
-        // «Ï¥ı
+        // Ìó§Îçî
         if (abilityIcon != null)
         {
             abilityIcon.enabled = data.Icon != null;
             abilityIcon.sprite = data.Icon;
         }
-
-        if (abilityName != null)
-            abilityName.text = LocUtil.GetOr($"ability.{data.Id}.name", data.DisplayName);
-
+        if (abilityName != null)                                          // ‚ë¢
+            abilityName.text = LocUtil.GetOr($"ability.{data.Id}.name",
+                                             LocUtil.Resolve(data.DisplayName));
         if (abilityFlavor != null)
-            abilityFlavor.text = LocUtil.GetOr($"ability.{data.Id}.flavor", data.Flavor);
+            abilityFlavor.text = LocUtil.GetOr($"ability.{data.Id}.flavor",
+                                               LocUtil.Resolve(data.Flavor));
 
-        // ∆–Ω√∫Í
+        // Ìå®ÏãúÎ∏å
         if (data.Passives != null)
             for (int i = 0; i < data.Passives.Length; i++)
                 AddEntry(BuildPassive(data, i));
 
-        // Ω∫≈≥
+        // Ïä§ÌÇ¨
         if (data.Skills != null)
             for (int i = 0; i < data.Skills.Length; i++)
                 AddEntry(BuildSkill(data, i));
+
+        // Í≤åÏù¥ÏßÄ
+        if (data.Charges != null)
+            foreach (var c in data.Charges)
+                AddEntry(new AbilityEntryView.Model
+                {
+                    SlotLabel = LocUtil.Get("ui.ability.charge"),
+                    Title = LocUtil.Resolve(c.DisplayName),
+                    Body = LocUtil.Get("ui.ability.charge_max", c.Max.ToString("0")),
+                });
     }
 
     void AddEntry(AbilityEntryView.Model m)
     {
+        if (entryPrefab == null || entryParent == null) return;
+
         var view = Instantiate(entryPrefab, entryParent);
         view.Bind(m);
+        view.Clicked += OnEntryClicked;
         _entries.Add(view);
     }
 
-    // ¶°¶° ∏µ® ∏∏µÈ±‚ ¶°¶°
+    void OnEntryClicked(AbilityEntryView v)
+    {
+        bool open = !v.IsExpanded;
+
+        if (_expanded != null && _expanded != v)
+            _expanded.SetExpanded(false);      // Í∏∞Ï°¥ Í±∞ Ï†ëÍ∏∞
+
+        v.SetExpanded(open);
+        _expanded = open ? v : null;
+    }
+
+    // ‚îÄ‚îÄ Î™®Îç∏ ÎßåÎì§Í∏∞ ‚îÄ‚îÄ
 
     AbilityEntryView.Model BuildPassive(AbilityData data, int i)
     {
@@ -112,8 +182,9 @@ public class AbilityPanel : UIPanel
         {
             Icon = p.Icon,
             SlotLabel = LocUtil.Get("ui.ability.passive"),
-            Title = LocUtil.GetOr($"{prefix}.name", p.Name),
-            Body = Format(LocUtil.GetOr($"{prefix}.desc", p.Description), args),
+            Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(p.Name)),        // ‚ë£
+            Body = Format(LocUtil.GetOr($"{prefix}.desc",
+                                             LocUtil.Resolve(p.Description)), args),
             Detail = BuildPassiveDetail(data, i, args),
         };
     }
@@ -130,15 +201,16 @@ public class AbilityPanel : UIPanel
         {
             Icon = s.Icon,
             SlotLabel = s.Slot.Label(),
-            Title = LocUtil.GetOr($"{prefix}.name", s.Name),
-            Body = Format(LocUtil.GetOr($"{prefix}.desc", s.Description), args),
+            Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(s.Name)),
+            Body = Format(LocUtil.GetOr($"{prefix}.desc",
+                                             LocUtil.Resolve(s.Description)), args),
             Detail = BuildSkillDetail(data, i, args),
         };
     }
 
     static object[] BuildArgs(AbilityData.EffectDef[] effects, int rank)
     {
-        if (effects == null) return new object[0];
+        if (effects == null) return System.Array.Empty<object>();
 
         var args = new object[effects.Length];
         for (int i = 0; i < effects.Length; i++)
@@ -150,7 +222,14 @@ public class AbilityPanel : UIPanel
     {
         if (string.IsNullOrEmpty(s) || args == null || args.Length == 0) return s;
         try { return string.Format(s, args); }
-        catch { return s; }
+        catch (System.FormatException e)
+        {
+#if UNITY_EDITOR
+            // Î≤àÏó≠Î¨∏Ïùò {N} Ïù¥ Ïù∏Ïûê Í∞úÏàòÎ•º ÎÑòÏúºÎ©¥ Ï°∞Ïö©Ìûà ÏõêÎ¨∏Ïù¥ ÎÇòÏò¥ ‚Äî ÏóêÎîîÌÑ∞ÏóêÏÑ† ÏïåÎ†§Ï§å
+            Debug.LogWarning($"[AbilityPanel] ÏÑúÏãù Ïù∏Ïûê Î∂àÏùºÏπò ({args.Length}Í∞ú): \"{s}\" ‚Äî {e.Message}");
+#endif
+            return s;
+        }
     }
 
     string BuildSkillDetail(AbilityData data, int i, object[] args)
@@ -159,7 +238,6 @@ public class AbilityPanel : UIPanel
         string prefix = $"ability.{data.Id}.skill.{i}";
         var sb = new System.Text.StringBuilder();
 
-        // ƒ⁄Ω∫∆Æ / ƒ≈∏¿”
         if (s.Cooldown > 0f)
             sb.AppendLine(LocUtil.Get("ui.ability.cooldown", s.Cooldown.ToString("0.#")));
 
@@ -169,7 +247,6 @@ public class AbilityPanel : UIPanel
         if (s.UltimateChargeCost > 0)
             sb.AppendLine(LocUtil.Get("ui.ability.ult_cost", s.UltimateChargeCost));
 
-        // ∆«¡§ π¸¿ß
         if (s.NeedsTarget)
         {
             string shape = s.HitMode == WeaponHitMode.ForwardArc
@@ -184,21 +261,18 @@ public class AbilityPanel : UIPanel
             sb.AppendLine(LocUtil.Get("ui.ability.self_target"));
         }
 
-        // π´±‚ ¡∂∞«
         if (s.RequiredWeapon != WeaponRequirement.None)
             sb.AppendLine(LocUtil.Get("ui.ability.weapon_req",
                 LocUtil.Get($"ui.weapon_req.{s.RequiredWeapon}")));
 
-        // ªÛºº º≥∏Ì
-        string info = LocUtil.GetOr($"{prefix}.info", s.DetailedInfo);
+        string info = LocUtil.GetOr($"{prefix}.info", LocUtil.Resolve(s.DetailedInfo));
         if (!string.IsNullOrWhiteSpace(info) && !info.StartsWith("#"))
         {
             sb.AppendLine();
             sb.AppendLine(Format(info, args));
         }
 
-        // ∆¡
-        string tip = LocUtil.GetOr($"{prefix}.tip", s.Tip);
+        string tip = LocUtil.GetOr($"{prefix}.tip", LocUtil.Resolve(s.Tip));
         if (!string.IsNullOrWhiteSpace(tip) && !tip.StartsWith("#"))
         {
             sb.AppendLine();
@@ -211,7 +285,8 @@ public class AbilityPanel : UIPanel
     string BuildPassiveDetail(AbilityData data, int i, object[] args)
     {
         var p = data.Passives[i];
-        string info = LocUtil.GetOr($"ability.{data.Id}.passive.{i}.info", p.DetailedInfo);
+        string info = LocUtil.GetOr($"ability.{data.Id}.passive.{i}.info",
+                                    LocUtil.Resolve(p.DetailedInfo));
 
         if (string.IsNullOrWhiteSpace(info) || info.StartsWith("#")) return null;
         return Format(info, args);

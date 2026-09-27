@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167485640704
-    m_Localized: Collapse
+    m_Localized: Fold
     m_Metadata:
       m_Items: []
   - m_Id: 442167552749568
@@ -35,43 +35,43 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943872
-    m_Localized: In Combat
+    m_Localized: During combat
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943873
-    m_Localized: Click for details
+    m_Localized: Click for more details
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943874
-    m_Localized: Open
+    m_Localized: opening
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943875
-    m_Localized: Common Chest
+    m_Localized: Regular box
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943876
-    m_Localized: Rare Chest
+    m_Localized: Rare box
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943877
-    m_Localized: Epic Chest
+    m_Localized: Hero Chest
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943878
-    m_Localized: Enchant Chest
+    m_Localized: Enchantment Box
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943879
-    m_Localized: Class
+    m_Localized: class
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943880
-    m_Localized: This Life
+    m_Localized: Random ability
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943881
-    m_Localized: None
+    m_Localized: doesn't exist
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943882
@@ -79,87 +79,87 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943883
-    m_Localized: Cooldown {0}s
+    m_Localized: Cooldown {0} seconds
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943884
-    m_Localized: '{0} Souls'
+    m_Localized: Soul {0}
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943885
-    m_Localized: Ultimate Charge {0}
+    m_Localized: Ultimate Gauge {0}
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943886
-    m_Localized: "{0}\xB0 frontal cone"
+    m_Localized: "Anterior {0}\xB0 sector"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943887
-    m_Localized: All around
+    m_Localized: The entire surrounding area
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, range {1}m, up to {2} targets'
+    m_Localized: '{0}, range {1}m, max {2} people'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
-    m_Localized: Self
+    m_Localized: Apply to yourself
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943890
-    m_Localized: 'Requires: {0}'
+    m_Localized: 'Required Weapons: {0}'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943891
-    m_Localized: 'Tip:'
+    m_Localized: 'tip:'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943892
-    m_Localized: Unarmed
+    m_Localized: bare hands
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943893
-    m_Localized: Melee Weapon
+    m_Localized: melee weapons
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943894
-    m_Localized: Bow
+    m_Localized: bow
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943895
-    m_Localized: Staff
+    m_Localized: cane
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943896
-    m_Localized: Gun
+    m_Localized: firearms
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943897
-    m_Localized: Thrown Weapon
+    m_Localized: Throwing weapons
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943898
-    m_Localized: Ranged Weapon
+    m_Localized: Ranged weapons
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943899
-    m_Localized: Any Weapon
+    m_Localized: All weapons
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943900
-    m_Localized: Shop
+    m_Localized: store
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943901
-    m_Localized: '[B] Shop'
+    m_Localized: '[B] Store'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943902
-    m_Localized: "In combat \u2014 Shop unavailable"
+    m_Localized: "During combat \u2014 Shop unavailable"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943903
-    m_Localized: Upgrades
+    m_Localized: enforce
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943904
@@ -171,39 +171,39 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943906
-    m_Localized: Buy
+    m_Localized: purchase
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943907
-    m_Localized: This ability has no special shop
+    m_Localized: This ability does not have a special shop.
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943908
-    m_Localized: Restore {0} HP
+    m_Localized: Recover stamina {0}
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943909
-    m_Localized: Refill {0}% ammo
+    m_Localized: Charge {0}% of ammo
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943910
-    m_Localized: Unavailable
+    m_Localized: Unavailable for purchase
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943911
-    m_Localized: Maxed
+    m_Localized: maximum
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943912
-    m_Localized: Not enough Souls
+    m_Localized: Soul shortage
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943913
-    m_Localized: Guns only
+    m_Localized: Firearms Only
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943914
-    m_Localized: Ammo full
+    m_Localized: Full ammunition
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943915
@@ -211,11 +211,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943916
-    m_Localized: No enchants
+    m_Localized: No enchantment
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943917
-    m_Localized: Enchant Stones
+    m_Localized: Enchant Stone
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943918
@@ -227,7 +227,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943920
-    m_Localized: No weapon
+    m_Localized: No weapons
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943921
@@ -235,23 +235,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943922
-    m_Localized: No weapon
+    m_Localized: No weapons
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943923
-    m_Localized: Cannot enchant
+    m_Localized: Cannot be enchanted
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943924
-    m_Localized: Guns cannot be enchanted
+    m_Localized: Gun enchantment impossible
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943925
-    m_Localized: Max stage
+    m_Localized: Maximum level
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943926
-    m_Localized: Not enough stones
+    m_Localized: Stone shortage
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943927
@@ -259,11 +259,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943928
-    m_Localized: Weapons
+    m_Localized: weapon
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943929
-    m_Localized: Gear
+    m_Localized: equipment
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943930
@@ -271,59 +271,59 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943931
-    m_Localized: '[G] Drop current weapon'
+    m_Localized: '[G] Discard current weapon'
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138176
-    m_Localized: Range {0}m
+    m_Localized: Intersection {0}m
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138177
-    m_Localized: "Arc {0}\xB0"
+    m_Localized: "Decision angle {0}\xB0"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138178
-    m_Localized: '{0} rounds'
+    m_Localized: '{0} rounds of ammunition'
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138179
-    m_Localized: '{0} RPM'
+    m_Localized: '{0} shots per minute'
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138180
-    m_Localized: "Charge {0}\u2013{1}s"
+    m_Localized: Charging {0}~{1} seconds
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138181
-    m_Localized: "Damage {0}\u2013{1}%"
+    m_Localized: Damage {0}~{1}%
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138182
-    m_Localized: Enchants
+    m_Localized: Enchant
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138183
-    m_Localized: No enchants yet
+    m_Localized: No enchantment yet
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138184
-    m_Localized: Cannot be enchanted
+    m_Localized: Weapons that cannot be enchanted
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138185
-    m_Localized: Bow
+    m_Localized: bow
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138186
-    m_Localized: Staff
+    m_Localized: cane
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138187
-    m_Localized: Gun
+    m_Localized: firearms
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138188
-    m_Localized: Thrown
+    m_Localized: Throw
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138189
@@ -331,23 +331,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138190
-    m_Localized: Leader {0}
+    m_Localized: 1st place {0}
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138191
-    m_Localized: '{0} wins!'
+    m_Localized: '{0} Victory!'
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138192
-    m_Localized: New round starting soon
+    m_Localized: A new round starts soon.
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138193
-    m_Localized: Max HP
+    m_Localized: Maximum HP
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138194
-    m_Localized: Attack
+    m_Localized: Attack power
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138195
@@ -355,51 +355,59 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138196
-    m_Localized: Move Speed
+    m_Localized: Movement speed
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138197
-    m_Localized: Attack Speed
+    m_Localized: Attack speed
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138198
-    m_Localized: Crit Chance
+    m_Localized: Critical Hit Chance
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138199
-    m_Localized: Crit Damage
+    m_Localized: Critical damage
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138200
-    m_Localized: Cooldown Reduction
+    m_Localized: Cooldown reduction
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138201
-    m_Localized: Life Steal
+    m_Localized: Bloodsucking
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138202
-    m_Localized: Damage Dealt
+    m_Localized: damage
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138203
-    m_Localized: Damage Taken
+    m_Localized: Damage received
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138204
-    m_Localized: Melee Damage
+    m_Localized: Melee damage
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138205
-    m_Localized: Ranged Damage
+    m_Localized: Ranged damage
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138206
-    m_Localized: Skill Damage
+    m_Localized: Skill damage
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138207
-    m_Localized: Ultimate Damage
+    m_Localized: Ultimate damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2615060709617664
+    m_Localized: Master of the One-Shot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2616682693111808
+    m_Localized: blow
     m_Metadata:
       m_Items: []
   references:
