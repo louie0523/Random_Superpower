@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EmpoweredStrikeAbility
   ChargeSlot: 0
   MaxCharge: 100
-  ChargePerSecondMoving: 3
+  ChargePerDistance: 7.5
+  ChargeOnDistance: 3
   ChargePerHit: 5
   StrikeCost: 100
   StrikeDamageMul: 4

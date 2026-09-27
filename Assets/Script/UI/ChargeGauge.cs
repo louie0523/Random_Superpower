@@ -30,6 +30,8 @@ public class ChargeGauge : MonoBehaviour
         var main = _ar != null ? _ar.GetMainAbility() : null;
         bool has = main != null && main.Charges != null && chargeIndex < main.Charges.Length;
 
+        if (Time.frameCount % 120 == 0) DumpChain();
+
         if (root != null && root.activeSelf != has) root.SetActive(has);
         if (!has) return;
 
@@ -60,5 +62,24 @@ public class ChargeGauge : MonoBehaviour
         }
 
         if (valueText != null) valueText.text = $"{Mathf.FloorToInt(ratio * 100f)}%";
+    }
+
+
+
+    void DumpChain()
+    {
+        var main = _ar != null ? _ar.GetMainAbility() : null;
+        var esa = _ar != null ? _ar.FindAbility<EmpoweredStrikeAbility>() : null;
+
+        string slot = "-";
+        if (main?.Charges != null && chargeIndex < main.Charges.Length)
+            slot = main.Charges[chargeIndex].Slot.ToString();
+
+        Debug.LogWarning(
+            $"[CG] ① ar={_ar != null}" +
+            $" | ② main={(main == null ? "null" : main.name)}" +
+            $" | ③ charges={(main?.Charges == null ? "null" : main.Charges.Length.ToString())} idx={chargeIndex}" +
+            $" | ④ infoSlot={slot} esaSlot={(esa == null ? "-" : esa.ChargeSlot.ToString())}" +
+            $" | ⑤ ratio={(esa == null ? -1f : esa.ChargeRatio):F3} ready={(esa != null && esa.IsReady)}");
     }
 }
