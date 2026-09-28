@@ -1301,7 +1301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98d5ef63a7443304f893bff4a6878739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoundManager
-  targetSoul: 1000
+  targetSoul: 9999
   resultDuration: 8
   _GameOver:
     RawValue: 0

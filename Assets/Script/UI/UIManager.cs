@@ -24,6 +24,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private UIPanel shopPanel;
     [SerializeField] private UIPanel inventoryPanel;
 
+    [Header("공용 창")]
+    [SerializeField] private DetailWindow detailWindow;
+
+    public DetailWindow Detail => detailWindow;
+
     [Header("툴팁")]
     [SerializeField] private TooltipView tooltip;
     public TooltipView Tooltip => tooltip;
@@ -65,6 +70,17 @@ public class UIManager : MonoBehaviour
         if (Instance == this) Instance = null;
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (detailWindow != null && detailWindow.IsOpen)
+                detailWindow.Hide();
+            else if (AnyPanelOpen)
+                CloseAll();
+        }
+    }
+
     // ══════════════════ 패널 ══════════════════
 
     public void ToggleAbility() => TogglePanel(abilityPanel);
@@ -84,8 +100,8 @@ public class UIManager : MonoBehaviour
 
     public void CloseAll()
     {
-        CloseAllInternal();
-        UpdateCursor();
+        detailWindow?.Hide();
+        foreach (var p in _panels) p.Close();
     }
 
     void CloseAllInternal()
