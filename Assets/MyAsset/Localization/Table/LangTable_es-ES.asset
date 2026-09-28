@@ -187,7 +187,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943910
-    m_Localized: No disponible para la compra
+    m_Localized: No disponible para la venta
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943911
@@ -402,12 +402,83 @@ MonoBehaviour:
     m_Localized: "Da\xF1o m\xE1ximo"
     m_Metadata:
       m_Items: []
-  - m_Id: 2615060709617664
+  - m_Id: 3001745419120640
+    m_Localized: Habilidad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423808
+    m_Localized: Especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Localized: "M\xE1ximo {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423810
+    m_Localized: Q / E / R / Ultimate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423811
     m_Localized: "Maestro del tiro \xFAnico"
     m_Metadata:
       m_Items: []
-  - m_Id: 2616682693111808
+  - m_Id: 3001745490423812
+    m_Localized: "Eres un maestro del Golpe \xDAnico.\n\nComo clase especializada
+      en armas cuerpo a cuerpo, arrasas con los enemigos usando la poderosa habilidad
+      de carga \xABGolpe \xDAnico\xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699647782912
     m_Localized: explotar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697472
+    m_Localized: explotar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697473
+    m_Localized: "Al realizar un ataque b\xE1sico con un arma cuerpo a cuerpo, cargas
+      hacia adelante mientras atacas r\xE1pidamente.\n\nEl da\xF1o de los ataques
+      b\xE1sicos con armas cuerpo a cuerpo aumenta un 400 %.\n\nDebes llenar la barra
+      de \"Disparo \xFAnico\" despu\xE9s de usar un ataque para poder atacar de nuevo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697474
+    m_Localized: "La barra de 'One-Shot' se recarga a una tasa del 3% por segundo
+      mientras te mueves y del 5% al \u200B\u200Bgolpear a un enemigo con un ataque
+      b\xE1sico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697475
+    m_Localized: "pies r\xE1pidos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891776
+    m_Localized: La velocidad de movimiento aumenta en 1.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891778
+    m_Localized: Recupera el aliento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891779
+    m_Localized: "Llena instant\xE1neamente el medidor de un solo golpe en un 50%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891780
+    m_Localized: "Maestro del tiro \xFAnico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891781
+    m_Localized: "Al usarlo, entras en el estado \"Maestro del Golpe \xDAnico\" durante
+      8 segundos.\n\nLa cantidad de la barra de \"Golpe \xDAnico\" que se obtiene
+      al moverse y al realizar ataques b\xE1sicos aumenta al 300%.\n\nMientras est\xE1s
+      en el estado \"Maestro del Golpe \xDAnico\", golpear con \"Golpe \xDAnico\"
+      llena instant\xE1neamente la barra de \"Golpe \xDAnico\" al 100%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891782
+    m_Localized: "La velocidad de movimiento aumenta en 2 durante la duraci\xF3n."
     m_Metadata:
       m_Items: []
   references:

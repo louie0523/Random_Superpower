@@ -402,12 +402,86 @@ MonoBehaviour:
     m_Localized: "D\xE9g\xE2ts ultimes"
     m_Metadata:
       m_Items: []
-  - m_Id: 2615060709617664
+  - m_Id: 3001745419120640
+    m_Localized: "Comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423808
+    m_Localized: "Sp\xE9cial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Localized: Max {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423810
+    m_Localized: Q / E / R / Ultime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423811
     m_Localized: "Ma\xEEtre du one-shot"
     m_Metadata:
       m_Items: []
-  - m_Id: 2616682693111808
+  - m_Id: 3001745490423812
+    m_Localized: "Vous ma\xEEtrisez l'attaque unique.\n\nEn tant que classe sp\xE9cialis\xE9e
+      dans les armes de m\xEAl\xE9e, vous balayez vos ennemis gr\xE2ce \xE0 votre
+      puissante comp\xE9tence de charge, \xAB\_Attaque unique\_\xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699647782912
     m_Localized: souffler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697472
+    m_Localized: souffler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697473
+    m_Localized: "Lors d'une attaque de base avec une arme de m\xEAl\xE9e, vous chargez
+      en avant tout en encha\xEEnant les coups rapides.\n\nLes d\xE9g\xE2ts des attaques
+      de base avec les armes de m\xEAl\xE9e sont augment\xE9s de 400 %.\n\nVous devez
+      remplir la jauge \xAB\_Coup fatal\_\xBB apr\xE8s chaque attaque pour pouvoir
+      attaquer \xE0 nouveau."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697474
+    m_Localized: "La jauge \xAB One-Shot \xBB se remplit \xE0 un rythme de 3 % par
+      seconde en mouvement et de 5 % lorsqu'on touche un ennemi avec une attaque
+      de base."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697475
+    m_Localized: pieds rapides
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891776
+    m_Localized: "La vitesse de d\xE9placement augmente de 1."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891778
+    m_Localized: Reprenez votre souffle.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891779
+    m_Localized: "Remplit instantan\xE9ment la jauge One-Hit de 50 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891780
+    m_Localized: "Ma\xEEtre du one-shot"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891781
+    m_Localized: "Lorsqu'elle est utilis\xE9e, cette capacit\xE9 vous conf\xE8re
+      l'\xE9tat \xAB\_Ma\xEEtre du Coup Unique\_\xBB pendant 8 secondes.\n\nLe bonus
+      de jauge \xAB\_Coup Unique\_\xBB obtenu gr\xE2ce aux d\xE9placements et aux
+      attaques de base est augment\xE9 \xE0 300\_%.\n\nEn \xE9tat \xAB\_Ma\xEEtre
+      du Coup Unique\_\xBB, porter un coup fatal remplit instantan\xE9ment la jauge
+      \xAB\_Coup Unique\_\xBB \xE0 100\_%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891782
+    m_Localized: "La vitesse de d\xE9placement augmente de 2 pendant toute la dur\xE9e
+      de l'effet."
     m_Metadata:
       m_Items: []
   references:

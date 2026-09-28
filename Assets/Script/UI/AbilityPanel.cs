@@ -101,7 +101,7 @@ public class AbilityPanel : UIPanel
         AddFrom(_runtime.GetSubAbility(), subAccent, specialColumnBySource);
         AddFrom(_runtime.GetRandomAbility(), randomAccent, specialColumnBySource);
 
-        AddCharges(main);
+        //AddCharges(main);
         UpdateEmptyStates();
     }
 
@@ -211,7 +211,8 @@ public class AbilityPanel : UIPanel
             Icon = d.Icon,
             Title = d.Title,
             Subtitle = d.SlotLabel,
-            Body = d.Detail,
+            Description = d.Body,      // 카드에 있던 기본 설명
+            Body = d.Detail,    // 쿨타임·사거리·팁 등 추가 정보
         });
     }
 

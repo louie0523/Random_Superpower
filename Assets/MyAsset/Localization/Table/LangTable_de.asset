@@ -402,12 +402,84 @@ MonoBehaviour:
     m_Localized: Ultimativer Schaden
     m_Metadata:
       m_Items: []
-  - m_Id: 2615060709617664
+  - m_Id: 3001745419120640
+    m_Localized: "F\xE4higkeit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423808
+    m_Localized: Besonders
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Localized: Max {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423810
+    m_Localized: Q / E / R / Ultimativ
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423811
     m_Localized: Meister des One-Shots
     m_Metadata:
       m_Items: []
-  - m_Id: 2616682693111808
+  - m_Id: 3001745490423812
+    m_Localized: "Du bist ein Meister des Einzelschlags.\n\nAls Nahkampfwaffen-Klasse
+      fegst du mit der m\xE4chtigen Spezialf\xE4higkeit \u201EEinzelschlag\u201C
+      durch deine Feinde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699647782912
     m_Localized: Schlag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697472
+    m_Localized: Schlag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697473
+    m_Localized: "Bei einem Standardangriff mit einer Nahkampfwaffe st\xFCrmst du
+      vorw\xE4rts und f\xFChrst dabei schnelle Hiebe aus.\n\nDer Schaden von Standardangriffen
+      mit Nahkampfwaffen erh\xF6ht sich um 400 %.\n\nNach einem Angriff musst du
+      die \u201EEin-Schuss\u201C-Anzeige auff\xFCllen, um erneut angreifen zu k\xF6nnen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697474
+    m_Localized: "Die \u201EOne-Shot\u201C-Anzeige f\xFCllt sich mit 3 % pro Sekunde
+      beim Bewegen und mit 5 %, wenn ein Gegner mit einem Standardangriff getroffen
+      wird."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697475
+    m_Localized: "schnelle F\xFC\xDFe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891776
+    m_Localized: "Die Bewegungsgeschwindigkeit erh\xF6ht sich um 1."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891778
+    m_Localized: Atmen Sie tief durch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891779
+    m_Localized: "F\xFCllt die One-Hit-Anzeige sofort um 50 % auf."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891780
+    m_Localized: Meister des One-Shots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891781
+    m_Localized: "Bei Aktivierung dieser F\xE4higkeit befindest du dich 8 Sekunden
+      lang im Zustand \u201EMeister des Sofort-Kills\u201C.\n\nDie durch Bewegung
+      und Treffer mit Standardangriffen gewonnene Sofort-Kill-Anzeige wird um 300
+      % erh\xF6ht.\n\nIm Zustand \u201EMeister des Sofort-Kills\u201C f\xFCllt jeder
+      Treffer mit Sofort-Kill die Sofort-Kill-Anzeige sofort auf 100 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891782
+    m_Localized: "Die Bewegungsgeschwindigkeit erh\xF6ht sich w\xE4hrend der Dauer
+      um 2."
     m_Metadata:
       m_Items: []
   references:

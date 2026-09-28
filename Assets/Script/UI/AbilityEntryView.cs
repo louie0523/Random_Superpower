@@ -43,7 +43,8 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
     public void Bind(Model m)
     {
         Data = m;
-        HasDetail = !string.IsNullOrWhiteSpace(m.Detail);
+        HasDetail = !string.IsNullOrWhiteSpace(m.Detail)
+                 || !string.IsNullOrWhiteSpace(m.Body);
 
         if (icon != null)
         {

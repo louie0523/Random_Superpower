@@ -399,12 +399,76 @@ MonoBehaviour:
     m_Key: stat.UltimateDamage
     m_Metadata:
       m_Items: []
-  - m_Id: 2615060709617664
-    m_Key: ability.EmpoweredStrikeAbility.Name
+  - m_Id: 3001745419120640
+    m_Key: ui.ability.skill
     m_Metadata:
       m_Items: []
-  - m_Id: 2616682693111808
-    m_Key: ability.EmpoweredStrikeAbility.Charge
+  - m_Id: 3001745490423808
+    m_Key: ui.ability.special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Key: ui.ability.charge_max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423810
+    m_Key: ui.skill.slot.0 ~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423811
+    m_Key: ability.6001.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423812
+    m_Key: ability.6001.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699647782912
+    m_Key: ability.6001.charge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697472
+    m_Key: ability.6001.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697473
+    m_Key: ability.6001.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697474
+    m_Key: ability.6001.passive.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697475
+    m_Key: ability.6001.passive.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891776
+    m_Key: ability.6001.passive.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891777
+    m_Key: ability.6001.passive.1.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891778
+    m_Key: ability.6001.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891779
+    m_Key: ability.6001.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891780
+    m_Key: ability.6001.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891781
+    m_Key: ability.6001.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891782
+    m_Key: ability.6001.skill.1.info
     m_Metadata:
       m_Items: []
   m_Metadata:

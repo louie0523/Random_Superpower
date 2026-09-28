@@ -9,6 +9,7 @@ public class DetailWindow : MonoBehaviour
         public Sprite Icon;
         public string Title;
         public string Subtitle;
+        public string Description;
         public string Body;
     }
 
@@ -20,6 +21,8 @@ public class DetailWindow : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text subtitleText;
+    [SerializeField] private TMP_Text descText;
+    [SerializeField] private GameObject divider;
     [SerializeField] private TMP_Text bodyText;
 
     public bool IsOpen { get; private set; }
@@ -42,7 +45,13 @@ public class DetailWindow : MonoBehaviour
 
         SetText(titleText, c.Title);
         SetText(subtitleText, c.Subtitle);
+        SetText(descText, c.Description);
         SetText(bodyText, c.Body);
+
+        // 둘 다 있을 때만 구분선
+        if (divider != null)
+            divider.SetActive(!string.IsNullOrWhiteSpace(c.Description)
+                           && !string.IsNullOrWhiteSpace(c.Body));
 
         Apply(true);
     }

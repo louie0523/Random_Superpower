@@ -402,12 +402,97 @@ MonoBehaviour:
     m_Localized: Kerusakan maksimum
     m_Metadata:
       m_Items: []
-  - m_Id: 2615060709617664
+  - m_Id: 3001745419120640
+    m_Localized: Keahlian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423808
+    m_Localized: Spesial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Localized: Maksimum {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423810
+    m_Localized: Q / E / R / Utama
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423811
     m_Localized: Ahli Cerita Satu Kali Tayang
     m_Metadata:
       m_Items: []
-  - m_Id: 2616682693111808
+  - m_Id: 3001745490423812
+    m_Localized: 'Anda adalah ahli dalam jurus One Strike.
+
+
+      Sebagai kelas
+      berbasis senjata jarak dekat, Anda menghabisi musuh menggunakan jurus andalan
+      yang kuat, ''One Strike''.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699647782912
     m_Localized: meniup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697472
+    m_Localized: meniup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697473
+    m_Localized: 'Saat melakukan serangan dasar dengan senjata jarak dekat, Anda
+      maju sambil menebas dengan cepat.
+
+
+      Kerusakan serangan dasar untuk senjata
+      jarak dekat menjadi 400%.
+
+
+      Anda harus mengisi pengukur ''One-Shot''
+      setelah menggunakan serangan untuk menyerang lagi.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697474
+    m_Localized: Pengukur 'One-Shot' diperoleh dengan kecepatan 3% per detik saat
+      bergerak dan 5% saat mengenai musuh dengan serangan dasar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697475
+    m_Localized: kaki cepat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891776
+    m_Localized: Kecepatan gerakan meningkat sebesar 1.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891778
+    m_Localized: Tarik napas sejenak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891779
+    m_Localized: Mengisi pengukur One-Hit secara instan sebesar 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891780
+    m_Localized: Ahli Cerita Satu Kali Tayang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891781
+    m_Localized: 'Saat digunakan, Anda memasuki kondisi ''Master of One-Hit'' selama
+      8 detik.
+
+
+      Jumlah pengisian gauge ''One-Hit'' dari gerakan dan serangan
+      dasar meningkat menjadi 300%.
+
+
+      Saat berada dalam kondisi ''Master of
+      One-Hit'', serangan ''One-Hit'' akan langsung mengisi gauge ''One-Hit'' hingga
+      100%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891782
+    m_Localized: Kecepatan gerakan meningkat sebesar 2 selama durasi tersebut.
     m_Metadata:
       m_Items: []
   references:

@@ -402,12 +402,95 @@ MonoBehaviour:
     m_Localized: Ultimate damage
     m_Metadata:
       m_Items: []
-  - m_Id: 2615060709617664
+  - m_Id: 3001745419120640
+    m_Localized: Skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423808
+    m_Localized: Special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Localized: Max {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423810
+    m_Localized: Q / E / R / Ultimate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423811
     m_Localized: Master of the One-Shot
     m_Metadata:
       m_Items: []
-  - m_Id: 2616682693111808
+  - m_Id: 3001745490423812
+    m_Localized: 'You are a master of the One Strike.
+
+
+      As a melee weapon-based
+      class, you sweep through enemies using the powerful charge skill, ''One Strike''.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699647782912
     m_Localized: blow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697472
+    m_Localized: blow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697473
+    m_Localized: 'When performing a basic attack with a melee weapon, you charge
+      forward while rapidly slashing.
+
+
+      Basic attack damage for melee weapons
+      becomes 400%.
+
+
+      You must fill the ''One-Shot'' gauge after using an attack
+      to attack again.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697474
+    m_Localized: '''One-Shot'' gauge is gained at a rate of 3% per second while moving
+      and 5% when hitting an enemy with a basic attack.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697475
+    m_Localized: quick feet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891776
+    m_Localized: Movement speed increases by 1.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891778
+    m_Localized: Catch your breath
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891779
+    m_Localized: Instantly fills the One-Hit Gauge by 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891780
+    m_Localized: Master of the One-Shot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891781
+    m_Localized: 'When used, you enter the ''Master of One-Hit'' state for 8 seconds.
+
+
+      The
+      amount of ''One-Hit'' gauge gained from movement and basic attack hits is increased
+      to 300%.
+
+
+      While in the ''Master of One-Hit'' state, hitting with ''One-Hit''
+      instantly fills the ''One-Hit'' gauge to 100%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891782
+    m_Localized: Movement speed increases by 2 during the duration.
     m_Metadata:
       m_Items: []
   references:

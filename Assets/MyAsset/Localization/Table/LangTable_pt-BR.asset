@@ -402,12 +402,82 @@ MonoBehaviour:
     m_Localized: "Dano m\xE1ximo"
     m_Metadata:
       m_Items: []
-  - m_Id: 2615060709617664
+  - m_Id: 3001745419120640
+    m_Localized: Habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423808
+    m_Localized: Especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Localized: "M\xE1ximo {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423810
+    m_Localized: Q / E / R / Ultimate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423811
     m_Localized: Mestre do One-Shot
     m_Metadata:
       m_Items: []
-  - m_Id: 2616682693111808
+  - m_Id: 3001745490423812
+    m_Localized: "Voc\xEA \xE9 um mestre do Golpe \xDAnico.\n\nComo uma classe focada
+      em armas de combate corpo a corpo, voc\xEA elimina inimigos usando a poderosa
+      habilidade de investida, \"Golpe \xDAnico\"."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699647782912
     m_Localized: soprar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697472
+    m_Localized: soprar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697473
+    m_Localized: "Ao executar um ataque b\xE1sico com uma arma corpo a corpo, voc\xEA
+      avan\xE7a enquanto desfere golpes r\xE1pidos.\n\nO dano do ataque b\xE1sico
+      com armas corpo a corpo passa a ser de 400%.\n\nVoc\xEA precisa preencher a
+      barra de \"Um Golpe\" ap\xF3s usar um ataque para atacar novamente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697474
+    m_Localized: "A barra de \"Um Tiro\" \xE9 preenchida a uma taxa de 3% por segundo
+      enquanto o jogador se move e 5% ao atingir um inimigo com um ataque b\xE1sico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699710697475
+    m_Localized: "p\xE9s r\xE1pidos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891776
+    m_Localized: A velocidade de movimento aumenta em 1.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891778
+    m_Localized: "Recupere o f\xF4lego."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891779
+    m_Localized: Preenche instantaneamente a barra de "Um Golpe" em 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891780
+    m_Localized: Mestre do One-Shot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891781
+    m_Localized: "Ao usar esta habilidade, voc\xEA entra no estado \"Mestre do Golpe
+      \xDAnico\" por 8 segundos.\n\nA quantidade de energia da barra \"Golpe \xDAnico\"
+      obtida com movimentos e ataques b\xE1sicos aumenta para 300%.\n\nEnquanto estiver
+      no estado \"Mestre do Golpe \xDAnico\", acertar um golpe com \"Golpe \xDAnico\"
+      preenche instantaneamente a barra \"Golpe \xDAnico\" at\xE9 100%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3004699714891782
+    m_Localized: "A velocidade de movimento aumenta em 2 durante esse per\xEDodo."
     m_Metadata:
       m_Items: []
   references:
