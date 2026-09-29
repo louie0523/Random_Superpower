@@ -1,4 +1,5 @@
-using UnityEngine;
+ï»¿using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class TooltipView : MonoBehaviour
@@ -10,31 +11,56 @@ public class TooltipView : MonoBehaviour
     [SerializeField] private GameObject detailSection;
     [SerializeField] private TMP_Text hintText;
     [SerializeField] private Vector2 offset = new(16f, -16f);
+    [SerializeField] private float edgePadding = 8f;
 
+    private RectTransform _canvasRect;
+    private Camera _uiCam;
     private bool _showDetail;
     private string _detailCache;
 
-    void Awake() => Hide();
+    void Awake()
+    {
+        var canvas = GetComponentInParent<Canvas>();
+        _canvasRect = canvas.transform as RectTransform;
+        _uiCam = canvas.renderMode == RenderMode.ScreenSpaceOverlay
+               ? null : canvas.worldCamera;
+
+        Hide();
+    }
 
     void Update()
     {
         if (!root.gameObject.activeSelf) return;
 
-        // Ä¿¼­ µû¶ó°¨ (È­¸é ¹ÛÀ¸·Î ¾È ³ª°¡°Ô)
-        Vector2 pos = (Vector2)Input.mousePosition + offset;
-        var size = root.sizeDelta;
+        Follow();
 
-        pos.x = Mathf.Min(pos.x, Screen.width - size.x - 8f);
-        pos.y = Mathf.Max(pos.y, size.y + 8f);
-
-        root.position = pos;
-
-        // ¼¼ºÎ Åä±Û
         if (!string.IsNullOrEmpty(_detailCache) && Input.GetMouseButtonDown(0))
         {
             _showDetail = !_showDetail;
             if (detailSection != null) detailSection.SetActive(_showDetail);
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(root);   // í¬ê¸° ë°”ë€Œì—ˆìœ¼ë‹ˆ ê°±ì‹ 
+            Follow();
         }
+    }
+
+    void Follow()
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            _canvasRect, Input.mousePosition, _uiCam, out var local);
+
+        local += offset;
+
+        Vector2 canvasSize = _canvasRect.rect.size;
+        Vector2 boxSize = root.rect.size;
+
+        float maxX = canvasSize.x * 0.5f - boxSize.x - edgePadding;
+        float minY = -canvasSize.y * 0.5f + boxSize.y + edgePadding;
+
+        if (local.x > maxX) local.x = maxX;
+        if (local.y < minY) local.y = minY;
+
+        root.anchoredPosition = local;
     }
 
     public void Show(string title, string body, string detail = null)
@@ -56,6 +82,9 @@ public class TooltipView : MonoBehaviour
         }
 
         root.gameObject.SetActive(true);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(root);   // í¬ê¸° í™•ì • í›„ ë°°ì¹˜
+        Follow();
     }
 
     public void Hide()

@@ -100,6 +100,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseAll()
     {
+        tooltip?.Hide();
         detailWindow?.Hide();
         foreach (var p in _panels) p.Close();
     }
