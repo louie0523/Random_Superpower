@@ -95,7 +95,8 @@ public class InventorySlotView : MonoBehaviour
     {
         var d = _model.Data;
 
-        string title = LocUtil.GetOr($"weapon.{d.Id}.name", d.DisplayName);
+        string title = LocUtil.GetOr($"item.{d.Id}.name", d.DisplayName);
+
         string body = BuildBody(d);
         string detail = BuildDetail(d);
 
@@ -153,7 +154,7 @@ public class InventorySlotView : MonoBehaviour
         var sb = new System.Text.StringBuilder();
 
         // Ό³Έν
-        string desc = LocUtil.GetOr($"weapon.{d.Id}.desc", d.Description);
+        string desc = LocUtil.GetOr($"item.{d.Id}.desc", d.Description);
         if (!string.IsNullOrWhiteSpace(desc) && !desc.StartsWith("#"))
         {
             sb.AppendLine(desc);
@@ -182,8 +183,10 @@ public class InventorySlotView : MonoBehaviour
                     if (e.Stats != null)
                         foreach (var s in e.Stats)
                         {
+                            string sign = s.Value >= 0 ? "+" : "";
                             string val = s.Type == ModType.Percent
-                                ? $"+{s.Value:0.#}%" : $"+{s.Value:0.##}";
+                                ? $"{sign}{s.Value:0.#}%"
+                                : $"{sign}{s.Value:0.##}";
                             sb.Append($"  {LocUtil.Get($"stat.{s.Stat}")} {val}");
                         }
 

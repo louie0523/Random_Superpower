@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
     [Header("패널 (없으면 비워둬도 됨)")]
     [SerializeField] private AbilityPanel abilityPanel;
     [SerializeField] private UIPanel shopPanel;
-    [SerializeField] private UIPanel inventoryPanel;
+    [SerializeField] private InventoryPanel inventoryPanel;
 
     [Header("공용 창")]
     [SerializeField] private DetailWindow detailWindow;
@@ -33,6 +33,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TooltipView tooltip;
     public TooltipView Tooltip => tooltip;
 
+    [Header("단축키")]
+    [SerializeField] private KeyCode abilityKey = KeyCode.F1;
+    [SerializeField] private KeyCode inventoryKey = KeyCode.I;
+    [SerializeField] private KeyCode shopKey = KeyCode.B;
+
+    private PlayerShop _shop;
 
     private readonly List<UIPanel> _panels = new();
     private Camera _currentBase;
@@ -72,12 +78,16 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(abilityKey)) ToggleAbility();
+        if (Input.GetKeyDown(inventoryKey)) ToggleInventory();
+
+        if (Input.GetKeyDown(shopKey) && (_shop == null || _shop.CanOpenShop))
+            ToggleShop();
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (detailWindow != null && detailWindow.IsOpen)
-                detailWindow.Hide();
-            else if (AnyPanelOpen)
-                CloseAll();
+            if (detailWindow != null && detailWindow.IsOpen) detailWindow.Hide();
+            else if (AnyPanelOpen) CloseAll();
         }
     }
 
@@ -158,6 +168,14 @@ public class UIManager : MonoBehaviour
         skillBar?.Bind(ability, hp);
         chargeGauge?.Bind(ability);
         abilityPanel?.Bind(ability);
+
+
+        inventoryPanel?.Bind(
+       player.GetComponent<PlayerEquipment>(),
+       player.GetComponent<PlayerEnchant>());
+
+        _shop = player.GetComponent<PlayerShop>();
+
 
     }
 

@@ -129,9 +129,9 @@ public class WeaponAnimator : MonoBehaviour
             armRig.SetDrawAmount(_drawAmount, dt);
             var idle = armRig.GetEffectiveIdle();
 
-            Debug.Log($"[Swing] draw={_drawAmount:F2} " +
-          $"left={idle.LeftPos} right={idle.RightPos} " +
-          $"blendTimer={_blendTimer:F2}");
+          //  Debug.Log($"[Swing] draw={_drawAmount:F2} " +
+          //$"left={idle.LeftPos} right={idle.RightPos} " +
+          //$"blendTimer={_blendTimer:F2}");
 
             if (_blendTimer > 0f && _blendFrom != null)
             {

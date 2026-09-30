@@ -43,8 +43,8 @@ public class PlayerInteract : NetworkBehaviour
 
         _target = chest;
 
-        Debug.Log($"[Interact] target={(_target == null ? "NULL" : _target.name)} " +
-              $"holding={_holding} progress={_target?.Progress:F2}");
+        //Debug.Log($"[Interact] target={(_target == null ? "NULL" : _target.name)} " +
+        //      $"holding={_holding} progress={_target?.Progress:F2}");
 
         if (_target == null) return;
 

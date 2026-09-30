@@ -153,45 +153,28 @@ public class PlayerMovement : NetworkBehaviour
 
     void Update()
     {
-        if (HasStateAuthority)
+        if (!HasInputAuthority) { weaponAnim?.TickRemote(); return; }
+
+        var ui = UIManager.Instance;
+        bool uiOpen = ui != null && ui.AnyPanelOpen;
+
+        if (!uiOpen)
         {
-            var ui = UIManager.Instance;
-
-            if (Input.GetKeyDown(KeyCode.F1)) ui?.ToggleAbility();
-            if (Input.GetKeyDown(KeyCode.I)) ui?.ToggleInventory();
-
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                // 상점은 전투 중 제한
-                if (_shop != null && _shop.CanOpenShop) ui?.ToggleShop();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape) && ui != null && ui.AnyPanelOpen)
-                ui.CloseAll();
-
             if (Input.GetKeyDown(KeyCode.G)) _equip?.DropActiveWeapon();
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) _equip?.SwitchWeapon(0);
             if (Input.GetKeyDown(KeyCode.Alpha2)) _equip?.SwitchWeapon(1);
             if (Input.GetKeyDown(KeyCode.Alpha3)) _equip?.SwitchWeapon(2);
 
-
-
             float wheel = Input.GetAxisRaw("Mouse ScrollWheel");
             if (wheel > 0.01f) _equip?.CycleWeapon(1);
             else if (wheel < -0.01f) _equip?.CycleWeapon(-1);
-
-            _smoothMoveDir = Vector3.Lerp(_smoothMoveDir, _localMoveDir,
-                                          Time.deltaTime * 8f);
-
-            fpsCamera.Tick(_smoothMoveDir, _currentSpeed, _speed01);
-            weaponAnim?.Tick(_smoothMoveDir, _speed01);
-
         }
-        else
-        {
-            weaponAnim?.TickRemote();
-        }
+
+        _smoothMoveDir = Vector3.Lerp(_smoothMoveDir, _localMoveDir, Time.deltaTime * 8f);
+
+        fpsCamera.Tick(_smoothMoveDir, _currentSpeed, _speed01);
+        weaponAnim?.Tick(_smoothMoveDir, _speed01);
     }
 
 

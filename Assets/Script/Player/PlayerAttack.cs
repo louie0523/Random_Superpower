@@ -773,7 +773,7 @@ public class PlayerAttack : NetworkBehaviour
             if (col.gameObject == gameObject) continue;
 
             int id = col.gameObject.GetInstanceID();
-            if (_hitThisAttack.Contains(id)) continue;      // ★ 중복 방지
+            if (_hitThisAttack.Contains(id)) continue;
 
             if (!col.TryGetComponent<PlayerHealth>(out var target)) continue;
             if (target.IsDead) continue;

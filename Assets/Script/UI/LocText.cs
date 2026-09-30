@@ -52,14 +52,8 @@ public class LocText : MonoBehaviour
         if (_text == null) _text = GetComponent<TMP_Text>();
         if (string.IsNullOrEmpty(entryKey)) return;
 
-        string s = LocUtil.Get(tableName, entryKey);
-
-        if (_args != null)
-        {
-            try { s = string.Format(s, _args); }
-            catch { }
-        }
-
-        _text.text = s;
+        _text.text = (_args != null && _args.Length > 0)
+                   ? LocUtil.Get(entryKey, _args)
+                   : LocUtil.Get(entryKey);
     }
 }

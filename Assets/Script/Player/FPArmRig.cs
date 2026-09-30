@@ -170,7 +170,7 @@ public class FPArmRig : MonoBehaviour
             _handBlend = _drawAmount > 0f ? 1f : 0f;
         }
 
-        Debug.Log($"[Charge] amount={_drawAmount:F2} visual={(_chargeVisual == null ? "NULL" : "OK")}");
+        //Debug.Log($"[Charge] amount={_drawAmount:F2} visual={(_chargeVisual == null ? "NULL" : "OK")}");
 
         // ★ 차징 연출 — 시위 유무와 무관
         if (_chargeVisual != null) _chargeVisual.SetAmount(_drawAmount);

@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
