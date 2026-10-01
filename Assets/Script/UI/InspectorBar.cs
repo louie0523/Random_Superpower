@@ -1,23 +1,23 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class InspectorBar : MonoBehaviour
 {
-    [Header("Á¤º¸")]
+    [Header("ì •ë³´")]
     [SerializeField] private TMP_Text nicknameText;
     [SerializeField] private Image portrait;
 
-    [Header("Ã¼·Â")]
+    [Header("ì²´ë ¥")]
     [SerializeField] private Image hpFill;
     [SerializeField] private TMP_Text hpText;
     [SerializeField] private Gradient hpGradient;
 
-    [Header("¼Ò¿ï")]
+    [Header("ì†Œìš¸")]
     [SerializeField] private TMP_Text soulText;
     [SerializeField] private LocText soulLabel;
 
-    [Header("»óÅÂ")]
+    [Header("ìƒíƒœ")]
     [SerializeField] private GameObject combatIcon;
     [SerializeField] private LocText combatLabel;
 
@@ -34,7 +34,7 @@ public class InspectorBar : MonoBehaviour
     {
         _hp = hp;
         _stats = stats;
-        if (nicknameText != null) nicknameText.text = nickname;   // ´Ğ³×ÀÓÀº ¹ø¿ª ¾È ÇÔ
+        if (nicknameText != null) nicknameText.text = nickname;   // ë‹‰ë„¤ì„ì€ ë²ˆì—­ ì•ˆ í•¨
     }
 
     void Update()

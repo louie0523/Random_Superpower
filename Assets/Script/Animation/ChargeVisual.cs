@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-/// <summary>Â÷Â¡ Á¤µµ¿¡ µû¶ó Å©±â/¹à±â°¡ º¯ÇÏ´Â ¿¬Ãâ. ¹«±â ¸ğµ¨¿¡ ºÙÀÓ.</summary>
+/// <summary>ì°¨ì§• ì •ë„ì— ë”°ë¼ í¬ê¸°/ë°ê¸°ê°€ ë³€í•˜ëŠ” ì—°ì¶œ. ë¬´ê¸° ëª¨ë¸ì— ë¶™ì„.</summary>
 public class ChargeVisual : MonoBehaviour
 {
     [Header("Target")]
-    [Tooltip("Ä¿Áö°í ¹à¾ÆÁú ¿ÀºêÁ§Æ®")]
+    [Tooltip("ì»¤ì§€ê³  ë°ì•„ì§ˆ ì˜¤ë¸Œì íŠ¸")]
     [SerializeField] private Transform target;
     [SerializeField] private Light glow;
     [SerializeField] private ParticleSystem particles;
@@ -17,7 +17,7 @@ public class ChargeVisual : MonoBehaviour
     [SerializeField] private float maxIntensity = 4f;
 
     [Header("Feel")]
-    [Tooltip("Â÷Â¡ÀÌ ³¡³µÀ» ¶§ ¸Æµ¿")]
+    [Tooltip("ì°¨ì§•ì´ ëë‚¬ì„ ë•Œ ë§¥ë™")]
     [SerializeField] private float pulseSpeed = 8f;
     [SerializeField] private float pulseAmount = 0.08f;
 
@@ -34,7 +34,7 @@ public class ChargeVisual : MonoBehaviour
 
         Debug.Log($"[Visual] a={a:F2} scale={(target != null ? target.localScale.x : -1f):F3}");
 
-        // ¸¸ÃæÀÌ¸é »ìÂ¦ ¸Æµ¿
+        // ë§Œì¶©ì´ë©´ ì‚´ì§ ë§¥ë™
         float pulse = a >= 0.999f
             ? Mathf.Sin(Time.time * pulseSpeed) * pulseAmount
             : 0f;

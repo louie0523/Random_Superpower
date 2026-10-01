@@ -16,15 +16,13 @@ MonoBehaviour:
   DisplayName: "\uC778\uCCB8\uD2B8 \uB9AC\uC14B"
   Icon: {fileID: 0}
   Description: "\uBB34\uAE30 \uC778\uCCB8\uD2B8\uB97C \uB9AC\uC14B\uD569\uB2C8\uB2E4."
-  Kind: 0
+  Kind: 3
   BasePrice: 10
   PriceGrowth: 1.5
   MaxLevel: 3
   Stat: 0
   ModType: 0
-  ValuePerLevel:
-  - 30
-  - 60
-  - 90
+  ValuePerLevel: []
   HealAmount: 40
   PricePerStage: 8
+  AmmoRatio: 0.25

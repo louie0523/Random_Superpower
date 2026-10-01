@@ -75,15 +75,7 @@ public class FPSCamera : MonoBehaviour
         if (cam != null) cam.fieldOfView = baseFov;
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked
-                ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = Cursor.lockState != CursorLockMode.Locked;
-        }
-    }
+
 
     public void Init()
     {
@@ -121,8 +113,12 @@ public class FPSCamera : MonoBehaviour
 
     // ---------------- 시점 ----------------
 
+
+
     void HandleLook()
     {
+        if (UIManager.InputBlocked) return;
+
         float mx = Input.GetAxisRaw("Mouse X") * sensitivity * 10f;
         float my = Input.GetAxisRaw("Mouse Y") * sensitivity * 10f;
 

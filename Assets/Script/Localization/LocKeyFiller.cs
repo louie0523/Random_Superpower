@@ -1,4 +1,4 @@
-using UnityEditor;
+ï»¿using UnityEditor;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Tables;
@@ -8,20 +8,20 @@ public static class LocKeyFiller
 {
     const string TableName = "Game";
 
-    [MenuItem("Tools/Localization/¿¡¼Â¿¡ Å° Ã¤¿ì±â")]
+    [MenuItem("Tools/Localization/ì—ì…‹ì— í‚¤ ì±„ìš°ê¸°")]
     public static void Fill()
     {
         var collection = LocalizationEditorSettings.GetStringTableCollection(TableName);
         if (collection == null)
         {
-            Debug.LogError($"[Loc] '{TableName}' Å×ÀÌºí ¾øÀ½");
+            Debug.LogError($"[Loc] '{TableName}' í…Œì´ë¸” ì—†ìŒ");
             return;
         }
 
         var shared = collection.SharedData;
         int added = 0;
 
-        // ¹«±â
+        // ë¬´ê¸°
         foreach (var guid in AssetDatabase.FindAssets("t:EquipmentData"))
         {
             var a = AssetDatabase.LoadAssetAtPath<EquipmentData>(
@@ -49,12 +49,12 @@ public static class LocKeyFiller
             EditorUtility.SetDirty(a);
         }
 
-        // ´É·Â, ÀÎÃ¦Æ®, »óÁ¡µµ °°Àº ½ÄÀ¸·Î...
+        // ëŠ¥ë ¥, ì¸ì±ˆíŠ¸, ìƒì ë„ ê°™ì€ ì‹ìœ¼ë¡œ...
 
         EditorUtility.SetDirty(shared);
         AssetDatabase.SaveAssets();
 
-        Debug.Log($"[Loc] Å° {added}°³ Ãß°¡");
+        Debug.Log($"[Loc] í‚¤ {added}ê°œ ì¶”ê°€");
     }
 
     static void EnsureKey(StringTableCollection col, SharedTableData shared,
@@ -66,7 +66,7 @@ public static class LocKeyFiller
         entry = shared.AddKey(key);
         added++;
 
-        // ÇÑ±¹¾î Ã¤¿ì±â
+        // í•œêµ­ì–´ ì±„ìš°ê¸°
         var koTable = col.GetTable(new UnityEngine.Localization.LocaleIdentifier
             ("ko")) as StringTable;
 

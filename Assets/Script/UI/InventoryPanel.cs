@@ -1,26 +1,26 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
 public class InventoryPanel : UIPanel
 {
-    [Header("π´±‚ ΩΩ∑‘")]
+    [Header("Î¨¥Í∏∞ Ïä¨Î°Ø")]
     [SerializeField] private Transform weaponSlotParent;
     [SerializeField] private InventorySlotView weaponSlotPrefab;
 
-    [Header("¿Â∫Ò")]
+    [Header("Ïû•ÎπÑ")]
     [SerializeField] private InventorySlotView armorSlot;
     [SerializeField] private InventorySlotView helmetSlot;
     [SerializeField] private InventorySlotView bootsSlot;
 
-    [Header("∂Û∫ß")]
+    [Header("ÎùºÎ≤®")]
     [SerializeField] private LocText titleLabel;
     [SerializeField] private LocText weaponSectionLabel;
     [SerializeField] private LocText gearSectionLabel;
     [SerializeField] private LocText dropHint;
 
-    [Header("¥›±‚")]
+    [Header("Îã´Í∏∞")]
     [SerializeField] private Button closeButton;
 
     private readonly List<InventorySlotView> _weaponSlots = new();
@@ -36,7 +36,7 @@ public class InventoryPanel : UIPanel
         weaponSectionLabel?.SetKey("ui.inventory.weapons");
         gearSectionLabel?.SetKey("ui.inventory.gear");
         dropHint?.SetKey("ui.inventory.drop_hint");
-
+            
         closeButton?.onClick.AddListener(() => UIManager.Instance?.CloseAll());
     }
 

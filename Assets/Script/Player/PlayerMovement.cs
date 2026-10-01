@@ -155,10 +155,12 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!HasInputAuthority) { weaponAnim?.TickRemote(); return; }
 
-        var ui = UIManager.Instance;
-        bool uiOpen = ui != null && ui.AnyPanelOpen;
 
-        if (!uiOpen)
+        if (UIManager.InputBlocked)
+        {
+            _localMoveDir = Vector3.zero;        // 이동 입력 해제
+        }
+        else
         {
             if (Input.GetKeyDown(KeyCode.G)) _equip?.DropActiveWeapon();
 

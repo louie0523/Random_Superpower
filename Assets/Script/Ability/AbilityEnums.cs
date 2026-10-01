@@ -1,14 +1,14 @@
-public enum AbilityKind { Main, Sub, Random }
+ï»¿public enum AbilityKind { Main, Sub, Random }
 public enum AbilityTag { Melee, Ranged, Growth, Utility, Trick, Soul }
 public enum SubTier { Silver, Gold, Platinum }
 
-/// <summary>¾ğÁ¦ ¹ßµ¿ÇÏ´Â°¡</summary>
+/// <summary>ì–¸ì œ ë°œë™í•˜ëŠ”ê°€</summary>
 public enum TriggerType
 {
-    Passive,        // Ç×»ó (½ºÅÈ ¼öÁ¤ÀÚ)
+    Passive,        // í•­ìƒ (ìŠ¤íƒ¯ ìˆ˜ì •ì)
     OnSkillUse,
-    OnHit,          // ³»°¡ ¶§·ÈÀ» ¶§
-    OnHitTaken,     // ³»°¡ ¸Â¾ÒÀ» ¶§
+    OnHit,          // ë‚´ê°€ ë•Œë ¸ì„ ë•Œ
+    OnHitTaken,     // ë‚´ê°€ ë§ì•˜ì„ ë•Œ
     OnKill,
     OnDeath,
     OnSoulGain,
@@ -18,32 +18,32 @@ public enum TriggerType
     OnStateActive,
 }
 
-/// <summary>¹«¾ùÀ» ÇÏ´Â°¡</summary>
+/// <summary>ë¬´ì—‡ì„ í•˜ëŠ”ê°€</summary>
 public enum EffectType
 {
-    StatMod,        // ½ºÅÈ º¯°æ
+    StatMod,        // ìŠ¤íƒ¯ ë³€ê²½
     Damage,
     Heal,
-    Seal,           // ´É·Â ºÀÀÎ
+    Seal,           // ëŠ¥ë ¥ ë´‰ì¸
     Slow,
-    Blind,          // ½Ã¾ß Èå¸²
+    Blind,          // ì‹œì•¼ íë¦¼
     Dash,
     Projectile,
-    MarkTarget,     // º¹¼ö ´ë»ó ÁöÁ¤ µî
+    MarkTarget,     // ë³µìˆ˜ ëŒ€ìƒ ì§€ì • ë“±
     GrantSoul,
     AddCharge,
     EnterState,
 }
 
-/// <summary>´©±¸¿¡°Ô</summary>
+/// <summary>ëˆ„êµ¬ì—ê²Œ</summary>
 public enum TargetType
 {
     Self,
-    Attacker,       // ³ª¸¦ ¶§¸° »ç¶÷
-    Victim,         // ³»°¡ ¶§¸° »ç¶÷
+    Attacker,       // ë‚˜ë¥¼ ë•Œë¦° ì‚¬ëŒ
+    Victim,         // ë‚´ê°€ ë•Œë¦° ì‚¬ëŒ
     Killer,
     MarkedTarget,
-    AimTarget,      // Á¶ÁØ ¹æÇâ
+    AimTarget,      // ì¡°ì¤€ ë°©í–¥
     AreaAroundSelf,
 }
 
@@ -52,7 +52,7 @@ public enum WeaponRequirement
 {
     None = 0,
     Unarmed = 1 << 0,
-    Melee = 1 << 1,      // ¸Ç¼Õ Á¦¿Ü ±ÙÁ¢
+    Melee = 1 << 1,      // ë§¨ì† ì œì™¸ ê·¼ì ‘
     Bow = 1 << 2,
     Staff = 1 << 3,
     Gun = 1 << 4,

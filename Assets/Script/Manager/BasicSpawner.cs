@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
@@ -49,12 +49,12 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
 
-        Debug.Log(result.Ok ? "Á¢¼Ó ¼º°ø" : $"Á¢¼Ó ½ÇÆĞ: {result.ShutdownReason}");
+        Debug.Log(result.Ok ? "ì ‘ì† ì„±ê³µ" : $"ì ‘ì† ì‹¤íŒ¨: {result.ShutdownReason}");
     }
 
     void OnGUI()
     {
-        if (_runner == null && GUI.Button(new Rect(20, 20, 200, 60), "Á¢¼Ó"))
+        if (_runner == null && GUI.Button(new Rect(20, 20, 200, 60), "ì ‘ì†"))
             StartGame();
     }
 
@@ -84,7 +84,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (!local.TryGetComponent<AbilityRuntime>(out var ar)) return;
 
         ar.RerollRandomAbility();
-        Debug.Log($"[Debug] ·£´ı ´É·Â ±³Ã¼ ¡æ {ar.GetRandomAbility()?.DisplayName ?? "¾øÀ½"}");
+        Debug.Log($"[Debug] ëœë¤ ëŠ¥ë ¥ êµì²´ â†’ {ar.GetRandomAbility()?.DisplayName ?? "ì—†ìŒ"}");
     }
 
     void GainSoul(int amount)
@@ -94,7 +94,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (!local.TryGetComponent<PlayerHealth>(out var h)) return;
 
         h.RPC_GainSoul(amount);
-        Debug.Log($"[Debug] ¼Ò¿ï {amount:+#;-#;0}");
+        Debug.Log($"[Debug] ì†Œìš¸ {amount:+#;-#;0}");
     }
 
     void Suicide()
@@ -105,7 +105,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (h.IsDead) return;
 
         h.RPC_TakeDamage(DamageInfo.FromEnvironment(99999, local.transform.position));
-        Debug.Log("[Debug] ÀÚÇØ »ç¸Á");
+        Debug.Log("[Debug] ìí•´ ì‚¬ë§");
     }
 
     void FullHeal()
@@ -115,7 +115,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (!local.TryGetComponent<PlayerHealth>(out var h)) return;
 
         h.RPC_Heal(9999);
-        Debug.Log("[Debug] Ã¼·Â È¸º¹");
+        Debug.Log("[Debug] ì²´ë ¥ íšŒë³µ");
     }
 
     void SpawnDummy()
@@ -129,13 +129,13 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         var dummy = _runner.Spawn(playerPrefab, pos, Quaternion.identity);
         dummy.gameObject.name = "Dummy";
 
-        // ÀÔ·Â °è¿­ ºñÈ°¼ºÈ­
+        // ì…ë ¥ ê³„ì—´ ë¹„í™œì„±í™”
         if (dummy.TryGetComponent<PlayerMovement>(out var mv)) mv.enabled = false;
         if (dummy.TryGetComponent<PlayerAttack>(out var at)) at.enabled = false;
         if (dummy.TryGetComponent<PlayerSkillInput>(out var si)) si.enabled = false;
         if (dummy.TryGetComponent<AbilityRuntime>(out var ab)) ab.enabled = false;
 
-        // Ä«¸Ş¶ó´Â ÄÄÆ÷³ÍÆ®¸¸ ²û (¿ÀºêÁ§Æ®¸¦ ²ô¸é ÆÈ±îÁö »ç¶óÁü)
+        // ì¹´ë©”ë¼ëŠ” ì»´í¬ë„ŒíŠ¸ë§Œ ë” (ì˜¤ë¸Œì íŠ¸ë¥¼ ë„ë©´ íŒ”ê¹Œì§€ ì‚¬ë¼ì§)
         var cam = dummy.GetComponentInChildren<Camera>(true);
         if (cam != null) cam.enabled = false;
 
@@ -146,22 +146,22 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (fps != null) fps.enabled = false;
 
         _dummies.Add(dummy);
-        Debug.Log("[Debug] ´õ¹Ì ½ºÆù");
+        Debug.Log("[Debug] ë”ë¯¸ ìŠ¤í°");
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        // Shared Mode¿¡¼± °¢ÀÚ ÀÚ±â Ä³¸¯ÅÍ¸¸ ½ºÆù
+        // Shared Modeì—ì„  ê°ì ìê¸° ìºë¦­í„°ë§Œ ìŠ¤í°
         if (player == runner.LocalPlayer)
         {
             Vector3 pos = new Vector3(UnityEngine.Random.Range(-4f, 4f), 1f,
                                       UnityEngine.Random.Range(-4f, 4f));
             var obj = runner.Spawn(playerPrefab, pos, Quaternion.identity, player);
-            runner.SetPlayerObject(player, obj);   // ¡ç ÀÌ ÁÙ
+            runner.SetPlayerObject(player, obj);   // â† ì´ ì¤„
         }
     }
 
-    // --- ¾Æ·¡´Â ÀüºÎ ºó ½ºÅÓ ---
+    // --- ì•„ë˜ëŠ” ì „ë¶€ ë¹ˆ ìŠ¤í… ---
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }

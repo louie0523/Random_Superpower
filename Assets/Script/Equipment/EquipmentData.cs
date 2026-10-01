@@ -41,6 +41,11 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public EquipSlot Slot;
     public WeaponClass Class = WeaponClass.Melee;
     public Sprite Icon;
+
+    [Header("태그")]
+    [Tooltip("툴팁 하단에 표시할 로컬라이즈 키 목록")]
+    public string[] Tags;
+
     [TextArea(2, 4)] public string Description;
 
     [Header("Base Stats")]

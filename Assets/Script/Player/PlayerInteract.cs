@@ -1,4 +1,4 @@
-using Fusion;
+ï»¿using Fusion;
 using UnityEngine;
 
 public class PlayerInteract : NetworkBehaviour
@@ -22,7 +22,9 @@ public class PlayerInteract : NetworkBehaviour
     void Update()
     {
         if (!HasStateAuthority) return;
-        _holding = Input.GetKey(interactKey);
+        if (UIManager.InputBlocked) return;
+
+            _holding = Input.GetKey(interactKey);
     }
 
 
@@ -38,7 +40,7 @@ public class PlayerInteract : NetworkBehaviour
 
         var chest = FindChest();
 
-        // ´ë»óÀÌ ¹Ù²î¸é ÀÌÀü °Í Ãë¼Ò
+        // ëŒ€ìƒì´ ë°”ë€Œë©´ ì´ì „ ê²ƒ ì·¨ì†Œ
         if (_target != null && _target != chest) Release();
 
         _target = chest;

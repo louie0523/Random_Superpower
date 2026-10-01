@@ -61,7 +61,7 @@ public class GameHUD : MonoBehaviour
         DrawScoreboard(_runner);
         DrawDebugKeys();
         DrawRoundState();
-        DrawShop(local, local.GetComponent<PlayerShop>(), hp);
+        //DrawShop(local, local.GetComponent<PlayerShop>(), hp);
         //DrawInteract(local);
         DrawStoneGain(local.GetComponent<PlayerEnchant>());
     }

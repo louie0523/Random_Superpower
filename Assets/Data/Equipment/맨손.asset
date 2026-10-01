@@ -35,6 +35,8 @@ MonoBehaviour:
   Slot: 0
   Class: 0
   Icon: {fileID: 0}
+  Tags:
+  - basic
   Description: "\uC774\uAC70 \uD558\uB098\uBA74 \uBABB\uD558\uB294\uAC8C \uC5C6\uB2E4."
   BaseStats: []
   EnchantTable: {fileID: 0}

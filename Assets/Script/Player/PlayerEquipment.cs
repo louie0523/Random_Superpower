@@ -196,8 +196,9 @@ public class PlayerEquipment : NetworkBehaviour
         }
     }
 
-    public bool PickUpWeapon(int id)
+    public bool PickUpWeapon(int id, out int slot)
     {
+        slot = -1;
         if (!HasStateAuthority) return false;
 
         var data = database?.Get(id);
@@ -211,13 +212,18 @@ public class PlayerEquipment : NetworkBehaviour
             ActiveWeaponSlot = i;
             RefillAmmo(i);
             _enchant?.OnWeaponChanged(i, id);
+
+            slot = i;
             return true;
         }
 
-        return false;      // 슬롯이 꽉 차면 안 먹음
+        return false;
     }
 
-    public void DropWeapon(int id)
+    /// <summary>기존 호출부 호환</summary>
+    public bool PickUpWeapon(int id) => PickUpWeapon(id, out _);
+
+    public void DropWeapon(int id, int[] enchants = null)
     {
         if (!HasStateAuthority) return;
         if (pickupPrefab == null) return;
@@ -227,7 +233,7 @@ public class PlayerEquipment : NetworkBehaviour
         var obj = Runner.Spawn(pickupPrefab, pos, Quaternion.identity);
         if (obj.TryGetComponent<Pickup>(out var pk))
         {
-            pk.Init(PickupKind.Weapon, id);
+            pk.InitWeapon(id, enchants);     // Init 대신 (안에서 Init을 부름)
             pk.SetPickupDelay(1.5f);
         }
     }
@@ -236,12 +242,17 @@ public class PlayerEquipment : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        int id = WeaponIds[ActiveWeaponSlot];
+        int slot = ActiveWeaponSlot;
+        int id = WeaponIds[slot];
         if (id == 0) return;
 
-        WeaponIds.Set(ActiveWeaponSlot, 0);
-        _enchant?.ClearSlot(ActiveWeaponSlot);
-        DropWeapon(id);
+        int[] carried = _enchant != null ? _enchant.ExportSlot(slot) : null;
+        Debug.Log($"[Drop] id={id} slot={slot} carried={(carried == null ? "null" : string.Join(",", carried))}");
+
+        WeaponIds.Set(slot, 0);
+        _enchant?.ClearSlot(slot);
+
+        DropWeapon(id, carried);
     }
 
     public void SwapWithPickup(int id)
@@ -249,13 +260,15 @@ public class PlayerEquipment : NetworkBehaviour
         if (!HasStateAuthority) return;
 
         int slot = Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1);
-
         int old = WeaponIds[slot];
+
+        int[] carried = (old != 0 && _enchant != null) ? _enchant.ExportSlot(slot) : null;  // ★
+
         WeaponIds.Set(slot, id);
         RefillAmmo(slot);
         _enchant?.OnWeaponChanged(slot, id);
 
-        if (old != 0) DropWeapon(old);
+        if (old != 0) DropWeapon(old, carried);
     }
 
     public void SwitchWeapon(int slot)

@@ -87,7 +87,14 @@ public class PlayerAttack : NetworkBehaviour
 
     void Update()
     {
-        if (!HasStateAuthority) return;
+        if (!HasInputAuthority) return;
+
+        if (UIManager.InputBlocked)
+        {
+            _attackQueued = false;
+            _releaseQueued = false;
+            return;
+        }
 
         var weapon = _equip != null ? _equip.GetWeapon() : null;
         bool ranged = weapon != null && weapon.Class == WeaponClass.Ranged;
@@ -126,7 +133,7 @@ public class PlayerAttack : NetworkBehaviour
             return;
         }
 
-        if (_shop != null && _shop.IsShopping)
+        if (UIManager.InputBlocked)
         {
             ResetCombo();
             _attackQueued = false;

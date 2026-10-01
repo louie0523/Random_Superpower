@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-/// <summary>Å¸°İ°¨¿ë ½Ã°¢ Á¤Áö. timeScaleÀº °Çµå¸®Áö ¾Ê´Â´Ù (³×Æ®¿öÅ© ¿µÇâ).</summary>
+/// <summary>íƒ€ê²©ê°ìš© ì‹œê° ì •ì§€. timeScaleì€ ê±´ë“œë¦¬ì§€ ì•ŠëŠ”ë‹¤ (ë„¤íŠ¸ì›Œí¬ ì˜í–¥).</summary>
 public static class HitStop
 {
     static WeaponAnimator _local;
 
-    /// <summary>·ÎÄÃ ÇÃ·¹ÀÌ¾î ½ºÆù ½Ã µî·Ï</summary>
+    /// <summary>ë¡œì»¬ í”Œë ˆì´ì–´ ìŠ¤í° ì‹œ ë“±ë¡</summary>
     public static void Register(WeaponAnimator anim) => _local = anim;
     public static void Unregister(WeaponAnimator anim)
     {

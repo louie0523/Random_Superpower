@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Brawler")]
 public class BrawlerAbility : AbilityBehaviour
@@ -11,7 +11,7 @@ public class BrawlerAbility : AbilityBehaviour
 
     public override void OnEquip()
     {
-        _src = SourceId.BuffBase + 50000;   // °ãÄ¡Áö ¾Ê´Â °íÀ¯°ª
+        _src = SourceId.BuffBase + 50000;   // ê²¹ì¹˜ì§€ ì•ŠëŠ” ê³ ìœ ê°’
         _applied = false;
     }
 

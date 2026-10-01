@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -31,7 +31,7 @@ public class InteractPrompt : MonoBehaviour
         if (root != null && root.activeSelf != show) root.SetActive(show);
         if (!show) { _shown = null; return; }
 
-        // ´ë»óÀÌ ¹Ù²ğ ¶§¸¸ µî±Ş ÅØ½ºÆ® °»½Å
+        // ëŒ€ìƒì´ ë°”ë€” ë•Œë§Œ ë“±ê¸‰ í…ìŠ¤íŠ¸ ê°±ì‹ 
         if (_shown != chest)
         {
             _shown = chest;

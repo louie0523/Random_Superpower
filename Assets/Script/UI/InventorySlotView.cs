@@ -1,6 +1,7 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class InventorySlotView : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class InventorySlotView : MonoBehaviour
     [SerializeField] private LocText emptyLabel;
     [SerializeField] private TooltipTrigger tooltip;
 
-    [Header("ªˆ")]
+    [Header("ÏÉâ")]
     [SerializeField] private Color activeColor = new(1f, 0.85f, 0.3f);
     [SerializeField] private Color normalColor = new(1f, 1f, 1f, 0.4f);
 
@@ -64,7 +65,7 @@ public class InventorySlotView : MonoBehaviour
         if (frame != null)
             frame.color = m.IsActive ? activeColor : normalColor;
 
-        // ≈∫æ‡
+        // ÌÉÑÏïΩ
         if (ammoText != null)
         {
             bool showAmmo = hasItem && m.Ammo >= 0
@@ -75,7 +76,7 @@ public class InventorySlotView : MonoBehaviour
             if (showAmmo) ammoText.text = $"{m.Ammo} / {m.Data.MaxAmmo}";
         }
 
-        // ¿Œ√¶∆Æ ∞≥ºˆ
+        // Ïù∏Ï±àÌä∏ Í∞úÏàò
         int stage = 0;
         if (hasItem && m.Enchant != null && m.SlotIndex >= 0)
             stage = m.Enchant.GetStage(m.SlotIndex);
@@ -86,28 +87,59 @@ public class InventorySlotView : MonoBehaviour
         if (dropButton != null)
             dropButton.gameObject.SetActive(hasItem && m.IsActive);
 
-        // ≈¯∆¡
+        // Ìà¥ÌåÅ
         if (tooltip != null)
-            tooltip.Provider = hasItem ? BuildTooltip : (System.Func<(string, string, string)>)null;
+            tooltip.Provider = hasItem ? BuildTooltip : (System.Func<TooltipView.Content>)null;
     }
 
-    (string, string, string) BuildTooltip()
+    TooltipView.Content BuildTooltip()
     {
         var d = _model.Data;
 
-        string title = LocUtil.GetOr($"item.{d.Id}.name", d.DisplayName);
+        return new TooltipView.Content
+        {
+            Title = LocUtil.GetOr($"weapon.{d.Id}.name", d.DisplayName),
+            Body = BuildBody(d),
+            Detail = BuildDetail(d),
+            Tags = BuildTags(d),
+        };
+    }
 
-        string body = BuildBody(d);
-        string detail = BuildDetail(d);
+    string[] BuildTags(EquipmentData d)
+    {
+        var tags = new List<string>();
 
-        return (title, body, detail);
+        // Ï¢ÖÎ•ò
+        if (d.Slot == EquipSlot.Weapon)
+        {
+            tags.Add(d.Class == WeaponClass.Melee
+                ? LocUtil.Get("ui.item.class.Melee")
+                : LocUtil.Get($"ui.item.ranged_kind.{d.RangedKind}"));
+        }
+        else
+        {
+            tags.Add(LocUtil.Get($"ui.item.slot.{d.Slot}"));
+        }
+
+        // Ïù∏Ï±àÌä∏ Í∞ÄÎä• Ïó¨Î∂Ä
+        tags.Add(LocUtil.Get(d.CanEnchant
+            ? "ui.item.tag.enchantable"
+            : "ui.item.tag.no_enchant"));
+
+        // ÏóêÏÖãÏóê Ï†ÅÏñ¥Îëî Ïª§Ïä§ÌÖÄ ÌÉúÍ∑∏
+        if (d.Tags != null)
+            foreach (var key in d.Tags)
+                if (!string.IsNullOrWhiteSpace(key))
+                    tags.Add(LocUtil.Get("tag." + key));
+
+        return tags.ToArray();
     }
 
     string BuildBody(EquipmentData d)
     {
         var sb = new System.Text.StringBuilder();
 
-        // ±‚∫ª Ω∫≈»
+        // Í∏∞Î≥∏ Ïä§ÌÉØ
         if (d.BaseStats != null)
             foreach (var s in d.BaseStats)
             {
@@ -116,7 +148,7 @@ public class InventorySlotView : MonoBehaviour
                 sb.AppendLine($"{statName}  {val}");
             }
 
-        // π´±‚ ¡§∫∏
+        // Î¨¥Í∏∞ Ï†ïÎ≥¥
         if (d.Slot == EquipSlot.Weapon)
         {
             sb.AppendLine();
@@ -124,11 +156,10 @@ public class InventorySlotView : MonoBehaviour
             if (d.Class == WeaponClass.Melee)
             {
                 sb.AppendLine(LocUtil.Get("ui.item.melee_range", d.Range.ToString("0.#")));
-                sb.AppendLine(LocUtil.Get("ui.item.hit_angle", d.HitAngle.ToString("0")));
+                //sb.AppendLine(LocUtil.Get("ui.item.hit_angle", d.HitAngle.ToString("0")));
             }
             else
             {
-                sb.AppendLine(LocUtil.Get($"ui.item.ranged_kind.{d.RangedKind}"));
 
                 if (d.RangedKind == RangedType.Gun)
                 {
@@ -153,7 +184,7 @@ public class InventorySlotView : MonoBehaviour
     {
         var sb = new System.Text.StringBuilder();
 
-        // º≥∏Ì
+        // ÏÑ§Î™Ö
         string desc = LocUtil.GetOr($"item.{d.Id}.desc", d.Description);
         if (!string.IsNullOrWhiteSpace(desc) && !desc.StartsWith("#"))
         {
@@ -161,7 +192,7 @@ public class InventorySlotView : MonoBehaviour
             sb.AppendLine();
         }
 
-        // ¿Œ√¶∆Æ ∏Ò∑œ
+        // Ïù∏Ï±àÌä∏ Î™©Î°ù
         if (_model.Enchant != null && _model.SlotIndex >= 0)
         {
             int stage = _model.Enchant.GetStage(_model.SlotIndex);
@@ -192,14 +223,6 @@ public class InventorySlotView : MonoBehaviour
 
                     sb.AppendLine();
                 }
-            }
-            else if (d.CanEnchant)
-            {
-                sb.AppendLine(LocUtil.Get("ui.item.no_enchant"));
-            }
-            else
-            {
-                sb.AppendLine(LocUtil.Get("ui.item.cannot_enchant"));
             }
         }
 

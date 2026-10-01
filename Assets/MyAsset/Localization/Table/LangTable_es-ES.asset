@@ -187,7 +187,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943910
-    m_Localized: No disponible para la venta
+    m_Localized: No disponible para la compra
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943911
@@ -445,7 +445,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3004699710697474
     m_Localized: "La barra de 'One-Shot' se recarga a una tasa del 3% por segundo
-      mientras te mueves y del 5% al \u200B\u200Bgolpear a un enemigo con un ataque
+      mientras te mueves y del 5% al \u200B\\u200bgolpear a un enemigo con un ataque
       b\xE1sico."
     m_Metadata:
       m_Items: []
@@ -479,6 +479,91 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3004699714891782
     m_Localized: "La velocidad de movimiento aumenta en 2 durante la duraci\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008527633428480
+    m_Localized: daga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156992
+    m_Localized: "Es una espada muy b\xE1sica."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156993
+    m_Localized: arco de madera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156994
+    m_Localized: "Est\xE1 bastante bien."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156995
+    m_Localized: "bast\xF3n de madera"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156996
+    m_Localized: "\xA1Qu\xE9 miedo!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156997
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156998
+    m_Localized: "Con tan solo esto, mi abuela tambi\xE9n podr\xEDa haberse convertido
+      en una leyenda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280082063360
+    m_Localized: manos desnudas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280144977920
+    m_Localized: "\xA1Con esto no hay nada que no puedas hacer!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871831687168
+    m_Localized: vecindad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601728
+    m_Localized: Encantador
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601729
+    m_Localized: No puede ser encantado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601730
+    m_Localized: armadura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601731
+    m_Localized: cabeceo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601732
+    m_Localized: zapatos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601733
+    m_Localized: Ambas manos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601734
+    m_Localized: pesadez
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4031231723941888
+    m_Localized: "b\xE1sico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974098284544
+    m_Localized: Encantar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974161199104
+    m_Localized: No se aplicaron encantamientos.
     m_Metadata:
       m_Items: []
   references:

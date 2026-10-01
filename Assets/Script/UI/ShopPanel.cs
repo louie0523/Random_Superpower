@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
@@ -7,13 +7,13 @@ public class ShopPanel : UIPanel
 {
     public enum Tab { Main, Enchant, Special }
 
-    [Header("°øÅë")]
+    [Header("ê³µí†µ")]
     [SerializeField] private TMP_Text soulValue;
     [SerializeField] private LocText soulLabel;
     [SerializeField] private LocText titleLabel;
     [SerializeField] private Button closeButton;
 
-    [Header("ÅÇ ¹öÆ°")]
+    [Header("íƒ­ ë²„íŠ¼")]
     [SerializeField] private Button mainTab;
     [SerializeField] private Button enchantTab;
     [SerializeField] private Button specialTab;
@@ -21,19 +21,19 @@ public class ShopPanel : UIPanel
     [SerializeField] private LocText enchantTabLabel;
     [SerializeField] private LocText specialTabLabel;
 
-    [Header("ÅÇ ³»¿ë")]
+    [Header("íƒ­ ë‚´ìš©")]
     [SerializeField] private GameObject mainPage;
     [SerializeField] private GameObject enchantPage;
     [SerializeField] private GameObject specialPage;
 
-    [Header("¸ŞÀÎ »óÁ¡")]
+    [Header("ë©”ì¸ ìƒì ")]
     [SerializeField] private Transform itemParent;
     [SerializeField] private ShopItemView itemPrefab;
 
-    [Header("ÀÎÃ¦Æ®")]
+    [Header("ì¸ì±ˆíŠ¸")]
     [SerializeField] private EnchantPage enchantView;
 
-    [Header("Æ¯¼ö »óÁ¡")]
+    [Header("íŠ¹ìˆ˜ ìƒì ")]
     [SerializeField] private Transform specialParent;
     [SerializeField] private ShopItemView specialItemPrefab;
     [SerializeField] private LocText specialEmptyLabel;
@@ -61,6 +61,8 @@ public class ShopPanel : UIPanel
         enchantTabLabel?.SetKey("ui.shop.tab_enchant");
         specialTabLabel?.SetKey("ui.shop.tab_special");
         specialEmptyLabel?.SetKey("ui.shop.special_empty");
+
+
     }
 
     public void Bind(PlayerShop shop, PlayerHealth health, AbilityRuntime ability,
@@ -86,10 +88,15 @@ public class ShopPanel : UIPanel
     void SetTab(Tab t)
     {
         _tab = t;
-
+            
         mainPage?.SetActive(t == Tab.Main);
         enchantPage?.SetActive(t == Tab.Enchant);
         specialPage?.SetActive(t == Tab.Special);
+
+        // ì„ íƒëœ íƒ­ì€ ëˆ„ë¥¼ ìˆ˜ ì—†ê²Œ í•´ì„œ ìƒíƒœë¥¼ ë“œëŸ¬ëƒ„
+        if (mainTab != null) mainTab.interactable = t != Tab.Main;
+        if (enchantTab != null) enchantTab.interactable = t != Tab.Enchant;
+        if (specialTab != null) specialTab.interactable = t != Tab.Special;
 
         if (t == Tab.Main) RebuildMain();
         else if (t == Tab.Special) RebuildSpecial();
@@ -100,7 +107,7 @@ public class ShopPanel : UIPanel
     {
         if (!IsOpen) return;
 
-        if (_shop != null && !_shop.IsShopping && !_shop.CanOpenShop)
+        if (_shop != null && /*!_shop.IsShopping &&*/ !_shop.CanOpenShop)
         {
             UIManager.Instance?.CloseAll();
             return;
@@ -109,7 +116,7 @@ public class ShopPanel : UIPanel
         if (soulValue != null && _health != null)
             soulValue.text = _health.Soul.ToString();
 
-        // ±¸¸Å °¡´É ¿©ºÎ°¡ ½Ç½Ã°£À¸·Î ¹Ù²î¹Ç·Î °»½Å
+        // êµ¬ë§¤ ê°€ëŠ¥ ì—¬ë¶€ê°€ ì‹¤ì‹œê°„ìœ¼ë¡œ ë°”ë€Œë¯€ë¡œ ê°±ì‹ 
         foreach (var v in _mainViews) v.RefreshState();
         foreach (var v in _specialViews) v.RefreshState();
 
@@ -141,7 +148,7 @@ public class ShopPanel : UIPanel
         _specialViews.Clear();
 
         var items = _shop?.GetExclusiveItems();
-        bool empty = items == null || items.Length == 0;
+        bool empty = items == null || items.Length == 0;    
 
         if (specialEmptyLabel != null)
             specialEmptyLabel.gameObject.SetActive(empty);

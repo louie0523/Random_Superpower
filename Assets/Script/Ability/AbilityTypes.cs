@@ -1,42 +1,42 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public enum DashDirection
 {
-    [Tooltip("¸öÅë Àü¹æ. À§¾Æ·¡¸¦ ºÁµµ ¼öÆòÀ¸·Î¸¸")]
+    [Tooltip("ëª¸í†µ ì „ë°©. ìœ„ì•„ëž˜ë¥¼ ë´ë„ ìˆ˜í‰ìœ¼ë¡œë§Œ")]
     Horizontal,
 
-    [Tooltip("Ä«¸Þ¶ó°¡ º¸´Â ¹æÇâ ±×´ë·Î")]
+    [Tooltip("ì¹´ë©”ë¼ê°€ ë³´ëŠ” ë°©í–¥ ê·¸ëŒ€ë¡œ")]
     CameraForward,
 
-    [Tooltip("ÀÌµ¿ ÀÔ·Â ¹æÇâ (WASD)")]
+    [Tooltip("ì´ë™ ìž…ë ¥ ë°©í–¥ (WASD)")]
     MoveInput,
 
-    [Tooltip("µÚ·Î")]
+    [Tooltip("ë’¤ë¡œ")]
     Backward,
 }
 
 [System.Serializable]
 public struct DashParams
 {
-    [Tooltip("µ¹Áø °Å¸® (m)")]
+    [Tooltip("ëŒì§„ ê±°ë¦¬ (m)")]
     public float Distance;
 
-    [Tooltip("µ¹Áø¿¡ °É¸®´Â ½Ã°£ (ÃÊ)")]
+    [Tooltip("ëŒì§„ì— ê±¸ë¦¬ëŠ” ì‹œê°„ (ì´ˆ)")]
     public float Duration;
 
-    [Tooltip("µ¹Áø ¹æÇâ ±âÁØ")]
+    [Tooltip("ëŒì§„ ë°©í–¥ ê¸°ì¤€")]
     public DashDirection Direction;
 
-    [Tooltip("CameraForwardÀÏ ¶§ À§¾Æ·¡ °¢µµ Á¦ÇÑ (µµ). 0ÀÌ¸é ¹«Á¦ÇÑ")]
+    [Tooltip("CameraForwardì¼ ë•Œ ìœ„ì•„ëž˜ ê°ë„ ì œí•œ (ë„). 0ì´ë©´ ë¬´ì œí•œ")]
     public float MaxPitch;
 
-    [Tooltip("µ¹Áø Áß ÇÃ·¹ÀÌ¾î¸¦ Åë°ú")]
+    [Tooltip("ëŒì§„ ì¤‘ í”Œë ˆì´ì–´ë¥¼ í†µê³¼")]
     public bool PassThroughPlayers;
 
-    [Tooltip("¹«¾ð°¡¿¡ ºÎµúÈ÷¸é Áï½Ã Á¤Áö")]
+    [Tooltip("ë¬´ì–¸ê°€ì— ë¶€ë”ªížˆë©´ ì¦‰ì‹œ ì •ì§€")]
     public bool StopOnContact;
 
-    [Tooltip("µ¹Áø Áß Áß·Â ¹«½Ã")]
+    [Tooltip("ëŒì§„ ì¤‘ ì¤‘ë ¥ ë¬´ì‹œ")]
     public bool IgnoreGravity;
 
     public static DashParams Default => new()

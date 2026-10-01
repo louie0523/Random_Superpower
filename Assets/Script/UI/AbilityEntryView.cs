@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
@@ -23,7 +23,7 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
     [SerializeField] private TMP_Text title;
     [SerializeField] private TMP_Text body;
 
-    [Header("»ö")]
+    [Header("ìƒ‰")]
     [SerializeField] private Color normalColor = new(1f, 1f, 1f, 0.04f);
     [SerializeField] private Color hoverColor = new(1f, 1f, 1f, 0.10f);
     [SerializeField] private Color selectedColor = new(1f, 1f, 1f, 0.16f);

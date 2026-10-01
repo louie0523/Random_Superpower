@@ -14,15 +14,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentData
   Id: 1001
   DisplayName: "\uB2E8\uAC80"
+  NameEntry:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  DescEntry:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   Slot: 0
   Class: 0
   Icon: {fileID: 0}
+  Tags:
+  - basic
   Description: "\uC870\uC57D\uD569\uB2C8\uB2E4."
   BaseStats:
   - Stat: 1
     Type: 0
     Value: 25
   EnchantTable: {fileID: 11400000, guid: 8e5fc6c0f1f48634e8caeee667b64deb, type: 2}
+  EnchantStoneCost: 1
+  EnchantCostPerStage: 0
   ModelPrefab: {fileID: 100000, guid: 550a61d9929e19749851330ea8c46ecd, type: 3}
   Grip: 0
   PositionOffset: {x: 0, y: 0, z: 0}
@@ -925,3 +947,7 @@ MonoBehaviour:
   ProjectileGravity: 12
   PierceCount: 0
   PierceDamageFalloff: 0.3
+  IsUnarmed: 0
+  references:
+    version: 2
+    RefIds: []

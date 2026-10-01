@@ -22,6 +22,8 @@ public class PlayerShop : NetworkBehaviour
     private PlayerHealth _health;
     private PlayerStats _stats;
     private AbilityRuntime _ability;
+    private PlayerEnchant _enchant;
+    private PlayerEquipment _equip;
 
     public ShopDatabase Database => database;
 
@@ -30,6 +32,8 @@ public class PlayerShop : NetworkBehaviour
         _health = GetComponent<PlayerHealth>();
         _stats = GetComponent<PlayerStats>();
         _ability = GetComponent<AbilityRuntime>();
+        _enchant = GetComponent<PlayerEnchant>();
+        _equip = GetComponent<PlayerEquipment>();
 
         ApplyAll();
     }
@@ -186,7 +190,7 @@ public class PlayerShop : NetworkBehaviour
         {
             case ShopItemKind.ResetEnchant:
                 {
-                    var en = GetComponent<PlayerEnchant>();
+                    var en = _enchant;
                     int stage = en != null ? en.ActiveStage : 0;
                     if (stage == 0) { reason = "ui.shop.reason.no_enchant"; return false; }
                     price = item.BasePrice + item.PricePerStage * stage;
@@ -195,10 +199,10 @@ public class PlayerShop : NetworkBehaviour
 
             case ShopItemKind.RefillAmmo:
                 {
-                    var en = GetComponent<PlayerEnchant>();
+                    var en = _enchant;
                     if (en == null || !en.IsGunsmith) { reason = "ui.shop.reason.need_ability"; return false; }
 
-                    var eq = GetComponent<PlayerEquipment>();
+                    var eq = _equip;
                     var w = eq != null ? eq.GetWeapon() : null;
                     if (w == null || w.Class != WeaponClass.Ranged || w.RangedKind != RangedType.Gun)
                     { reason = "ui.shop.reason.not_gun"; return false; }

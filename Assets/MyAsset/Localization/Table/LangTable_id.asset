@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
@@ -428,7 +428,7 @@ MonoBehaviour:
 
       Sebagai kelas
       berbasis senjata jarak dekat, Anda menghabisi musuh menggunakan jurus andalan
-      yang kuat, ''One Strike''.'
+      yang kuat, ''One Strike'''
     m_Metadata:
       m_Items: []
   - m_Id: 3004699647782912
@@ -493,6 +493,90 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3004699714891782
     m_Localized: Kecepatan gerakan meningkat sebesar 2 selama durasi tersebut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008527633428480
+    m_Localized: belati
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156992
+    m_Localized: Ini adalah pedang yang sangat sederhana.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156993
+    m_Localized: busur kayu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156994
+    m_Localized: Lumayanlah.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156995
+    m_Localized: tongkat kayu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156996
+    m_Localized: Menakutkan sekali!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156997
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156998
+    m_Localized: Hanya dengan satu hal ini, nenekku pun bisa menjadi legenda.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280082063360
+    m_Localized: tangan kosong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280144977920
+    m_Localized: Tidak ada yang tidak bisa kamu lakukan dengan ini!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871831687168
+    m_Localized: sekitar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601728
+    m_Localized: Mempesona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601729
+    m_Localized: Tidak bisa disihir.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601730
+    m_Localized: baja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601731
+    m_Localized: anggukan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601732
+    m_Localized: sepatu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601733
+    m_Localized: Kedua tangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601734
+    m_Localized: berat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4031231723941888
+    m_Localized: dasar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974098284544
+    m_Localized: Mempesona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974161199104
+    m_Localized: Tidak ada mantra yang diterapkan.
     m_Metadata:
       m_Items: []
   references:

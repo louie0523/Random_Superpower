@@ -480,6 +480,91 @@ MonoBehaviour:
     m_Localized: "A velocidade de movimento aumenta em 2 durante esse per\xEDodo."
     m_Metadata:
       m_Items: []
+  - m_Id: 4008527633428480
+    m_Localized: punhal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156992
+    m_Localized: "\xC9 uma espada muito b\xE1sica."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156993
+    m_Localized: arco de madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156994
+    m_Localized: "\xC9 razo\xE1vel."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156995
+    m_Localized: bengala de madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156996
+    m_Localized: Que medo!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156997
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156998
+    m_Localized: "Com apenas isso, minha av\xF3 tamb\xE9m poderia ter se tornado
+      uma lenda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280082063360
+    m_Localized: "m\xE3os nuas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280144977920
+    m_Localized: "Com isso, voc\xEA pode fazer praticamente tudo!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871831687168
+    m_Localized: "vizinhan\xE7a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601728
+    m_Localized: "Encant\xE1vel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601729
+    m_Localized: "N\xE3o pode ser encantado"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601730
+    m_Localized: armadura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601731
+    m_Localized: arremesso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601732
+    m_Localized: sapato
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601733
+    m_Localized: "Ambas as m\xE3os"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601734
+    m_Localized: peso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4031231723941888
+    m_Localized: "b\xE1sico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974098284544
+    m_Localized: Encantar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974161199104
+    m_Localized: Nenhum encantamento aplicado.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

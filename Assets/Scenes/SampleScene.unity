@@ -1240,8 +1240,8 @@ MonoBehaviour:
   rerollAbilityKey: 288
   suicideKey: 289
   healKey: 290
-  soulGainKey: 282
-  soulLoseKey: 283
+  soulGainKey: 257
+  soulLoseKey: 258
   soulCheatAmount: 50
 --- !u!114 &1401543695
 MonoBehaviour:

@@ -1,9 +1,9 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
-/// <summary>Å°¸¦ ÄÚµå·Î ¹Ù²Ü ¼ö ÀÖ´Â ·ÎÄÃ¶óÀÌÁî ÅØ½ºÆ®</summary>
+/// <summary>í‚¤ë¥¼ ì½”ë“œë¡œ ë°”ê¿€ ìˆ˜ ìˆëŠ” ë¡œì»¬ë¼ì´ì¦ˆ í…ìŠ¤íŠ¸</summary>
 [RequireComponent(typeof(TMP_Text))]
 public class LocText : MonoBehaviour
 {
@@ -38,7 +38,7 @@ public class LocText : MonoBehaviour
         Refresh();
     }
 
-    /// <summary>¹ø¿ª ¾øÀÌ ±×´ë·Î Ç¥½Ã (´Ğ³×ÀÓ µî)</summary>
+    /// <summary>ë²ˆì—­ ì—†ì´ ê·¸ëŒ€ë¡œ í‘œì‹œ (ë‹‰ë„¤ì„ ë“±)</summary>
     public void SetRaw(string raw)
     {
         entryKey = null;

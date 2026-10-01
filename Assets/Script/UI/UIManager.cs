@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
 
     [Header("패널 (없으면 비워둬도 됨)")]
     [SerializeField] private AbilityPanel abilityPanel;
-    [SerializeField] private UIPanel shopPanel;
+    [SerializeField] private ShopPanel shopPanel;
     [SerializeField] private InventoryPanel inventoryPanel;
 
     [Header("공용 창")]
@@ -50,7 +50,17 @@ public class UIManager : MonoBehaviour
         {
             foreach (var p in _panels)
                 if (p != null && p.IsOpen) return true;
-            return false;
+            return false;   
+        }
+    }
+
+    /// <summary>패널이 열려 있어 게임 입력을 막아야 하는가</summary>
+    public static bool InputBlocked
+    {
+        get
+        {
+            var ui = Instance;
+            return ui != null && ui.AnyPanelOpen;
         }
     }
 
@@ -99,7 +109,7 @@ public class UIManager : MonoBehaviour
 
     public void TogglePanel(UIPanel target)
     {
-        if (target == null) return;       // 아직 안 만든 패널은 무시
+        if (target == null) return;
 
         bool wasOpen = target.IsOpen;
         CloseAllInternal();
@@ -110,15 +120,15 @@ public class UIManager : MonoBehaviour
 
     public void CloseAll()
     {
-        tooltip?.Hide();
-        detailWindow?.Hide();
-        foreach (var p in _panels) p.Close();
+        CloseAllInternal();
+        UpdateCursor();
     }
 
     void CloseAllInternal()
     {
         foreach (var p in _panels) p?.Close();
         tooltip?.Hide();
+        detailWindow?.Hide();
     }
 
     void UpdateCursor()
@@ -175,6 +185,12 @@ public class UIManager : MonoBehaviour
        player.GetComponent<PlayerEnchant>());
 
         _shop = player.GetComponent<PlayerShop>();
+        shopPanel?.Bind(
+    player.GetComponent<PlayerShop>(),
+    hp,
+    ability,
+    player.GetComponent<PlayerEquipment>(),
+    player.GetComponent<PlayerEnchant>());
 
 
     }

@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -80,7 +80,7 @@ public class ShopItemView : MonoBehaviour
         if (reasonText != null)
         {
             reasonText.gameObject.SetActive(!ok);
-            if (!ok) reasonText.text = LocUtil.Get(reason);   // reason¿Ã ≈∞
+            if (!ok) reasonText.text = LocUtil.Get(reason);   // reasonÏù¥ ÌÇ§
         }
 
         if (buyButton != null) buyButton.interactable = ok;
@@ -105,7 +105,7 @@ public class ShopItemView : MonoBehaviour
 
                 for (int i = 0; i < _data.MaxLevel; i++)
                 {
-                    string mark = (i + 1 <= lv) ? "¢√" : "°‡";
+                    string mark = (i + 1 <= lv) ? "‚ñ£" : "‚ñ°";
                     sb.AppendLine($"{mark} Lv.{i + 1}  {FormatStat(_data, i + 1)}");
                 }
                 break;

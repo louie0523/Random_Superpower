@@ -1,6 +1,6 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-/// <summary>´É·Âº° Àü¿ë ·ÎÁ÷. AbilityData¿¡ ¿¬°áÇØ¼­ »ç¿ë.</summary>
+/// <summary>ëŠ¥ë ¥ë³„ ì „ìš© ë¡œì§. AbilityDataì— ì—°ê²°í•´ì„œ ì‚¬ìš©.</summary>
 public abstract class AbilityBehaviour : ScriptableObject
 {
     [System.NonSerialized] protected AbilityRuntime Ctx;
@@ -19,13 +19,13 @@ public abstract class AbilityBehaviour : ScriptableObject
     public virtual void Tick(float dt) { }
     public virtual void OnTrigger(TriggerType t, GameObject other) { }
 
-    /// <summary>true ¹İÈ¯ ½Ã µ¥ÀÌÅÍ ±â¹İ Effect Ã³¸®¸¦ °Ç³Ê¶Ü</summary>
+    /// <summary>true ë°˜í™˜ ì‹œ ë°ì´í„° ê¸°ë°˜ Effect ì²˜ë¦¬ë¥¼ ê±´ë„ˆëœ€</summary>
     public virtual bool OnSkillUsed(int slot, AbilityData.SkillDef skill) => false;
 
     public virtual void OnStateEnter(int stateId) { }
     public virtual void OnStateExit(int stateId) { }
 
-    /// <summary>±âº» °ø°İÀ» ´ëÃ¼. true¸é ovrÀÇ ³»¿ëÀÌ Àû¿ëµÊ</summary>
+    /// <summary>ê¸°ë³¸ ê³µê²©ì„ ëŒ€ì²´. trueë©´ ovrì˜ ë‚´ìš©ì´ ì ìš©ë¨</summary>
     public virtual bool TryOverrideAttack(out AttackOverride ovr)
     {
         ovr = AttackOverride.None;

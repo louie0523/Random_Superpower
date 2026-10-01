@@ -482,6 +482,91 @@ MonoBehaviour:
       um 2."
     m_Metadata:
       m_Items: []
+  - m_Id: 4008527633428480
+    m_Localized: Dolch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156992
+    m_Localized: Es ist ein sehr einfaches Schwert.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156993
+    m_Localized: Holzbogen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156994
+    m_Localized: Es ist ausreichend.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156995
+    m_Localized: Gehstock aus Holz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156996
+    m_Localized: Wie gruselig!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156997
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156998
+    m_Localized: "Mit dieser einen Sache h\xE4tte auch meine Gro\xDFmutter zur Legende
+      werden k\xF6nnen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280082063360
+    m_Localized: "blo\xDFe H\xE4nde"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280144977920
+    m_Localized: "Damit ist alles m\xF6glich!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871831687168
+    m_Localized: "N\xE4he"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601728
+    m_Localized: Bezaubernd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601729
+    m_Localized: Kann nicht verzaubert werden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601730
+    m_Localized: "R\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601731
+    m_Localized: Werfen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601732
+    m_Localized: Schuhe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601733
+    m_Localized: "Beide H\xE4nde"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601734
+    m_Localized: Schwere
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4031231723941888
+    m_Localized: Basic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974098284544
+    m_Localized: Verzaubern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974161199104
+    m_Localized: Keine Verzauberungen angewendet.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -3,17 +3,14 @@ using UnityEngine.EventSystems;
 
 public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public System.Func<(string title, string body, string detail)> Provider;
+    public System.Func<TooltipView.Content> Provider;
 
     public void OnPointerEnter(PointerEventData e)
     {
         if (Provider == null) return;
-        var (t, b, d) = Provider();
-        UIManager.Instance?.Tooltip?.Show(t, b, d);
+        UIManager.Instance?.Tooltip?.Show(Provider());
     }
 
     public void OnPointerExit(PointerEventData e)
-    {
-        UIManager.Instance?.Tooltip?.Hide();
-    }
+        => UIManager.Instance?.Tooltip?.Hide();
 }

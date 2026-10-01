@@ -1,65 +1,87 @@
+Ôªøusing System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 
 public class EnchantPage : MonoBehaviour
 {
-    [Header("π´±‚")]
+    [Header("Ïä§ÌÜ§")]
+    [SerializeField] private LocText stoneLabel;
+    [SerializeField] private TMP_Text stoneValue;
+
+    [Header("ÎåÄÏÉÅ Î¨¥Í∏∞")]
     [SerializeField] private Image weaponIcon;
     [SerializeField] private TMP_Text weaponName;
     [SerializeField] private TMP_Text stageText;
 
-    [Header("Ω∫≈Ê")]
-    [SerializeField] private LocText stoneLabel;
-    [SerializeField] private TMP_Text stoneValue;
+    [Header("Î™©Î°ù")]
+    [SerializeField] private Transform rowParent;
+    [SerializeField] private EnchantRowView rowPrefab;
+    [SerializeField] private LocText emptyLabel;
 
-    [Header("ø…º« ∏Ò∑œ")]
-    [SerializeField] private Transform slotParent;
-    [SerializeField] private EnchantSlotView slotPrefab;
-
-    [Header("πˆ∆∞")]
+    [Header("Ïã§Ìñâ")]
     [SerializeField] private Button enchantButton;
     [SerializeField] private LocText enchantLabel;
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text reasonText;
 
-    private readonly List<EnchantSlotView> _slots = new();
     private PlayerEnchant _enchant;
     private PlayerEquipment _equip;
-    private int _builtStage = -1;
-    private int _builtWeaponId = -1;
+
+    private readonly List<EnchantRowView> _rows = new();
+
+    // Î™©Î°ùÏùÑ Îß§ ÌîÑÎ†àÏûÑ Îã§Ïãú ÎßåÎì§ÏßÄ ÏïäÍ∏∞ ÏúÑÌïú Ï∫êÏãú
+    private int _shownStage = -1;
+    private int _shownWeaponId = -1;
+    private int _shownRollTick = -1;
 
     void Awake()
     {
+        enchantButton?.onClick.AddListener(OnEnchant);
+
         stoneLabel?.SetKey("ui.enchant.stones");
-        enchantLabel?.SetKey("ui.enchant.button");
-        enchantButton?.onClick.AddListener(() => _enchant?.RPC_Enchant());
+        enchantLabel?.SetKey("ui.enchant.do");
+        emptyLabel?.SetKey("ui.enchant.empty");
     }
 
     public void Bind(PlayerEnchant enchant, PlayerEquipment equip)
     {
         _enchant = enchant;
         _equip = equip;
+        Invalidate();
     }
 
+    /// <summary>ÌÉ≠ ÏßÑÏûÖ Ïãú ‚Äî Í∞ïÏ†úÎ°ú Îã§Ïãú Í∑∏Î¶º</summary>
     public void Refresh()
     {
-        _builtStage = -1;       // ∞≠¡¶ ¿Á±∏º∫
+        Invalidate();
         RefreshState();
     }
 
+    void Invalidate()
+    {
+        _shownStage = -1;
+        _shownWeaponId = -1;
+        _shownRollTick = -1;
+    }
+
+    /// <summary>Îß§ ÌîÑÎ†àÏûÑ ‚Äî ShopPanel.Update Í∞Ä Ìò∏Ï∂ú</summary>
     public void RefreshState()
     {
         if (_enchant == null || _equip == null) return;
 
-        var w = _equip.GetWeapon();
+        if (stoneValue != null) stoneValue.text = _enchant.Stones.ToString();
 
-        // «Ï¥ı
+        var w = _equip.GetWeapon();
+        int slot = _equip.ActiveWeaponSlot;
+        int stage = _enchant.GetStage(slot);
+        int wid = w != null ? w.Id : 0;
+
+        // ‚îÄ‚îÄ ÎåÄÏÉÅ Î¨¥Í∏∞ ‚îÄ‚îÄ
         if (weaponIcon != null)
         {
-            weaponIcon.enabled = w?.Icon != null;
-            weaponIcon.sprite = w?.Icon;
+            weaponIcon.enabled = w != null && w.Icon != null;
+            if (w != null) weaponIcon.sprite = w.Icon;
         }
 
         if (weaponName != null)
@@ -67,23 +89,29 @@ public class EnchantPage : MonoBehaviour
                 ? LocUtil.GetOr($"weapon.{w.Id}.name", w.DisplayName)
                 : LocUtil.Get("ui.enchant.no_weapon");
 
-        if (stoneValue != null) stoneValue.text = _enchant.Stones.ToString();
-
-        int stage = _enchant.ActiveStage;
-        int max = w != null ? Mathf.Min(w.MaxEnchantStage, PlayerEnchant.MaxEnchants) : 0;
-
-        if (stageText != null) stageText.text = $"{stage} / {max}";
-
-        // ΩΩ∑‘ ¿Á±∏º∫ (π´±‚≥™ ¥‹∞Ë∞° πŸ≤ ∂ß∏∏)
-        int wid = w != null ? w.Id : 0;
-        if (_builtStage != stage || _builtWeaponId != wid)
+        if (stageText != null)
         {
-            RebuildSlots(max, stage);
-            _builtStage = stage;
-            _builtWeaponId = wid;
+            bool show = w != null && w.CanEnchant;
+            stageText.gameObject.SetActive(show);
+            if (show)
+            {
+                int max = Mathf.Min(w.MaxEnchantStage, PlayerEnchant.MaxEnchants);
+                stageText.text = $"{stage} / {max}";
+            }
         }
 
-        // πˆ∆∞
+        // ‚îÄ‚îÄ Î™©Î°ù (Î∞îÎÄî ÎïåÎßå) ‚îÄ‚îÄ
+        if (stage != _shownStage || wid != _shownWeaponId
+            || _enchant.LastRollTick != _shownRollTick)
+        {
+            _shownStage = stage;
+            _shownWeaponId = wid;
+            _shownRollTick = _enchant.LastRollTick;
+
+            RebuildRows(slot, stage);
+        }
+
+        // ‚îÄ‚îÄ Î≤ÑÌäº ‚îÄ‚îÄ
         bool ok = _enchant.CanEnchant(out string reason, out int cost);
 
         if (enchantButton != null) enchantButton.interactable = ok;
@@ -101,24 +129,35 @@ public class EnchantPage : MonoBehaviour
         }
     }
 
-    void RebuildSlots(int max, int stage)
+    void RebuildRows(int slot, int stage)
     {
-        foreach (var s in _slots) Destroy(s.gameObject);
-        _slots.Clear();
-
-        if (_enchant == null || _equip == null) return;
-
-        int slot = _equip.ActiveWeaponSlot;
-        var db = _enchant.Database;
-
-        for (int i = 0; i < max; i++)
+        foreach (var r in _rows)
         {
-            var view = Instantiate(slotPrefab, slotParent);
+            if (r == null) continue;
+            r.gameObject.SetActive(false);
+            Destroy(r.gameObject);
+        }
+        _rows.Clear();
 
+        if (emptyLabel != null) emptyLabel.gameObject.SetActive(stage == 0);
+        if (rowPrefab == null || rowParent == null) return;
+
+        var db = _enchant.Database;
+        int newest = _enchant.LastRolled;
+
+        for (int i = 0; i < stage; i++)
+        {
             int id = _enchant.GetEnchantId(slot, i);
-            view.Bind(i + 1, id != 0 ? db?.Get(id) : null);
+            if (id == 0) continue;
 
-            _slots.Add(view);
+            var data = db != null ? db.Get(id) : null;
+            if (data == null) continue;
+
+            var row = Instantiate(rowPrefab, rowParent);
+            row.Bind(i, data, id == newest && i == stage - 1);
+            _rows.Add(row);
         }
     }
+
+    void OnEnchant() => _enchant?.RPC_Enchant();
 }

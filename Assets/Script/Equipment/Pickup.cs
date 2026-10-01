@@ -17,6 +17,9 @@ public class Pickup : NetworkBehaviour
     [SerializeField] private float bobSpeed = 2f;
     [SerializeField] private Transform visualRoot;
 
+    [Networked, Capacity(PlayerEnchant.MaxEnchants)]
+    public NetworkArray<int> Enchants { get; }
+
     [Header("수명")]
     [Tooltip("이 시간이 지나면 사라짐. 0이면 영구")]
     [SerializeField] private float lifetime = 60f;
@@ -31,6 +34,9 @@ public class Pickup : NetworkBehaviour
     [SerializeField] private float modelScale = 0.6f;
 
     [Networked] private TickTimer NoPickupTimer { get; set; }
+    [Networked] public PlayerRef Claimer { get; set; }
+    private float _nextRequestTime;
+    private bool _granted;
 
     private GameObject _model;
     private Vector3 _baseLocalPos;
@@ -47,6 +53,15 @@ public class Pickup : NetworkBehaviour
             LifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
 
         BuildVisual();
+    }
+
+    public void InitWeapon(int weaponId, int[] enchants)
+    {
+        Init(PickupKind.Weapon, weaponId);
+
+        if (enchants == null) return;
+        for (int i = 0; i < PlayerEnchant.MaxEnchants && i < enchants.Length; i++)
+            Enchants.Set(i, enchants[i]);
     }
 
     /// <summary>드롭 직후 잠깐 못 줍게 (버린 무기를 바로 다시 줍는 것 방지)</summary>
@@ -110,33 +125,75 @@ public class Pickup : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (!HasStateAuthority) return;
-
-        if (lifetime > 0f && LifeTimer.Expired(Runner))
+        // ── 수명 관리는 SA만 ──
+        if (HasStateAuthority)
         {
-            Runner.Despawn(Object);
-            return;
+            if (lifetime > 0f && LifeTimer.Expired(Runner))
+            {
+                Runner.Despawn(Object);
+                return;
+            }
         }
 
         if (_consumed) return;
         if (NoPickupTimer.IsRunning && !NoPickupTimer.Expired(Runner)) return;
 
-        foreach (var p in Runner.ActivePlayers)
+        // ── 각 클라이언트는 자기 플레이어만 본다 ──
+        var me = Runner.GetPlayerObject(Runner.LocalPlayer);
+        if (me == null) return;
+
+        if (!me.TryGetComponent<PlayerHealth>(out var h) || h.IsDead) return;
+
+        bool inRange = Vector3.Distance(me.transform.position, transform.position) <= pickupRadius;
+
+        // 아직 임자가 없고 내가 범위 안 → 요청
+        if (Claimer == PlayerRef.None)
         {
-            var obj = Runner.GetPlayerObject(p);
-            if (obj == null) continue;
+            _granted = false;
 
-            float d = Vector3.Distance(obj.transform.position, transform.position);
-            if (d > pickupRadius) continue;
+            if (inRange && Time.time >= _nextRequestTime)
+            {
+                _nextRequestTime = Time.time + 0.5f;
+                RPC_Request(Runner.LocalPlayer);
+            }
+            return;
+        }
 
-            if (!obj.TryGetComponent<PlayerHealth>(out var h) || h.IsDead) continue;
+        // 내게 임자가 떨어졌으면 내 권한으로 지급
+        if (Claimer == Runner.LocalPlayer && !_granted)
+        {
+            _granted = true;
 
-            if (TryGive(obj)) {
+            if (TryGive(me))
+            {
                 _consumed = true;
-                Runner.Despawn(Object); 
-                return; 
+                RPC_Consumed();
+            }
+            else
+            {
+                RPC_Release();      // 슬롯 꽉 참 등
             }
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_Request(PlayerRef p)
+    {
+        if (Claimer != PlayerRef.None) return;        // 먼저 온 사람이 임자
+        Claimer = p;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_Consumed() => Runner.Despawn(Object);
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_Release() => Claimer = PlayerRef.None;
+
+    public int[] ExportEnchants()
+    {
+        var arr = new int[PlayerEnchant.MaxEnchants];
+        for (int i = 0; i < arr.Length; i++) arr[i] = Enchants[i];
+        return arr;
     }
 
     bool TryGive(NetworkObject player)
@@ -145,8 +202,14 @@ public class Pickup : NetworkBehaviour
         {
             case PickupKind.Weapon:
                 if (!player.TryGetComponent<PlayerEquipment>(out var eq)) return false;
-                Debug.Log($"[Pickup] 획득 시도 — {ItemId}");
-                return eq.PickUpWeapon(ItemId);      // ← 실패하면 픽업이 안 사라짐
+
+                if (!eq.PickUpWeapon(ItemId, out int slot)) return false;
+
+                // 무기를 끼운 뒤에 인챈트를 덮어씀 (순서 중요)
+                if (player.TryGetComponent<PlayerEnchant>(out var pe))
+                    pe.ImportSlot(slot, ItemId, ExportEnchants());
+
+                return true;
 
             case PickupKind.Soul:
                 if (!player.TryGetComponent<PlayerHealth>(out var hp)) return false;

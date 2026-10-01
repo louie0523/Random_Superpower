@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 
 public class AmmoDisplay : MonoBehaviour
@@ -7,11 +7,11 @@ public class AmmoDisplay : MonoBehaviour
     [SerializeField] private TMP_Text currentText;
     [SerializeField] private TMP_Text maxText;
 
-    [Header("»ö")]
+    [Header("ìƒ‰")]
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color lowColor = new(1f, 0.75f, 0.2f);
     [SerializeField] private Color emptyColor = new(1f, 0.3f, 0.3f);
-    [Tooltip("ÀÌ ºñÀ² ÀÌÇÏ¸é °æ°í»ö")]
+    [Tooltip("ì´ ë¹„ìœ¨ ì´í•˜ë©´ ê²½ê³ ìƒ‰")]
     [SerializeField, Range(0f, 1f)] private float lowRatio = 0.25f;
 
     private PlayerEquipment _equip;

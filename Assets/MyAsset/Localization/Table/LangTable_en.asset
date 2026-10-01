@@ -452,8 +452,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3004699710697474
-    m_Localized: '''One-Shot'' gauge is gained at a rate of 3% per second while moving
-      and 5% when hitting an enemy with a basic attack.'
+    m_Localized: One-Shot' gauge is gained at a rate of 3% per second while moving
+      and 5% when hitting an enemy with a basic attack.
     m_Metadata:
       m_Items: []
   - m_Id: 3004699710697475
@@ -491,6 +491,91 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3004699714891782
     m_Localized: Movement speed increases by 2 during the duration.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008527633428480
+    m_Localized: dagger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156992
+    m_Localized: It is a very basic sword.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156993
+    m_Localized: wooden bow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156994
+    m_Localized: It's decent enough.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156995
+    m_Localized: wooden walking stick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156996
+    m_Localized: How scary!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156997
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4008528275156998
+    m_Localized: With just this one thing, my grandmother could have become a legend
+      too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280082063360
+    m_Localized: bare hands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4025280144977920
+    m_Localized: There is nothing you can't do with this!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871831687168
+    m_Localized: vicinity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601728
+    m_Localized: Enchantable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601729
+    m_Localized: Cannot be enchanted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601730
+    m_Localized: armor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601731
+    m_Localized: pitching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601732
+    m_Localized: shoes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601733
+    m_Localized: Both hands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4030871894601734
+    m_Localized: heaviness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4031231723941888
+    m_Localized: basic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974098284544
+    m_Localized: Enchant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4071974161199104
+    m_Localized: No enchantments applied.
     m_Metadata:
       m_Items: []
   references:

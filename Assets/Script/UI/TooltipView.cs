@@ -4,19 +4,30 @@ using TMPro;
 
 public class TooltipView : MonoBehaviour
 {
+    public struct Content
+    {
+        public string Title;
+        public string Body;
+        public string Detail;
+        public string[] Tags;
+
+        /// <summary>기존 3-튜플 호출부 호환</summary>
+        public static implicit operator Content((string title, string body, string detail) t)
+            => new Content { Title = t.title, Body = t.body, Detail = t.detail };
+    }
+
     [SerializeField] private RectTransform root;
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text bodyText;
     [SerializeField] private TMP_Text detailText;
-    [SerializeField] private GameObject detailSection;
-    [SerializeField] private TMP_Text hintText;
+    [SerializeField] private GameObject divider;
+    [SerializeField] private TMP_Text tagsText;
+
     [SerializeField] private Vector2 offset = new(16f, -16f);
     [SerializeField] private float edgePadding = 8f;
 
     private RectTransform _canvasRect;
     private Camera _uiCam;
-    private bool _showDetail;
-    private string _detailCache;
 
     void Awake()
     {
@@ -28,20 +39,43 @@ public class TooltipView : MonoBehaviour
         Hide();
     }
 
-    void Update()
+    void LateUpdate()
     {
-        if (!root.gameObject.activeSelf) return;
+        if (root.gameObject.activeSelf) Follow();
+    }
 
-        Follow();
+    public void Show(Content c)
+    {
+        SetText(titleText, c.Title);
+        SetText(bodyText, c.Body);
+        SetText(detailText, c.Detail);
 
-        if (!string.IsNullOrEmpty(_detailCache) && Input.GetMouseButtonDown(0))
+        bool hasTags = c.Tags != null && c.Tags.Length > 0;
+        if (tagsText != null)
         {
-            _showDetail = !_showDetail;
-            if (detailSection != null) detailSection.SetActive(_showDetail);
-
-            LayoutRebuilder.ForceRebuildLayoutImmediate(root);   // 크기 바뀌었으니 갱신
-            Follow();
+            tagsText.gameObject.SetActive(hasTags);
+            if (hasTags) tagsText.text = BuildTagLine(c.Tags);
         }
+        if (divider != null) divider.SetActive(hasTags);
+
+        root.gameObject.SetActive(true);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(root);
+        Follow();
+    }
+
+    public void Hide() => root.gameObject.SetActive(false);
+
+    /// <summary>칩처럼 보이도록 리치 텍스트로 배경을 깔아줌</summary>
+    static string BuildTagLine(string[] tags)
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var t in tags)
+        {
+            if (string.IsNullOrWhiteSpace(t)) continue;
+            sb.Append("<mark=#FFFFFF18>  ").Append(t).Append("  </mark> ");
+        }
+        return sb.ToString().TrimEnd();
     }
 
     void Follow()
@@ -63,34 +97,11 @@ public class TooltipView : MonoBehaviour
         root.anchoredPosition = local;
     }
 
-    public void Show(string title, string body, string detail = null)
+    static void SetText(TMP_Text t, string s)
     {
-        if (titleText != null) titleText.text = title;
-        if (bodyText != null) bodyText.text = body;
-
-        _detailCache = detail;
-        _showDetail = false;
-
-        if (detailText != null) detailText.text = detail ?? "";
-        if (detailSection != null) detailSection.SetActive(false);
-
-        if (hintText != null)
-        {
-            bool hasDetail = !string.IsNullOrEmpty(detail);
-            hintText.gameObject.SetActive(hasDetail);
-            if (hasDetail) hintText.text = LocUtil.Get("ui.tooltip.click_detail");
-        }
-
-        root.gameObject.SetActive(true);
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(root);   // 크기 확정 후 배치
-        Follow();
-    }
-
-    public void Hide()
-    {
-        _showDetail = false;
-        _detailCache = null;
-        root.gameObject.SetActive(false);
+        if (t == null) return;
+        bool has = !string.IsNullOrWhiteSpace(s);
+        t.text = s ?? "";
+        t.gameObject.SetActive(has);
     }
 }

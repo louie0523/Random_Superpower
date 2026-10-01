@@ -62,6 +62,38 @@ public class PlayerEnchant : NetworkBehaviour
         return n;
     }
 
+    /// <summary>슬롯의 인챈트를 배열로 복사</summary>
+    public int[] ExportSlot(int slot)
+    {
+        var arr = new int[MaxEnchants];
+        if (slot < 0 || slot >= PlayerEquipment.WeaponSlots) return arr;
+
+        for (int i = 0; i < MaxEnchants; i++)
+            arr[i] = GetEnchantId(slot, i);
+
+        return arr;
+    }
+
+
+    /// <summary>주운 무기의 인챈트를 슬롯에 복원</summary>
+    public void ImportSlot(int slot, int weaponId, int[] src)
+    {
+        if (!HasStateAuthority) return;
+        if (slot < 0 || slot >= PlayerEquipment.WeaponSlots) return;
+
+        bool any = false;
+
+        for (int i = 0; i < MaxEnchants; i++)
+        {
+            int id = (src != null && i < src.Length) ? src[i] : 0;
+            SlotEnchants.Set(slot * MaxEnchants + i, id);
+            if (id != 0) any = true;
+        }
+
+        EnchantedWeaponIds.Set(slot, any ? weaponId : 0);
+        ApplyAll();
+    }
+
     public int ActiveStage => _equip != null ? GetStage(_equip.ActiveWeaponSlot) : 0;
 
     public bool CanEnchant(out string reason, out int cost)
@@ -152,7 +184,7 @@ public class PlayerEnchant : NetworkBehaviour
         if (!HasStateAuthority) return;
         if (EnchantedWeaponIds[slot] == newWeaponId) return;
 
-        ClearSlot(slot);
+        //ClearSlot(slot);
     }
 
     // ══════════════════ 적용 ══════════════════
@@ -162,10 +194,15 @@ public class PlayerEnchant : NetworkBehaviour
         if (!HasStateAuthority) return;
         if (_stats == null || _equip == null || database == null) return;
 
+
+
         for (int i = 0; i < MaxEnchants; i++)
             _stats.RemoveBySource(SourceId.EnchantBase + i);
 
         int slot = _equip.ActiveWeaponSlot;
+
+        int wid = _equip.GetWeaponIdAt(slot);
+        if (wid == 0 || EnchantedWeaponIds[slot] != wid) return;
 
         for (int i = 0; i < MaxEnchants; i++)
         {

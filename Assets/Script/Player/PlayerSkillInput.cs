@@ -14,6 +14,8 @@ public class PlayerSkillInput : MonoBehaviour
 
     void Update()
     {
+        if (UIManager.InputBlocked) return;
+
         if (Input.GetKeyDown(skill1)) Pressed[0] = true;
         if (Input.GetKeyDown(skill2)) Pressed[1] = true;
 
