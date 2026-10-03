@@ -86,6 +86,34 @@ public class PlayerEquipment : NetworkBehaviour
         ApplyAll();
     }
 
+    /// <summary>시작 무기만 든 처음 상태로</summary>
+    public void ResetForNewRound()
+    {
+        if (!HasStateAuthority) return;
+
+        for (int i = 0; i < WeaponSlots; i++)
+        {
+            WeaponIds.Set(i, 0);
+            SlotAmmo.Set(i, 0);
+        }
+
+        WeaponIds.Set(0, startWeaponId);
+        ActiveWeaponSlot = 0;
+        ArmorId = 0;
+        HelmetId = 0;
+        BootsId = 0;
+        SwapTimer = default;
+
+        RefillAmmo(0);
+        ApplyAll();      // 스탯 즉시 재적용 (OnChangedRender는 렌더 때라 늦음)
+    }
+
+    public bool HasEmptyWeaponSlot()
+    {
+        for (int i = 0; i < WeaponSlots; i++)
+            if (WeaponIds[i] == 0) return true;
+        return false;
+    }
     public void AddAmmo(int amount)
     {
         if (!HasStateAuthority) return;

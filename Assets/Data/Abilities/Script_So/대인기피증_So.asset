@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 861b93e5b0c44fe4294a08ca243751d6, type: 3}
-  m_Name: "\uB300\uC778\uAE30\uD53C\uC99D"
+  m_Name: "\uB300\uC778\uAE30\uD53C\uC99D_So"
   m_EditorClassIdentifier: Assembly-CSharp::AnthropophobiaAbility
   DetectRange: 5
   TriggerTime: 3

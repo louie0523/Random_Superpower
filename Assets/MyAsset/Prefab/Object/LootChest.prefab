@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 434850148142681884}
   - component: {fileID: 4996097942353926482}
   - component: {fileID: 7815494447225777847}
+  - component: {fileID: -7704291726552735581}
   m_Layer: 8
   m_Name: LootChest
   m_TagString: Untagged
@@ -50,9 +51,10 @@ MonoBehaviour:
   SortKey: 2545847137
   SendPriority: 1
   EnableInterpolation: 1
-  Flags: 262146
+  Flags: 131330
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: -7704291726552735581}
   - {fileID: 7815494447225777847}
   ForceRemoteRenderTimeframe: 0
 --- !u!65 &4996097942353926482
@@ -97,12 +99,54 @@ MonoBehaviour:
   weaponIds: 
   dropCount: 1
   dropSpread: 1.2
+  stoneCountMin: 3
+  stoneCountMax: 10
   lid: {fileID: 8052426859621238089}
   lidOpenRot: {x: -100, y: 0, z: 0}
   lidSpeed: 6
   _IsOpened:
     RawValue: 0
   _Progress: 0
+--- !u!114 &-7704291726552735581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8438604559942411438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  ConfigFlags: 0
+  PhysicsSettings:
+    ForecastEnabled: 1
+    DebugPhysics: 0
+    GravityForecast: 2
+    MaxExtrapolationTime: 0.15
+    MinLinearDetectedError: 0.02
+    MinAngularDetectedError: 3
+    MaxLinearError: 0
+    MaxAngularError: 0
+    LowCorrectionProgressThreshold: 0.015
+    HighErrorSimilarityThreshold: 1
+    MaxErrorTotalTime: 0.5
+    MaxRemoteSleepIgnoreTime: 0.5
+    ErrorCorrectionType: 0
+    LinearVelCorrectionMul: 1
+    AngularVelCorrectionMul: 1
+    PositionCorrectionLerp: 0.15
+    RotationCorrectionLerp: 0.15
+    Spring: 75
+    Damper: 2
+    MinImpactfulCollisionAlignment: 0.3
+    ImpactStartCorrectionTime: 0.1
+    ImpactCorrectionTimeComplete: 0.3
 --- !u!1001 &5611800072133453321
 PrefabInstance:
   m_ObjectHideFlags: 0

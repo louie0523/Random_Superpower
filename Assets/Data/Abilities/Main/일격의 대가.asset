@@ -35,13 +35,27 @@ MonoBehaviour:
       3%, \uC801 \uAE30\uBCF8\uACF5\uACA9 \uC801\uC911\uC2DC 5%\uC529 \uD68D\uB4DD\uD569\uB2C8\uB2E4."
     Tip: 
     DevNote: 
+    MaxLevel: 3
+    Vars:
+    - Name: "\uC77C\uACA9 \uD53C\uD574\uB7C9 \uACC4\uC218"
+      Values:
+      - 400
+      - 450
+      - 500
     Effects: []
   - Name: "\uC7AC\uBE60\uB978 \uBC1C"
     Icon: {fileID: 0}
-    Description: "\uC774\uB3D9 \uC18D\uB3C4\uAC00 1 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+    Description: "\uC774\uB3D9 \uC18D\uB3C4\uAC00 5 \uC99D\uAC00\uD569\uB2C8\uB2E4."
     DetailedInfo: 
     Tip: 
     DevNote: 
+    MaxLevel: 3
+    Vars:
+    - Name: "\uC18D\uB3C4 \uC99D\uAC00\uB7C9"
+      Values:
+      - 5
+      - 10
+      - 15
     Effects:
     - Trigger: 0
       Effect: 0
@@ -51,7 +65,7 @@ MonoBehaviour:
       CostChargeSlot: 0
       ChargeCost: 0
       Values:
-      - 10
+      - 1
       Duration: 0
       Chance: 1
       Stat: 3
@@ -61,13 +75,20 @@ MonoBehaviour:
   Skills:
   - Name: "\uC228\uACE0\uB974\uAE30"
     Icon: {fileID: 0}
-    Description: "\uC989\uC2DC \uC77C\uACA9 \uAC8C\uC774\uC9C0\uB97C 50% \uCC44\uC6C1\uB2C8\uB2E4."
+    Description: "\uC989\uC2DC \uC77C\uACA9 \uAC8C\uC774\uC9C0\uB97C {0}% \uCC44\uC6C1\uB2C8\uB2E4.\n\uC0AC\uC6A9\uD6C4
+      \uC7A0\uC2DC \uC774\uB3D9 \uC18D\uB3C4\uAC00 \uC99D\uAC00\uD569\uB2C8\uB2E4."
     DetailedInfo: 
     Tip: 
     DevNote: 
     Slot: 0
+    MaxLevel: 3
+    Vars: []
     RequiredWeapon: 0
-    Cooldown: 1
+    CooldownByLevel:
+    - 5
+    - 4
+    - 3
+    Cooldown: 0
     SoulCost: 0
     UltimateChargeCost: 0
     MotionData: {fileID: 11400000, guid: 599f48ac1ff19fa45bba8d11924c6ff7, type: 2}
@@ -122,7 +143,10 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 3
+    MaxLevel: 5
+    Vars: []
     RequiredWeapon: 0
+    CooldownByLevel: []
     Cooldown: 12
     SoulCost: 0
     UltimateChargeCost: 0

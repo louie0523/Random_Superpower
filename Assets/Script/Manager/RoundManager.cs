@@ -20,6 +20,11 @@ public class RoundManager : NetworkBehaviour
     static RoundManager _inst;
     public static RoundManager Instance => _inst;
 
+    [Tooltip("재시작 직후 승리 판정을 쉬는 시간 (초기화 RPC가 반영될 때까지)")]
+    [SerializeField] private float restartGrace = 2f;
+
+    [Networked] private TickTimer GraceTimer { get; set; }
+
     public override void Spawned()
     {
         _inst = this;
@@ -40,6 +45,8 @@ public class RoundManager : NetworkBehaviour
             if (RestartTimer.Expired(Runner)) Restart();
             return;
         }
+
+        if (!GraceTimer.ExpiredOrNotRunning(Runner)) return;   // ★ 재시작 직후 대기
 
         CheckWin();
     }
@@ -79,15 +86,20 @@ public class RoundManager : NetworkBehaviour
         {
             var obj = Runner.GetPlayerObject(p);
             if (obj == null) continue;
-            if (!obj.TryGetComponent<PlayerHealth>(out var h)) continue;
-
-            h.ResetForNewRound();
-            if (obj.TryGetComponent<PlayerShop>(out var shop)) shop.ResetForNewRound();
+            if (obj.TryGetComponent<PlayerHealth>(out var h))
+                h.RPC_ResetForNewRound();        // ★ 직접 호출 대신 RPC
         }
+
+        foreach (var c in FindObjectsByType<LootChest>(FindObjectsSortMode.None))
+            c.ResetForNewRound();
+
+        foreach (var pk in FindObjectsByType<Pickup>(FindObjectsSortMode.None))
+            pk.RPC_DespawnForReset();
 
         GameOver = false;
         Winner = PlayerRef.None;
         WinnerSoul = 0;
+        GraceTimer = TickTimer.CreateFromSeconds(Runner, restartGrace);   // ★
 
         Debug.Log("[Round] 새 라운드 시작");
     }

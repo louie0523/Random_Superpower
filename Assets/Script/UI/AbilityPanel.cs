@@ -11,44 +11,53 @@ public class AbilityPanel : UIPanel
     [SerializeField] private TMP_Text abilityName;
     [SerializeField] private TMP_Text abilityFlavor;
 
+    [Header("레벨")]
+    [Tooltip("남은 스킬 포인트 표시. 0이면 숨김")]
+    [SerializeField] private TMP_Text pointsText;
+
     [Header("열 — 목록 컨테이너")]
     [SerializeField] private Transform passiveParent;
     [SerializeField] private Transform skillParent;
-    [SerializeField] private Transform specialParent;
-    [Tooltip("비워두면 게이지 항목이 패시브 열로 들어감")]
-    [SerializeField] private Transform chargeParent;
 
     [Header("열 — 라벨")]
     [SerializeField] private LocText passiveLabel;
     [SerializeField] private LocText skillLabel;
-    [SerializeField] private LocText specialLabel;
 
     [Header("열 — 비었을 때")]
     [SerializeField] private GameObject passiveEmpty;
     [SerializeField] private GameObject skillEmpty;
-    [SerializeField] private GameObject specialEmpty;
 
     [Header("카드")]
     [SerializeField] private AbilityEntryView entryPrefab;
 
-    [Header("출처 색")]
+    [Header("출처 색 (카드 왼쪽 띠)")]
     [SerializeField] private Color mainAccent = new(0f, 0f, 0f, 0f);
     [SerializeField] private Color subAccent = new(0.38f, 0.75f, 1f, 1f);
     [SerializeField] private Color randomAccent = new(1f, 0.78f, 0.2f, 1f);
-
-    [Header("분류 방식")]
-    [Tooltip("켜면 서브·랜덤이 전부 특수 열로. 끄면 종류대로 나뉘고 색으로만 구분")]
-    [SerializeField] private bool specialColumnBySource = true;
 
     [Header("닫기")]
     [SerializeField] private Button closeButton;
     [SerializeField] private LocText closeHint;
 
-    private readonly List<AbilityEntryView> _entries = new();
+    /// <summary>카드 하나가 어떤 항목인지</summary>
+    struct Card
+    {
+        public AbilityEntryView View;
+        public AbilityData Data;
+        public int Owner;       // AbilityRuntime.OwnerMain / OwnerSub, 레벨 없음(랜덤)은 -1
+        public bool IsSkill;
+        public int Index;       // Passives 또는 Skills 배열 안의 번호
+        public int Local;       // 레벨 저장용 항목 번호 (패시브 먼저, 이어서 스킬)
+        public Color Accent;
+    }
+
+    private readonly List<Card> _cards = new();
     private AbilityRuntime _runtime;
     private AbilityEntryView _selectedEntry;
 
-    private int _passiveCount, _skillCount, _specialCount;
+    private int _passiveCount, _skillCount;
+    private int _rankSig;
+    private (int, int, int) _shownIds;
 
     // ══════════════════ 생명주기 ══════════════════
 
@@ -61,7 +70,6 @@ public class AbilityPanel : UIPanel
         closeHint?.SetKey("ui.common.close_hint");
         passiveLabel?.SetKey("ui.ability.passive");
         skillLabel?.SetKey("ui.ability.skill");
-        specialLabel?.SetKey("ui.ability.special");
     }
 
     void OnEnable() => LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
@@ -76,6 +84,23 @@ public class AbilityPanel : UIPanel
 
     protected override void OnOpened() => Rebuild();
 
+    void Update()
+    {
+        if (!IsOpen || _runtime == null) return;
+
+        // 능력 자체가 바뀌었으면 (사망 리롤·진화) 전부 다시
+        var ids = (_runtime.MainAbilityId, _runtime.SubAbilityId, _runtime.RandomAbilityId);
+        if (ids != _shownIds) { Rebuild(); return; }
+
+        // 레벨·포인트만 바뀌었으면 카드 내용만 갱신 (선택·상세창 유지)
+        int sig = ComputeRankSig();
+        if (sig != _rankSig)
+        {
+            _rankSig = sig;
+            RefreshCards();
+        }
+    }
+
     // ══════════════════ 재구성 ══════════════════
 
     void Rebuild()
@@ -83,26 +108,36 @@ public class AbilityPanel : UIPanel
         UIManager.Instance?.Detail?.Hide();
         _selectedEntry = null;
 
-        foreach (var e in _entries)
+        foreach (var c in _cards)
         {
-            if (e == null) continue;
-            e.gameObject.SetActive(false);
-            Destroy(e.gameObject);
+            if (c.View == null) continue;
+            c.View.gameObject.SetActive(false);
+            Destroy(c.View.gameObject);
         }
-        _entries.Clear();
-        _passiveCount = _skillCount = _specialCount = 0;
+        _cards.Clear();
+        _passiveCount = _skillCount = 0;
 
-        if (_runtime == null) { FillHeader(null); UpdateEmptyStates(); return; }
+        if (_runtime == null)
+        {
+            FillHeader(null);
+            UpdateEmptyStates();
+            RefreshPoints();
+            return;
+        }
+
+        _shownIds = (_runtime.MainAbilityId, _runtime.SubAbilityId, _runtime.RandomAbilityId);
 
         var main = _runtime.GetMainAbility();
         FillHeader(main);
 
-        AddFrom(main, mainAccent, false);
-        AddFrom(_runtime.GetSubAbility(), subAccent, specialColumnBySource);
-        AddFrom(_runtime.GetRandomAbility(), randomAccent, specialColumnBySource);
+        // 정렬 = 추가 순서. 각 열 안에서 메인 → 서브 → 랜덤(항상 맨 아래)
+        AddFrom(main, mainAccent, AbilityRuntime.OwnerMain);
+        AddFrom(_runtime.GetSubAbility(), subAccent, AbilityRuntime.OwnerSub);
+        AddFrom(_runtime.GetRandomAbility(), randomAccent, -1);
 
-        //AddCharges(main);
+        _rankSig = ComputeRankSig();
         UpdateEmptyStates();
+        RefreshPoints();
     }
 
     void FillHeader(AbilityData data)
@@ -130,70 +165,98 @@ public class AbilityPanel : UIPanel
                                                LocUtil.Resolve(data.Flavor));
     }
 
-    /// <param name="forceSpecial">true면 종류와 무관하게 특수 열로 보냄</param>
-    void AddFrom(AbilityData data, Color accent, bool forceSpecial)
+    /// <summary>패시브는 패시브 열, 스킬은 스킬 열. 출처는 카드 띠 색으로만 구분</summary>
+    void AddFrom(AbilityData data, Color accent, int owner)
     {
         if (data == null) return;
 
-        if (data.Passives != null)
-            for (int i = 0; i < data.Passives.Length; i++)
-                Place(forceSpecial ? Col.Special : Col.Passive,
-                      BuildPassive(data, i, accent));
+        int p = data.Passives?.Length ?? 0;
+
+        for (int i = 0; i < p; i++)
+            Spawn(passiveParent, new Card
+            {
+                Data = data,
+                Owner = owner,
+                IsSkill = false,
+                Index = i,
+                Local = i,
+                Accent = accent,
+            }, ref _passiveCount);
 
         if (data.Skills != null)
             for (int i = 0; i < data.Skills.Length; i++)
-                Place(forceSpecial ? Col.Special : Col.Skill,
-                      BuildSkill(data, i, accent));
-    }
-
-    void AddCharges(AbilityData data)
-    {
-        if (data?.Charges == null) return;
-
-        foreach (var c in data.Charges)
-        {
-            var m = new AbilityEntryView.Model
-            {
-                SlotLabel = LocUtil.Get("ui.ability.charge"),
-                Title = LocUtil.Resolve(c.DisplayName),
-                Body = LocUtil.Get("ui.ability.charge_max", c.Max.ToString("0")),
-                Accent = mainAccent,
-            };
-
-            if (chargeParent != null) Spawn(chargeParent, m);
-            else Place(Col.Passive, m);
-        }
+                Spawn(skillParent, new Card
+                {
+                    Data = data,
+                    Owner = owner,
+                    IsSkill = true,
+                    Index = i,
+                    Local = p + i,
+                    Accent = accent,
+                }, ref _skillCount);
     }
 
     // ══════════════════ 배치 ══════════════════
 
-    enum Col { Passive, Skill, Special }
-
-    void Place(Col col, AbilityEntryView.Model m)
-    {
-        switch (col)
-        {
-            case Col.Passive: Spawn(passiveParent, m); _passiveCount++; break;
-            case Col.Skill: Spawn(skillParent, m); _skillCount++; break;
-            case Col.Special: Spawn(specialParent, m); _specialCount++; break;
-        }
-    }
-
-    void Spawn(Transform parent, AbilityEntryView.Model m)
+    void Spawn(Transform parent, Card c, ref int count)
     {
         if (entryPrefab == null || parent == null) return;
 
-        var view = Instantiate(entryPrefab, parent);
-        view.Bind(m);
-        view.Clicked += OnEntryClicked;
-        _entries.Add(view);
+        c.View = Instantiate(entryPrefab, parent);
+        c.View.Bind(BuildModel(c));
+        c.View.Clicked += OnEntryClicked;
+        c.View.UpgradeClicked += OnUpgradeClicked;
+        _cards.Add(c);
+        count++;
     }
 
     void UpdateEmptyStates()
     {
         if (passiveEmpty != null) passiveEmpty.SetActive(_passiveCount == 0);
         if (skillEmpty != null) skillEmpty.SetActive(_skillCount == 0);
-        if (specialEmpty != null) specialEmpty.SetActive(_specialCount == 0);
+    }
+
+    // ══════════════════ 레벨 갱신 ══════════════════
+
+    int ComputeRankSig()
+    {
+        if (_runtime == null) return 0;
+
+        unchecked
+        {
+            int h = _runtime.SkillPoints * 397;
+            for (int i = 0; i < _runtime.EntryRanks.Length; i++)
+                h = h * 31 + _runtime.EntryRanks[i];
+            return h;
+        }
+    }
+
+    void RefreshCards()
+    {
+        var detail = UIManager.Instance?.Detail;
+
+        foreach (var c in _cards)
+        {
+            if (c.View == null) continue;
+
+            bool sel = c.View == _selectedEntry;
+            c.View.Bind(BuildModel(c));
+            c.View.SetSelected(sel);
+
+            // 보고 있던 상세창도 새 수치로
+            if (sel && detail != null && detail.IsOpen) ShowDetail(c.View);
+        }
+
+        RefreshPoints();
+    }
+
+    void RefreshPoints()
+    {
+        if (pointsText == null) return;
+
+        int pts = _runtime != null ? _runtime.SkillPoints : 0;
+        pointsText.gameObject.SetActive(pts > 0);
+        if (pts > 0) pointsText.text = LocUtil.Get("ui.ability.points", pts);
     }
 
     // ══════════════════ 클릭 ══════════════════
@@ -202,9 +265,14 @@ public class AbilityPanel : UIPanel
     {
         _selectedEntry = v;
 
-        foreach (var e in _entries)
-            if (e != null) e.SetSelected(e == v);
+        foreach (var c in _cards)
+            if (c.View != null) c.View.SetSelected(c.View == v);
 
+        ShowDetail(v);
+    }
+
+    void ShowDetail(AbilityEntryView v)
+    {
         var d = v.Data;
         UIManager.Instance?.Detail?.Show(new DetailWindow.Content
         {
@@ -212,83 +280,89 @@ public class AbilityPanel : UIPanel
             Title = d.Title,
             Subtitle = d.SlotLabel,
             Description = d.Body,      // 카드에 있던 기본 설명
-            Body = d.Detail,    // 쿨타임·사거리·팁 등 추가 정보
+            Body = d.Detail,    // 레벨·쿨타임·사거리·팁 등 추가 정보
         });
+    }
+
+    void OnUpgradeClicked(AbilityEntryView v)
+    {
+        if (_runtime == null) return;
+
+        foreach (var c in _cards)
+        {
+            if (c.View != v) continue;
+            _runtime.RequestUpgrade(c.Owner, c.Local);
+            return;
+        }
     }
 
     // ══════════════════ 모델 만들기 ══════════════════
 
-    int Rank => _runtime != null ? _runtime.SkillRank : 0;
-
-    AbilityEntryView.Model BuildPassive(AbilityData data, int i, Color accent)
+    AbilityEntryView.Model BuildModel(Card c)
     {
-        var p = data.Passives[i];
-        string prefix = $"ability.{data.Id}.passive.{i}";
-        object[] args = BuildArgs(p.Effects, Rank);
-
-        return new AbilityEntryView.Model
+        int rank = 0, max = 1;
+        if (c.Owner >= 0 && _runtime != null)
         {
-            Icon = p.Icon,
-            SlotLabel = LocUtil.Get("ui.ability.passive"),
-            Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(p.Name)),
-            Body = Format(LocUtil.GetOr($"{prefix}.desc",
-                                             LocUtil.Resolve(p.Description)), args),
-            Detail = BuildPassiveDetail(data, i, args),
-            Accent = accent,
-        };
-    }
-
-    AbilityEntryView.Model BuildSkill(AbilityData data, int i, Color accent)
-    {
-        var s = data.Skills[i];
-        string prefix = $"ability.{data.Id}.skill.{i}";
-        object[] args = BuildArgs(s.Effects, Rank);
-
-        return new AbilityEntryView.Model
-        {
-            Icon = s.Icon,
-            SlotLabel = s.Slot.Label(),
-            Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(s.Name)),
-            Body = Format(LocUtil.GetOr($"{prefix}.desc",
-                                             LocUtil.Resolve(s.Description)), args),
-            Detail = BuildSkillDetail(data, i, args),
-            Accent = accent,
-        };
-    }
-
-    static object[] BuildArgs(AbilityData.EffectDef[] effects, int rank)
-    {
-        if (effects == null) return System.Array.Empty<object>();
-
-        var args = new object[effects.Length];
-        for (int i = 0; i < effects.Length; i++)
-            args[i] = effects[i].GetValue(rank);
-        return args;
-    }
-
-    static string Format(string s, object[] args)
-    {
-        if (string.IsNullOrEmpty(s) || args == null || args.Length == 0) return s;
-
-        try { return string.Format(s, args); }
-        catch (System.FormatException e)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"[AbilityPanel] 서식 인자 불일치 ({args.Length}개): \"{s}\" — {e.Message}");
-#endif
-            return s;
+            rank = _runtime.GetEntryRank(c.Owner, c.Local);
+            max = _runtime.GetEntryMaxLevel(c.Owner, c.Local);
         }
+        bool ranked = c.Owner >= 0 && max > 1;
+
+        var m = new AbilityEntryView.Model
+        {
+            Accent = c.Accent,
+            ShowRank = ranked,
+            Level = rank + 1,
+            MaxLevel = max,
+            CanUpgrade = ranked && _runtime.CanUpgrade(c.Owner, c.Local),
+        };
+
+        var data = c.Data;
+
+        if (c.IsSkill)
+        {
+            var s = data.Skills[c.Index];
+            string prefix = $"ability.{data.Id}.skill.{c.Index}";
+
+            m.Icon = s.Icon;
+            m.SlotLabel = s.Slot.Label();
+            m.Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(s.Name));
+            m.Body = AbilityData.FormatSkill(s,
+                        LocUtil.GetOr($"{prefix}.desc", LocUtil.Resolve(s.Description)), rank);
+            m.Detail = BuildSkillDetail(s, prefix, rank, max, ranked);
+        }
+        else
+        {
+            var p = data.Passives[c.Index];
+            string prefix = $"ability.{data.Id}.passive.{c.Index}";
+
+            m.Icon = p.Icon;
+            m.SlotLabel = LocUtil.Get("ui.ability.passive");
+            m.Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(p.Name));
+            m.Body = AbilityData.FormatPassive(p,
+                        LocUtil.GetOr($"{prefix}.desc", LocUtil.Resolve(p.Description)), rank);
+            m.Detail = BuildPassiveDetail(p, prefix, rank, max, ranked);
+        }
+
+        return m;
     }
 
-    string BuildSkillDetail(AbilityData data, int i, object[] args)
+    string BuildSkillDetail(AbilityData.SkillDef s, string prefix, int rank, int max, bool ranked)
     {
-        var s = data.Skills[i];
-        string prefix = $"ability.{data.Id}.skill.{i}";
         var sb = new System.Text.StringBuilder();
 
+        if (ranked)
+            sb.AppendLine(LocUtil.Get("ui.ability.level", rank + 1, max));
+
         // 코스트 / 쿨타임
-        if (s.Cooldown > 0f)
-            sb.AppendLine(LocUtil.Get("ui.ability.cooldown", s.Cooldown.ToString("0.#")));
+        bool hasLevels = s.CooldownByLevel != null && s.CooldownByLevel.Length > 0;
+        if (s.GetCooldown(rank) > 0f)
+        {
+            string cd = hasLevels
+                ? AbilityData.FormatLevels(s.CooldownByLevel, rank, max)
+                : s.Cooldown.ToString("0.#");
+            sb.AppendLine(LocUtil.Get("ui.ability.cooldown", cd));
+        }
 
         if (s.SoulCost > 0)
             sb.AppendLine(LocUtil.Get("ui.ability.soul_cost", s.SoulCost));
@@ -321,7 +395,7 @@ public class AbilityPanel : UIPanel
         if (!string.IsNullOrWhiteSpace(info) && !info.StartsWith("#"))
         {
             sb.AppendLine();
-            sb.AppendLine(Format(info, args));
+            sb.AppendLine(AbilityData.FormatSkill(s, info, rank));
         }
 
         // 팁
@@ -329,19 +403,27 @@ public class AbilityPanel : UIPanel
         if (!string.IsNullOrWhiteSpace(tip) && !tip.StartsWith("#"))
         {
             sb.AppendLine();
-            sb.AppendLine(LocUtil.Get("ui.ability.tip_prefix") + " " + Format(tip, args));
+            sb.AppendLine(LocUtil.Get("ui.ability.tip_prefix") + " " + AbilityData.FormatSkill(s, tip, rank));
         }
 
         return sb.ToString().TrimEnd();
     }
 
-    string BuildPassiveDetail(AbilityData data, int i, object[] args)
+    string BuildPassiveDetail(AbilityData.PassiveDef p, string prefix, int rank, int max, bool ranked)
     {
-        var p = data.Passives[i];
-        string info = LocUtil.GetOr($"ability.{data.Id}.passive.{i}.info",
-                                    LocUtil.Resolve(p.DetailedInfo));
+        var sb = new System.Text.StringBuilder();
 
-        if (string.IsNullOrWhiteSpace(info) || info.StartsWith("#")) return null;
-        return Format(info, args);
+        if (ranked)
+            sb.AppendLine(LocUtil.Get("ui.ability.level", rank + 1, max));
+
+        string info = LocUtil.GetOr($"{prefix}.info", LocUtil.Resolve(p.DetailedInfo));
+        if (!string.IsNullOrWhiteSpace(info) && !info.StartsWith("#"))
+        {
+            if (sb.Length > 0) sb.AppendLine();
+            sb.AppendLine(AbilityData.FormatPassive(p, info, rank));
+        }
+
+        string s = sb.ToString().TrimEnd();
+        return string.IsNullOrEmpty(s) ? null : s;
     }
 }

@@ -12,6 +12,9 @@ public class LootChest : NetworkBehaviour
     [Tooltip("이 거리를 벗어나면 진행도 초기화")]
     [SerializeField] private float interactRange = 2.5f;
 
+    [Tooltip("SA가 보는 원격 플레이어 위치는 약간 늦으므로 거리 판정에 주는 여유 (m)")]
+    [SerializeField] private float rangeTolerance = 0.5f;
+
     [Tooltip("재충전 시간. 0이면 한 번만")]
     [SerializeField] private float refillTime = 45f;
 
@@ -50,50 +53,81 @@ public class LootChest : NetworkBehaviour
 
     // ══════════════════ 상호작용 ══════════════════
 
-    /// <summary>플레이어가 키를 누르고 있는 동안 매 틱 호출</summary>
-    /// 
-    //[Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    //public void RPC_Hold(PlayerRef player, Vector3 playerPos) => Hold(player, playerPos);
-
-    public void Hold(PlayerRef player, Vector3 playerPos)
+    /// <summary>
+    /// 누르기 시작 / 뗌. 누가 열고 있는지만 SA에 알리고,
+    /// 진행도·거리·사망 판정은 SA가 FixedUpdateNetwork에서 직접 한다.
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetHold(PlayerRef player, NetworkBool on)
     {
-        if (!HasStateAuthority) return;
         if (IsOpened) return;
 
-        // 다른 사람이 열고 있으면 뺏지 못함
-        if (Opener != PlayerRef.None && Opener != player) return;
-
-        if (Vector3.Distance(playerPos, transform.position) > interactRange)
+        if (on)
         {
-            Cancel(player);
+            // 다른 사람이 열고 있으면 뺏지 못함 — 그 사람이 떼면 다음 요청 때 잡힘
+            if (Opener == PlayerRef.None) Opener = player;
+        }
+        else if (Opener == player)
+        {
+            Opener = PlayerRef.None;
+            Progress = 0f;
+        }
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        if (!HasStateAuthority) return;
+
+        if (IsOpened)
+        {
+            if (refillTime > 0f && RefillTimer.Expired(Runner))
+            {
+                IsOpened = false;
+                Progress = 0f;
+                RefillTimer = default;
+            }
             return;
         }
 
-        Opener = player;
-        Progress += Runner.DeltaTime / Mathf.Max(0.1f, openTime);
+        // ── 누군가 열고 있음 → SA가 직접 검증 ──
+        if (Opener != PlayerRef.None)
+        {
+            if (!IsOpenerValid())
+            {
+                // 멀어짐 · 사망 · 나감 → 취소
+                Opener = PlayerRef.None;
+                Progress = 0f;
+                return;
+            }
 
-        if (Progress >= 1f) Open();
+            Progress += Runner.DeltaTime / Mathf.Max(0.1f, openTime);
+            if (Progress >= 1f) Open();
+            return;
+        }
+
+        // 아무도 안 누르고 있으면 진행도 감소
+        if (Progress > 0f)
+            Progress = Mathf.Max(0f, Progress - Runner.DeltaTime * 0.5f);
     }
 
-    /// <summary>키를 떼거나 멀어지면</summary>
-    public void Cancel(PlayerRef player)
+    bool IsOpenerValid()
     {
-        if (!HasStateAuthority) return;
-        if (Opener != player) return;
+        var obj = Runner.GetPlayerObject(Opener);
+        if (obj == null) return false;                                     // 나감
 
-        Opener = PlayerRef.None;
-        Progress = 0f;
+        if (obj.TryGetComponent<PlayerHealth>(out var h) && h.IsDead) return false;
+
+        float d = Vector3.Distance(obj.transform.position, transform.position);
+        return d <= interactRange + rangeTolerance;
     }
 
     void Open()
     {
-        var opener = Opener;      // ★ 초기화 전에 저장
+        var opener = Opener;      // 초기화 전에 저장
 
         IsOpened = true;
         Progress = 1f;
         Opener = PlayerRef.None;
-
-
 
         for (int i = 0; i < dropCount; i++) DropOne(i);
 
@@ -101,7 +135,7 @@ public class LootChest : NetworkBehaviour
 
         Debug.Log($"[Chest] 열림 — opener={opener.PlayerId}, stones={num}");
 
-        // 스톤은 연 사람에게 직접
+        // 스톤은 연 사람에게 직접 (RPC라 남의 플레이어여도 OK)
         if (num > 0 && opener != PlayerRef.None)
         {
             var obj = Runner.GetPlayerObject(opener);
@@ -112,8 +146,6 @@ public class LootChest : NetworkBehaviour
         if (refillTime > 0f)
             RefillTimer = TickTimer.CreateFromSeconds(Runner, refillTime);
     }
-
-    
 
     void DropOne(int index)
     {
@@ -135,26 +167,6 @@ public class LootChest : NetworkBehaviour
         }
     }
 
-    public override void FixedUpdateNetwork()
-    {
-        if (!HasStateAuthority) return;
-
-        if (IsOpened)
-        {
-            if (refillTime > 0f && RefillTimer.Expired(Runner))
-            {
-                IsOpened = false;
-                Progress = 0f;
-                RefillTimer = default;
-            }
-            return;
-        }
-
-        // 아무도 안 누르고 있으면 진행도 감소
-        if (Opener == PlayerRef.None && Progress > 0f)
-            Progress = Mathf.Max(0f, Progress - Runner.DeltaTime * 0.5f);
-    }
-
     int RollWeaponId()
     {
         if (weaponIds != null && weaponIds.Length > 0)
@@ -167,6 +179,17 @@ public class LootChest : NetworkBehaviour
             if (e != null && e.Slot == EquipSlot.Weapon) pool.Add(e.Id);
 
         return pool.Count > 0 ? pool[Random.Range(0, pool.Count)] : 0;
+    }
+
+    // ══════════════════ 라운드 ══════════════════
+
+    public void ResetForNewRound()
+    {
+        if (!HasStateAuthority) return;
+        IsOpened = false;
+        Progress = 0f;
+        Opener = PlayerRef.None;
+        RefillTimer = default;
     }
 
     // ══════════════════ 연출 ══════════════════

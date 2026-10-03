@@ -1199,6 +1199,7 @@ GameObject:
   - component: {fileID: 1401543693}
   - component: {fileID: 1401543694}
   - component: {fileID: 1401543695}
+  - component: {fileID: 1401543696}
   m_Layer: 0
   m_Name: GameSpawner
   m_TagString: Untagged
@@ -1233,15 +1234,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed6501d44f3b4c48a6fe94b447e6188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicSpawner
-  playerPrefab: {fileID: 1933714763159700364, guid: 2e88d1791f21fe64c9c1d3b2386535b9, type: 3}
+  playerPrefab: {fileID: 0}
   dummySpawnDistance: 5
   spawnDummyKey: 286
   clearDummyKey: 287
   rerollAbilityKey: 288
   suicideKey: 289
   healKey: 290
-  soulGainKey: 257
-  soulLoseKey: 258
+  soulGainKey: 282
+  soulLoseKey: 283
   soulCheatAmount: 50
 --- !u!114 &1401543695
 MonoBehaviour:
@@ -1256,6 +1257,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameHUD
   showDebugKeys: 1
+--- !u!114 &1401543696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401543692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 068dec8f3bef6f54384cb7dd6fd18d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BasicSpawner
+  playerPrefab: {fileID: 1933714763159700364, guid: 2e88d1791f21fe64c9c1d3b2386535b9, type: 3}
+  dummySpawnDistance: 5
+  spawnDummyKey: 286
+  clearDummyKey: 287
+  rerollAbilityKey: 288
+  suicideKey: 289
+  healKey: 290
+  soulGainKey: 257
+  soulLoseKey: 258
+  soulCheatAmount: 50
 --- !u!1 &1632451878
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,11 +1324,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98d5ef63a7443304f893bff4a6878739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoundManager
-  targetSoul: 9999
+  targetSoul: 1000
   resultDuration: 8
   _GameOver:
     RawValue: 0
   _WinnerSoul: 0
+  restartGrace: 2
 --- !u!114 &1632451881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1321,7 +1345,7 @@ MonoBehaviour:
   SortKey: 1476231161
   SendPriority: 1
   EnableInterpolation: 1
-  Flags: 262146
+  Flags: 131074
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1632451880}

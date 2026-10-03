@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
-using static UnityEngine.InputSystem.Controls.AxisControl;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -132,6 +131,7 @@ public class PlayerHealth : NetworkBehaviour
         Deaths = 0;
 
         _recentDamage.Clear();
+        CombatTimer = default;
 
         if (IsDead)
         {
@@ -197,6 +197,20 @@ public class PlayerHealth : NetworkBehaviour
             Die(info.FromPlayer ? DeathCause.Player : DeathCause.Environment,
                 info.Attacker);
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ResetForNewRound()
+    {
+        // 순서 중요: 스탯 비우기 → 각 시스템이 처음 상태로 다시 걸기 → HP는 마지막
+        _stats.ClearAll();
+
+        GetComponent<PlayerEquipment>()?.ResetForNewRound();
+        GetComponent<PlayerEnchant>()?.ResetForNewRound();
+        GetComponent<PlayerShop>()?.ResetForNewRound();
+        GetComponent<AbilityRuntime>()?.ResetForNewRound();
+
+        ResetForNewRound();
     }
 
     void RecordDamage(PlayerRef attacker, int amount, bool canCauseFall)
@@ -272,6 +286,7 @@ public class PlayerHealth : NetworkBehaviour
         _ability?.RerollRandomAbility();
         _ability?.FireTrigger(TriggerType.OnDeath, null);
         _recentDamage.Clear();
+        CombatTimer = default;
 
     }
 

@@ -10,13 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56f6bb414ca2824449c1f6f8dac2ea77, type: 3}
-  m_Name: AK74
+  m_Name: AK47
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentData
   Id: 1004
-  DisplayName: AK74
+  DisplayName: AK47
+  NameEntry:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  DescEntry:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   Slot: 0
   Class: 1
   Icon: {fileID: 0}
+  Tags: []
   Description: "\uC774\uAC70 \uD558\uB098\uBA74 \uC6B0\uB9AC \uD560\uBA38\uB2C8\uB3C4
     \uCC9C\uAD70\uB9CC\uB9C8 \uC0C1\uB300\uB85C \uBB34\uC30D\uC744 \uCC0D\uAE30\uB3C4
     \uD558\uC168\uB2E4."
@@ -24,7 +43,7 @@ MonoBehaviour:
   - Stat: 1
     Type: 0
     Value: 10
-  EnchantTable: {fileID: 0}
+  EnchantTable: {fileID: 11400000, guid: 5963e09dfc03a6a43a0f834db3b9a41e, type: 2}
   EnchantStoneCost: 1
   EnchantCostPerStage: 0
   ModelPrefab: {fileID: 6518945834294003907, guid: f2a71c2ee2f538447a3bde44c6b59859, type: 3}
@@ -915,3 +934,6 @@ MonoBehaviour:
   PierceCount: 0
   PierceDamageFalloff: 0.3
   IsUnarmed: 0
+  references:
+    version: 2
+    RefIds: []

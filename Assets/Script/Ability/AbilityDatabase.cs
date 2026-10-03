@@ -154,9 +154,15 @@ public class AbilityDatabase : ScriptableObject
 
             switch (a.Kind)
             {
-                case AbilityKind.Main: _mainPool.Add(a); break;
-                case AbilityKind.Random: _randomPool.Add(a); break;
-                default: _subPools[a.Tier].Add(a); break;
+                case AbilityKind.Main:
+                    if (!a.ExcludeFromRoll) _mainPool.Add(a);
+                    break;
+                case AbilityKind.Random:
+                    _randomPool.Add(a);         // RollRandom이 자체적으로 걸러냄
+                    break;
+                default:
+                    if (!a.ExcludeFromRoll) _subPools[a.Tier].Add(a);
+                    break;
             }
         }
     }

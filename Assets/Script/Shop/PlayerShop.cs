@@ -16,7 +16,6 @@ public class PlayerShop : NetworkBehaviour
 
     [SerializeField] private ShopDatabase database;
 
-
     [Networked] public NetworkBool IsShopping { get; set; }
 
     private PlayerHealth _health;
@@ -49,12 +48,19 @@ public class PlayerShop : NetworkBehaviour
 
     public void Toggle() => SetShopping(!IsShopping);
 
-    // ══════════════════ 구매 ══════════════════
+    public bool CanOpenShop
+    {
+        get
+        {
+            if (_health == null) return true;
+            return _health.IsDead || !_health.InCombat;
+        }
+    }
+
+    // ══════════════════ 갱신 ══════════════════
 
     public int GetLevel(int index) =>
         (index >= 0 && index < MaxItems) ? Levels[index] : 0;
-
-  
 
     public override void FixedUpdateNetwork()
     {
@@ -71,81 +77,55 @@ public class PlayerShop : NetworkBehaviour
             ApplyAll();
         }
 
-        // 상점 열린 중 전투 돌입 → 닫기 (기존 코드)
+        // 상점 열린 중 전투 돌입 → 닫기
         if (IsShopping && _health != null && !_health.IsDead && _health.InCombat)
             IsShopping = false;
     }
 
     // ══════════════════ 적용 ══════════════════
 
+    /// <summary>상점 스탯을 현재 레벨로 다시 건다 (스킬 포인트는 구매 시점에 지급되므로 여기선 안 다룸)</summary>
     void ApplyAll()
     {
         if (!HasStateAuthority) return;
         if (_stats == null) return;
 
-        int rank = 0;
-
-        // ── 공용 ──
         for (int i = 0; i < MaxItems; i++)
         {
             int src = SourceId.ShopBase + i;
             _stats.RemoveBySource(src);
 
             var item = database != null ? database.GetByIndex(i) : null;
-            rank += ApplyItem(item, Levels[i], src);
+            ApplyItem(item, Levels[i], src);
         }
 
-        // ── 전용 ──
         for (int i = 0; i < MaxExclusive; i++)
         {
             int src = SourceId.ShopExclusiveBase + i;
             _stats.RemoveBySource(src);
 
-            rank += ApplyItem(GetExclusiveItem(i), ExclusiveLevels[i], src);
+            ApplyItem(GetExclusiveItem(i), ExclusiveLevels[i], src);
         }
-
-        _ability?.SetSkillRank(rank);
     }
 
-    /// <summary>스탯 적용 후, 스킬 랭크 기여분 반환</summary>
-    int ApplyItem(ShopItemData item, int lv, int src)
+    void ApplyItem(ShopItemData item, int lv, int src)
     {
-        if (item == null || lv <= 0) return 0;
+        if (item == null || lv <= 0) return;
 
-        switch (item.Kind)
-        {
-            case ShopItemKind.Stat:
-                _stats.AddModifier(new StatModifier(item.Stat, item.ModType, item.GetValue(lv), src));
-                return 0;
-
-            case ShopItemKind.SkillRank:
-                return lv;
-        }
-        return 0;
+        if (item.Kind == ShopItemKind.Stat)
+            _stats.AddModifier(new StatModifier(item.Stat, item.ModType, item.GetValue(lv), src));
     }
 
     public void ResetForNewRound()
     {
         if (!HasStateAuthority) return;
 
+        for (int i = 0; i < MaxItems; i++) Levels.Set(i, 0);
         for (int i = 0; i < MaxExclusive; i++) ExclusiveLevels.Set(i, 0);
         IsShopping = false;
+
         ApplyAll();
     }
-
-    public bool CanOpenShop
-    {
-        get
-        {
-            if (_health == null) return true;
-            return _health.IsDead || !_health.InCombat;
-        }
-    }
-
-
-
-
-
 
     // ══════════════════ 조회 ══════════════════
 
@@ -190,8 +170,7 @@ public class PlayerShop : NetworkBehaviour
         {
             case ShopItemKind.ResetEnchant:
                 {
-                    var en = _enchant;
-                    int stage = en != null ? en.ActiveStage : 0;
+                    int stage = _enchant != null ? _enchant.ActiveStage : 0;
                     if (stage == 0) { reason = "ui.shop.reason.no_enchant"; return false; }
                     price = item.BasePrice + item.PricePerStage * stage;
                     break;
@@ -199,15 +178,13 @@ public class PlayerShop : NetworkBehaviour
 
             case ShopItemKind.RefillAmmo:
                 {
-                    var en = _enchant;
-                    if (en == null || !en.IsGunsmith) { reason = "ui.shop.reason.need_ability"; return false; }
+                    if (_enchant == null || !_enchant.IsGunsmith) { reason = "ui.shop.reason.need_ability"; return false; }
 
-                    var eq = _equip;
-                    var w = eq != null ? eq.GetWeapon() : null;
+                    var w = _equip != null ? _equip.GetWeapon() : null;
                     if (w == null || w.Class != WeaponClass.Ranged || w.RangedKind != RangedType.Gun)
                     { reason = "ui.shop.reason.not_gun"; return false; }
 
-                    if (eq.Ammo >= w.MaxAmmo) { reason = "ui.shop.reason.ammo_full"; return false; }
+                    if (_equip.Ammo >= w.MaxAmmo) { reason = "ui.shop.reason.ammo_full"; return false; }
                     price = item.BasePrice;
                     break;
                 }
@@ -233,6 +210,8 @@ public class PlayerShop : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_Buy(int index)
     {
+        if (index < 0 || index >= MaxItems) return;
+
         var item = database?.GetByIndex(index);
         if (Purchase(item, GetLevel(index), out bool levelUp) && levelUp)
         {
@@ -270,23 +249,24 @@ public class PlayerShop : NetworkBehaviour
                 break;
 
             case ShopItemKind.ResetEnchant:
-                {
-                    var en = GetComponent<PlayerEnchant>();
-                    var eq = GetComponent<PlayerEquipment>();
-                    en?.ClearSlot(eq.ActiveWeaponSlot);
-                    break;
-                }
+                _enchant?.ClearSlot(_equip.ActiveWeaponSlot);
+                break;
 
             case ShopItemKind.RefillAmmo:
                 {
-                    var eq = GetComponent<PlayerEquipment>();
-                    var w = eq.GetWeapon();
-                    eq.AddAmmo(Mathf.CeilToInt(w.MaxAmmo * item.AmmoRatio));
+                    var w = _equip.GetWeapon();
+                    _equip.AddAmmo(Mathf.CeilToInt(w.MaxAmmo * item.AmmoRatio));
                     break;
                 }
 
+            case ShopItemKind.SkillRank:
+                // ★ 스킬 포인트 1 지급 — 어디에 쓸지는 능력 패널(F1)에서 고름
+                _ability?.AddSkillPoints(1);
+                levelUp = true;      // 구매 횟수 = 레벨 (MaxLevel로 총 구매 수 제한)
+                break;
+
             default:
-                levelUp = true;      // Stat, SkillRank
+                levelUp = true;      // Stat
                 break;
         }
 

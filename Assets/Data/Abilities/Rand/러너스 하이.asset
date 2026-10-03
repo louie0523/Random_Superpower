@@ -17,13 +17,15 @@ MonoBehaviour:
   Kind: 2
   Tier: 0
   Tags: 03000000
+  ExclusiveShopItems: []
   Icon: {fileID: 0}
   Flavor: "\uB2F9\uC2E0\uC740 \uB9E4\uC6B0 \uBE60\uB985\uB2C8\uB2E4! \uD558\uC9C0\uB9CC
     \uC808\uB54C \uBA48\uCD94\uC9C0 \uB9C8\uC138\uC694! "
   Passives:
   - Name: "\uB7EC\uB108\uC758 \uC790\uC9C8"
     Icon: {fileID: 0}
-    Description: 
+    Description: "\uC18D\uB3C4\uAC00 \uB9E4\uC6B0 \uC99D\uAC00\uD558\uB294 \uB300\uC2E0,
+      \uBA48\uCDB0\uC788\uC744\uB54C\uB9C8\uB2E4 \uD53C\uD574\uB97C \uBC1B\uC2B5\uB2C8\uB2E4!"
     DetailedInfo: 
     Tip: 
     DevNote: 
@@ -38,11 +40,16 @@ MonoBehaviour:
       Values:
       - 10
       Duration: 0
-      Chance: 0
+      Chance: 1
       Stat: 3
       ModType: 0
       PerTargetCooldown: 0
       Interval: 0
   Skills: []
   Behaviour: {fileID: 0}
+  MaxConcurrent: 0
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
   Charges: []

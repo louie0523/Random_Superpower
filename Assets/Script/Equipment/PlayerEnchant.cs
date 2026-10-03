@@ -225,6 +225,8 @@ public class PlayerEnchant : NetworkBehaviour
 
         for (int s = 0; s < PlayerEquipment.WeaponSlots; s++) ClearSlot(s);
         Stones = 0;
-        IsGunsmith = false;      // ★ 능력이 다시 OnEquip하면 켜짐
+        LastRolled = 0;
+        LastRollTick = 0;
+        IsGunsmith = false;      // 능력 재배정 때 건스미스 OnEquip이 다시 켬
     }
 }

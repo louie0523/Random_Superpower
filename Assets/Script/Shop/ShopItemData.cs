@@ -24,7 +24,7 @@ public class ShopItemData : ScriptableObject
     public int BasePrice = 20;
     [Tooltip("레벨당 가격 배율")]
     public float PriceGrowth = 1.5f;
-    [Range(1, 5)] public int MaxLevel = 3;
+    [Range(1, 100)] public int MaxLevel = 3;
 
     [Header("Stat 전용")]
     public StatType Stat;

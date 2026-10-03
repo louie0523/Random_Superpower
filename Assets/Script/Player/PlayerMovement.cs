@@ -96,8 +96,9 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
 
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        bool blocked = UIManager.InputBlocked;
+        float h = blocked ? 0f : Input.GetAxisRaw("Horizontal");
+        float v = blocked ? 0f : Input.GetAxisRaw("Vertical");
 
         if (_ability != null)
         {
@@ -122,7 +123,7 @@ public class PlayerMovement : NetworkBehaviour
             fpsCamera.LandDip(Mathf.Clamp01(-_verticalVel / 12f));
 
         if (grounded && _verticalVel < 0f) _verticalVel = -2f;
-        if (grounded && Input.GetKey(KeyCode.Space)) _verticalVel = jumpPower;
+        if (grounded && !blocked && Input.GetKey(KeyCode.Space)) _verticalVel = jumpPower;
 
         bool dashNoGravity = _ability != null && _ability.DashIgnoresGravity;
 

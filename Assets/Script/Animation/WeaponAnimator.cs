@@ -144,7 +144,6 @@ public class WeaponAnimator : MonoBehaviour
             }
             else
             {
-                armRig.SetDrawAmount(_drawAmount, dt);
                 armRig.ApplyPose(idle);
             }
             return;
@@ -195,8 +194,9 @@ public class WeaponAnimator : MonoBehaviour
 
     void HandleArmOffset(float speed01)
     {
-        float mx = Input.GetAxisRaw("Mouse X");
-        float my = Input.GetAxisRaw("Mouse Y");
+        bool blocked = UIManager.InputBlocked;
+        float mx = blocked ? 0f : Input.GetAxisRaw("Mouse X");
+        float my = blocked ? 0f : Input.GetAxisRaw("Mouse Y");
 
         Vector3 targetSwayPos = new(
             Mathf.Clamp(-mx * swayAmount, -swayMaxOffset, swayMaxOffset),

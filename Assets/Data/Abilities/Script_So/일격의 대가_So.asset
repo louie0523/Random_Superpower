@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cda0fcb9866151644925cacb534aa79c, type: 3}
-  m_Name: "\uC77C\uACA9\uC758 \uB300\uAC00 \uC2A4\uD06C\uB9BD\uD2B8"
+  m_Name: "\uC77C\uACA9\uC758 \uB300\uAC00_So"
   m_EditorClassIdentifier: Assembly-CSharp::EmpoweredStrikeAbility
   ChargeSlot: 0
   MaxCharge: 100

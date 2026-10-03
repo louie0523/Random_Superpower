@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Ability")]
@@ -60,15 +62,44 @@ public class AbilityData : ScriptableObject
 
     // ─────────────────────────────
 
+    /// <summary>레벨별 수치. Behaviour가 코드에서 읽고, 설명에서 {v0} {v1}로 참조</summary>
+    [System.Serializable]
+    public class RankVar
+    {
+        [Tooltip("메모용 이름 (인게임에 표시 안 됨)")]
+        public string Name;
+
+        [Tooltip("레벨별 값. [0] = Lv1(기본). 배열이 짧으면 마지막 값 반복")]
+        public float[] Values = { 0f };
+
+        public float Get(int rank) =>
+            Values == null || Values.Length == 0
+                ? 0f
+                : Values[Mathf.Clamp(rank, 0, Values.Length - 1)];
+    }
+
+    const string TextHelp =
+        "{0} {1} … = Effects 값 (현재 레벨)\n" +
+        "{0:all} = 모든 레벨 값 (예: 400 / 425 / 450, 현재 레벨 굵게)\n" +
+        "{v0} {v1} … = Vars 값,  {v0:all} = Vars 모든 레벨\n" +
+        "숫자 서식: {0:0.#}  /  {0:all|0.#}";
+
     [System.Serializable]
     public class PassiveDef
     {
         public string Name;
         public Sprite Icon;
-        [TextArea(2, 4)] public string Description;
-        [TextArea(2, 5)] public string DetailedInfo;
+        [TextArea(2, 4), Tooltip(TextHelp)] public string Description;
+        [TextArea(2, 5), Tooltip(TextHelp)] public string DetailedInfo;
         [TextArea(1, 3)] public string Tip;
         [TextArea(1, 2)] public string DevNote;
+
+        [Header("레벨")]
+        [Tooltip("최대 레벨. 1이면 강화 불가.\nEffects의 Values와 Vars의 칸 수를 이 값에 맞추세요")]
+        [Min(1)] public int MaxLevel = 3;
+
+        [Tooltip("Behaviour가 읽는 레벨별 수치. 설명에서 {v0} {v1}로 참조")]
+        public RankVar[] Vars;
 
         public EffectDef[] Effects;
     }
@@ -81,18 +112,17 @@ public class AbilityData : ScriptableObject
     }
 
     [System.Serializable]
-    public class SkillDef   
+    public class SkillDef
     {
         public string Name;
         public Sprite Icon;
 
-
         [TextArea(2, 4)]
-        [Tooltip("인게임 표시용 짧은 설명. {0} {1}로 Effects의 Value 삽입")]
+        [Tooltip("인게임 표시용 짧은 설명.\n" + TextHelp)]
         public string Description;
 
         [TextArea(2, 5)]
-        [Tooltip("상세 설명 — 판정 범위, 예외 상황, 상호작용 등")]
+        [Tooltip("상세 설명 — 판정 범위, 예외 상황, 상호작용 등.\n" + TextHelp)]
         public string DetailedInfo;
 
         [TextArea(1, 3)]
@@ -106,9 +136,25 @@ public class AbilityData : ScriptableObject
         [Header("Slot")]
         public SkillSlot Slot = SkillSlot.Skill1;
 
+        [Header("레벨")]
+        [Tooltip("최대 레벨. 1이면 강화 불가. 궁극기는 보통 3.\nEffects의 Values와 Vars의 칸 수를 이 값에 맞추세요")]
+        [Min(1)] public int MaxLevel = 5;
+
+        [Tooltip("Behaviour가 읽는 레벨별 수치. 설명에서 {v0} {v1}로 참조")]
+        public RankVar[] Vars;
+
         [Header("무기 조건")]
         [Tooltip("이 무기를 들었을 때만 사용 가능. None이면 제한 없음")]
         public WeaponRequirement RequiredWeapon = WeaponRequirement.None;
+
+
+        [Tooltip("레벨별 쿨타임 (초). [0] = Lv1. 비우면 아래 Cooldown 고정")]
+        public float[] CooldownByLevel;
+
+        public float GetCooldown(int rank) =>
+            CooldownByLevel == null || CooldownByLevel.Length == 0
+                ? Cooldown
+                : CooldownByLevel[Mathf.Clamp(rank, 0, CooldownByLevel.Length - 1)];
 
         [Header("Cost / Timing")]
         public float Cooldown = 8f;
@@ -126,8 +172,6 @@ public class AbilityData : ScriptableObject
         [Header("Timing")]
         public SkillEffectTiming EffectTiming = SkillEffectTiming.OnHitFrame;
 
-
-
         [Header("Hit")]
         [Tooltip("적중 판정이 필요한 스킬인가 (버프류는 false)")]
         public bool NeedsTarget = false;
@@ -138,6 +182,7 @@ public class AbilityData : ScriptableObject
         public int MaxTargets = 1;
 
         public EffectDef[] Effects;
+
     }
 
     [System.Serializable]
@@ -160,13 +205,14 @@ public class AbilityData : ScriptableObject
         public float ChargeCost = 0f;
 
         [Header("Values")]
-        [Tooltip("배열에 추가시 랭크에 따라 수치 변경\n" +
+        [Tooltip("레벨별 수치. [0] = Lv1(기본), [1] = Lv2 …  짧으면 마지막 값 반복\n" +
             "일반 스탯: Flat = 실수치(+25), Percent = 퍼센트(25 = +25%)\n" +
-         "배율 스탯(피해 계열): Flat = 합연산(25 = +25%p), Percent = 곱연산(25 = ×1.25)\n" +
-         "비율 스탯(치확/쿨감/흡혈): Flat만, 0~1 단위(0.1 = 10%)")]
+            "배율 스탯(피해 계열): Flat = 합연산(25 = +25%p), Percent = 곱연산(25 = ×1.25)\n" +
+            "비율 스탯(치확/쿨감/흡혈): Flat만, 0~1 단위(0.1 = 10%)\n" +
+            "EnterState: 값이 상태 ID라 레벨과 무관하게 [0]만 사용")]
         public float[] Values = new float[] { 0f };
         public float Duration = 0f;
-        [Range(0f, 1f)] 
+        [Range(0f, 1f)]
         public float Chance = 1f;
 
         [Header("StatMod 전용")]
@@ -185,27 +231,126 @@ public class AbilityData : ScriptableObject
                 : Values[Mathf.Clamp(rank, 0, Values.Length - 1)];
     }
 
-    /// <summary>설명 문자열의 {0}, {1}을 실제 수치로 치환</summary>
-    public static string Format(string desc, EffectDef[] effects, int rank = 0)
+    // ══════════════════ 설명 서식 ══════════════════
+
+    /// <summary>
+    /// 레벨별 값을 가진 서식 인자.
+    ///   {0}          → 현재 레벨 값
+    ///   {0:0.#}      → 현재 레벨 값, 숫자 서식 지정
+    ///   {0:all}      → 400 / 425 / 450 (현재 레벨 굵게, 나머지 흐리게)
+    ///   {0:all|0.#}  → 위와 같고 숫자 서식 지정
+    /// </summary>
+    sealed class RankedArg : System.IFormattable
     {
-        if (string.IsNullOrEmpty(desc) || effects == null) return desc;
-        object[] args = new object[effects.Length];
-        for (int i = 0; i < effects.Length; i++)
-            args[i] = effects[i].GetValue(rank);
-        try { return string.Format(desc, args); }
-        catch { return desc; }
+        const string DefaultNum = "0.##";
+        const string DimColor = "#8A8A8A";
+
+        readonly float[] _values;
+        readonly int _rank;
+        readonly int _levels;
+
+        public RankedArg(float[] values, int rank, int levels)
+        {
+            _values = values;
+            _rank = rank;
+            _levels = Mathf.Max(1, levels);
+        }
+
+        float At(int r) =>
+            _values == null || _values.Length == 0
+                ? 0f
+                : _values[Mathf.Clamp(r, 0, _values.Length - 1)];
+
+        public override string ToString() => ToString(null, null);
+
+        public string ToString(string format, System.IFormatProvider provider)
+        {
+            if (!string.IsNullOrEmpty(format) && format.StartsWith("all"))
+            {
+                string num = DefaultNum;
+                int bar = format.IndexOf('|');
+                if (bar >= 0 && bar < format.Length - 1) num = format.Substring(bar + 1);
+
+                // 레벨이 하나뿐이거나 모든 레벨 값이 같으면 하나만
+                bool same = true;
+                for (int i = 1; i < _levels; i++)
+                    if (!Mathf.Approximately(At(i), At(0))) { same = false; break; }
+
+                if (same) return At(0).ToString(num, provider);
+
+                var sb = new StringBuilder();
+                for (int i = 0; i < _levels; i++)
+                {
+                    if (i > 0) sb.Append(" / ");
+                    string s = At(i).ToString(num, provider);
+
+                    if (i == _rank) sb.Append("<b>").Append(s).Append("</b>");
+                    else sb.Append("<color=").Append(DimColor).Append('>').Append(s).Append("</color>");
+                }
+                return sb.ToString();
+            }
+
+            return At(_rank).ToString(string.IsNullOrEmpty(format) ? DefaultNum : format, provider);
+        }
     }
 
+    static readonly Regex VarToken = new(@"\{v(\d+)", RegexOptions.Compiled);
+
+    /// <summary>
+    /// 설명 문자열의 자리표시자를 레벨 기준 수치로 치환.
+    /// {0}~ = Effects 순서, {v0}~ = Vars 순서.
+    /// </summary>
+    public static string FormatRanked(string text, EffectDef[] effects, RankVar[] vars,
+                                      int rank, int maxLevel)
+    {
+        if (string.IsNullOrEmpty(text)) return text;
+
+        int e = effects?.Length ?? 0;
+        int v = vars?.Length ?? 0;
+        if (e + v == 0) return text;
+
+        var args = new object[e + v];
+        for (int i = 0; i < e; i++) args[i] = new RankedArg(effects[i]?.Values, rank, maxLevel);
+        for (int i = 0; i < v; i++) args[e + i] = new RankedArg(vars[i]?.Values, rank, maxLevel);
+
+        // {v0} → {e+0} 로 번호 변환
+        string s = v > 0
+            ? VarToken.Replace(text, m => "{" + (e + int.Parse(m.Groups[1].Value)))
+            : text;
+
+        try { return string.Format(s, args); }
+        catch (System.FormatException ex)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"[AbilityData] 서식 오류 (Effects {e}개, Vars {v}개): \"{text}\" — {ex.Message}");
+#endif
+            return text;
+        }
+    }
+
+    /// <summary>레벨별 값을 "8 / 7.5 / 7" 형태로 (현재 레벨 굵게)</summary>
+    public static string FormatLevels(float[] values, int rank, int levels, string num = "0.#") =>
+        new RankedArg(values, rank, levels).ToString("all|" + num, null);
+
+    public static string FormatPassive(PassiveDef p, string text, int rank) =>
+        p == null ? text : FormatRanked(text, p.Effects, p.Vars, rank, p.MaxLevel);
+
+    public static string FormatSkill(SkillDef s, string text, int rank) =>
+        s == null ? text : FormatRanked(text, s.Effects, s.Vars, rank, s.MaxLevel);
+
+    /// <summary>기존 호출부 호환 — Vars 없이 Effects만</summary>
+    public static string Format(string desc, EffectDef[] effects, int rank = 0) =>
+        FormatRanked(desc, effects, null, rank, 1);
+
     /// <summary>스킬 툴팁 전체 텍스트 (수치 치환 포함)</summary>
-    public static string BuildTooltip(SkillDef s, bool includeTip = true)
+    public static string BuildTooltip(SkillDef s, int rank = 0, bool includeTip = true)
     {
         if (s == null) return "";
 
-        var sb = new System.Text.StringBuilder();
+        var sb = new StringBuilder();
 
         sb.AppendLine($"<b>{s.Name}</b>  <color=#888>[{s.Slot.Label()}]</color>");
 
-        // 코스트/쿨타임
         var cost = new List<string>();
         if (s.Cooldown > 0f) cost.Add($"쿨타임 {s.Cooldown:0.#}초");
         if (s.SoulCost > 0) cost.Add($"소울 {s.SoulCost}");
@@ -213,12 +358,12 @@ public class AbilityData : ScriptableObject
             sb.AppendLine($"<color=#7ac>{string.Join("  ·  ", cost)}</color>");
 
         sb.AppendLine();
-        sb.AppendLine(Format(s.Description, s.Effects));
+        sb.AppendLine(FormatSkill(s, s.Description, rank));
 
         if (!string.IsNullOrWhiteSpace(s.DetailedInfo))
         {
             sb.AppendLine();
-            sb.AppendLine($"<color=#aaa>{Format(s.DetailedInfo, s.Effects)}</color>");
+            sb.AppendLine($"<color=#aaa>{FormatSkill(s, s.DetailedInfo, rank)}</color>");
         }
 
         if (includeTip && !string.IsNullOrWhiteSpace(s.Tip))
@@ -252,13 +397,23 @@ public class AbilityData : ScriptableObject
     void FixEffects(PassiveDef[] arr)
     {
         if (arr == null) return;
-        foreach (var p in arr) FixChance(p?.Effects);
+        foreach (var p in arr)
+        {
+            if (p == null) continue;
+            if (p.MaxLevel < 1) p.MaxLevel = 1;
+            FixChance(p.Effects);
+        }
     }
 
     void FixEffects(SkillDef[] arr)
     {
         if (arr == null) return;
-        foreach (var s in arr) FixChance(s?.Effects);
+        foreach (var s in arr)
+        {
+            if (s == null) continue;
+            if (s.MaxLevel < 1) s.MaxLevel = 1;
+            FixChance(s.Effects);
+        }
     }
 
     static void FixChance(EffectDef[] effects)

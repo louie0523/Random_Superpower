@@ -328,7 +328,7 @@ MonoBehaviour:
   baseMaxHP: 100
   baseAttack: 25
   baseDefense: 0
-  baseMoveSpeed: 6
+  baseMoveSpeed: 12
   baseAttackSpeed: 1
   baseCritChance: 0.05
   baseCritDamage: 1.5
@@ -362,7 +362,7 @@ MonoBehaviour:
   _HelmetId: 0
   _BootsId: 0
   _SlotAmmo: 
-  startWeaponId: 1001
+  startWeaponId: 1004
   fistWeaponId: 1000
   swapTime: 0.6
 --- !u!114 &-1179119024802948346
@@ -402,7 +402,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   weaponAnim: {fileID: 6649258101475754144}
-  forceMainId: 6001
+  forceMainId: 0
   forceSubId: 0
   forceRandomId: 0
   logSkills: 0
@@ -466,9 +466,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   searchRadius: 3
-  interactKey: 101
-  _AllowGunEnchant:
-    RawValue: 0
+  interactKey: 114
+  sendInterval: 0.3
 --- !u!114 &959149403550185092
 MonoBehaviour:
   m_ObjectHideFlags: 0
