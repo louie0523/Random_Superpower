@@ -16,6 +16,7 @@ MonoBehaviour:
   DisplayName: "\uC11C\uB9AC\uD654\uC0C1"
   Color: {r: 1, g: 0, b: 0.8710184, a: 1}
   Icon: {fileID: 0}
+  Description: 
   Tiers:
   - Description: 
     Effects:

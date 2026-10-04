@@ -18,15 +18,14 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Description: 
   Tiers:
-  - Description: "{d0}\uCD08\uAC04 \uB300\uC0C1\uC758 \uC774\uB3D9\uC18D\uB3C4\uB97C
-      {v0}% \uB454\uD654\uC2DC\uD0B5\uB2C8\uB2E4."
+  - Description: 
     Effects:
     - Kind: 0
       Status: 0
       Value: 15
       Duration: 2
       IgnoreDefense: 0
-  - Description: II
+  - Description: 
     Effects:
     - Kind: 0
       Status: 0
