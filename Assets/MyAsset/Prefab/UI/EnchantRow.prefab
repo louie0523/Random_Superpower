@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 99
+  m_text: X99
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d6996bfddc8f9344b892c6bea04f98e7, type: 2}
   m_sharedMaterial: {fileID: -8877660845988995874, guid: d6996bfddc8f9344b892c6bea04f98e7, type: 2}
@@ -151,9 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
   m_IgnoreLayout: 0
-  m_MinWidth: 35
+  m_MinWidth: 45
   m_MinHeight: -1
-  m_PreferredWidth: 35
+  m_PreferredWidth: 45
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
@@ -776,6 +776,7 @@ MonoBehaviour:
   nameText: {fileID: 8630634722621519592}
   statsText: {fileID: 2147922436604175835}
   newMark: {fileID: 4010946942490806573}
+  specialMark: {fileID: 0}
 --- !u!114 &359429635108190513
 MonoBehaviour:
   m_ObjectHideFlags: 0

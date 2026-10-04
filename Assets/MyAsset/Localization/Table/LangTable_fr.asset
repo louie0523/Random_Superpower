@@ -593,30 +593,6 @@ MonoBehaviour:
     m_Localized: Enchantement normal
     m_Metadata:
       m_Items: []
-  - m_Id: 5221716631072782
-    m_Localized: ralentir
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072783
-    m_Localized: "br\xFBler"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072784
-    m_Localized: statue
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267072
-    m_Localized: joint
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267073
-    m_Localized: "\xE9vanouissement"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267074
-    m_Localized: entaille
-    m_Metadata:
-      m_Items: []
   - m_Id: 5221716635267075
     m_Localized: mains nues
     m_Metadata:
@@ -656,6 +632,52 @@ MonoBehaviour:
   - m_Id: 5221716639461376
     m_Localized: "Avec \xE7a seulement, ma grand-m\xE8re aurait pu, elle aussi, devenir
       une l\xE9gende."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191309283328
+    m_Localized: ralentir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837760
+    m_Localized: "Ralentit la vitesse de d\xE9placement de la cible de {v0}% pendant
+      {d0} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837761
+    m_Localized: "br\xFBler"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837762
+    m_Localized: "Br\xFBle la cible pendant {d0} secondes, infligeant des d\xE9g\xE2ts
+      fixes \xE9gaux \xE0 {v0}% de sa sant\xE9 maximale chaque seconde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837763
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837764
+    m_Localized: "Inflige des br\xFBlures ({v0}%) et des gelures ({v1}%) pendant
+      {d0} secondes simultan\xE9ment."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837765
+    m_Localized: jugement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837766
+    m_Localized: "Inflige des d\xE9g\xE2ts fixes suppl\xE9mentaires \xE9gaux \xE0
+      {v0}% des points de vie maximum de la cible lors de l'impact."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837767
+    m_Localized: Gourmandise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837768
+    m_Localized: "Cette arme ne permet pas de r\xE9cup\xE9rer de vie. Elle inflige
+      en revanche des d\xE9g\xE2ts suppl\xE9mentaires \xE9gaux \xE0 {v0}% du montant
+      de la r\xE9cup\xE9ration."
     m_Metadata:
       m_Items: []
   references:

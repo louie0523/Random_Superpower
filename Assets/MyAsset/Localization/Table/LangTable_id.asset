@@ -602,30 +602,6 @@ MonoBehaviour:
     m_Localized: Pesona Normal
     m_Metadata:
       m_Items: []
-  - m_Id: 5221716631072782
-    m_Localized: kemunduran
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072783
-    m_Localized: membakar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072784
-    m_Localized: patung
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267072
-    m_Localized: segel
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267073
-    m_Localized: pingsan
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267074
-    m_Localized: luka sayatan
-    m_Metadata:
-      m_Items: []
   - m_Id: 5221716635267075
     m_Localized: tangan kosong
     m_Metadata:
@@ -664,6 +640,52 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5221716639461376
     m_Localized: Hanya dengan satu hal ini, nenekku pun bisa menjadi legenda.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191309283328
+    m_Localized: kemunduran
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837760
+    m_Localized: Memperlambat kecepatan gerakan target sebesar {v0}% selama {d0}
+      detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837761
+    m_Localized: membakar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837762
+    m_Localized: Membakar target selama {d0} detik, memberikan kerusakan tetap sebesar
+      {v0}% dari kesehatan maksimum mereka setiap detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837763
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837764
+    m_Localized: Menimbulkan luka bakar ({v0}%) dan radang dingin ({v1}%) selama
+      {d0} detik secara bersamaan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837765
+    m_Localized: keputusan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837766
+    m_Localized: Menimbulkan kerusakan tetap tambahan sebesar {v0}% dari kesehatan
+      maksimum target saat mengenai target.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837767
+    m_Localized: Kerakusan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837768
+    m_Localized: Anda tidak dapat melakukan pengisapan darah dengan senjata ini.
+      Sebagai gantinya, senjata ini memberikan kerusakan tambahan sebesar {v0}% dari
+      jumlah pengisapan darah.
     m_Metadata:
       m_Items: []
   references:

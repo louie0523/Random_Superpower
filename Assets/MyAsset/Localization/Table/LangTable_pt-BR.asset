@@ -587,30 +587,6 @@ MonoBehaviour:
     m_Localized: Encantamento Normal
     m_Metadata:
       m_Items: []
-  - m_Id: 5221716631072782
-    m_Localized: desacelerar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072783
-    m_Localized: queimar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072784
-    m_Localized: "est\xE1tua"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267072
-    m_Localized: selo
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267073
-    m_Localized: desmaio
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267074
-    m_Localized: corte
-    m_Metadata:
-      m_Items: []
   - m_Id: 5221716635267075
     m_Localized: "m\xE3os nuas"
     m_Metadata:
@@ -650,6 +626,50 @@ MonoBehaviour:
   - m_Id: 5221716639461376
     m_Localized: "Com apenas isso, minha av\xF3 tamb\xE9m poderia ter se tornado
       uma lenda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191309283328
+    m_Localized: desacelerar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837760
+    m_Localized: Reduz a velocidade de movimento do alvo em {v0}% por {d0} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837761
+    m_Localized: queimar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837762
+    m_Localized: "Queima o alvo por {d0} segundos, causando dano fixo igual a {v0}%
+      da sa\xFAde m\xE1xima dele a cada segundo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837763
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837764
+    m_Localized: Causa queimadura ({v0}%) e congelamento ({v1}%) por {d0} segundos
+      simultaneamente.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837765
+    m_Localized: julgamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837766
+    m_Localized: "Causa dano fixo adicional igual a {v0}% da vida m\xE1xima do alvo
+      ao atingir o alvo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837767
+    m_Localized: Glutonaria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837768
+    m_Localized: "Voc\xEA n\xE3o pode roubar vida com esta arma. Em vez disso, ela
+      causa dano adicional igual a {v0}% da quantidade roubada."
     m_Metadata:
       m_Items: []
   references:

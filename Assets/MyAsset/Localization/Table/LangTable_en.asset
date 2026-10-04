@@ -599,30 +599,6 @@ MonoBehaviour:
     m_Localized: Normal Enchant
     m_Metadata:
       m_Items: []
-  - m_Id: 5221716631072782
-    m_Localized: slowdown
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072783
-    m_Localized: burn
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072784
-    m_Localized: statue
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267072
-    m_Localized: seal
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267073
-    m_Localized: fainting
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267074
-    m_Localized: gash
-    m_Metadata:
-      m_Items: []
   - m_Id: 5221716635267075
     m_Localized: bare hands
     m_Metadata:
@@ -662,6 +638,49 @@ MonoBehaviour:
   - m_Id: 5221716639461376
     m_Localized: With just this one thing, my grandmother could have become a legend
       too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191309283328
+    m_Localized: slowdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837760
+    m_Localized: Slows the target's movement speed by {v0}% for {d0} seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837761
+    m_Localized: burn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837762
+    m_Localized: Burns the target for {d0} seconds, dealing fixed damage equal to
+      {v0}% of their maximum health every second.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837763
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837764
+    m_Localized: Inflicts burn ({v0}%) and frostbite ({v1}%) for {d0} seconds simultaneously.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837765
+    m_Localized: judgment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837766
+    m_Localized: Deals additional fixed damage equal to {v0}% of the target's maximum
+      health upon hitting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837767
+    m_Localized: Gluttony
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837768
+    m_Localized: You cannot leech with this weapon. Instead, it deals additional
+      damage equal to {v0}% of the leech amount.
     m_Metadata:
       m_Items: []
   references:

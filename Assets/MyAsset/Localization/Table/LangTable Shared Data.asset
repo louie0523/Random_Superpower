@@ -519,30 +519,6 @@ MonoBehaviour:
     m_Key: stat.UltimateDamage
     m_Metadata:
       m_Items: []
-  - m_Id: 5221716631072782
-    m_Key: status.Slow
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072783
-    m_Key: status.Burn
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072784
-    m_Key: status.Frost
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267072
-    m_Key: status.Seal
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267073
-    m_Key: status.Stun
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267074
-    m_Key: status.DeepWound
-    m_Metadata:
-      m_Items: []
   - m_Id: 3001745490423811
     m_Key: ability.6001.name
     m_Metadata:
@@ -637,6 +613,46 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5221716639461376
     m_Key: weapon.1004.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191309283328
+    m_Key: special.9501.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837760
+    m_Key: special.9501.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837761
+    m_Key: special.9502.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837762
+    m_Key: special.9502.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837763
+    m_Key: special.9503.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837764
+    m_Key: special.9503.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837765
+    m_Key: special.9504.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837766
+    m_Key: special.9504.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837767
+    m_Key: special.9505.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837768
+    m_Key: special.9505.desc
     m_Metadata:
       m_Items: []
   m_Metadata:

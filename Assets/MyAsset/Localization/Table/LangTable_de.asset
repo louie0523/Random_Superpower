@@ -589,30 +589,6 @@ MonoBehaviour:
     m_Localized: Normale Verzauberung
     m_Metadata:
       m_Items: []
-  - m_Id: 5221716631072782
-    m_Localized: verlangsamen
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072783
-    m_Localized: brennen
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072784
-    m_Localized: Statue
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267072
-    m_Localized: Siegel
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267073
-    m_Localized: Ohnmacht
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267074
-    m_Localized: Schnitt
-    m_Metadata:
-      m_Items: []
   - m_Id: 5221716635267075
     m_Localized: "blo\xDFe H\xE4nde"
     m_Metadata:
@@ -652,6 +628,51 @@ MonoBehaviour:
   - m_Id: 5221716639461376
     m_Localized: "Mit dieser einen Sache h\xE4tte auch meine Gro\xDFmutter zur Legende
       werden k\xF6nnen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191309283328
+    m_Localized: verlangsamen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837760
+    m_Localized: "Verlangsamt die Bewegungsgeschwindigkeit des Ziels um {v0}% f\xFCr
+      {d0} Sekunden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837761
+    m_Localized: brennen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837762
+    m_Localized: "Verbrennt das Ziel f\xFCr {d0} Sekunden und verursacht jede Sekunde
+      einen fixen Schaden in H\xF6he von {v0}% seiner maximalen Gesundheit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837763
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837764
+    m_Localized: "Verursacht gleichzeitig Verbrennungen ({v0}%) und Erfrierungen
+      ({v1}%) f\xFCr {d0} Sekunden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837765
+    m_Localized: Urteil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837766
+    m_Localized: "Verursacht beim Treffer zus\xE4tzlichen fixen Schaden in H\xF6he
+      von {v0}% der maximalen Gesundheit des Ziels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837767
+    m_Localized: "V\xF6llerei"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837768
+    m_Localized: "Mit dieser Waffe kann man keinen Lebensraub erzielen. Stattdessen
+      verursacht sie zus\xE4tzlichen Schaden in H\xF6he von {v0}% des Lebensraubbetrags."
     m_Metadata:
       m_Items: []
   references:

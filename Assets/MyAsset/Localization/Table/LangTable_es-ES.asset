@@ -589,30 +589,6 @@ MonoBehaviour:
     m_Localized: Encantamiento normal
     m_Metadata:
       m_Items: []
-  - m_Id: 5221716631072782
-    m_Localized: desacelerar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072783
-    m_Localized: quemar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716631072784
-    m_Localized: estatua
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267072
-    m_Localized: sello
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267073
-    m_Localized: desmayo
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5221716635267074
-    m_Localized: tajo
-    m_Metadata:
-      m_Items: []
   - m_Id: 5221716635267075
     m_Localized: manos desnudas
     m_Metadata:
@@ -652,6 +628,51 @@ MonoBehaviour:
   - m_Id: 5221716639461376
     m_Localized: "Con tan solo esto, mi abuela tambi\xE9n podr\xEDa haberse convertido
       en una leyenda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191309283328
+    m_Localized: desacelerar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837760
+    m_Localized: Disminuye la velocidad de movimiento del objetivo en un {v0}% durante
+      {d0} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837761
+    m_Localized: quemar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837762
+    m_Localized: "Quema al objetivo durante {d0} segundos, infligiendo un da\xF1o
+      fijo igual al {v0}% de su salud m\xE1xima cada segundo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837763
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837764
+    m_Localized: "Inflige quemaduras ({v0}%) y congelaci\xF3n ({v1}%) durante {d0}
+      segundos simult\xE1neamente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837765
+    m_Localized: juicio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837766
+    m_Localized: "Inflige da\xF1o fijo adicional equivalente al {v0}% de la salud
+      m\xE1xima del objetivo al impactar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837767
+    m_Localized: "Glotoner\xEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227191342837768
+    m_Localized: "No puedes robar vida con esta arma. En cambio, inflige da\xF1o
+      adicional igual al {v0}% de la cantidad de robo de vida."
     m_Metadata:
       m_Items: []
   references:

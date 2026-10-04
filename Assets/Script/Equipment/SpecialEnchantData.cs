@@ -1,5 +1,6 @@
 using System.Text;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
 public enum SpecialEffectKind
 {
@@ -51,6 +52,11 @@ public class SpecialEnchantData : ScriptableObject
     public Color Color = new(1f, 0.6f, 0.2f);
     public Sprite Icon;
 
+    [Tooltip("모든 등급 공통 설명. 숫자 자리:\n" +
+         "{v0} = 0번 효과 수치, {d0} = 0번 효과 지속(초), {v1} {d1} … 다음 효과\n" +
+         "예) {d0}초간 대상의 이동속도를 {v0}% 둔화시킵니다.")]
+    [TextArea(2, 4)] public string Description;
+
     [Header("등급 — [0] = I, [1] = II …")]
     public SpecialTier[] Tiers;
 
@@ -69,15 +75,23 @@ public class SpecialEnchantData : ScriptableObject
     public string ColoredName(int tier) =>
         $"<color=#{ColorUtility.ToHtmlStringRGB(Color)}>{Name(tier)}</color>";
 
+    static readonly Regex Token = new(@"\{([vd])(\d+)\}", RegexOptions.Compiled);
+
     /// <summary>등급 설명. 직접 쓴 문장이 없으면 효과로 자동 생성</summary>
+    /// <summary>등급 설명 — 등급 전용 → 공통 → 자동 순서. {vN} {dN}을 그 등급 값으로 채움</summary>
     public string Describe(int tier)
     {
         var t = GetTier(tier);
         if (t == null) return "";
 
-        string custom = LocUtil.GetOr($"special.{Id}.tier{tier}", LocUtil.Resolve(t.Description));
-        if (!string.IsNullOrWhiteSpace(custom)) return custom;
+        string text = LocUtil.GetOr($"special.{Id}.tier{tier}", LocUtil.Resolve(t.Description));
+        if (string.IsNullOrWhiteSpace(text))
+            text = LocUtil.GetOr($"special.{Id}.desc", LocUtil.Resolve(Description));
 
+        if (!string.IsNullOrWhiteSpace(text))
+            return FillTokens(text, t);
+
+        // 자동 생성
         var sb = new StringBuilder();
         if (t.Effects != null)
             foreach (var e in t.Effects)
@@ -88,6 +102,17 @@ public class SpecialEnchantData : ScriptableObject
             }
         return sb.ToString();
     }
+
+    static string FillTokens(string text, SpecialTier t) =>
+        Token.Replace(text, m =>
+        {
+            int i = int.Parse(m.Groups[2].Value);
+            if (t.Effects == null || i >= t.Effects.Length || t.Effects[i] == null) return m.Value;
+
+            var e = t.Effects[i];
+            float v = m.Groups[1].Value == "v" ? e.Value : e.Duration;
+            return v.ToString("0.#");
+        });
 
     static string DescribeEffect(SpecialEffect e) => e.Kind switch
     {
