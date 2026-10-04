@@ -16,6 +16,7 @@ public class MotionEventPlayer : MonoBehaviour
     private float _t;
     private bool _isLocal;
     private readonly HashSet<int> _fired = new();
+    private float _speed = 1f;
 
     void Awake()
     {
@@ -24,12 +25,13 @@ public class MotionEventPlayer : MonoBehaviour
     }
 
     /// <summary>모션 시작 시 호출</summary>
-    public void Play(ComboStep step, bool isLocal)
+    public void Play(ComboStep step, bool isLocal, float speed = 1f)
     {
         _step = step;
         _duration = step != null ? step.TotalTime : 0f;
         _t = 0f;
         _isLocal = isLocal;
+        _speed = Mathf.Max(0.1f, speed);
         _fired.Clear();
     }
 
@@ -44,7 +46,7 @@ public class MotionEventPlayer : MonoBehaviour
     {
         if (_step == null || _step.Events == null) return;
 
-        _t += Time.deltaTime;
+        _t += Time.deltaTime * _speed;
         float p = _duration > 0f ? _t / _duration : 1f;
 
         for (int i = 0; i < _step.Events.Length; i++)

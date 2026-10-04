@@ -33,6 +33,10 @@ public class ComboStep
     [Tooltip("체크하면 이 타만 별도 판정 범위 사용")]
     public bool OverrideHitShape = false;
 
+    [Header("인챈트")]
+    [Tooltip("체크하면 이 타격에는 무기의 특수 인챈트 효과가 붙지 않음")]
+    public bool NoWeaponEnchants = false;
+
     public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;
     public float Range = 3f;
     [Range(20f, 360f)] public float HitAngle = 120f;

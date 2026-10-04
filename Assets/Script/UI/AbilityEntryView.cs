@@ -16,11 +16,10 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
         public string Detail;
         public Color Accent;
 
-        // 레벨
-        public bool ShowRank;       // 레벨 표시 여부 (랜덤 능력·최대 1레벨은 false)
-        public int Level;           // 현재 레벨 (1부터)
+        public bool ShowRank;
+        public int Level;
         public int MaxLevel;
-        public bool CanUpgrade;     // [+] 버튼 표시
+        public bool CanUpgrade;
     }
 
     [SerializeField] private Image background;
@@ -31,9 +30,7 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
     [SerializeField] private TMP_Text body;
 
     [Header("레벨")]
-    [Tooltip("점들이 들어 있는 줄 (Horizontal Layout Group).\n" +
-             "자식 Image를 왼쪽부터 점으로 사용. 하나만 있어도 되고 미리 여러 개 있어도 됨.\n" +
-             "최대 레벨보다 모자라면 첫 번째 점을 복제해서 채움")]
+    [Tooltip("점들이 들어 있는 줄. 자식 Image를 왼쪽부터 점으로 사용. 모자라면 첫 점을 복제")]
     [SerializeField] private RectTransform pipParent;
     [SerializeField] private Color pipOn = Color.white;
     [SerializeField] private Color pipOff = new(0.35f, 0.35f, 0.35f, 1f);
@@ -51,15 +48,29 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
     public bool HasDetail { get; private set; }
 
     private bool _selected;
-    private readonly List<Image> _pips = new();
+    private bool _init;
     private CanvasGroup _upgradeGroup;
+    private readonly List<Image> _pips = new();
 
-    void Awake()
+    void Awake() => EnsureInit();
+
+    /// <summary>Awake 전에 Bind가 불려도 안전하게 (프리팹이 꺼진 채 복제된 경우 등)</summary>
+    void EnsureInit()
     {
+        if (_init) return;
+        _init = true;
+
         if (background == null) background = GetComponent<Image>();
-        CollectPips();
+
+        _pips.Clear();
+        if (pipParent != null)
+            for (int i = 0; i < pipParent.childCount; i++)
+                if (pipParent.GetChild(i).TryGetComponent<Image>(out var img))
+                    _pips.Add(img);
+
         if (upgradeButton != null)
         {
+            upgradeButton.onClick.AddListener(() => UpgradeClicked?.Invoke(this));
             _upgradeGroup = upgradeButton.GetComponent<CanvasGroup>();
             if (_upgradeGroup == null) _upgradeGroup = upgradeButton.gameObject.AddComponent<CanvasGroup>();
         }
@@ -67,6 +78,8 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
 
     public void Bind(Model m)
     {
+        EnsureInit();
+
         Data = m;
         HasDetail = !string.IsNullOrWhiteSpace(m.Detail)
                  || !string.IsNullOrWhiteSpace(m.Body);
@@ -93,18 +106,6 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
 
     // ══════════════════ 레벨 점 ══════════════════
 
-    /// <summary>pipParent에 미리 놓인 점들을 왼쪽부터 수집 (1개든 5개든)</summary>
-    void CollectPips()
-    {
-        _pips.Clear();
-        if (pipParent == null) return;
-
-        for (int i = 0; i < pipParent.childCount; i++)
-            if (pipParent.GetChild(i).TryGetComponent<Image>(out var img))
-                _pips.Add(img);
-    }
-
-    /// <summary>최대 레벨보다 점이 모자라면 첫 번째 점을 복제해서 채움</summary>
     void EnsurePips(int count)
     {
         if (pipParent == null || _pips.Count == 0) return;
@@ -131,23 +132,23 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
                 var pip = _pips[i];
                 if (pip == null) continue;
 
-                // 최대 레벨을 넘는 점 → 오브젝트 끔
-                bool used = i < m.MaxLevel;
+                bool used = i < m.MaxLevel;              // 최대 레벨 넘는 점은 끔
                 pip.gameObject.SetActive(used);
-
-                // 남은 점 → 현재 레벨까지 켜진 색, 나머지 꺼진 색
                 if (used) pip.color = i < m.Level ? pipOn : pipOff;
             }
         }
 
         if (upgradeButton != null)
         {
-            // 레벨 있는 카드는 버튼 자리를 항상 차지 → 업그레이드 가능 여부로 레이아웃이 안 흔들림
+            // 레벨 있는 카드는 버튼 자리 유지 → 업그레이드 가능 여부로 레이아웃이 안 흔들림
             upgradeButton.gameObject.SetActive(m.ShowRank);
             upgradeButton.interactable = m.CanUpgrade;
 
-            _upgradeGroup.alpha = m.CanUpgrade ? 1f : 0f;
-            _upgradeGroup.blocksRaycasts = m.CanUpgrade;   // 안 보일 땐 클릭도 막지 않음
+            if (_upgradeGroup != null)
+            {
+                _upgradeGroup.alpha = m.CanUpgrade ? 1f : 0f;
+                _upgradeGroup.blocksRaycasts = m.CanUpgrade;
+            }
         }
     }
 

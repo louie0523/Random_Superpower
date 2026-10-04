@@ -48,6 +48,8 @@ public class WeaponAnimator : MonoBehaviour
     private float _drawAmount;
 
     private float _bobWeight;
+    private float _speed = 1f;
+
 
     public FPArmRig ArmRig => armRig;
     public void SetDraw(float t01) => _drawAmount = t01;
@@ -61,13 +63,14 @@ public class WeaponAnimator : MonoBehaviour
 
     /// <summary>공격 시작</summary>
 
-    public void Play(ComboStep step)
+    public void Play(ComboStep step, float speed = 1f)
     {
         _blendFrom = CaptureCurrent();
         _blendTimer = blendInTime;
         _blendDuration = blendInTime;
 
-        _freezeTimer = 0f;      // ← 추가
+        _freezeTimer = 0f;
+        _speed = Mathf.Max(0.1f, speed);
 
         _step = step;
         _t = 0f;
@@ -151,7 +154,7 @@ public class WeaponAnimator : MonoBehaviour
 
         // ── 모션 재생 ──
         if (_freezeTimer > 0f) _freezeTimer -= dt;
-        else _t += dt;
+        else _t += dt * _speed;
 
         if (_t >= _step.TotalTime)
         {

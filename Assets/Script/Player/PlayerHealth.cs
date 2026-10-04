@@ -54,6 +54,7 @@ public class PlayerHealth : NetworkBehaviour
     private PlayerStats _stats;
     private CharacterController _cc;
     private AbilityRuntime _ability;
+    private PlayerStatus _status;
 
     [Header("Hit Flash")]
     [Tooltip("셰이더의 색 프로퍼티 이름. 비우면 자동 탐색")]
@@ -68,6 +69,7 @@ public class PlayerHealth : NetworkBehaviour
         _cc = GetComponent<CharacterController>();
         _ability = GetComponent<AbilityRuntime>();
         _renderer = GetComponentInChildren<Renderer>();
+        _status = GetComponent<PlayerStatus>();
         SetupColorProperty();
 
         if (HasStateAuthority)
@@ -172,7 +174,13 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (IsDead) return;
 
-        int final = DamageCalc.CalcIncoming(_stats, info.Amount);
+        float raw = info.Amount;
+        if (info.MaxHpPercent > 0f)
+            raw += _stats.Get(StatType.MaxHP) * info.MaxHpPercent * 0.01f;
+
+        int final = info.IgnoreDefense
+            ? Mathf.Max(1, Mathf.RoundToInt(raw))           // 고정 피해 — 방어·배율 무시
+            : DamageCalc.CalcIncoming(_stats, raw);
 
         LastHitFrom = info.SourcePos;
         HP -= final;
@@ -189,7 +197,12 @@ public class PlayerHealth : NetworkBehaviour
                 ah.RPC_MarkCombat();
         }
 
-        _ability?.FireTrigger(TriggerType.OnHitTaken, null);
+
+        if (!info.IsDot)
+        {
+            var atkObj = info.Attacker != PlayerRef.None ? Runner.GetPlayerObject(info.Attacker) : null;
+            _ability?.FireTrigger(TriggerType.OnHitTaken, atkObj != null ? atkObj.gameObject : null);
+        }
 
         if (HP <= 0)
         {
@@ -199,10 +212,38 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+    /// <summary>상태이상 지속 피해 — 최대 체력 N% 고정 피해. 건 사람에게 킬 인정</summary>
+    public void TakeStatusDamage(float maxHpPercent, PlayerRef source)
+    {
+        if (!HasStateAuthority || IsDead) return;
+
+        var info = source != PlayerRef.None && source != Object.InputAuthority
+            ? DamageInfo.FromPlayerHit(0, source, transform.position)
+            : DamageInfo.FromEnvironment(0, transform.position);
+
+        info.MaxHpPercent = maxHpPercent;
+        info.IgnoreDefense = true;
+        info.IsDot = true;
+
+        RPC_TakeDamage(info);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_Heal(int amount)
+    {
+        if (IsDead) return;
+
+        int healed = Mathf.RoundToInt(amount * (_status != null ? _status.HealMultiplier : 1f));
+        if (healed <= 0) return;
+
+        HP = Mathf.Min(HP + healed, Mathf.RoundToInt(_stats.Get(StatType.MaxHP)));
+    }
+
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ResetForNewRound()
     {
         // 순서 중요: 스탯 비우기 → 각 시스템이 처음 상태로 다시 걸기 → HP는 마지막
+        GetComponent<PlayerStatus>()?.ClearAll();
         _stats.ClearAll();
 
         GetComponent<PlayerEquipment>()?.ResetForNewRound();
@@ -245,6 +286,7 @@ public class PlayerHealth : NetworkBehaviour
         if (IsDead) return;
 
         IsDead = true;
+        _status?.ClearAll();
         Deaths++;
         RespawnTimer = TickTimer.CreateFromSeconds(Runner, respawnDelay);
 
@@ -339,7 +381,11 @@ public class PlayerHealth : NetworkBehaviour
     {
         Kills++;
         Soul += soul;
-        GetComponent<AbilityRuntime>()?.FireTrigger(TriggerType.OnKill, null);
+
+        var ar = GetComponent<AbilityRuntime>();
+        ar?.FireTrigger(TriggerType.OnKill, null);
+        ar?.OnPlayerKill();                          // ★ 진화 카운트
+
         GetComponent<PlayerEnchant>()?.RPC_AddStones(1);
     }
 
@@ -350,12 +396,7 @@ public class PlayerHealth : NetworkBehaviour
         Soul += soul;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_Heal(int amount)
-    {
-        if (IsDead) return;
-        HP = Mathf.Min(HP + amount, Mathf.RoundToInt(_stats.Get(StatType.MaxHP)));
-    }
+
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_GainSoul(int amount) => Soul += amount;

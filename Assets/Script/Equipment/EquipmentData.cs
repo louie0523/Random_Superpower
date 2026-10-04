@@ -1,10 +1,12 @@
 using UnityEngine.Localization;
-using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine;
 
 public enum EquipSlot { Weapon, Armor, Helmet, Boots }
 public enum GripType { RightHand, LeftHand, TwoHand }
 public enum WeaponClass { Melee, Ranged }
+
+/// <summary>아이템 등급 — 인챈트 비용(EnchantRules)과 상자 드롭 확률에 사용</summary>
+public enum ItemGrade { C, B, A, S }
 
 public enum RangedType
 {
@@ -25,9 +27,6 @@ public enum GunFireMode
     Projectile,     // 투사체 (유탄, 로켓)
 }
 
-
-
-
 [CreateAssetMenu(menuName = "Game/Equipment")]
 public class EquipmentData : ScriptableObject, IMotionSource
 {
@@ -42,6 +41,13 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public WeaponClass Class = WeaponClass.Melee;
     public Sprite Icon;
 
+    [Header("등급 · 분류")]
+    [Tooltip("인챈트 스톤 비용과 상자 드롭 확률에 사용")]
+    public ItemGrade Grade = ItemGrade.C;
+
+    [Tooltip("체크하면 상자·스포너에서 안 나옴. 진화로만 얻는 특수 무기")]
+    public bool IsSpecial = false;
+
     [Header("태그")]
     [Tooltip("툴팁 하단에 표시할 로컬라이즈 키 목록")]
     public string[] Tags;
@@ -52,13 +58,13 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public StatEntry[] BaseStats;
 
     [Header("─── Weapon: 인챈트 ───")]
-    [Tooltip("비우면 이 무기는 인챈트 불가")]
+    [Tooltip("비우면 이 무기는 인챈트 불가. 최대 단계도 이 테이블이 정함")]
     public EnchantTable EnchantTable;
 
-    [Tooltip("인챈트 1회당 스톤 소모량")]
+    [Tooltip("EnchantRules가 연결되지 않았을 때만 사용 — 인챈트 1회당 스톤")]
     public int EnchantStoneCost = 1;
 
-    [Tooltip("단계마다 추가되는 스톤 비용")]
+    [Tooltip("EnchantRules가 연결되지 않았을 때만 사용 — 단계마다 추가 스톤")]
     public int EnchantCostPerStage = 0;
 
     public bool CanEnchant => EnchantTable != null && EnchantTable.MaxStage > 0;
@@ -67,7 +73,25 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public int GetEnchantCost(int currentStage) =>
         Mathf.Max(1, EnchantStoneCost + EnchantCostPerStage * currentStage);
 
+    [System.Serializable]
+    public class UpgradePath
+    {
+        [Tooltip("진화 후 무기 ID (보통 특수 무기)")]
+        public int TargetId;
 
+        [Tooltip("이 무기를 들고 처치한 수. 0 = 조건 없음")]
+        [Min(0)] public int RequiredKills;
+
+        [Tooltip("이 무기의 강화 단계. 0 = 조건 없음")]
+        [Min(0)] public int RequiredStage;
+
+        [Tooltip("켜면 강화 단계가 그대로 따라감 (무기가 강화되는 느낌).\n끄면 0강부터 (아예 다른 무기로 바뀌는 느낌)")]
+        public bool InheritEnchant = true;
+    }
+
+    [Header("─── Weapon: 진화 ───")]
+    [Tooltip("적힌 조건을 모두 만족하면 인벤토리에 진화 버튼이 뜸. 여러 갈래면 플레이어가 고름")]
+    public UpgradePath[] Upgrades;
 
     // ══════════ 무기 전용 ══════════
 
@@ -77,8 +101,6 @@ public class EquipmentData : ScriptableObject, IMotionSource
     public Vector3 PositionOffset;
     public Vector3 RotationOffset;
     public Vector3 ScaleOverride = Vector3.one;
-
-
 
     [Tooltip("1인칭 전용 오프셋 (0이면 위 값 사용)")]
     public Vector3 FpPositionOffset;
@@ -113,8 +135,6 @@ public class EquipmentData : ScriptableObject, IMotionSource
 
     [Tooltip("수직 판정 허용 높이 (m). 눈높이 기준 위아래")]
     public float HitHeight = 1.2f;
-
-
 
     [Header("─── Weapon: Combo ───")]
     [Tooltip("배열 길이 1이면 단타 무기")]
@@ -254,8 +274,6 @@ public class EquipmentData : ScriptableObject, IMotionSource
                              && Class == WeaponClass.Melee
                              && !IsUnarmed;
 
-
-
     // ══════════ 편의 ══════════
 
     public bool IsWeapon => Slot == EquipSlot.Weapon;
@@ -273,7 +291,7 @@ public class EquipmentData : ScriptableObject, IMotionSource
         return Combo[Mathf.Abs(index) % Combo.Length];
     }
 
-    public string GetName() 
+    public string GetName()
     {
         if (!NameEntry.IsEmpty)
         {
@@ -297,8 +315,10 @@ public class EquipmentData : ScriptableObject, IMotionSource
         public StatType Stat;
         public ModType Type;
 
-        [Tooltip("Flat = 실수치 (+25). Percent = 퍼센트 (25 = +25%). " +
-                 "치확/치피/쿨감/흡혈은 Flat만 사용 (0.1 = 10%)")]
+        [Tooltip("Flat = 스탯 실제 값에 그대로 더함 / Percent = 퍼센트 숫자\n" +
+                 "일반: Flat 25 = +25, Percent 25 = +25%\n" +
+                 "피해 배율 계열: Flat 0.25 = +25%p\n" +
+                 "치확/치피/쿨감/흡혈: Flat만 (0.1 = 10%)")]
         public float Value;
     }
 
@@ -345,6 +365,11 @@ public class EquipmentData : ScriptableObject, IMotionSource
         for (int i = 0; i < Combo.Length; i++)
             if (Combo[i] != null && string.IsNullOrEmpty(Combo[i].Name))
                 Combo[i].Name = $"{i + 1}타";
+
+        if (Upgrades != null)
+            foreach (var u in Upgrades)
+                if (u != null && u.TargetId == Id && Id != 0)
+                    Debug.LogWarning($"[Equipment] {name}: 진화 대상이 자기 자신입니다", this);
     }
 #endif
 }

@@ -481,47 +481,6 @@ MonoBehaviour:
     m_Localized: "La velocidad de movimiento aumenta en 2 durante la duraci\xF3n."
     m_Metadata:
       m_Items: []
-  - m_Id: 4008527633428480
-    m_Localized: daga
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156992
-    m_Localized: "Es una espada muy b\xE1sica."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156993
-    m_Localized: arco de madera
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156994
-    m_Localized: "Est\xE1 bastante bien."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156995
-    m_Localized: "bast\xF3n de madera"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156996
-    m_Localized: "\xA1Qu\xE9 miedo!"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156997
-    m_Localized: AK47
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156998
-    m_Localized: "Con tan solo esto, mi abuela tambi\xE9n podr\xEDa haberse convertido
-      en una leyenda."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280082063360
-    m_Localized: manos desnudas
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280144977920
-    m_Localized: "\xA1Con esto no hay nada que no puedas hacer!"
-    m_Metadata:
-      m_Items: []
   - m_Id: 4030871831687168
     m_Localized: vecindad
     m_Metadata:
@@ -564,6 +523,135 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4071974161199104
     m_Localized: No se aplicaron encantamientos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716563963904
+    m_Localized: Puntos de habilidad {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072768
+    m_Localized: Nivel {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072769
+    m_Localized: 'Compra +1 Punto de Habilidad: puedes mejorar cualquier habilidad
+      que desees en el Panel de Habilidades (F1).'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072770
+    m_Localized: Elimina todos los encantamientos de armas actuales (Alma +{0} por
+      nivel)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072771
+    m_Localized: Encanto especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072772
+    m_Localized: Seleccionar encantamiento especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072773
+    m_Localized: Cambiar a encantamiento normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072774
+    m_Localized: Selecciona un encantamiento especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072775
+    m_Localized: '{0} {1} ({2} segundos) al ser golpeado'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072776
+    m_Localized: "Inflige un da\xF1o adicional del {0}% de la salud m\xE1xima del
+      objetivo al golpear."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072777
+    m_Localized: "En lugar de poder drenar vida, convierte el {0}% de la cantidad
+      drenada en da\xF1o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072778
+    m_Localized: "designaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072779
+    m_Localized: "Siguiente designaci\xF3n de Enchant"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072780
+    m_Localized: Encanto especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072781
+    m_Localized: Encantamiento normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072782
+    m_Localized: desacelerar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072783
+    m_Localized: quemar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072784
+    m_Localized: estatua
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267072
+    m_Localized: sello
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267073
+    m_Localized: desmayo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267074
+    m_Localized: tajo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267075
+    m_Localized: manos desnudas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267076
+    m_Localized: "\xA1Con esto no hay nada que no puedas hacer!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267077
+    m_Localized: daga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267078
+    m_Localized: "Es una espada muy b\xE1sica."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267079
+    m_Localized: arco de madera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267080
+    m_Localized: "Est\xE1 bastante bien."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267081
+    m_Localized: "bast\xF3n de madera"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267082
+    m_Localized: "\xA1Qu\xE9 miedo!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267083
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716639461376
+    m_Localized: "Con tan solo esto, mi abuela tambi\xE9n podr\xEDa haberse convertido
+      en una leyenda."
     m_Metadata:
       m_Items: []
   references:

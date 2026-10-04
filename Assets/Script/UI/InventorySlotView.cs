@@ -8,10 +8,12 @@ public class InventorySlotView : MonoBehaviour
     public struct Model
     {
         public EquipmentData Data;
-        public int SlotIndex;
+        public EquipmentDatabase Database;   // 진화 대상 이름 조회용
+        public int SlotIndex;                // 장비 칸은 -1
         public bool IsActive;
         public PlayerEnchant Enchant;
         public int Ammo;
+        public bool UpgradeReady;            // 진화 버튼 표시
     }
 
     [SerializeField] private Image icon;
@@ -22,6 +24,8 @@ public class InventorySlotView : MonoBehaviour
     [SerializeField] private TMP_Text enchantCount;
     [SerializeField] private Button clickArea;
     [SerializeField] private Button dropButton;
+    [Tooltip("진화 조건을 만족했을 때만 보임")]
+    [SerializeField] private Button upgradeButton;
     [SerializeField] private LocText emptyLabel;
     [SerializeField] private TooltipTrigger tooltip;
 
@@ -31,8 +35,13 @@ public class InventorySlotView : MonoBehaviour
 
     public System.Action OnClicked;
     public System.Action OnDropClicked;
+    public System.Action OnUpgradeClicked;
 
     private Model _model;
+    private readonly List<EnchantSummary.Group> _groups = new();
+
+    const string MetColor = "#7FD07F";
+    const string DimColor = "#8A8A8A";
 
     void Awake()
     {
@@ -40,6 +49,7 @@ public class InventorySlotView : MonoBehaviour
 
         clickArea?.onClick.AddListener(() => OnClicked?.Invoke());
         dropButton?.onClick.AddListener(() => OnDropClicked?.Invoke());
+        upgradeButton?.onClick.AddListener(() => OnUpgradeClicked?.Invoke());
     }
 
     public void Bind(Model m)
@@ -76,7 +86,7 @@ public class InventorySlotView : MonoBehaviour
             if (showAmmo) ammoText.text = $"{m.Ammo} / {m.Data.MaxAmmo}";
         }
 
-        // 인챈트 개수
+        // 강화 단계
         int stage = 0;
         if (hasItem && m.Enchant != null && m.SlotIndex >= 0)
             stage = m.Enchant.GetStage(m.SlotIndex);
@@ -84,13 +94,29 @@ public class InventorySlotView : MonoBehaviour
         if (enchantMark != null) enchantMark.SetActive(stage > 0);
         if (enchantCount != null) enchantCount.text = $"+{stage}";
 
+        // 버튼 — 버리기는 무기 칸 전부, 진화는 조건 만족 시
         if (dropButton != null)
-            dropButton.gameObject.SetActive(hasItem && m.IsActive);
+            dropButton.gameObject.SetActive(hasItem && m.SlotIndex >= 0);
 
-        // 툴팁
+        if (upgradeButton != null)
+            upgradeButton.gameObject.SetActive(hasItem && m.SlotIndex >= 0 && m.UpgradeReady);
+
         if (tooltip != null)
             tooltip.Provider = hasItem ? BuildTooltip : (System.Func<TooltipView.Content>)null;
     }
+
+    // ══════════════════ 툴팁 ══════════════════
+
+    static string KeyPrefix(EquipmentData d) => d.Slot switch
+    {
+        EquipSlot.Armor => "armor",
+        EquipSlot.Helmet => "helmet",
+        EquipSlot.Boots => "boots",
+        _ => "weapon",
+    };
+
+    static string NameOf(EquipmentData d) =>
+        LocUtil.GetOr($"{KeyPrefix(d)}.{d.Id}.name", LocUtil.Resolve(d.DisplayName));
 
     TooltipView.Content BuildTooltip()
     {
@@ -98,7 +124,7 @@ public class InventorySlotView : MonoBehaviour
 
         return new TooltipView.Content
         {
-            Title = LocUtil.GetOr($"weapon.{d.Id}.name", d.DisplayName),
+            Title = NameOf(d),
             Body = BuildBody(d),
             Detail = BuildDetail(d),
             Tags = BuildTags(d),
@@ -109,7 +135,8 @@ public class InventorySlotView : MonoBehaviour
     {
         var tags = new List<string>();
 
-        // 종류
+        tags.Add(LocUtil.Get($"ui.item.grade.{d.Grade}"));
+
         if (d.Slot == EquipSlot.Weapon)
         {
             tags.Add(d.Class == WeaponClass.Melee
@@ -121,12 +148,10 @@ public class InventorySlotView : MonoBehaviour
             tags.Add(LocUtil.Get($"ui.item.slot.{d.Slot}"));
         }
 
-        // 인챈트 가능 여부
-        tags.Add(LocUtil.Get(d.CanEnchant
-            ? "ui.item.tag.enchantable"
-            : "ui.item.tag.no_enchant"));
+        tags.Add(LocUtil.Get(d.CanEnchant ? "ui.item.tag.enchantable" : "ui.item.tag.no_enchant"));
 
-        // 에셋에 적어둔 커스텀 태그
+        if (d.IsSpecial) tags.Add(LocUtil.Get("ui.item.tag.special"));
+
         if (d.Tags != null)
             foreach (var key in d.Tags)
                 if (!string.IsNullOrWhiteSpace(key))
@@ -139,16 +164,10 @@ public class InventorySlotView : MonoBehaviour
     {
         var sb = new System.Text.StringBuilder();
 
-        // 기본 스탯
         if (d.BaseStats != null)
             foreach (var s in d.BaseStats)
-            {
-                string statName = LocUtil.Get($"stat.{s.Stat}");
-                string val = s.Type == ModType.Percent ? $"+{s.Value:0.#}%" : $"+{s.Value:0.##}";
-                sb.AppendLine($"{statName}  {val}");
-            }
+                sb.AppendLine($"{LocUtil.Get($"stat.{s.Stat}")}  {StatText.Value(s.Stat, s.Type, s.Value)}");
 
-        // 무기 정보
         if (d.Slot == EquipSlot.Weapon)
         {
             sb.AppendLine();
@@ -156,24 +175,19 @@ public class InventorySlotView : MonoBehaviour
             if (d.Class == WeaponClass.Melee)
             {
                 sb.AppendLine(LocUtil.Get("ui.item.melee_range", d.Range.ToString("0.#")));
-                //sb.AppendLine(LocUtil.Get("ui.item.hit_angle", d.HitAngle.ToString("0")));
+            }
+            else if (d.RangedKind == RangedType.Gun)
+            {
+                sb.AppendLine(LocUtil.Get("ui.item.ammo", d.MaxAmmo));
+                sb.AppendLine(LocUtil.Get("ui.item.rpm", d.RoundsPerMinute.ToString("0")));
             }
             else
             {
-
-                if (d.RangedKind == RangedType.Gun)
-                {
-                    sb.AppendLine(LocUtil.Get("ui.item.ammo", d.MaxAmmo));
-                    sb.AppendLine(LocUtil.Get("ui.item.rpm", d.RoundsPerMinute.ToString("0")));
-                }
-                else
-                {
-                    sb.AppendLine(LocUtil.Get("ui.item.charge_time",
-                        d.MinDrawTime.ToString("0.##"), d.MaxDrawTime.ToString("0.##")));
-                    sb.AppendLine(LocUtil.Get("ui.item.charge_damage",
-                        (d.MinDrawDamageMul * 100f).ToString("0"),
-                        (d.MaxDrawDamageMul * 100f).ToString("0")));
-                }
+                sb.AppendLine(LocUtil.Get("ui.item.charge_time",
+                    d.MinDrawTime.ToString("0.##"), d.MaxDrawTime.ToString("0.##")));
+                sb.AppendLine(LocUtil.Get("ui.item.charge_damage",
+                    (d.MinDrawDamageMul * 100f).ToString("0"),
+                    (d.MaxDrawDamageMul * 100f).ToString("0")));
             }
         }
 
@@ -185,47 +199,76 @@ public class InventorySlotView : MonoBehaviour
         var sb = new System.Text.StringBuilder();
 
         // 설명
-        string desc = LocUtil.GetOr($"item.{d.Id}.desc", d.Description);
+        string desc = LocUtil.GetOr($"{KeyPrefix(d)}.{d.Id}.desc", LocUtil.Resolve(d.Description));
         if (!string.IsNullOrWhiteSpace(desc) && !desc.StartsWith("#"))
         {
             sb.AppendLine(desc);
             sb.AppendLine();
         }
 
-        // 인챈트 목록
-        if (_model.Enchant != null && _model.SlotIndex >= 0)
-        {
-            int stage = _model.Enchant.GetStage(_model.SlotIndex);
+        var en = _model.Enchant;
+        int slot = _model.SlotIndex;
+        bool weaponSlot = en != null && slot >= 0;
 
+        // 인챈트 — 같은 것끼리 묶어서, TierColor로
+        if (weaponSlot)
+        {
+            int stage = en.GetStage(slot);
             if (stage > 0)
             {
-                sb.AppendLine(LocUtil.Get("ui.item.enchants"));
+                sb.Append(LocUtil.Get("ui.item.enchants")).Append("  +").Append(stage).AppendLine();
 
-                var db = _model.Enchant.Database;
-                for (int i = 0; i < stage; i++)
-                {
-                    int id = _model.Enchant.GetEnchantId(_model.SlotIndex, i);
-                    var e = db?.Get(id);
-                    if (e == null) continue;
+                EnchantSummary.Build(en, slot, _groups);
+                foreach (var g in _groups)
+                    sb.AppendLine(EnchantSummary.Line(g));
 
-                    string ename = LocUtil.GetOr($"enchant.{e.Id}.name", e.DisplayName);
-                    sb.Append($"  {i + 1}. {ename}");
-
-                    if (e.Stats != null)
-                        foreach (var s in e.Stats)
-                        {
-                            string sign = s.Value >= 0 ? "+" : "";
-                            string val = s.Type == ModType.Percent
-                                ? $"{sign}{s.Value:0.#}%"
-                                : $"{sign}{s.Value:0.##}";
-                            sb.Append($"  {LocUtil.Get($"stat.{s.Stat}")} {val}");
-                        }
-
-                    sb.AppendLine();
-                }
+                sb.AppendLine();
             }
+        }
+
+        // 진화 — 갈래마다 조건 진행도
+        if (weaponSlot && d.Upgrades != null && d.Upgrades.Length > 0)
+        {
+            int kills = en.GetKills(slot);
+            int stage = en.GetStage(slot);
+
+            sb.AppendLine(LocUtil.Get("ui.item.upgrades"));
+
+            for (int i = 0; i < d.Upgrades.Length; i++)
+            {
+                var u = d.Upgrades[i];
+                if (u == null || u.TargetId == 0) continue;
+
+                var target = _model.Database != null ? _model.Database.Get(u.TargetId) : null;
+                string tName = target != null ? NameOf(target) : $"#{u.TargetId}";
+                bool ready = en.IsUpgradeReady(slot, i);
+
+                sb.Append(ready ? $"  <color={MetColor}>→ {tName}</color>" : $"  → {tName}");
+
+                if (u.RequiredKills > 0)
+                    sb.Append("   ").Append(Progress(LocUtil.Get("ui.item.upgrade_kills", kills, u.RequiredKills),
+                                                     kills >= u.RequiredKills));
+
+                if (u.RequiredStage > 0)
+                    sb.Append("   ").Append(Progress(LocUtil.Get("ui.item.upgrade_stage", stage, u.RequiredStage),
+                                                     stage >= u.RequiredStage));
+
+                if (!u.InheritEnchant)
+                    sb.Append("   <color=").Append(DimColor).Append('>')
+                      .Append(LocUtil.Get("ui.item.upgrade_reset")).Append("</color>");
+
+                sb.AppendLine();
+            }
+        }
+        else if (weaponSlot && d.Slot == EquipSlot.Weapon)
+        {
+            // 진화가 없어도 처치 수는 보여줌
+            sb.AppendLine(LocUtil.Get("ui.item.kills", en.GetKills(slot)));
         }
 
         return sb.ToString().TrimEnd();
     }
+
+    static string Progress(string text, bool met) =>
+        met ? $"<color={MetColor}>✓ {text}</color>" : $"<color={DimColor}>{text}</color>";
 }

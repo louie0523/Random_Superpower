@@ -484,47 +484,6 @@ MonoBehaviour:
       de l'effet."
     m_Metadata:
       m_Items: []
-  - m_Id: 4008527633428480
-    m_Localized: poignard
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156992
-    m_Localized: "C'est une \xE9p\xE9e tr\xE8s basique."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156993
-    m_Localized: arc en bois
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156994
-    m_Localized: C'est assez correct.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156995
-    m_Localized: canne en bois
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156996
-    m_Localized: Quelle peur !
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156997
-    m_Localized: AK47
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156998
-    m_Localized: "Avec \xE7a seulement, ma grand-m\xE8re aurait pu, elle aussi, devenir
-      une l\xE9gende."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280082063360
-    m_Localized: mains nues
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280144977920
-    m_Localized: "Vous pouvez tout faire avec \xE7a !"
-    m_Metadata:
-      m_Items: []
   - m_Id: 4030871831687168
     m_Localized: environs
     m_Metadata:
@@ -567,6 +526,136 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4071974161199104
     m_Localized: "Aucun enchantement appliqu\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716563963904
+    m_Localized: "Points de comp\xE9tence {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072768
+    m_Localized: Niveau {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072769
+    m_Localized: "Achat +1 point de comp\xE9tence \u2014 Vous pouvez am\xE9liorer
+      n'importe quelle comp\xE9tence que vous souhaitez dans le panneau des capacit\xE9s
+      (F1)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072770
+    m_Localized: "Supprime tous les enchantements d'arme actuels (\xC2me +{0} par
+      niveau)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072771
+    m_Localized: "Enchantement sp\xE9cial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072772
+    m_Localized: "S\xE9lectionnez Enchantement sp\xE9cial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072773
+    m_Localized: "Passer \xE0 l'enchantement normal"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072774
+    m_Localized: "Choisissez un enchantement sp\xE9cial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072775
+    m_Localized: '{0} {1} ({2} secondes) lors de l''impact'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072776
+    m_Localized: "Inflige {0}% des points de vie maximum de la cible en d\xE9g\xE2ts
+      suppl\xE9mentaires lors de l'impact"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072777
+    m_Localized: "Au lieu de pouvoir drainer la vie, convertissez {0}% de la quantit\xE9
+      drain\xE9e en d\xE9g\xE2ts."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072778
+    m_Localized: "d\xE9signation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072779
+    m_Localized: "Prochaine d\xE9signation d'enchantement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072780
+    m_Localized: "Enchantement sp\xE9cial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072781
+    m_Localized: Enchantement normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072782
+    m_Localized: ralentir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072783
+    m_Localized: "br\xFBler"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072784
+    m_Localized: statue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267072
+    m_Localized: joint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267073
+    m_Localized: "\xE9vanouissement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267074
+    m_Localized: entaille
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267075
+    m_Localized: mains nues
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267076
+    m_Localized: "Vous pouvez tout faire avec \xE7a !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267077
+    m_Localized: poignard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267078
+    m_Localized: "C'est une \xE9p\xE9e tr\xE8s basique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267079
+    m_Localized: arc en bois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267080
+    m_Localized: C'est assez correct.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267081
+    m_Localized: canne en bois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267082
+    m_Localized: Quelle peur !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267083
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716639461376
+    m_Localized: "Avec \xE7a seulement, ma grand-m\xE8re aurait pu, elle aussi, devenir
+      une l\xE9gende."
     m_Metadata:
       m_Items: []
   references:

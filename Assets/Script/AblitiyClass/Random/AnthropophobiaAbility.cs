@@ -15,12 +15,17 @@ public class AnthropophobiaAbility : AbilityBehaviour
     [Tooltip("폭발 후 자신도 사망")]
     public bool KillSelf = true;
 
-    [Header("연출")]
+    [Header("연출 — 모든 클라이언트에서 재생")]
     public GameObject WarningEffect;
     public GameObject ExplodeEffect;
 
+    const int EvWarn = 0;
+    const int EvExplode = 1;
+
     private float _timer;
     private bool _warned;
+
+    [System.NonSerialized] private readonly Collider[] _hits = new Collider[16];
 
     /// <summary>HUD 표시용 (0~1)</summary>
     public float DangerRatio => Mathf.Clamp01(_timer / Mathf.Max(0.01f, TriggerTime));
@@ -34,14 +39,7 @@ public class AnthropophobiaAbility : AbilityBehaviour
 
     public override void Tick(float dt)
     {
-        if (Ctx.Health == null || Ctx.Health.IsDead)
-        {
-            _timer = 0f;
-            _warned = false;
-            return;
-        }
-
-        if (!HasNearbyPlayer())
+        if (Ctx.Health == null || Ctx.Health.IsDead || !HasNearbyPlayer())
         {
             _timer = 0f;
             _warned = false;
@@ -53,18 +51,25 @@ public class AnthropophobiaAbility : AbilityBehaviour
         if (!_warned && _timer >= TriggerTime * 0.4f)
         {
             _warned = true;
-            Ctx.PlayEffectLocal(WarningEffect, Ctx.transform.position);
+            Broadcast(EvWarn, Ctx.transform.position);
         }
 
         if (_timer >= TriggerTime) Explode();
     }
 
+    public override void OnRemoteEvent(int key, Vector3 pos)
+    {
+        if (key == EvWarn) Ctx.PlayEffectLocal(WarningEffect, pos);
+        else if (key == EvExplode) Ctx.PlayEffectLocal(ExplodeEffect, pos);
+    }
+
     bool HasNearbyPlayer()
     {
-        var cols = Physics.OverlapSphere(Ctx.transform.position, DetectRange, Ctx.HitMask);
+        int n = Physics.OverlapSphereNonAlloc(Ctx.transform.position, DetectRange, _hits, Ctx.HitMask);
 
-        foreach (var c in cols)
+        for (int i = 0; i < n; i++)
         {
+            var c = _hits[i];
             if (c.gameObject == Ctx.gameObject) continue;
             if (!c.TryGetComponent<PlayerHealth>(out var h)) continue;
             if (h.IsDead) continue;
@@ -79,10 +84,11 @@ public class AnthropophobiaAbility : AbilityBehaviour
         _warned = false;
 
         Vector3 center = Ctx.transform.position;
-        var cols = Physics.OverlapSphere(center, ExplodeRadius, Ctx.HitMask);
+        int n = Physics.OverlapSphereNonAlloc(center, ExplodeRadius, _hits, Ctx.HitMask);
 
-        foreach (var c in cols)
+        for (int i = 0; i < n; i++)
         {
+            var c = _hits[i];
             if (c.gameObject == Ctx.gameObject) continue;
             if (!c.TryGetComponent<PlayerHealth>(out var h)) continue;
             if (h.IsDead) continue;
@@ -91,7 +97,7 @@ public class AnthropophobiaAbility : AbilityBehaviour
                 Mathf.RoundToInt(Damage), Ctx.Object.InputAuthority, center));
         }
 
-        Ctx.PlayEffectLocal(ExplodeEffect, center);
+        Broadcast(EvExplode, center);
 
         if (KillSelf && Ctx.Health != null)
             Ctx.Health.RPC_TakeDamage(DamageInfo.FromEnvironment(99999, center));

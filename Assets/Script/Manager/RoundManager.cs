@@ -23,6 +23,13 @@ public class RoundManager : NetworkBehaviour
     [Tooltip("재시작 직후 승리 판정을 쉬는 시간 (초기화 RPC가 반영될 때까지)")]
     [SerializeField] private float restartGrace = 2f;
 
+    [Networked] public float RoundStartTime { get; set; }
+
+    public float RoundMinutes =>
+        Object != null && Object.IsValid
+            ? Mathf.Max(0f, (Runner.SimulationTime - RoundStartTime) / 60f)
+            : 0f;
+
     [Networked] private TickTimer GraceTimer { get; set; }
 
     public override void Spawned()
@@ -33,6 +40,7 @@ public class RoundManager : NetworkBehaviour
         {
             GameOver = false;
             Winner = PlayerRef.None;
+            RoundStartTime = Runner.SimulationTime;
         }
     }
 
@@ -82,6 +90,8 @@ public class RoundManager : NetworkBehaviour
 
     void Restart()
     {
+        RoundStartTime = Runner.SimulationTime;
+
         foreach (var p in Runner.ActivePlayers)
         {
             var obj = Runner.GetPlayerObject(p);
@@ -95,6 +105,9 @@ public class RoundManager : NetworkBehaviour
 
         foreach (var pk in FindObjectsByType<Pickup>(FindObjectsSortMode.None))
             pk.RPC_DespawnForReset();
+
+        //foreach (var sp in FindObjectsByType<PickupSpawner>(FindObjectsSortMode.None))
+        //    sp.ResetForNewRound();
 
         GameOver = false;
         Winner = PlayerRef.None;

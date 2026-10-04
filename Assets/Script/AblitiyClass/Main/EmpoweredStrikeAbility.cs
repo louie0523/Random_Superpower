@@ -55,6 +55,8 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
     public bool IsReady => Ctx.GetCharge(ChargeSlot) >= StrikeCost;
     public bool InMastery => Ctx.HasState(StateId);
 
+    public override ComboStep GetOverrideStep() => StrikeMotion?.Step;
+
     int StrikeEntry => StrikeFromSkill ? SkillEntry(StrikeIndex) : PassiveEntry(StrikeIndex);
 
     /// <summary>현재 레벨의 일격 배율 (4 = 400%)</summary>
@@ -165,7 +167,8 @@ public class EmpoweredStrikeAbility : AbilityBehaviour
         ovr.HasDash = true;
 
         _strikeInProgress = true;
-        _strikeFlagTimer = step.WindUp + step.ActiveWindow + 0.1f;
+        float spd = Mathf.Max(0.1f, Ctx.Stats != null ? Ctx.Stats.Get(StatType.AttackSpeed) : 1f);
+        _strikeFlagTimer = (step.WindUp + step.ActiveWindow) / spd + 0.1f;
 
         return true;
     }

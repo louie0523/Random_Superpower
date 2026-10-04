@@ -1,7 +1,6 @@
 ﻿using Fusion;
 using UnityEngine;
 
-public enum ChestTier { Common, Rare, Epic }
 
 public class PickupSpawner : NetworkBehaviour
 {
@@ -20,22 +19,43 @@ public class PickupSpawner : NetworkBehaviour
 
     private NetworkObject _localCurrent;
 
+    private bool _hadPickup;    // 직전 틱까지 무기가 있었는가 (로컬)
+    private bool _forceSpawn;   // 라운드 시작 — 비면 즉시 생성
+
     public override void Spawned()
     {
-        if (!HasStateAuthority) return;
-
-        Timer = TickTimer.CreateFromSeconds(Runner, respawnInterval);
-        SpawnNow();
+        if (HasStateAuthority) SpawnNow();
     }
 
     public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
 
-        if (!Timer.ExpiredOrNotRunning(Runner)) return;   // 쿨타임 중
-        if (Current != null || _localCurrent != null) return;
+        // 무기가 놓여 있는 동안은 대기
+        if (Current != null || _localCurrent != null)
+        {
+            _hadPickup = true;
+            return;
+        }
 
-        Timer = TickTimer.CreateFromSeconds(Runner, respawnInterval);   // ★ 먼저
+        // 라운드 시작 → 타이머 없이 바로
+        if (_forceSpawn)
+        {
+            _forceSpawn = false;
+            _hadPickup = false;
+            SpawnNow();
+            return;
+        }
+
+        // 방금 비었음 (누가 주웠거나 수명 만료) → 여기서부터 카운트
+        if (_hadPickup)
+        {
+            _hadPickup = false;
+            Timer = TickTimer.CreateFromSeconds(Runner, respawnInterval);
+            return;
+        }
+
+        if (!Timer.ExpiredOrNotRunning(Runner)) return;
         SpawnNow();
     }
 
@@ -67,6 +87,14 @@ public class PickupSpawner : NetworkBehaviour
             if (e != null && e.Slot == EquipSlot.Weapon) pool.Add(e.Id);
 
         return pool.Count > 0 ? pool[Random.Range(0, pool.Count)] : 0;
+    }
+
+    /// <summary>RoundManager가 호출. 기존 무기가 치워지는 대로 즉시 새로 생성</summary>
+    public void ResetForNewRound()
+    {
+        if (!HasStateAuthority) return;
+        _forceSpawn = true;
+        Timer = default;
     }
 
     void OnDrawGizmos()

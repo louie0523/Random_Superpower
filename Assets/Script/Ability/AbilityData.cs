@@ -48,6 +48,8 @@ public class AbilityData : ScriptableObject
     [Tooltip("진화 조건: 막타 횟수")]
     public int EvolveKillCount = 0;
 
+
+
     [System.Serializable]
     public struct ChargeInfo
     {
@@ -181,6 +183,9 @@ public class AbilityData : ScriptableObject
         public float HitHeight = 1.5f;
         public int MaxTargets = 1;
 
+        [Tooltip("무기 판정 스킬 — 맞힌 대상에게 들고 있는 무기의 특수 인챈트 효과 적용")]
+        public bool AppliesWeaponEnchants = false;
+
         public EffectDef[] Effects;
 
     }
@@ -206,10 +211,11 @@ public class AbilityData : ScriptableObject
 
         [Header("Values")]
         [Tooltip("레벨별 수치. [0] = Lv1(기본), [1] = Lv2 …  짧으면 마지막 값 반복\n" +
-            "일반 스탯: Flat = 실수치(+25), Percent = 퍼센트(25 = +25%)\n" +
-            "배율 스탯(피해 계열): Flat = 합연산(25 = +25%p), Percent = 곱연산(25 = ×1.25)\n" +
-            "비율 스탯(치확/쿨감/흡혈): Flat만, 0~1 단위(0.1 = 10%)\n" +
-            "EnterState: 값이 상태 ID라 레벨과 무관하게 [0]만 사용")]
+    "Flat = 스탯 실제 값에 그대로 더함 / Percent = 퍼센트 숫자\n" +
+    "  일반 스탯: Flat 25 = +25, Percent 25 = +25%\n" +
+    "  배율 스탯(피해 계열, 기본 1.0): Flat 0.25 = +25%p, Percent 25 = ×1.25\n" +
+    "  비율 스탯(치확/치피/쿨감/흡혈): Flat만, 0.1 = 10%\n" +
+    "EnterState: 값이 상태 ID라 레벨과 무관하게 [0]만 사용")]
         public float[] Values = new float[] { 0f };
         public float Duration = 0f;
         [Range(0f, 1f)]
@@ -218,6 +224,10 @@ public class AbilityData : ScriptableObject
         [Header("StatMod 전용")]
         public StatType Stat;
         public ModType ModType;
+
+        [Header("상태이상 전용")]
+        [Tooltip("ApplyStatus일 때 부여할 상태이상. Values = 수치(둔화 25 = 25%), Duration = 지속(초)")]
+        public StatusType Status;
 
         [Header("Trigger 옵션")]
         [Tooltip("대상별 재발동 쿨타임 (0이면 없음)")]

@@ -51,9 +51,9 @@ public class EnchantSlotView : MonoBehaviour
 
         foreach (var s in data.Stats)
         {
-            string statName = LocUtil.Get($"stat.{s.Stat}");
-            string val = s.Type == ModType.Percent ? $"+{s.Value:0.#}%" : $"+{s.Value:0.##}";
-            sb.AppendLine($"{statName}  {val}");
+            if (sb.Length > 0) sb.Append("   ");
+            sb.Append(LocUtil.Get($"stat.{s.Stat}")).Append(' ')
+              .Append(StatText.Value(s.Stat, s.Type, s.Value));
         }
 
         return sb.ToString().TrimEnd();

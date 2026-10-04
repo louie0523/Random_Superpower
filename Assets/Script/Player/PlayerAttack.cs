@@ -27,6 +27,11 @@ public class PlayerAttack : NetworkBehaviour
     private CharacterController _cc;
     private MotionEventPlayer _events;
     private PlayerShop _shop;
+    private PlayerStatus _status;
+    private PlayerEnchant _enchant;
+
+    private float _atkSpd = 1f;         // 이번 공격의 공속 (시작 시점 고정)
+    private int _overrideSource = -1;   // 공격을 대체한 Behaviour 번호. -1 = 일반 공격
 
     // 콤보 상태
     private int _comboIndex;
@@ -73,6 +78,8 @@ public class PlayerAttack : NetworkBehaviour
         _cc = GetComponent<CharacterController>();
         _events = GetComponent<MotionEventPlayer>();
         _shop = GetComponent<PlayerShop>();
+        _status = GetComponent<PlayerStatus>();
+        _enchant = GetComponent<PlayerEnchant>();
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
@@ -141,13 +148,7 @@ public class PlayerAttack : NetworkBehaviour
             return;
         }
 
-        if (_health.IsDead)
-        {
-            ResetCombo();
-            _attackQueued = false;
-            CancelDraw();
-            return;
-        }
+        if (_health.IsDead || (_status != null && _status.IsStunned))
 
         // 스킬 시전 중이면 공격 불가
         if (_ability != null && _ability.IsCasting)
@@ -299,14 +300,7 @@ public class PlayerAttack : NetworkBehaviour
         target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
             Mathf.RoundToInt(outgoing), Object.InputAuthority, hit.point));
 
-        _ability?.FireTrigger(TriggerType.OnHit, hit.collider.gameObject);
-
-        float lifeSteal = _stats.Get(StatType.LifeSteal);
-        if (lifeSteal > 0f)
-        {
-            int heal = Mathf.RoundToInt(outgoing * lifeSteal);
-            if (heal > 0) _health.RPC_Heal(heal);
-        }
+        AfterWeaponHit(target, hit.collider.gameObject, outgoing);
 
         if (fpsCamera != null) fpsCamera.Shake(0.15f);
     }
@@ -475,14 +469,7 @@ public class PlayerAttack : NetworkBehaviour
         target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
             Mathf.RoundToInt(outgoing), Object.InputAuthority, point));
 
-        _ability?.FireTrigger(TriggerType.OnHit, col.gameObject);
-
-        float lifeSteal = _stats.Get(StatType.LifeSteal);
-        if (lifeSteal > 0f)
-        {
-            int heal = Mathf.RoundToInt(outgoing * lifeSteal);
-            if (heal > 0) _health.RPC_Heal(heal);
-        }
+        AfterWeaponHit(target, col.gameObject, outgoing);
 
         if (fpsCamera != null) fpsCamera.Shake(0.2f);
     }
@@ -510,7 +497,7 @@ public class PlayerAttack : NetworkBehaviour
 
     void TickAttack(float dt, bool pressed)
     {
-        _attackTimer += dt;
+        _attackTimer += dt * _atkSpd;
 
         float activeStart = _current.WindUp;
         float activeEnd = _current.WindUp + _current.ActiveWindow;
@@ -546,7 +533,7 @@ public class PlayerAttack : NetworkBehaviour
         if (!_isDashAttack && _current.LungeDistance > 0f && inWindow)
         {
             float speed = _current.LungeDistance / Mathf.Max(0.01f, _current.ActiveWindow);
-            _cc.Move(transform.forward * speed * dt);
+            _cc.Move(transform.forward * speed * dt * _atkSpd);
         }
 
         // ── 다음 입력 예약 (판정 종료 후부터) ──
@@ -589,9 +576,13 @@ public class PlayerAttack : NetworkBehaviour
         _isDashAttack = false;
         _dashStarted = false;
         _override = AttackOverride.None;
+        _overrideSource = -1;
         _hitThisAttack.Clear();
 
-        if (_ability != null && _ability.TryOverrideAttack(out _override))
+        // 공속은 시작 시점 값으로 고정 (휘두르는 도중 버프가 바뀌어도 모션이 안 튐)
+        _atkSpd = Mathf.Max(0.1f, _stats.Get(StatType.AttackSpeed));
+
+        if (_ability != null && _ability.TryOverrideAttack(out _override, out _overrideSource))
         {
             _pendingDamageMul = _override.DamageMul;
             _current = _override.Step ?? weapon.GetStep(0);
@@ -614,7 +605,21 @@ public class PlayerAttack : NetworkBehaviour
         if (fpsCamera != null && !_isDashAttack)
             fpsCamera.FovKick(_current.CameraKickFov);
 
-        RPC_PlaySwing(_isDashAttack ? -1 : _comboIndex - 1);
+        // 대체 공격이면 콤보 번호 대신 Behaviour 번호로 (대시 여부와 무관)
+        RPC_PlaySwing(_overrideSource >= 0 ? -1 : _comboIndex - 1, _overrideSource, _atkSpd);
+    }
+
+    /// <summary>무기 타격 후 공통 처리 — OnHit 트리거, 특수 인챈트, 흡혈</summary>
+    void AfterWeaponHit(PlayerHealth target, GameObject targetObj, float outgoing, bool weaponEnchants = true)
+    {
+        _ability?.FireTrigger(TriggerType.OnHit, targetObj);
+
+        int heal = Mathf.RoundToInt(outgoing * _stats.Get(StatType.LifeSteal));
+
+        if (weaponEnchants)
+            _enchant?.OnWeaponHit(target, ref heal);     // 탐식이면 heal → 0, 대신 피해
+
+        if (heal > 0) _health.RPC_Heal(heal);
     }
 
     void ResetCombo()
@@ -711,14 +716,7 @@ public class PlayerAttack : NetworkBehaviour
         target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
             Mathf.RoundToInt(outgoing), Object.InputAuthority, cameraRoot.position));
 
-        _ability?.FireTrigger(TriggerType.OnHit, targetObj);
-
-        float lifeSteal = _stats.Get(StatType.LifeSteal);
-        if (lifeSteal > 0f)
-        {
-            int heal = Mathf.RoundToInt(outgoing * lifeSteal);
-            if (heal > 0) _health.RPC_Heal(heal);
-        }
+        AfterWeaponHit(target, targetObj, outgoing, !step.NoWeaponEnchants);
 
         if (fpsCamera != null) fpsCamera.Shake(step.CameraShake);
         if (step.HitStopDuration > 0f)
@@ -738,15 +736,13 @@ public class PlayerAttack : NetworkBehaviour
     // ══════════════════ 연출 동기화 ══════════════════
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    void RPC_PlaySwing(int comboIndex)
+    void RPC_PlaySwing(int comboIndex, int overrideSource, float speed)
     {
         ComboStep step;
 
         if (comboIndex < 0)
         {
-            // 능력 대체 공격 (일격 등)
-            var b = _ability != null ? _ability.FindAbility<EmpoweredStrikeAbility>() : null;
-            step = b?.GetStrikeStep();
+            step = _ability != null ? _ability.GetOverrideStep(overrideSource) : null;
         }
         else
         {
@@ -756,8 +752,8 @@ public class PlayerAttack : NetworkBehaviour
 
         if (step == null) return;
 
-        weaponAnim?.Play(step);
-        _events?.Play(step, HasStateAuthority);
+        weaponAnim?.Play(step, speed);
+        _events?.Play(step, HasStateAuthority, speed);
     }
 
     void SweepDashHit(ComboStep step)

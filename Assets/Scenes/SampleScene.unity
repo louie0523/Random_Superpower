@@ -1330,6 +1330,7 @@ MonoBehaviour:
     RawValue: 0
   _WinnerSoul: 0
   restartGrace: 2
+  _RoundStartTime: 0
 --- !u!114 &1632451881
 MonoBehaviour:
   m_ObjectHideFlags: 0

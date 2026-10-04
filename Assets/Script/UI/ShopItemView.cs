@@ -118,18 +118,19 @@ public class ShopItemView : MonoBehaviour
                 sb.AppendLine(LocUtil.Get("ui.shop.ammo_ratio",
                     Mathf.RoundToInt(_data.AmmoRatio * 100f)));
                 break;
+
+            case ShopItemKind.SkillRank:
+                sb.AppendLine(LocUtil.Get("ui.shop.skill_point"));
+                break;
+
+            case ShopItemKind.ResetEnchant:
+                sb.AppendLine(LocUtil.Get("ui.shop.reset_enchant", _data.PricePerStage));
+                break;
         }
 
         return sb.ToString().TrimEnd();
     }
 
-    static string FormatStat(ShopItemData d, int level)
-    {
-        float v = d.GetValue(level);
-        string statName = LocUtil.Get($"stat.{d.Stat}");
-
-        return d.ModType == ModType.Percent
-            ? $"{statName} +{v:0.#}%"
-            : $"{statName} +{v:0.##}";
-    }
+    static string FormatStat(ShopItemData d, int level) =>
+        $"{LocUtil.Get($"stat.{d.Stat}")} {StatText.Value(d.Stat, d.ModType, d.GetValue(level))}";
 }

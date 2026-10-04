@@ -13,6 +13,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private float dummySpawnDistance = 5f;
 
     [Header("Debug Keys")]
+    [SerializeField] private KeyCode StoneGet = KeyCode.Keypad3;
     [SerializeField] private KeyCode spawnDummyKey = KeyCode.F5;
     [SerializeField] private KeyCode clearDummyKey = KeyCode.F6;
     [SerializeField] private KeyCode rerollAbilityKey = KeyCode.F7;
@@ -74,9 +75,27 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKeyDown(rerollAbilityKey)) RerollAbility();
         if (Input.GetKeyDown(suicideKey)) Suicide();
         if (Input.GetKeyDown(healKey)) FullHeal();
-        if (Input.GetKeyDown(soulGainKey)) GainSoul(soulCheatAmount);
+        if (Input.GetKeyDown(soulGainKey)) GainSoul(soulCheatAmount); 
         if (Input.GetKeyDown(soulLoseKey)) GainSoul(-soulCheatAmount / 2);
+        if (Input.GetKeyDown(KeyCode.F10)) StatusSelf(StatusType.Slow, 50f, 3f);
+        if (Input.GetKeyDown(KeyCode.F11)) StatusSelf(StatusType.Burn, 5f, 4f);
+        if (Input.GetKeyDown(KeyCode.F12)) StatusSelf(StatusType.Stun, 2f, 2f);
+        if (Input.GetKeyDown(StoneGet)) StoneGive(100);
     }
+
+    void StoneGive(int num)
+    {
+        var local = GetLocal();
+        if (local == null) return;
+        if (!local.TryGetComponent<PlayerEnchant>(out var enchant)) return;
+
+        enchant.RPC_AddStones(num);
+        Debug.Log($"[Debug] 스톤 +{num}");
+    }
+
+    void StatusSelf(StatusType t, float v, float d) =>
+    GetLocal()?.GetComponent<PlayerStatus>()?.Apply(t, v, d, PlayerRef.None);
+
     void RerollAbility()
     {
         var local = GetLocal();
@@ -181,8 +200,5 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
 
-    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ReadOnlySpan<byte> data)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ReadOnlySpan<byte> data) { }
 }

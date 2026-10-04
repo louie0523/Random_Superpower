@@ -35,9 +35,11 @@ MonoBehaviour:
   Slot: 0
   Class: 0
   Icon: {fileID: 0}
+  Grade: 0
+  IsSpecial: 0
   Tags:
   - basic
-  Description: "\uC870\uC57D\uD569\uB2C8\uB2E4."
+  Description: "\uC2DC\uC791\uC740 \uBBF8\uC57D\uD560\uC9C0\uB098, \uB05D\uC740 \uCC3D\uB300\uD558\uB9AC\uB77C."
   BaseStats:
   - Stat: 1
     Type: 0
@@ -45,6 +47,7 @@ MonoBehaviour:
   EnchantTable: {fileID: 11400000, guid: 8e5fc6c0f1f48634e8caeee667b64deb, type: 2}
   EnchantStoneCost: 1
   EnchantCostPerStage: 0
+  Upgrades: []
   ModelPrefab: {fileID: 100000, guid: 550a61d9929e19749851330ea8c46ecd, type: 3}
   Grip: 0
   PositionOffset: {x: 0, y: 0, z: 0}

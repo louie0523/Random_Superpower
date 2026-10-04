@@ -33,6 +33,7 @@ public enum EffectType
     GrantSoul,
     AddCharge,
     EnterState,
+    ApplyStatus,
 }
 
 /// <summary>누구에게</summary>

@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
@@ -495,46 +495,6 @@ MonoBehaviour:
     m_Localized: Kecepatan gerakan meningkat sebesar 2 selama durasi tersebut.
     m_Metadata:
       m_Items: []
-  - m_Id: 4008527633428480
-    m_Localized: belati
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156992
-    m_Localized: Ini adalah pedang yang sangat sederhana.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156993
-    m_Localized: busur kayu
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156994
-    m_Localized: Lumayanlah.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156995
-    m_Localized: tongkat kayu
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156996
-    m_Localized: Menakutkan sekali!
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156997
-    m_Localized: AK47
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156998
-    m_Localized: Hanya dengan satu hal ini, nenekku pun bisa menjadi legenda.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280082063360
-    m_Localized: tangan kosong
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280144977920
-    m_Localized: Tidak ada yang tidak bisa kamu lakukan dengan ini!
-    m_Metadata:
-      m_Items: []
   - m_Id: 4030871831687168
     m_Localized: sekitar
     m_Metadata:
@@ -577,6 +537,133 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4071974161199104
     m_Localized: Tidak ada mantra yang diterapkan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716563963904
+    m_Localized: Poin Keterampilan {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072768
+    m_Localized: Level {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072769
+    m_Localized: "Beli +1 Poin Keterampilan \u2014 Anda dapat meningkatkan keterampilan
+      apa pun yang Anda inginkan di Panel Kemampuan (F1)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072770
+    m_Localized: Menghapus semua pesona senjata saat ini (Jiwa +{0} per level)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072771
+    m_Localized: Pesona Khusus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072772
+    m_Localized: Pilih Mantra Khusus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072773
+    m_Localized: Ubah ke pesona normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072774
+    m_Localized: Pilih mantra khusus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072775
+    m_Localized: '{0} {1} ({2} detik) saat terkena'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072776
+    m_Localized: Memberikan kerusakan tambahan sebesar {0}% dari kesehatan maksimum
+      target saat mengenai target.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072777
+    m_Localized: Alih-alih dapat menguras nyawa, ubah {0}% dari jumlah yang dikuras
+      menjadi kerusakan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072778
+    m_Localized: penamaan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072779
+    m_Localized: Penunjukan Mantra Berikutnya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072780
+    m_Localized: Pesona Khusus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072781
+    m_Localized: Pesona Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072782
+    m_Localized: kemunduran
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072783
+    m_Localized: membakar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072784
+    m_Localized: patung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267072
+    m_Localized: segel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267073
+    m_Localized: pingsan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267074
+    m_Localized: luka sayatan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267075
+    m_Localized: tangan kosong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267076
+    m_Localized: Tidak ada yang tidak bisa kamu lakukan dengan ini!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267077
+    m_Localized: belati
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267078
+    m_Localized: Ini adalah pedang yang sangat sederhana.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267079
+    m_Localized: busur kayu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267080
+    m_Localized: Lumayanlah.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267081
+    m_Localized: tongkat kayu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267082
+    m_Localized: Menakutkan sekali!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267083
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716639461376
+    m_Localized: Hanya dengan satu hal ini, nenekku pun bisa menjadi legenda.
     m_Metadata:
       m_Items: []
   references:

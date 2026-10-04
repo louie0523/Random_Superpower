@@ -482,47 +482,6 @@ MonoBehaviour:
       um 2."
     m_Metadata:
       m_Items: []
-  - m_Id: 4008527633428480
-    m_Localized: Dolch
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156992
-    m_Localized: Es ist ein sehr einfaches Schwert.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156993
-    m_Localized: Holzbogen
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156994
-    m_Localized: Es ist ausreichend.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156995
-    m_Localized: Gehstock aus Holz
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156996
-    m_Localized: Wie gruselig!
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156997
-    m_Localized: AK47
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4008528275156998
-    m_Localized: "Mit dieser einen Sache h\xE4tte auch meine Gro\xDFmutter zur Legende
-      werden k\xF6nnen."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280082063360
-    m_Localized: "blo\xDFe H\xE4nde"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4025280144977920
-    m_Localized: "Damit ist alles m\xF6glich!"
-    m_Metadata:
-      m_Items: []
   - m_Id: 4030871831687168
     m_Localized: "N\xE4he"
     m_Metadata:
@@ -565,6 +524,134 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4071974161199104
     m_Localized: Keine Verzauberungen angewendet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716563963904
+    m_Localized: Fertigkeitspunkte {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072768
+    m_Localized: Level {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072769
+    m_Localized: "Kaufe +1 Fertigkeitspunkt \u2014 Du kannst jede beliebige Fertigkeit
+      im F\xE4higkeitenpanel (F1) verbessern."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072770
+    m_Localized: Entfernt alle aktuellen Waffenverzauberungen (Seele +{0} pro Stufe)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072771
+    m_Localized: Besondere Verzauberung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072772
+    m_Localized: "W\xE4hle Spezialverzauberung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072773
+    m_Localized: Wechsel zu normaler Verzauberung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072774
+    m_Localized: "W\xE4hle eine besondere Verzauberung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072775
+    m_Localized: '{0} {1} ({2} Sekunden) beim Treffer'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072776
+    m_Localized: "Verursacht bei einem Treffer zus\xE4tzlichen Schaden in H\xF6he
+      von {0}% der maximalen Gesundheit des Ziels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072777
+    m_Localized: Anstatt Leben abzusaugen, werden {0}% der abgesaugten Menge in Schaden
+      umgewandelt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072778
+    m_Localized: Bezeichnung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072779
+    m_Localized: "N\xE4chste Verzauberungsbezeichnung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072780
+    m_Localized: Besondere Verzauberung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072781
+    m_Localized: Normale Verzauberung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072782
+    m_Localized: verlangsamen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072783
+    m_Localized: brennen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072784
+    m_Localized: Statue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267072
+    m_Localized: Siegel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267073
+    m_Localized: Ohnmacht
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267074
+    m_Localized: Schnitt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267075
+    m_Localized: "blo\xDFe H\xE4nde"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267076
+    m_Localized: "Damit ist alles m\xF6glich!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267077
+    m_Localized: Dolch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267078
+    m_Localized: Es ist ein sehr einfaches Schwert.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267079
+    m_Localized: Holzbogen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267080
+    m_Localized: Es ist ausreichend.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267081
+    m_Localized: Gehstock aus Holz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267082
+    m_Localized: Wie gruselig!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267083
+    m_Localized: AK47
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716639461376
+    m_Localized: "Mit dieser einen Sache h\xE4tte auch meine Gro\xDFmutter zur Legende
+      werden k\xF6nnen."
     m_Metadata:
       m_Items: []
   references:

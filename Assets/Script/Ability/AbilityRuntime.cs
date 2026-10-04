@@ -20,6 +20,7 @@ public class AbilityRuntime : NetworkBehaviour
     [SerializeField] private string ghostLayerName = "PlayerGhost";
     [SerializeField] private float dashDecayTime = 0.15f;
 
+
     // ══════════════════ 네트워크 상태 ══════════════════
 
     [Networked, OnChangedRender(nameof(OnAbilityChanged))]
@@ -53,6 +54,8 @@ public class AbilityRuntime : NetworkBehaviour
 
     public const int ChargeSlotCount = 4;
 
+    private static int _curseSeq;
+
     // ══════════════════ 내부 상태 ══════════════════
 
     private AbilityData.SkillDef _casting;
@@ -77,6 +80,8 @@ public class AbilityRuntime : NetworkBehaviour
     private MotionEventPlayer _events;
     private PlayerEquipment _equipment;
     private PlayerAttack _attack;
+    private PlayerStatus _status;
+    public PlayerStatus Status => _status;
 
     private readonly List<AbilityData> _active = new();
     private readonly List<AbilityBehaviour> _behaviours = new();
@@ -111,7 +116,8 @@ public class AbilityRuntime : NetworkBehaviour
     public PlayerEquipment Equipment => _equipment;
     public Transform CameraRootTransform => cameraRoot;
 
-    public bool IsSealed => !SealTimer.ExpiredOrNotRunning(Runner);
+    public bool IsSealed => (_status != null && _status.IsSealed) || !SealTimer.ExpiredOrNotRunning(Runner);
+    public bool IsStunned => _status != null && _status.IsStunned;
     public bool IsCasting => _castTimer >= 0f;
     public bool IsDashing => _dashTimer > 0f;
     public bool IsMoving => _movement != null && _movement.IsMoving;
@@ -272,6 +278,7 @@ public class AbilityRuntime : NetworkBehaviour
         _events = GetComponent<MotionEventPlayer>();
         _equipment = GetComponent<PlayerEquipment>();
         _attack = GetComponent<PlayerAttack>();
+        _status = GetComponent<PlayerStatus>();
 
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
@@ -536,6 +543,14 @@ public class AbilityRuntime : NetworkBehaviour
         }
         else _moveTickAccum = 0f;
 
+        if (IsStunned)
+        {
+            _castTimer = -1f;
+            _casting = null;
+            _input?.ClearAll();
+            return;
+        }
+
         // 시전 중
         if (_castTimer >= 0f)
         {
@@ -590,6 +605,7 @@ public class AbilityRuntime : NetworkBehaviour
     {
         if (!HasStateAuthority) return false;
         if (IsSealed) return false;
+        if (IsStunned) return false;
         if (IsCasting) return false;
 
         // 기본 공격 중이면 스킬 못 씀
@@ -677,6 +693,12 @@ public class AbilityRuntime : NetworkBehaviour
         var src = skill.Slot == SkillSlot.Ultimate ? DamageSource.Ultimate : DamageSource.Skill;
         foreach (var e in skill.Effects)
             Execute(e, target, src);
+
+        if (skill.AppliesWeaponEnchants && target != null && target.TryGetComponent<PlayerHealth>(out var th))
+        {
+            int noHeal = 0;
+            GetComponent<PlayerEnchant>()?.OnWeaponHit(th, ref noHeal);
+        }
     }
 
     public GameObject FindTarget(AbilityData.SkillDef skill)
@@ -863,24 +885,31 @@ public class AbilityRuntime : NetworkBehaviour
 
     // ══════════════════ 공격 대체 ══════════════════
 
-    public bool TryOverrideAttack(out AttackOverride ovr)
+    public bool TryOverrideAttack(out AttackOverride ovr, out int source)
     {
         ovr = AttackOverride.None;
+        source = -1;
         if (!HasStateAuthority) return false;
 
         for (int i = 0; i < _behaviours.Count; i++)
             if (_behaviours[i].TryOverrideAttack(out ovr))
+            {
+                source = i;
                 return true;
+            }
 
         return false;
     }
+
+    public ComboStep GetOverrideStep(int source) =>
+        source >= 0 && source < _behaviours.Count ? _behaviours[source].GetOverrideStep() : null;
 
     // ══════════════════ RPC ══════════════════
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ApplySeal(float seconds)
     {
-        SealTimer = TickTimer.CreateFromSeconds(Runner, seconds);
+        _status?.Apply(StatusType.Seal, 1f, seconds, PlayerRef.None);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -971,6 +1000,7 @@ public class AbilityRuntime : NetworkBehaviour
                     hh.RPC_Heal(Mathf.RoundToInt(v));
                 break;
 
+
             case EffectType.Seal:
                 if (target.TryGetComponent<AbilityRuntime>(out var ar))
                     ar.RPC_ApplySeal(v);
@@ -982,9 +1012,10 @@ public class AbilityRuntime : NetworkBehaviour
                 break;
 
             case EffectType.AddCharge:
-                // ※ 대상이 타인이면 지금은 동작 안 함 → 2-5에서 RPC로
-                if (target.TryGetComponent<AbilityRuntime>(out var ac))
-                    ac.AddCharge(e.ChargeSlot, v);
+                if (target == gameObject)
+                    AddCharge(e.ChargeSlot, v);
+                else if (target.TryGetComponent<AbilityRuntime>(out var ac))
+                    ac.RPC_AddCharge(e.ChargeSlot, v);
                 break;
 
             case EffectType.EnterState:
@@ -1004,12 +1035,25 @@ public class AbilityRuntime : NetworkBehaviour
                 });
                 break;
 
+            case EffectType.Slow:
+                if (target.TryGetComponent<PlayerStatus>(out var slowTarget))
+                    slowTarget.Apply(StatusType.Slow, v, e.Duration, Object.InputAuthority);
+                break;
+
+            case EffectType.ApplyStatus:
+                if (target.TryGetComponent<PlayerStatus>(out var st))
+                    st.Apply(e.Status, v, e.Duration, Object.InputAuthority);
+                break;
+
             default:
                 if (_warnedUnimplemented.Add(e))
                     Debug.LogWarning($"[Ability] 미구현 효과: {e.Effect}");
                 break;
         }
     }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddCharge(int slot, float amount) => AddCharge(slot, amount);
 
     GameObject ResolveTarget(TargetType t, GameObject other) => t switch
     {
@@ -1019,21 +1063,60 @@ public class AbilityRuntime : NetworkBehaviour
         _ => null,
     };
 
+    public void BroadcastBehaviourEvent(AbilityBehaviour b, int key, Vector3 pos)
+    {
+        if (!HasStateAuthority) return;
+
+        int index = _behaviours.IndexOf(b);
+        if (index < 0) return;
+
+        RPC_BehaviourEvent(index, b.AbilityId, key, pos);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_BehaviourEvent(int index, int abilityId, int key, Vector3 pos)
+    {
+        if (index < 0 || index >= _behaviours.Count) return;
+
+        var b = _behaviours[index];
+        if (b.AbilityId != abilityId) return;      // 그 사이 능력이 바뀌었으면 무시
+
+        b.OnRemoteEvent(key, pos);
+    }
+
     void ApplyTempStat(GameObject target, AbilityData.EffectDef e, float v)
     {
-        if (!target.TryGetComponent<PlayerStats>(out var st)) return;
-
-        if (e.Duration <= 0f)
+        if (target == gameObject)
         {
-            // 영구 — BuffBase 그 자체
-            st.AddModifier(new StatModifier(e.Stat, e.ModType, v, SourceId.BuffBase));
+            AddTimedStat(e.Stat, e.ModType, v, e.Duration, SourceId.BuffBase, ref _buffSeq);
             return;
         }
 
-        // 임시 — BuffBase+1 ~ BuffBase+99999 안에서 순환 (영구 버프·StateBase와 안 겹치게)
-        int src = SourceId.BuffBase + 1 + (_buffSeq++ % 99998);
-        st.AddModifier(new StatModifier(e.Stat, e.ModType, v, src));
-        StartCoroutine(RemoveAfter(st, src, e.Duration));
+        // 남에게 — 상대 쪽에서 적용하고, 해제 타이머도 상대 쪽에서 돔
+        if (target.TryGetComponent<AbilityRuntime>(out var other))
+            other.RPC_ApplyTempStat((int)e.Stat, (int)e.ModType, v, e.Duration);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ApplyTempStat(int stat, int modType, float value, float duration)
+    {
+        AddTimedStat((StatType)stat, (ModType)modType, value, duration, SourceId.CurseBase, ref _curseSeq);
+    }
+
+    /// <summary>내 스탯에 지속시간 있는 수정자. 0이면 영구(baseId 그 자체)</summary>
+    void AddTimedStat(StatType stat, ModType mod, float v, float duration, int baseId, ref int seq)
+    {
+        if (_stats == null) return;
+
+        if (duration <= 0f)
+        {
+            _stats.AddModifier(new StatModifier(stat, mod, v, baseId));
+            return;
+        }
+
+        int src = baseId + 1 + (seq++ % 99998);
+        _stats.AddModifier(new StatModifier(stat, mod, v, src));
+        StartCoroutine(RemoveAfter(_stats, src, duration));
     }
 
     System.Collections.IEnumerator RemoveAfter(PlayerStats st, int src, float t)

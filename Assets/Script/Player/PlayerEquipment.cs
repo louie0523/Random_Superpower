@@ -27,7 +27,6 @@ public class PlayerEquipment : NetworkBehaviour
         }
     }
 
-
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int ArmorId { get; set; }
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
@@ -86,34 +85,8 @@ public class PlayerEquipment : NetworkBehaviour
         ApplyAll();
     }
 
-    /// <summary>시작 무기만 든 처음 상태로</summary>
-    public void ResetForNewRound()
-    {
-        if (!HasStateAuthority) return;
+    // ══════════════════ 탄약 ══════════════════
 
-        for (int i = 0; i < WeaponSlots; i++)
-        {
-            WeaponIds.Set(i, 0);
-            SlotAmmo.Set(i, 0);
-        }
-
-        WeaponIds.Set(0, startWeaponId);
-        ActiveWeaponSlot = 0;
-        ArmorId = 0;
-        HelmetId = 0;
-        BootsId = 0;
-        SwapTimer = default;
-
-        RefillAmmo(0);
-        ApplyAll();      // 스탯 즉시 재적용 (OnChangedRender는 렌더 때라 늦음)
-    }
-
-    public bool HasEmptyWeaponSlot()
-    {
-        for (int i = 0; i < WeaponSlots; i++)
-            if (WeaponIds[i] == 0) return true;
-        return false;
-    }
     public void AddAmmo(int amount)
     {
         if (!HasStateAuthority) return;
@@ -147,6 +120,8 @@ public class PlayerEquipment : NetworkBehaviour
         SlotAmmo.Set(slot, cur - 1);
         return true;
     }
+
+    // ══════════════════ 표시 · 스탯 ══════════════════
 
     void MountThirdPersonWeapon()
     {
@@ -185,7 +160,7 @@ public class PlayerEquipment : NetworkBehaviour
         _stats.RemoveBySource(sourceId);
 
         var data = database.Get(id);
-        if (data == null) return;
+        if (data == null || data.BaseStats == null) return;
 
         foreach (var s in data.BaseStats)
             _stats.AddModifier(new StatModifier(s.Stat, s.Type, s.Value, sourceId));
@@ -197,12 +172,10 @@ public class PlayerEquipment : NetworkBehaviour
         if (_mountedWeaponId == WeaponId) return;
 
         _mountedWeaponId = WeaponId;
-        var data = database?.Get(WeaponId);
-
-        Debug.Log($"[Equip] Mount 시도 — WeaponId={WeaponId}, data={(data == null ? "NULL" : data.DisplayName)}");
-
-        armRig.Mount(data);
+        armRig.Mount(database?.Get(WeaponId));
     }
+
+    // ══════════════════ 장착 · 획득 ══════════════════
 
     public void Equip(int id)
     {
@@ -222,6 +195,13 @@ public class PlayerEquipment : NetworkBehaviour
             case EquipSlot.Helmet: HelmetId = id; break;
             case EquipSlot.Boots: BootsId = id; break;
         }
+    }
+
+    public bool HasEmptyWeaponSlot()
+    {
+        for (int i = 0; i < WeaponSlots; i++)
+            if (WeaponIds[i] == 0) return true;
+        return false;
     }
 
     public bool PickUpWeapon(int id, out int slot)
@@ -251,7 +231,22 @@ public class PlayerEquipment : NetworkBehaviour
     /// <summary>기존 호출부 호환</summary>
     public bool PickUpWeapon(int id) => PickUpWeapon(id, out _);
 
-    public void DropWeapon(int id, int[] enchants = null)
+    /// <summary>슬롯의 무기를 다른 무기로 교체 (진화). 인챈트·처치 수는 OnWeaponChanged가 비움</summary>
+    public void ReplaceWeaponAt(int slot, int newId)
+    {
+        if (!HasStateAuthority) return;
+        if (slot < 0 || slot >= WeaponSlots) return;
+
+        WeaponIds.Set(slot, newId);
+        RefillAmmo(slot);
+        _enchant?.OnWeaponChanged(slot, newId);
+        ApplyAll();     // SA는 즉시 반영 (OnChangedRender는 렌더 시점)
+    }
+
+    // ══════════════════ 버리기 ══════════════════
+
+    /// <summary>무기를 바닥에. 인챈트·처치 수가 픽업에 실림</summary>
+    public void DropWeapon(int id, int[] enchants = null, int kills = 0)
     {
         if (!HasStateAuthority) return;
         if (pickupPrefab == null) return;
@@ -261,27 +256,31 @@ public class PlayerEquipment : NetworkBehaviour
         var obj = Runner.Spawn(pickupPrefab, pos, Quaternion.identity);
         if (obj.TryGetComponent<Pickup>(out var pk))
         {
-            pk.InitWeapon(id, enchants);     // Init 대신 (안에서 Init을 부름)
+            pk.InitWeapon(id, enchants, kills);
             pk.SetPickupDelay(1.5f);
         }
     }
 
-    public void DropActiveWeapon()
+    /// <summary>지정 슬롯의 무기를 인챈트·처치 수째로 바닥에</summary>
+    public void DropWeaponAt(int slot)
     {
         if (!HasStateAuthority) return;
+        if (slot < 0 || slot >= WeaponSlots) return;
 
-        int slot = ActiveWeaponSlot;
         int id = WeaponIds[slot];
         if (id == 0) return;
 
+        // 비우기 전에 복사
         int[] carried = _enchant != null ? _enchant.ExportSlot(slot) : null;
-        Debug.Log($"[Drop] id={id} slot={slot} carried={(carried == null ? "null" : string.Join(",", carried))}");
+        int kills = _enchant != null ? _enchant.GetKills(slot) : 0;
 
         WeaponIds.Set(slot, 0);
         _enchant?.ClearSlot(slot);
 
-        DropWeapon(id, carried);
+        DropWeapon(id, carried, kills);
     }
+
+    public void DropActiveWeapon() => DropWeaponAt(ActiveWeaponSlot);
 
     public void SwapWithPickup(int id)
     {
@@ -290,14 +289,17 @@ public class PlayerEquipment : NetworkBehaviour
         int slot = Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1);
         int old = WeaponIds[slot];
 
-        int[] carried = (old != 0 && _enchant != null) ? _enchant.ExportSlot(slot) : null;  // ★
+        int[] carried = (old != 0 && _enchant != null) ? _enchant.ExportSlot(slot) : null;
+        int kills = (old != 0 && _enchant != null) ? _enchant.GetKills(slot) : 0;
 
         WeaponIds.Set(slot, id);
         RefillAmmo(slot);
         _enchant?.OnWeaponChanged(slot, id);
 
-        if (old != 0) DropWeapon(old, carried);
+        if (old != 0) DropWeapon(old, carried, kills);
     }
+
+    // ══════════════════ 교체 ══════════════════
 
     public void SwitchWeapon(int slot)
     {
@@ -316,6 +318,30 @@ public class PlayerEquipment : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
         SwitchWeapon((ActiveWeaponSlot + dir + WeaponSlots) % WeaponSlots);
+    }
+
+    // ══════════════════ 라운드 ══════════════════
+
+    /// <summary>시작 무기만 든 처음 상태로</summary>
+    public void ResetForNewRound()
+    {
+        if (!HasStateAuthority) return;
+
+        for (int i = 0; i < WeaponSlots; i++)
+        {
+            WeaponIds.Set(i, 0);
+            SlotAmmo.Set(i, 0);
+        }
+
+        WeaponIds.Set(0, startWeaponId);
+        ActiveWeaponSlot = 0;
+        ArmorId = 0;
+        HelmetId = 0;
+        BootsId = 0;
+        SwapTimer = default;
+
+        RefillAmmo(0);
+        ApplyAll();
     }
 
     public EquipmentData GetWeapon() => database != null ? database.Get(WeaponId) : null;

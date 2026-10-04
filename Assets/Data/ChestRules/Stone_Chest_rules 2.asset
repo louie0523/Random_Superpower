@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eba8875605479c6448d2068313f736d8, type: 3}
+  m_Name: Stone_Chest_rules 2
+  m_EditorClassIdentifier: Assembly-CSharp::ChestRules
+  Schedule:
+  - FromMinute: 0
+    Common: 100
+    Rare: 0
+    Epic: 0
+  - FromMinute: 5
+    Common: 0
+    Rare: 100
+    Epic: 0
+  - FromMinute: 10
+    Common: 0
+    Rare: 0
+    Epic: 100
+  CommonChest:
+    C: 0
+    B: 0
+    A: 0
+    S: 0
+    DropCount: 1
+    StoneMin: 8
+    StoneMax: 14
+    OpenTime: 0
+  RareChest:
+    C: 0
+    B: 0
+    A: 0
+    S: 0
+    DropCount: 1
+    StoneMin: 10
+    StoneMax: 19
+    OpenTime: 0
+  EpicChest:
+    C: 0
+    B: 0
+    A: 0
+    S: 0
+    DropCount: 2
+    StoneMin: 15
+    StoneMax: 25
+    OpenTime: 0
+  WeaponBoosts: []

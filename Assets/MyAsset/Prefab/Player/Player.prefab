@@ -28,6 +28,8 @@ GameObject:
   - component: {fileID: 959149403550185092}
   - component: {fileID: 433004572054489072}
   - component: {fileID: 1140823715662527484}
+  - component: {fileID: 2781225716965767357}
+  - component: {fileID: 8855885309026736249}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -137,6 +139,7 @@ MonoBehaviour:
   - {fileID: 6143414690035071440}
   - {fileID: 8318037346556842547}
   - {fileID: 959149403550185092}
+  - {fileID: 2781225716965767357}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &927725796463626508
 MonoBehaviour:
@@ -362,7 +365,7 @@ MonoBehaviour:
   _HelmetId: 0
   _BootsId: 0
   _SlotAmmo: 
-  startWeaponId: 1004
+  startWeaponId: 1001
   fistWeaponId: 1000
   swapTime: 0.6
 --- !u!114 &-1179119024802948346
@@ -402,11 +405,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   weaponAnim: {fileID: 6649258101475754144}
-  forceMainId: 0
+  forceMainId: 6002
   forceSubId: 0
   forceRandomId: 0
   logSkills: 0
   ghostLayerName: PlayerGhost
+  dashDecayTime: 0.15
   _MainAbilityId: 0
   _SubAbilityId: 0
   _RandomAbilityId: 0
@@ -414,7 +418,9 @@ MonoBehaviour:
   _Charges: []
   _MaxCharges: []
   _ActiveStateId: 0
-  dashDecayTime: 0.15
+  _EntryRanks: 
+  _SkillPoints: 0
+  _CooldownTotal: []
 --- !u!114 &6879911572735546874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,13 +487,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEnchant
   database: {fileID: 11400000, guid: fd84a8c6e8e780342a8b7281e6e6c019, type: 2}
+  rules: {fileID: 11400000, guid: e4ba73aba5ac63e4fa281d2b0920a3e8, type: 2}
   _SlotEnchants: 
   _EnchantedWeaponIds: 
+  _SlotKills: 
   _Stones: 0
   _LastRolled: 0
   _LastRollTick: 0
   _IsGunsmith:
     RawValue: 0
+  _UnlimitedStage:
+    RawValue: 0
+  _PendingSpecial: 
 --- !u!82 &433004572054489072
 AudioSource:
   m_ObjectHideFlags: 0
@@ -682,6 +693,35 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2781225716965767357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b02e3b3fa4a6b24d8438d5985f3a2f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
+  maxReduction: 90
+  _Values: []
+  _EndTimes: []
+--- !u!114 &8855885309026736249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190a990b71c3b148b83cf18e1a7512d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusVisuals
+  status: {fileID: 2781225716965767357}
+  entries: []
 --- !u!1 &4519324451150578074
 GameObject:
   m_ObjectHideFlags: 0

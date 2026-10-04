@@ -5,7 +5,7 @@
     public float Value;
     public int SourceId;
 
-    public StatModifier(StatType stat, ModType type, float value, int sourceId = 0)
+    public StatModifier(StatType stat, ModType type, float value, int sourceId)
     {
         Stat = stat; Type = type; Value = value; SourceId = sourceId;
     }

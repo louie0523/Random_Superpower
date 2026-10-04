@@ -27,11 +27,12 @@ MonoBehaviour:
   Passives:
   - Name: "\uCD1D\uAE30 \uC778\uCCB8\uD2B8"
     Icon: {fileID: 0}
-    Description: "\uCD1D\uAE30\uB97C \uC774\uC81C \uC778\uCCB8\uD2B8\uD560 \uC218
-      \uC788\uC2B5\uB2C8\uB2E4."
+    Description: "\uCD1D\uAE30\uB97C \uC778\uCCB8\uD2B8\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
     DetailedInfo: 
     Tip: 
     DevNote: 
+    MaxLevel: 3
+    Vars: []
     Effects: []
   - Name: "\uCD1D\uAE30\uC758 \uB2EC\uC778"
     Icon: {fileID: 0}
@@ -43,6 +44,8 @@ MonoBehaviour:
     DetailedInfo: 
     Tip: 
     DevNote: 
+    MaxLevel: 3
+    Vars: []
     Effects: []
   Skills: []
   Behaviour: {fileID: 11400000, guid: 79944463ae022c048b3fa4d98263ccaf, type: 2}

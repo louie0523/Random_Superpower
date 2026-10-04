@@ -18,8 +18,12 @@ public class Pickup : NetworkBehaviour
     [Tooltip("회전·흔들림 연출용 자식. 루트(NetworkTransform)와 반드시 분리")]
     [SerializeField] private Transform visualRoot;
 
+    /// <summary>무기에 딸린 인챈트 (버린 사람 → 주운 사람)</summary>
     [Networked, Capacity(PlayerEnchant.MaxEnchants)]
     public NetworkArray<int> Enchants { get; }
+
+    /// <summary>무기에 딸린 처치 수 (진화 조건)</summary>
+    [Networked] public int WeaponKills { get; set; }
 
     [Header("수명")]
     [Tooltip("이 시간이 지나면 사라짐. 0이면 영구")]
@@ -41,8 +45,8 @@ public class Pickup : NetworkBehaviour
     [SerializeField] private float requestInterval = 0.5f;
 
     [Header("Debug")]
-    [Tooltip("획득 흐름 단계별 로그. 원인 찾으면 끄기")]
-    [SerializeField] private bool logFlow = true;
+    [Tooltip("획득 흐름 단계별 로그")]
+    [SerializeField] private bool logFlow = false;
 
     [Networked] private TickTimer NoPickupTimer { get; set; }
     [Networked] public PlayerRef Claimer { get; set; }
@@ -77,15 +81,10 @@ public class Pickup : NetworkBehaviour
         Log($"스폰 — SA={HasStateAuthority} pos={transform.position}");
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_DespawnForReset()
-    {
-        if (Object != null && Object.IsValid) Runner.Despawn(Object);
-    }
-
-    public void InitWeapon(int weaponId, int[] enchants)
+    public void InitWeapon(int weaponId, int[] enchants, int kills = 0)
     {
         Init(PickupKind.Weapon, weaponId);
+        WeaponKills = Mathf.Max(0, kills);
 
         if (enchants == null) return;
         for (int i = 0; i < PlayerEnchant.MaxEnchants && i < enchants.Length; i++)
@@ -119,7 +118,6 @@ public class Pickup : NetworkBehaviour
             return;
         }
 
-        // 임자가 나가거나 끊겨서 지급을 못 끝냈으면 풀어줌
         if (Claimer != PlayerRef.None && ClaimTimer.Expired(Runner))
         {
             Log($"임자 {Claimer} 타임아웃 → 해제");
@@ -128,8 +126,7 @@ public class Pickup : NetworkBehaviour
     }
 
     // ══════════════════ 모든 클라이언트 — 표시 + 내 플레이어 획득 판정 ══════════════════
-    // Render는 SA·프록시 구분 없이 매 프레임 돈다.
-    // 여기선 네트워크 상태를 읽기만 하고 변경은 전부 RPC로 → 시뮬레이션 설정과 무관하게 동작
+    // Render는 SA·프록시 구분 없이 매 프레임 돈다. 상태는 읽기만, 변경은 전부 RPC.
 
     public override void Render()
     {
@@ -146,7 +143,6 @@ public class Pickup : NetworkBehaviour
         visualRoot.localPosition = _baseLocalPos +
             Vector3.up * Mathf.Sin(Time.time * bobSpeed) * bobAmount;
 
-        // 수명이 얼마 안 남으면 깜빡
         if (lifetime > 0f && blinkTime > 0f && _model != null)
         {
             float? remain = LifeTimer.RemainingTime(Runner);
@@ -168,7 +164,6 @@ public class Pickup : NetworkBehaviour
         if (me == null) return;
         if (!me.TryGetComponent<PlayerHealth>(out var h) || h.IsDead) return;
 
-        // ── 아직 임자 없음 → 범위 안이고 받을 수 있으면 요청 ──
         if (Claimer == PlayerRef.None)
         {
             _granted = false;
@@ -194,7 +189,6 @@ public class Pickup : NetworkBehaviour
             return;
         }
 
-        // ── 내가 임자 → 내 권한으로 지급 ──
         if (Claimer == Runner.LocalPlayer && !_granted)
         {
             _granted = true;
@@ -209,7 +203,7 @@ public class Pickup : NetworkBehaviour
             }
             else
             {
-                RPC_Release(Runner.LocalPlayer);    // 그 사이 슬롯이 찼다거나
+                RPC_Release(Runner.LocalPlayer);
             }
         }
     }
@@ -221,7 +215,7 @@ public class Pickup : NetworkBehaviour
     {
         Log($"요청 받음 from {p} — 현재 임자 {Claimer}");
 
-        if (Claimer != PlayerRef.None) return;        // 먼저 온 사람이 임자
+        if (Claimer != PlayerRef.None) return;
         if (NoPickupTimer.IsRunning && !NoPickupTimer.Expired(Runner)) return;
 
         Claimer = p;
@@ -238,7 +232,14 @@ public class Pickup : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     void RPC_Release(PlayerRef p)
     {
-        if (Claimer == p) Claimer = PlayerRef.None;   // 남이 뒤늦게 보낸 해제는 무시
+        if (Claimer == p) Claimer = PlayerRef.None;
+    }
+
+    /// <summary>라운드 초기화 — RoundManager가 호출</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_DespawnForReset()
+    {
+        if (Object != null && Object.IsValid) Runner.Despawn(Object);
     }
 
     // ══════════════════ 지급 ══════════════════
@@ -250,7 +251,6 @@ public class Pickup : NetworkBehaviour
         return arr;
     }
 
-    /// <summary>지금 이 픽업을 받을 수 있는 상태인가 (요청 전 사전 확인)</summary>
     bool CanReceive(NetworkObject player)
     {
         switch (PickupKind)
@@ -274,12 +274,11 @@ public class Pickup : NetworkBehaviour
         {
             case PickupKind.Weapon:
                 if (!player.TryGetComponent<PlayerEquipment>(out var eq)) return false;
-
                 if (!eq.PickUpWeapon(ItemId, out int slot)) return false;
 
-                // 무기를 끼운 뒤에 인챈트를 덮어씀 (순서 중요)
+                // 무기를 끼운 뒤에 인챈트·처치 수를 덮어씀 (순서 중요)
                 if (player.TryGetComponent<PlayerEnchant>(out var pe))
-                    pe.ImportSlot(slot, ItemId, ExportEnchants());
+                    pe.ImportSlot(slot, ItemId, ExportEnchants(), WeaponKills);
 
                 return true;
 
@@ -319,7 +318,6 @@ public class Pickup : NetworkBehaviour
 
         _model.transform.localScale = baseScale * modelScale;
 
-        // 무기 프리팹의 판정용 컴포넌트 제거
         foreach (var c in _model.GetComponentsInChildren<Collider>(true))
             c.enabled = false;
     }

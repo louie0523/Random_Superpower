@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerShop : NetworkBehaviour
 {
     public const int MaxItems = 16;
-    public const int MaxExclusive = 8;
+    public const int MaxExclusive = 50;
 
     [Networked, Capacity(MaxItems)]
     public NetworkArray<int> Levels { get; }

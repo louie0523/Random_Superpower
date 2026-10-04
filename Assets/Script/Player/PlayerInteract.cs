@@ -14,6 +14,7 @@ public class PlayerInteract : NetworkBehaviour
     private LootChest _target;
     private LootChest _sentTo;      // 마지막으로 '누름'을 보낸 상자
     private PlayerHealth _health;
+    private PlayerStatus _status;
     private float _nextSend;
 
     public LootChest CurrentTarget => _target;
@@ -21,14 +22,14 @@ public class PlayerInteract : NetworkBehaviour
     public override void Spawned()
     {
         _health = GetComponent<PlayerHealth>();
+        _status = GetComponent<PlayerStatus>();
     }
 
     void Update()
     {
         if (!HasStateAuthority) return;
 
-        // UI가 열리면 누르고 있던 것도 뗀 것으로 처리
-        _holding = !UIManager.InputBlocked && Input.GetKey(interactKey);
+        _holding = !UIManager.InputBlocked && !(_status != null && _status.IsStunned) && Input.GetKey(interactKey);
     }
 
     public override void FixedUpdateNetwork()

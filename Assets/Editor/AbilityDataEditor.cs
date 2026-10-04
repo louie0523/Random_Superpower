@@ -547,6 +547,8 @@ public class AbilityDataEditor : Editor
             EditorGUILayout.PropertyField(maxT, new GUIContent("최대 대상"));
             if (maxT.intValue > 1) Warn("지금 코드는 가장 가까운 1명에게만 적용합니다.");
             Hint("못 맞히면 효과 전체가 발동하지 않음 (쿨타임·소울은 소모)");
+            EditorGUILayout.PropertyField(el.FindPropertyRelative("AppliesWeaponEnchants"),
+            new GUIContent("무기 인챈트 적용", "맞힌 대상에게 들고 있는 무기의 특수 인챈트 효과"));
         }
         else
         {
@@ -831,6 +833,15 @@ public class AbilityDataEditor : Editor
                     EditorGUILayout.EndHorizontal();
                     Hint(StatHint((StatType)statP.enumValueIndex, (ModType)modP.enumValueIndex));
 
+                    var stat = (StatType)statP.enumValueIndex;
+                    bool isMul = stat == StatType.DamageDealt || stat == StatType.DamageTaken ||
+                                 stat == StatType.MeleeDamage || stat == StatType.RangedDamage ||
+                                 stat == StatType.SkillDamage || stat == StatType.UltimateDamage;
+                    if (isMul && (ModType)modP.enumValueIndex == ModType.Flat)
+                        for (int k = 0; k < vals.arraySize; k++)
+                            if (Mathf.Abs(vals.GetArrayElementAtIndex(k).floatValue) >= 1f)
+                            { Warn("1 이상이면 배율이 2배 넘게 오릅니다 — 0.25 = +25%p 단위가 맞나요?"); break; }
+
                     DrawLevelValues(vals, levels, "수치");
 
                     bool alwaysOn = !isSkill && trg == TriggerType.Passive;
@@ -872,6 +883,25 @@ public class AbilityDataEditor : Editor
                 EditorGUILayout.PropertyField(dur, new GUIContent("시간 (초)", "0이면 0.2초"));
                 break;
 
+            case EffectType.Slow:
+                DrawLevelValues(vals, levels, "감소율 (%)");
+                EditorGUILayout.PropertyField(dur, new GUIContent("지속 (초)"));
+                break;
+
+            case EffectType.ApplyStatus:
+                {
+                    var stP = e.FindPropertyRelative("Status");
+                    EditorGUILayout.PropertyField(stP, new GUIContent("상태이상"));
+                    var type = (StatusType)stP.enumValueIndex;
+
+                    if (type == StatusType.Seal || type == StatusType.Stun) Hint("수치 없음 — 지속시간만 씀");
+                    else DrawLevelValues(vals, levels, StatusValueLabel(type));
+
+                    EditorGUILayout.PropertyField(dur, new GUIContent("지속 (초)"));
+                    if (dur.floatValue <= 0f) Warn("지속 0이면 걸리지 않습니다.");
+                    break;
+                }
+
             default:
                 DrawLevelValues(vals, levels, ValueLabel(eff));
                 if (IsUnimplemented(eff))
@@ -886,6 +916,15 @@ public class AbilityDataEditor : Editor
 
         DrawEffectAdvanced(e, trg, isSkill);
     }
+
+    static string StatusValueLabel(StatusType t) => t switch
+    {
+        StatusType.Slow => "이속 감소 (%)",
+        StatusType.Frost => "공속 감소 (%)",
+        StatusType.Burn => "초당 최대체력 %",
+        StatusType.DeepWound => "회복 감소 (%)",
+        _ => "값",
+    };
 
     void DrawEffectAdvanced(SerializedProperty e, TriggerType trg, bool isSkill)
     {
@@ -1124,8 +1163,7 @@ public class AbilityDataEditor : Editor
     }
 
     static bool IsUnimplemented(EffectType e) =>
-        e == EffectType.Slow || e == EffectType.Blind ||
-        e == EffectType.Projectile || e == EffectType.MarkTarget;
+        e == EffectType.Blind || e == EffectType.Projectile || e == EffectType.MarkTarget;
 
     static string EffectDesc(EffectType e) => e switch
     {
@@ -1134,9 +1172,12 @@ public class AbilityDataEditor : Editor
         EffectType.Heal => "회복",
         EffectType.Seal => "능력 봉인 — 값 = 봉인 시간(초)",
         EffectType.GrantSoul => "소울 지급",
-        EffectType.AddCharge => "게이지 증가 (지금은 자신에게만 동작)",
+        EffectType.AddCharge => "게이지 증가 — 남에게 걸면 그 사람 게이지가 오름",
         EffectType.EnterState => "상태 진입 — Behaviour가 상태 ID로 반응",
         EffectType.Dash => "정면 수평 돌진",
+        EffectType.Slow => "둔화 — 이동속도 감소",
+        EffectType.ApplyStatus => "상태이상 부여 — 같은 종류는 높은 수치 우선",
+
         _ => "<color=#E0A040>미구현</color>",
     };
 
@@ -1195,7 +1236,7 @@ public class AbilityDataEditor : Editor
 
         if (multiplier)
             return m == ModType.Flat
-                ? "배율 스탯 · Flat = 합연산 — 현재 코드 기준 0.2 = +20%p (25를 넣으면 ×26!)"
+                ? "배율 스탯 · Flat = 실제 배율(기본 1.0)에 더함 — 0.25 = +25%p"
                 : "배율 스탯 · Percent = 곱연산 — 20 = ×1.2";
 
         if (ratio)

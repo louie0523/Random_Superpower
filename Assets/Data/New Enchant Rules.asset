@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9597c096341bb304f826b6af52fb6400, type: 3}
+  m_Name: New Enchant Rules
+  m_EditorClassIdentifier: Assembly-CSharp::EnchantRules
+  CostBands:
+  - FromStage: 1
+    CostByGrade: 01000000020000000200000003000000
+  - FromStage: 6
+    CostByGrade: 02000000030000000400000004000000
+  - FromStage: 15
+    CostByGrade: 03000000040000000500000005000000
+  - FromStage: 30
+    CostByGrade: 04000000050000000500000006000000
+  - FromStage: 85
+    CostByGrade: 0f0000000f0000000f0000000f000000
+  - FromStage: 90
+    CostByGrade: 14000000140000001400000014000000
+  - FromStage: 99
+    CostByGrade: 64000000640000006400000064000000
+  UnlockedMaxStage: 100
+  UnlockedSpecialInterval: 10
+  SpecialTierWeights:
+  - 60
+  - 30
+  - 10

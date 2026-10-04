@@ -12,19 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8372b4a0446eb4478186d7b1629889c, type: 3}
   m_Name: "\uD65C"
   m_EditorClassIdentifier: Assembly-CSharp::EnchantTable
-  Stages:
+  maxStage: 10
+  Phases:
   - Label: "1\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 330d78c8819965c4fa72e4ab150fc1db, type: 2}
-  - Label: "1\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 330d78c8819965c4fa72e4ab150fc1db, type: 2}
-  - Label: "1\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 330d78c8819965c4fa72e4ab150fc1db, type: 2}
-  - Label: "1\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 330d78c8819965c4fa72e4ab150fc1db, type: 2}
-  - Label: "1\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 330d78c8819965c4fa72e4ab150fc1db, type: 2}
+    FromStage: 1
+    ToStage: 10
+    Candidates:
+    - Enchant: {fileID: 11400000, guid: 330d78c8819965c4fa72e4ab150fc1db, type: 2}
+      Weight: 0
+    - Enchant: {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
+      Weight: 0
+  Milestones: []
+  SpecialStages: 050000000a0000000f000000
+  SpecialCandidates: []
+  SpecialChoiceCount: 3
+  Stages: []

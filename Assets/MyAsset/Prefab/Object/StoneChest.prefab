@@ -47,23 +47,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e85fc5f26b464c42be9a6ba5fa44d14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootChest
-  tier: 0
+  rules: {fileID: 11400000, guid: e3a14d6729ebe4442b8703e9a2ff2ecc, type: 2}
   openTime: 3
   interactRange: 2.5
+  rangeTolerance: 0.5
   refillTime: 45
+  fixedFirstTier: 1
+  firstTier: 0
+  tierMul:
+    Common: 1
+    Rare: 1
+    Epic: 1
+  gradeMul:
+    C: 1
+    B: 1
+    A: 1
+    S: 1
+  weaponBoosts: []
+  weaponPool: []
   pickupPrefab: {fileID: 0}
   equipDatabase: {fileID: 0}
-  weaponIds: 
-  dropCount: 1
   dropSpread: 1.2
-  stoneCountMin: 3
-  stoneCountMax: 10
   lid: {fileID: 6592728571045801922}
   lidOpenRot: {x: -100, y: 0, z: 0}
   lidSpeed: 6
+  tierVisuals: []
+  logRolls: 0
   _IsOpened:
     RawValue: 0
   _Progress: 0
+  _CurrentTier: 0
 --- !u!114 &9141576635721821017
 MonoBehaviour:
   m_ObjectHideFlags: 0

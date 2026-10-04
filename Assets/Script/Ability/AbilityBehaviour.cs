@@ -14,6 +14,17 @@ public abstract class AbilityBehaviour : ScriptableObject
         return inst;
     }
 
+    /// <summary>이 Behaviour가 속한 능력 ID (원격 이벤트 확인용)</summary>
+    public int AbilityId => Data != null ? Data.Id : 0;
+
+    /// <summary>SA가 Broadcast로 보낸 이벤트를 모든 클라이언트가 받음 (연출용)</summary>
+    public virtual void OnRemoteEvent(int key, Vector3 pos) { }
+
+    /// <summary>모든 클라이언트에 이벤트 전송. SA에서만 동작</summary>
+    protected void Broadcast(int key, Vector3 pos) => Ctx.BroadcastBehaviourEvent(this, key, pos);
+
+    /// <summary>TryOverrideAttack이 쓰는 모션. 원격 클라이언트가 같은 모션을 재생할 때 사용</summary>
+    public virtual ComboStep GetOverrideStep() => null;
     public virtual void OnEquip() { }
     public virtual void OnUnequip() { }
     public virtual void Tick(float dt) { }

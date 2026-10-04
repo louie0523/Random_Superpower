@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnchantData
   Id: 9002
   DisplayName: "\uAC00\uBCBC\uC6C0"
-  Description: "\uACF5\uACA9 \uC18D\uB3C4 + 10%"
+  Description: "\uACF5\uACA9 \uC18D\uB3C4 + 5%"
   TierColor: {r: 1, g: 1, b: 1, a: 1}
   Stats:
   - Stat: 4
     Type: 0
-    Value: 0.1
+    Value: 0.05
   RollWeight: 1

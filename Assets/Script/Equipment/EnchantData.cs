@@ -24,14 +24,8 @@ public class EnchantData : ScriptableObject
 
         var sb = new System.Text.StringBuilder(DisplayName);
         sb.Append("  ");
-
         foreach (var s in Stats)
-        {
-            string val = s.Type == ModType.Percent
-                ? $"+{s.Value:0.#}%"
-                : $"+{s.Value:0.##}";
-            sb.Append($"{s.Stat} {val} ");
-        }
+            sb.Append($"{s.Stat} {StatText.Value(s.Stat, s.Type, s.Value)} ");
         return sb.ToString();
     }
 }

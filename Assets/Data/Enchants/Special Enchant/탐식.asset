@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4688ecb0fac90654dba64dc0d277152f, type: 3}
+  m_Name: "\uD0D0\uC2DD"
+  m_EditorClassIdentifier: Assembly-CSharp::SpecialEnchantData
+  Id: 9505
+  DisplayName: "\uD0D0\uC2DD"
+  Color: {r: 0.7082386, g: 0, b: 1, a: 1}
+  Icon: {fileID: 0}
+  Tiers:
+  - Description: 
+    Effects:
+    - Kind: 2
+      Status: 2
+      Value: 100
+      Duration: 0
+      IgnoreDefense: 0

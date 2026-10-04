@@ -12,27 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8372b4a0446eb4478186d7b1629889c, type: 3}
   m_Name: "\uB2E8\uAC80"
   m_EditorClassIdentifier: Assembly-CSharp::EnchantTable
-  Stages:
-  - Label: "1\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 1abc0e2a916d53a4aaaf02501988dc0b, type: 2}
-    - {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
-  - Label: "2\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 1abc0e2a916d53a4aaaf02501988dc0b, type: 2}
-    - {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
-    - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
-  - Label: "3\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 48a5b838eee414d44b8275d9b44bf22e, type: 2}
-  - Label: "4\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
-  - Label: "5\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
-    - {fileID: 11400000, guid: 48a5b838eee414d44b8275d9b44bf22e, type: 2}
-  - Label: "6\uAC15"
-    Pool:
-    - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
-    - {fileID: 11400000, guid: 48a5b838eee414d44b8275d9b44bf22e, type: 2}
+  maxStage: 20
+  Phases:
+  - Label: "\uCD08\uBC18"
+    FromStage: 1
+    ToStage: 7
+    Candidates:
+    - Enchant: {fileID: 11400000, guid: 1abc0e2a916d53a4aaaf02501988dc0b, type: 2}
+      Weight: 0
+    - Enchant: {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
+      Weight: 0
+  - Label: "\uC911\uD6C4\uBC18"
+    FromStage: 8
+    ToStage: 15
+    Candidates:
+    - Enchant: {fileID: 11400000, guid: 1abc0e2a916d53a4aaaf02501988dc0b, type: 2}
+      Weight: 0
+    - Enchant: {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
+      Weight: 0
+    - Enchant: {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
+      Weight: 0
+  Milestones: []
+  SpecialStages: 050000000a000000
+  SpecialCandidates:
+  - Special: {fileID: 11400000, guid: 9ebd9f92ba58e944aa508c97348eb7b4, type: 2}
+    Weight: 1
+  SpecialChoiceCount: 1
+  Stages: []

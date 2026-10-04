@@ -9,9 +9,9 @@ public class BrawlerAbility : AbilityBehaviour
     private int _src;
     private bool _applied;
 
-    public override void OnEquip()
+    public override void OnEquip()  
     {
-        _src = SourceId.BuffBase + 50000;   // 겹치지 않는 고유값
+        _src = Src(0);      // 기존: SourceId.BuffBase + 50000
         _applied = false;
     }
 

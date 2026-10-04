@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e2b5392d15828440aa604b5e19c64af, type: 3}
-  m_Name: "\uB0A0\uCE74\uB85C\uC6C0"
+  m_Name: "\uD0C4\uB825"
   m_EditorClassIdentifier: Assembly-CSharp::EnchantData
-  Id: 9001
-  DisplayName: "\uB0A0\uCE74\uB85C\uC6C0"
-  Description: "\uADFC\uC811 \uBB34\uAE30 \uD53C\uD574 + 8%"
-  TierColor: {r: 1, g: 1, b: 1, a: 1}
+  Id: 9006
+  DisplayName: "\uD0C4\uB825"
+  Description: "\uACF5\uACA9\uC18D\uB3C4 + 8%"
+  TierColor: {r: 0, g: 0.9013953, b: 1, a: 1}
   Stats:
-  - Stat: 11
-    Type: 1
-    Value: 8
+  - Stat: 4
+    Type: 0
+    Value: 0.08
   RollWeight: 1

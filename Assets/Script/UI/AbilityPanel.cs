@@ -203,11 +203,14 @@ public class AbilityPanel : UIPanel
         if (entryPrefab == null || parent == null) return;
 
         c.View = Instantiate(entryPrefab, parent);
-        c.View.Bind(BuildModel(c));
+        if (!c.View.gameObject.activeSelf) c.View.gameObject.SetActive(true);   // 프리팹이 꺼진 채 저장돼 있어도
+
         c.View.Clicked += OnEntryClicked;
         c.View.UpgradeClicked += OnUpgradeClicked;
-        _cards.Add(c);
+        _cards.Add(c);          // ★ Bind 전에 등록
         count++;
+
+        c.View.Bind(BuildModel(c));
     }
 
     void UpdateEmptyStates()

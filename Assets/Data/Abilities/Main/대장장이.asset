@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
+  m_Name: "\uB300\uC7A5\uC7A5\uC774"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  Id: 6002
+  DisplayName: "\uB300\uC7A5\uC7A5\uC774"
+  Kind: 0
+  Tier: 0
+  Tags: 0000000003000000
+  ExclusiveShopItems: []
+  Icon: {fileID: 0}
+  Flavor: "\uB2F9\uC2E0\uC740 \uB300\uC7A5\uAC04\uC758 \uC8FC\uC778\uC785\uB2C8\uB2E4.\n\uBB34\uAE30
+    \uC544\uC774\uD15C\uC758 \uC778\uCCB8\uD2B8 \uD55C\uB3C4\uAC00 100\uAE4C\uC9C0
+    \uC99D\uAC00\uD569\uB2C8\uB2E4.\n\uC18C\uC6B8\uC744 \uC18C\uBAA8\uD558\uC5EC
+    \uB2E4\uC74C \uC778\uCCB8\uD2B8\uB97C \uC6D0\uD558\uB294 \uAC12\uC73C\uB85C \uC9C0\uC815\uD560
+    \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+  Passives:
+  - Name: "\uB300\uC7A5\uAC04"
+    Icon: {fileID: 0}
+    Description: "\uC778\uCCB8\uD2B8\uC758 \uD55C\uB3C4\uAC00 100 \uAE4C\uC9C0 \uC99D\uAC00\uD569\uB2C8\uB2E4.\n\uB2E4\uC74C
+      \uC778\uCCB8\uD2B8\uC758 \uAC12\uC744 \uC18C\uC6B8\uC744 \uC18C\uBAA8\uD558\uC5EC
+      \uC9C0\uC815\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    MaxLevel: 1
+    Vars: []
+    Effects: []
+  - Name: "\uB2E8\uB828\uB41C \uBAB8"
+    Icon: {fileID: 0}
+    Description: "\uB2F9\uC2E0\uC758 \uBAB8\uC740 \uD480\uBB34\uC9C8\uC744 \uD558\uAE30\uC5D0
+      \uC801\uD569\uD569\uB2C8\uB2E4.\nHP + {0:all}"
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    MaxLevel: 3
+    Vars: []
+    Effects:
+    - Trigger: 0
+      Effect: 0
+      Target: 0
+      RequireStateId: 0
+      ChargeSlot: 0
+      CostChargeSlot: 0
+      ChargeCost: 0
+      Values:
+      - 50
+      - 100
+      - 150
+      Duration: 0
+      Chance: 1
+      Stat: 0
+      ModType: 0
+      Status: 0
+      PerTargetCooldown: 0
+      Interval: 1
+  Skills: []
+  Behaviour: {fileID: 11400000, guid: 5250274e57b2c654aa89a102c81e7775, type: 2}
+  MaxConcurrent: 0
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
+  Charges: []

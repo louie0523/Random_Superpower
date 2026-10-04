@@ -22,6 +22,7 @@ public class PlayerMovement : NetworkBehaviour
     public bool IsDummy = false;
 
     private CharacterController _cc;
+    private PlayerStatus _status;
     private float _verticalVel;
     private bool _wasGrounded = true;
     private Vector3 _localMoveDir;
@@ -51,6 +52,7 @@ public class PlayerMovement : NetworkBehaviour
         _ability = GetComponent<AbilityRuntime>();
         _shop = GetComponent<PlayerShop>();
         _equip = GetComponent<PlayerEquipment>();
+        _status = GetComponent<PlayerStatus>();
 
         if (armRoot != null) armRoot.SetActive(true);   // 항상 켬
 
@@ -96,7 +98,7 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
 
-        bool blocked = UIManager.InputBlocked;
+        bool blocked = UIManager.InputBlocked || (_status != null && _status.IsStunned);
         float h = blocked ? 0f : Input.GetAxisRaw("Horizontal");
         float v = blocked ? 0f : Input.GetAxisRaw("Vertical");
 

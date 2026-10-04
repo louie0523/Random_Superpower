@@ -399,6 +399,66 @@ MonoBehaviour:
     m_Key: ui.enchant.empty
     m_Metadata:
       m_Items: []
+  - m_Id: 5221716563963904
+    m_Key: ui.ability.points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072768
+    m_Key: ui.ability.level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072769
+    m_Key: ui.shop.skill_point
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072770
+    m_Key: ui.shop.reset_enchant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072771
+    m_Key: ui.enchant.do_special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072772
+    m_Key: ui.enchant.special_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072773
+    m_Key: ui.enchant.normal_instead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072774
+    m_Key: ui.enchant.reason.choose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072775
+    m_Key: ui.special.status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072776
+    m_Key: ui.special.maxhp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072777
+    m_Key: ui.special.lifesteal_to_damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072778
+    m_Key: ui.enchant.pick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072779
+    m_Key: ui.enchant.pick_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072780
+    m_Key: ui.enchant.pick_special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072781
+    m_Key: ui.enchant.pick_normal
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:
@@ -459,6 +519,30 @@ MonoBehaviour:
     m_Key: stat.UltimateDamage
     m_Metadata:
       m_Items: []
+  - m_Id: 5221716631072782
+    m_Key: status.Slow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072783
+    m_Key: status.Burn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716631072784
+    m_Key: status.Frost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267072
+    m_Key: status.Seal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267073
+    m_Key: status.Stun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5221716635267074
+    m_Key: status.DeepWound
+    m_Metadata:
+      m_Items: []
   - m_Id: 3001745490423811
     m_Key: ability.6001.name
     m_Metadata:
@@ -515,44 +599,44 @@ MonoBehaviour:
     m_Key: ability.6001.skill.1.info
     m_Metadata:
       m_Items: []
-  - m_Id: 4025280082063360
-    m_Key: item.1000.name
+  - m_Id: 5221716635267075
+    m_Key: weapon.1000.name
     m_Metadata:
       m_Items: []
-  - m_Id: 4025280144977920
-    m_Key: item.1000.desc
+  - m_Id: 5221716635267076
+    m_Key: weapon.1000.desc
     m_Metadata:
       m_Items: []
-  - m_Id: 4008527633428480
-    m_Key: item.1001.name
+  - m_Id: 5221716635267077
+    m_Key: weapon.1001.name
     m_Metadata:
       m_Items: []
-  - m_Id: 4008528275156992
-    m_Key: item.1001.desc
+  - m_Id: 5221716635267078
+    m_Key: weapon.1001.desc
     m_Metadata:
       m_Items: []
-  - m_Id: 4008528275156993
-    m_Key: item.1002.name
+  - m_Id: 5221716635267079
+    m_Key: weapon.1002.name
     m_Metadata:
       m_Items: []
-  - m_Id: 4008528275156994
-    m_Key: item.1002.desc
+  - m_Id: 5221716635267080
+    m_Key: weapon.1002.desc
     m_Metadata:
       m_Items: []
-  - m_Id: 4008528275156995
-    m_Key: item.1003.name
+  - m_Id: 5221716635267081
+    m_Key: weapon.1003.name
     m_Metadata:
       m_Items: []
-  - m_Id: 4008528275156996
-    m_Key: item.1003.desc
+  - m_Id: 5221716635267082
+    m_Key: weapon.1003.desc
     m_Metadata:
       m_Items: []
-  - m_Id: 4008528275156997
-    m_Key: item.1004.name
+  - m_Id: 5221716635267083
+    m_Key: weapon.1004.name
     m_Metadata:
       m_Items: []
-  - m_Id: 4008528275156998
-    m_Key: item.1004.desc
+  - m_Id: 5221716639461376
+    m_Key: weapon.1004.desc
     m_Metadata:
       m_Items: []
   m_Metadata:

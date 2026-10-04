@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private SkillBar skillBar;
     [SerializeField] private ChargeGauge chargeGauge;
 
+
     [Header("패널 (없으면 비워둬도 됨)")]
     [SerializeField] private AbilityPanel abilityPanel;
     [SerializeField] private ShopPanel shopPanel;
@@ -26,6 +27,9 @@ public class UIManager : MonoBehaviour
 
     [Header("공용 창")]
     [SerializeField] private DetailWindow detailWindow;
+
+    [Header("상태이상")]
+    [SerializeField] private StatusScreenTint statusTint;
 
     public DetailWindow Detail => detailWindow;
 
@@ -181,16 +185,17 @@ public class UIManager : MonoBehaviour
 
 
         inventoryPanel?.Bind(
-       player.GetComponent<PlayerEquipment>(),
-       player.GetComponent<PlayerEnchant>());
+        player.GetComponent<PlayerEquipment>(),
+        player.GetComponent<PlayerEnchant>());
 
         _shop = player.GetComponent<PlayerShop>();
         shopPanel?.Bind(
-    player.GetComponent<PlayerShop>(),
-    hp,
-    ability,
-    player.GetComponent<PlayerEquipment>(),
-    player.GetComponent<PlayerEnchant>());
+            player.GetComponent<PlayerShop>(),
+            hp,
+            ability,
+            player.GetComponent<PlayerEquipment>(),
+            player.GetComponent<PlayerEnchant>());
+        statusTint?.Bind(player.GetComponent<PlayerStatus>());
 
 
     }
