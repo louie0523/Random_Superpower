@@ -365,7 +365,7 @@ MonoBehaviour:
   _HelmetId: 0
   _BootsId: 0
   _SlotAmmo: 
-  startWeaponId: 1001
+  startWeaponId: 1004
   fistWeaponId: 1000
   swapTime: 0.6
 --- !u!114 &-1179119024802948346

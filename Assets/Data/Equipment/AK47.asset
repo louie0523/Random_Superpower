@@ -111,6 +111,7 @@ MonoBehaviour:
     CancelPoint: 0.95
     ComboResetTime: 0.8
     OverrideHitShape: 0
+    NoWeaponEnchants: 0
     HitMode: 0
     Range: 3
     HitAngle: 120
@@ -430,6 +431,7 @@ MonoBehaviour:
     CancelPoint: 0.95
     ComboResetTime: 0.8
     OverrideHitShape: 0
+    NoWeaponEnchants: 0
     HitMode: 0
     Range: 3
     HitAngle: 120
@@ -851,7 +853,7 @@ MonoBehaviour:
   HitscanRange: 150
   TracerPrefab: {fileID: 8388733948279739780, guid: 687d5a6b442f97542afbdbd7d2b868f6, type: 3}
   ProjectileSpeed: 60
-  FireSound: {fileID: 8300000, guid: 49402f923a5c9fb44b49a603afcc7998, type: 3}
+  FireSound: {fileID: 8300000, guid: b39489cde38d7474790bde0158d66df8, type: 3}
   FireVolume: 1
   FirePitchVariance: 0.08
   EmptySound: {fileID: 8300000, guid: dea9acde42c37f74cbe3428ce84cd771, type: 3}
