@@ -14,14 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpecialEnchantData
   Id: 9505
   DisplayName: "\uD0D0\uC2DD"
-  Color: {r: 0.7082386, g: 0, b: 1, a: 1}
+  Color: {r: 0.8773585, g: 0.012415428, b: 0.029354215, a: 1}
   Icon: {fileID: 0}
   Description: 
   Tiers:
-  - Description: 
+  - Label: 
+    Description: 
     Effects:
-    - Kind: 2
-      Status: 2
-      Value: 100
+    - Kind: 3
+      Status: 0
+      Value: 25
+      Value2: 0
       Duration: 0
+      Chance: 1
+      MaxStacks: 1
+      IgnoreDefense: 0
+  - Label: 
+    Description: 
+    Effects:
+    - Kind: 3
+      Status: 0
+      Value: 40
+      Value2: 0
+      Duration: 0
+      Chance: 1
+      MaxStacks: 1
       IgnoreDefense: 0

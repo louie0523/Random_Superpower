@@ -37,5 +37,23 @@ MonoBehaviour:
   SpecialCandidates:
   - Special: {fileID: 11400000, guid: 9ebd9f92ba58e944aa508c97348eb7b4, type: 2}
     Weight: 1
+    MinStage: 0
+    MaxStage: 0
+  - Special: {fileID: 11400000, guid: 91f07d2f1c00ac44ebe7c83eec039a89, type: 2}
+    Weight: 1
+    MinStage: 0
+    MaxStage: 0
+  - Special: {fileID: 11400000, guid: 482acaa3d1d37ce4696de21cf4712d0d, type: 2}
+    Weight: 1
+    MinStage: 0
+    MaxStage: 0
+  - Special: {fileID: 11400000, guid: 212897d322fdf194eb5176d34c0242a6, type: 2}
+    Weight: 1
+    MinStage: 0
+    MaxStage: 0
+  - Special: {fileID: 11400000, guid: 265e441175541124e8915d2386fc616f, type: 2}
+    Weight: 1
+    MinStage: 0
+    MaxStage: 0
   SpecialChoiceCount: 1
   Stages: []

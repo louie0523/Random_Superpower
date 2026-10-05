@@ -83,6 +83,9 @@ public class AbilityRuntime : NetworkBehaviour
     private PlayerStatus _status;
     public PlayerStatus Status => _status;
 
+    private bool _weaponHitSkill;   // 지금 실행 중인 스킬이 무기 판정인가
+    private float _skillDealt;      // 그 스킬로 준 피해 합 (탐식 흡혈용)
+
     private readonly List<AbilityData> _active = new();
     private readonly List<AbilityBehaviour> _behaviours = new();
     private readonly AbilityData.SkillDef[] _slots = new AbilityData.SkillDef[SkillSlotExt.Count];
@@ -690,15 +693,21 @@ public class AbilityRuntime : NetworkBehaviour
             if (target == null) return;
         }
 
+        _weaponHitSkill = skill.AppliesWeaponEnchants;
+        _skillDealt = 0f;
+
         var src = skill.Slot == SkillSlot.Ultimate ? DamageSource.Ultimate : DamageSource.Skill;
         foreach (var e in skill.Effects)
             Execute(e, target, src);
 
-        if (skill.AppliesWeaponEnchants && target != null && target.TryGetComponent<PlayerHealth>(out var th))
+        if (_weaponHitSkill && target != null && target.TryGetComponent<PlayerHealth>(out var th))
         {
-            int noHeal = 0;
-            GetComponent<PlayerEnchant>()?.OnWeaponHit(th, ref noHeal);
+            int heal = 0;
+            GetComponent<PlayerEnchant>()?.OnWeaponHit(th, _skillDealt, ref heal);
+            if (heal > 0) _health.RPC_Heal(heal);
         }
+
+        _weaponHitSkill = false;
     }
 
     public GameObject FindTarget(AbilityData.SkillDef skill)
@@ -990,8 +999,15 @@ public class AbilityRuntime : NetworkBehaviour
                     if (!target.TryGetComponent<PlayerHealth>(out var h)) break;
 
                     float outgoing = DamageCalc.CalcOutgoing(_stats, v, src, true, out _);
-                    h.RPC_TakeDamage(DamageInfo.FromPlayerHit(
-                        Mathf.RoundToInt(outgoing), Object.InputAuthority, transform.position));
+                    var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, transform.position);
+
+                    if (_weaponHitSkill)
+                    {
+                        GetComponent<PlayerEnchant>()?.ModifyWeaponHit(ref info);
+                        _skillDealt += outgoing;
+                    }
+
+                    h.RPC_TakeDamage(info);
                     break;
                 }
 

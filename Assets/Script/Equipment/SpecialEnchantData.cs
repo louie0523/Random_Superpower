@@ -1,12 +1,16 @@
 using System.Text;
-using UnityEngine;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
+/// <summary>순서가 저장값 — 뒤에만 추가</summary>
 public enum SpecialEffectKind
 {
-    ApplyStatus,        // 상태이상 부여
+    ApplyStatus,        // 상태이상 부여 (중독은 MaxStacks까지 중첩)
     MaxHpDamage,        // 대상 최대 체력 N% 추가 피해
-    LifestealToDamage,  // 이 무기 흡혈 불가, 흡혈량의 N%를 피해로
+    LifestealToDamage,  // 이 무기 흡혈 불가, 흡혈량의 N%를 피해로 (혈격)
+    Lifesteal,          // 이 무기로 준 피해의 N%만큼 추가 흡혈 (탐식)
+    Execute,            // 대상 체력 Value% 이하면 이 타격 피해 +Value2% (처형)
+    DefensePen,         // 이 타격은 대상 방어력 N% 무시 (관통)
 }
 
 [System.Serializable]
@@ -17,29 +21,47 @@ public class SpecialEffect
     [Tooltip("ApplyStatus일 때 부여할 상태이상")]
     public StatusType Status;
 
-    [Tooltip("ApplyStatus: 둔화 15 = 15%, 화상 2 = 초당 최대체력 2% (봉인·기절은 무시)\n" +
+    [Tooltip("ApplyStatus: 둔화 15 = 15%, 화상 2 = 초당 최대체력 2%, 중독 0.25 = 중첩당 초당 0.25%\n" +
              "MaxHpDamage: 7 = 대상 최대 체력의 7%\n" +
-             "LifestealToDamage: 100 = 흡혈량의 100%를 피해로")]
+             "LifestealToDamage: 100 = 흡혈량의 100%를 피해로\n" +
+             "Lifesteal: 10 = 준 피해의 10% 회복\n" +
+             "Execute: 30 = 대상 체력 30% 이하일 때\n" +
+             "DefensePen: 20 = 방어력 20% 무시")]
     public float Value = 15f;
+
+    [Tooltip("Execute: 피해 증가 % (30 = +30%)")]
+    public float Value2 = 30f;
 
     [Tooltip("ApplyStatus 지속 (초)")]
     public float Duration = 2f;
 
+    [Tooltip("발동 확률. 1 = 항상, 0.15 = 15%. 0이면 1로 취급")]
+    [Range(0f, 1f)] public float Chance = 1f;
+
+    [Tooltip("ApplyStatus 중독: 최대 중첩. 다른 상태이상은 무시")]
+    [Min(1)] public int MaxStacks = 1;
+
     [Tooltip("MaxHpDamage · LifestealToDamage: 방어력을 무시하는 고정 피해로")]
     public bool IgnoreDefense = true;
+
+    public float GetChance() => Chance <= 0f ? 1f : Chance;
+    public int GetMaxStacks() => Mathf.Max(1, MaxStacks);
 }
 
 [System.Serializable]
 public class SpecialTier
 {
-    [Tooltip("비우면 효과 목록으로 자동 설명")]
+    [Tooltip("인스펙터 표시용 이름표 (I, II …). 게임에는 안 나옴")]
+    public string Label;
+
+    [Tooltip("이 등급만 다른 설명이 필요할 때. 비우면 에셋 공통 Description 사용")]
     [TextArea(1, 3)] public string Description;
 
     public SpecialEffect[] Effects;
 }
 
 /// <summary>
-/// 특수 인챈트 하나 (둔화, 화상, 서리화상, 심판, 탐식 …).
+/// 특수 인챈트 하나 (둔화, 화상, 중독, 감전, 처형, 관통, 탐식, 혈격 …).
 /// 등급 I, II, … 마다 효과 목록. 무기에는 종류별로 하나만 붙고, 같은 종류가 다시 나오면 등급이 오름.
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Special Enchant")]
@@ -52,9 +74,9 @@ public class SpecialEnchantData : ScriptableObject
     public Color Color = new(1f, 0.6f, 0.2f);
     public Sprite Icon;
 
-    [Tooltip("모든 등급 공통 설명. 숫자 자리:\n" +
-         "{v0} = 0번 효과 수치, {d0} = 0번 효과 지속(초), {v1} {d1} … 다음 효과\n" +
-         "예) {d0}초간 대상의 이동속도를 {v0}% 둔화시킵니다.")]
+    [Tooltip("모든 등급 공통 설명. 숫자 자리 (N = 효과 번호):\n" +
+             "{vN} 수치  {dN} 지속(초)  {cN} 확률(%)  {sN} 최대 중첩  {xN} 두 번째 수치\n" +
+             "예) {d0}초간 대상의 이동속도를 {v0}% 둔화시킵니다.")]
     [TextArea(2, 4)] public string Description;
 
     [Header("등급 — [0] = I, [1] = II …")]
@@ -75,10 +97,9 @@ public class SpecialEnchantData : ScriptableObject
     public string ColoredName(int tier) =>
         $"<color=#{ColorUtility.ToHtmlStringRGB(Color)}>{Name(tier)}</color>";
 
-    static readonly Regex Token = new(@"\{([vd])(\d+)\}", RegexOptions.Compiled);
+    static readonly Regex Token = new(@"\{([vdcsx])(\d+)\}", RegexOptions.Compiled);
 
-    /// <summary>등급 설명. 직접 쓴 문장이 없으면 효과로 자동 생성</summary>
-    /// <summary>등급 설명 — 등급 전용 → 공통 → 자동 순서. {vN} {dN}을 그 등급 값으로 채움</summary>
+    /// <summary>등급 설명 — 등급 전용 → 공통 → 자동 순서. 숫자 자리를 그 등급 값으로 채움</summary>
     public string Describe(int tier)
     {
         var t = GetTier(tier);
@@ -91,7 +112,6 @@ public class SpecialEnchantData : ScriptableObject
         if (!string.IsNullOrWhiteSpace(text))
             return FillTokens(text, t);
 
-        // 자동 생성
         var sb = new StringBuilder();
         if (t.Effects != null)
             foreach (var e in t.Effects)
@@ -110,23 +130,41 @@ public class SpecialEnchantData : ScriptableObject
             if (t.Effects == null || i >= t.Effects.Length || t.Effects[i] == null) return m.Value;
 
             var e = t.Effects[i];
-            float v = m.Groups[1].Value == "v" ? e.Value : e.Duration;
-            return v.ToString("0.#");
+            return m.Groups[1].Value switch
+            {
+                "v" => e.Value.ToString("0.##"),
+                "d" => e.Duration.ToString("0.#"),
+                "c" => (e.GetChance() * 100f).ToString("0.#"),
+                "s" => e.GetMaxStacks().ToString(),
+                "x" => e.Value2.ToString("0.##"),
+                _ => m.Value,
+            };
         });
 
-    static string DescribeEffect(SpecialEffect e) => e.Kind switch
+    static string DescribeEffect(SpecialEffect e)
     {
-        SpecialEffectKind.ApplyStatus => LocUtil.Get("ui.special.status",
-            LocUtil.Get($"status.{e.Status}"), StatusValue(e), e.Duration.ToString("0.#")),
-        SpecialEffectKind.MaxHpDamage => LocUtil.Get("ui.special.maxhp", e.Value.ToString("0.#")),
-        SpecialEffectKind.LifestealToDamage => LocUtil.Get("ui.special.lifesteal_to_damage", e.Value.ToString("0")),
-        _ => "",
-    };
+        string body = e.Kind switch
+        {
+            SpecialEffectKind.ApplyStatus => LocUtil.Get("ui.special.status",
+                LocUtil.Get($"status.{e.Status}"), StatusValue(e), e.Duration.ToString("0.#")),
+            SpecialEffectKind.MaxHpDamage => LocUtil.Get("ui.special.maxhp", e.Value.ToString("0.#")),
+            SpecialEffectKind.LifestealToDamage => LocUtil.Get("ui.special.lifesteal_to_damage", e.Value.ToString("0")),
+            SpecialEffectKind.Lifesteal => LocUtil.Get("ui.special.lifesteal", e.Value.ToString("0.#")),
+            SpecialEffectKind.Execute => LocUtil.Get("ui.special.execute", e.Value.ToString("0"), e.Value2.ToString("0")),
+            SpecialEffectKind.DefensePen => LocUtil.Get("ui.special.defpen", e.Value.ToString("0")),
+            _ => "",
+        };
+
+        return e.GetChance() < 1f
+            ? LocUtil.Get("ui.special.chance", (e.GetChance() * 100f).ToString("0.#")) + " " + body
+            : body;
+    }
 
     static string StatusValue(SpecialEffect e) => e.Status switch
     {
         StatusType.Seal or StatusType.Stun => "",
-        StatusType.Burn => $"{e.Value:0.#}%/s",
+        StatusType.Burn => $"{e.Value:0.##}%/s",
+        StatusType.Poison => $"{e.Value:0.##}%/s ×{e.GetMaxStacks()}",
         _ => $"{e.Value:0.#}%",
     };
 

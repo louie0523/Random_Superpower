@@ -297,8 +297,9 @@ public class PlayerAttack : NetworkBehaviour
         float outgoing = DamageCalc.CalcOutgoing(
             _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
 
-        target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
-            Mathf.RoundToInt(outgoing), Object.InputAuthority, hit.point));
+        var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, hit.point);
+        _enchant?.ModifyWeaponHit(ref info);
+        target.RPC_TakeDamage(info);
 
         AfterWeaponHit(target, hit.collider.gameObject, outgoing);
 
@@ -466,8 +467,9 @@ public class PlayerAttack : NetworkBehaviour
         float outgoing = DamageCalc.CalcOutgoing(
             _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
 
-        target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
-            Mathf.RoundToInt(outgoing), Object.InputAuthority, point));
+        var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, point);
+        _enchant?.ModifyWeaponHit(ref info);
+        target.RPC_TakeDamage(info);
 
         AfterWeaponHit(target, col.gameObject, outgoing);
 
@@ -617,7 +619,7 @@ public class PlayerAttack : NetworkBehaviour
         int heal = Mathf.RoundToInt(outgoing * _stats.Get(StatType.LifeSteal));
 
         if (weaponEnchants)
-            _enchant?.OnWeaponHit(target, ref heal);     // 탐식이면 heal → 0, 대신 피해
+            _enchant?.OnWeaponHit(target, outgoing, ref heal);
 
         if (heal > 0) _health.RPC_Heal(heal);
     }
@@ -713,10 +715,13 @@ public class PlayerAttack : NetworkBehaviour
 
         float outgoing = DamageCalc.CalcOutgoing(_stats, baseDmg, src, true, out bool crit);
 
-        target.RPC_TakeDamage(DamageInfo.FromPlayerHit(
-            Mathf.RoundToInt(outgoing), Object.InputAuthority, cameraRoot.position));
+        bool ench = !step.NoWeaponEnchants;
 
-        AfterWeaponHit(target, targetObj, outgoing, !step.NoWeaponEnchants);
+        var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, cameraRoot.position);
+        if (ench) _enchant?.ModifyWeaponHit(ref info);     // 관통·처형
+        target.RPC_TakeDamage(info);
+
+        AfterWeaponHit(target, targetObj, outgoing, ench);
 
         if (fpsCamera != null) fpsCamera.Shake(step.CameraShake);
         if (step.HitStopDuration > 0f)

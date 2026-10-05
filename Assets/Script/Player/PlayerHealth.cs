@@ -174,13 +174,19 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (IsDead) return;
 
+        float maxHp = _stats.Get(StatType.MaxHP);
         float raw = info.Amount;
+
         if (info.MaxHpPercent > 0f)
-            raw += _stats.Get(StatType.MaxHP) * info.MaxHpPercent * 0.01f;
+            raw += maxHp * info.MaxHpPercent * 0.01f;
+
+        // 처형 — 맞기 직전 체력 기준
+        if (info.ExecuteBelow > 0f && HP <= maxHp * info.ExecuteBelow)
+            raw *= 1f + info.ExecuteBonus;
 
         int final = info.IgnoreDefense
-            ? Mathf.Max(1, Mathf.RoundToInt(raw))           // 고정 피해 — 방어·배율 무시
-            : DamageCalc.CalcIncoming(_stats, raw);
+            ? Mathf.Max(1, Mathf.RoundToInt(raw))
+            : DamageCalc.CalcIncoming(_stats, raw, info.DefensePen);     // 관통
 
         LastHitFrom = info.SourcePos;
         HP -= final;

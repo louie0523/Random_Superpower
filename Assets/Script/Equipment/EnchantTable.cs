@@ -65,6 +65,15 @@ public class SpecialCandidate
 
     [Tooltip("선택지에 뽑힐 가중치")]
     [Min(0)] public float Weight = 1f;
+
+    [Tooltip("이 단계 이상을 만들 때부터 후보에 나옴. 0 = 처음부터")]
+    [Min(0)] public int MinStage = 0;
+
+    [Tooltip("이 단계까지만 후보에 나옴. 0 = 제한 없음")]
+    [Min(0)] public int MaxStage = 0;
+
+    public bool AvailableAt(int stage) =>
+        stage >= MinStage && (MaxStage <= 0 || stage <= MaxStage);
 }
 
 /// <summary>

@@ -120,8 +120,10 @@ public class PlayerEnchant : NetworkBehaviour
         if (t == null) return false;
         if (!t.IsSpecialStage(GetStage(slot) + 1, UnlimitedStage, SpecialInterval)) return false;
 
+        int next = GetStage(slot) + 1;
         foreach (var c in t.SpecialCandidates)
             if (c?.Special != null && c.Weight > 0f && c.Special.MaxTier > 0
+                && c.AvailableAt(next)                                           // ★
                 && OwnedTier(slot, c.Special.Id) < c.Special.MaxTier)
                 return true;
 
@@ -291,6 +293,8 @@ public class PlayerEnchant : NetworkBehaviour
         {
             var s = c?.Special;
             if (s == null || c.Weight <= 0f || s.MaxTier == 0) continue;
+            int next = GetStage(slot) + 1;
+            if (!c.AvailableAt(next)) continue;                                      // ★
 
             int owned = OwnedTier(slot, s.Id);
             if (owned >= s.MaxTier) continue;
@@ -332,20 +336,16 @@ public class PlayerEnchant : NetworkBehaviour
 
     static readonly Dictionary<int, int> _effective = new();   // 특수ID → 등급
 
-    /// <summary>
-    /// 이 무기로 때렸을 때 (PlayerAttack · 무기 판정 스킬이 호출).
-    /// 같은 특수 인챈트는 가장 높은 등급만 적용.
-    /// </summary>
-    /// <param name="lifestealHeal">흡혈로 회복할 양. 탐식이면 0이 되고 피해로 바뀜</param>
-    public void OnWeaponHit(PlayerHealth target, ref int lifestealHeal)
+    /// <summary>들고 있는 무기의 특수 인챈트를 종류별 최고 등급으로 모음</summary>
+    bool CollectEffective()
     {
-        if (!HasStateAuthority || target == null || database == null || _equip == null) return;
+        _effective.Clear();
+        if (_equip == null || database == null) return false;
 
         int slot = _equip.ActiveWeaponSlot;
         int wid = _equip.GetWeaponIdAt(slot);
-        if (wid == 0 || EnchantedWeaponIds[slot] != wid) return;
+        if (wid == 0 || EnchantedWeaponIds[slot] != wid) return false;
 
-        _effective.Clear();
         for (int i = 0; i < MaxEnchants; i++)
         {
             int code = GetEnchantId(slot, i);
@@ -356,43 +356,103 @@ public class PlayerEnchant : NetworkBehaviour
             int tier = EnchantCode.Tier(code);
             if (!_effective.TryGetValue(id, out int cur) || tier > cur) _effective[id] = tier;
         }
+        return _effective.Count > 0;
+    }
 
-        if (_effective.Count == 0) return;
+    /// <summary>
+    /// 타격 전 — 관통·처형을 피해 정보에 실음. 실제 계산은 맞는 쪽에서.
+    /// PlayerAttack이 RPC_TakeDamage 직전에 호출
+    /// </summary>
+    public void ModifyWeaponHit(ref DamageInfo info)
+    {
+        if (!HasStateAuthority || !CollectEffective()) return;
 
-        var attacker = Object.InputAuthority;
         foreach (var kv in _effective)
         {
-            var tierData = database.GetSpecial(kv.Key)?.GetTier(kv.Value);
-            if (tierData?.Effects == null) continue;
+            var tier = database.GetSpecial(kv.Key)?.GetTier(kv.Value);
+            if (tier?.Effects == null) continue;
 
-            foreach (var e in tierData.Effects)
-                if (e != null) ApplySpecialEffect(e, target, attacker, ref lifestealHeal);
+            foreach (var e in tier.Effects)
+            {
+                if (e == null || Random.value > e.GetChance()) continue;
+
+                switch (e.Kind)
+                {
+                    case SpecialEffectKind.DefensePen:
+                        info.DefensePen = Mathf.Clamp01(info.DefensePen + e.Value * 0.01f);
+                        break;
+
+                    case SpecialEffectKind.Execute:
+                        info.ExecuteBelow = Mathf.Max(info.ExecuteBelow, e.Value * 0.01f);
+                        info.ExecuteBonus = Mathf.Max(info.ExecuteBonus, e.Value2 * 0.01f);
+                        break;
+                }
+            }
         }
     }
 
-    void ApplySpecialEffect(SpecialEffect e, PlayerHealth target, PlayerRef attacker, ref int heal)
+    /// <summary>
+    /// 타격 후 — 상태이상, 추가 피해, 흡혈.
+    /// 순서: ① 탐식(흡혈 추가) → ② 나머지 → ③ 혈격(흡혈을 피해로) — 혈격이 늘어난 흡혈량까지 바꾸도록
+    /// </summary>
+    /// <param name="dealt">이번 타격 피해 (탐식 흡혈 계산용)</param>
+    /// <param name="lifestealHeal">흡혈로 회복할 양. 혈격이면 0이 되고 피해로 바뀜</param>
+    public void OnWeaponHit(PlayerHealth target, float dealt, ref int lifestealHeal)
+    {
+        if (!HasStateAuthority || target == null || !CollectEffective()) return;
+
+        var attacker = Object.InputAuthority;
+
+        for (int pass = 0; pass < 3; pass++)
+            foreach (var kv in _effective)
+            {
+                var tier = database.GetSpecial(kv.Key)?.GetTier(kv.Value);
+                if (tier?.Effects == null) continue;
+
+                foreach (var e in tier.Effects)
+                {
+                    if (e == null || PassOf(e.Kind) != pass) continue;
+                    if (Random.value > e.GetChance()) continue;
+                    ApplySpecialEffect(e, target, attacker, dealt, ref lifestealHeal);
+                }
+            }
+    }
+
+    static int PassOf(SpecialEffectKind k) => k switch
+    {
+        SpecialEffectKind.Lifesteal => 0,
+        SpecialEffectKind.LifestealToDamage => 2,
+        SpecialEffectKind.DefensePen or SpecialEffectKind.Execute => -1,   // 타격 전에 처리됨
+        _ => 1,
+    };
+
+    void ApplySpecialEffect(SpecialEffect e, PlayerHealth target, PlayerRef attacker, float dealt, ref int heal)
     {
         switch (e.Kind)
         {
             case SpecialEffectKind.ApplyStatus:
                 if (target.TryGetComponent<PlayerStatus>(out var st))
-                    st.Apply(e.Status, e.Value, e.Duration, attacker);
+                    st.Apply(e.Status, e.Value, e.Duration, attacker, e.GetMaxStacks());
                 break;
 
             case SpecialEffectKind.MaxHpDamage:
                 {
                     var info = DamageInfo.FromPlayerHit(0, attacker, transform.position);
-                    info.MaxHpPercent = e.Value;          // 대상 쪽에서 대상 최대 체력으로 계산
+                    info.MaxHpPercent = e.Value;
                     info.IgnoreDefense = e.IgnoreDefense;
-                    info.IsDot = true;                    // 같은 타격의 부가 피해 — 피격 트리거 중복 방지
+                    info.IsDot = true;
                     target.RPC_TakeDamage(info);
                     break;
                 }
 
+            case SpecialEffectKind.Lifesteal:
+                heal += Mathf.RoundToInt(dealt * e.Value * 0.01f);
+                break;
+
             case SpecialEffectKind.LifestealToDamage:
                 {
                     int dmg = Mathf.RoundToInt(heal * e.Value * 0.01f);
-                    heal = 0;                             // 이 무기로는 흡혈 불가
+                    heal = 0;
 
                     if (dmg > 0)
                     {
@@ -405,6 +465,7 @@ public class PlayerEnchant : NetworkBehaviour
                 }
         }
     }
+
 
     // ══════════════════ 처치 수 ══════════════════
 
@@ -571,8 +632,11 @@ public class PlayerEnchant : NetworkBehaviour
             int tier = EnchantCode.Tier(code);
 
             SpecialEnchantData s = null;
+            int next = GetStage(slot) + 1;
             foreach (var c in t.SpecialCandidates)
-                if (c?.Special != null && c.Weight > 0f && c.Special.Id == id) { s = c.Special; break; }
+                if (c?.Special != null && c.Weight > 0f && c.Special.Id == id
+                    && c.AvailableAt(next))                                          // ★
+                { s = c.Special; break; }
 
             if (s == null) return -1;
             if (tier <= OwnedTier(slot, id) || tier > s.MaxTier) return -1;
