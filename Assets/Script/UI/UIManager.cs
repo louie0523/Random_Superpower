@@ -169,6 +169,7 @@ public class UIManager : MonoBehaviour
         }
 
         AttachUICamera(playerCam);
+        DamageParticleManager.Instance?.SetCamera(playerCam);
         if (bootCamera != null) bootCamera.enabled = false;
         if (hudRoot != null) hudRoot.SetActive(true);
 

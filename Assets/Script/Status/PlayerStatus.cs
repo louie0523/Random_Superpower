@@ -12,6 +12,7 @@ public enum StatusType
     Stun,       // 기절 — 이동·공격·스킬·상호작용 불가 (수치 없음)
     DeepWound,  // 깊은 상처 — 받는 회복 N% 감소
     Poison,     // 중독 — 1초마다 최대 체력 (N × 중첩)% 고정 피해. 맞을 때마다 중첩 +1, 지속 갱신
+    Evade,      // 회피 - 받는 공격을 모두 회피
 }
 
 /// <summary>
@@ -77,7 +78,10 @@ public class PlayerStatus : NetworkBehaviour
 
     public float HealMultiplier => 1f - Mathf.Clamp01(Get(StatusType.DeepWound) * 0.01f);
 
-    static bool IsFlag(StatusType t) => t == StatusType.Seal || t == StatusType.Stun;
+    static bool IsFlag(StatusType t) =>
+        t == StatusType.Seal || t == StatusType.Stun || t == StatusType.Evade;
+
+    public bool IsEvading => Has(StatusType.Evade);
 
     public override void Spawned()
     {
@@ -106,6 +110,7 @@ public class PlayerStatus : NetworkBehaviour
     {
         if (_health != null && _health.IsDead) return;
         if (duration <= 0f) return;
+        if (t != StatusType.Evade && IsEvading && source != Object.InputAuthority) return;
         if (IsFlag(t)) value = 1f;
         if (value <= 0f) return;
 
@@ -210,7 +215,7 @@ public class PlayerStatus : NetworkBehaviour
         if (timer < 1f) return;
         timer -= 1f;
 
-        _health?.TakeStatusDamage(pct, source());
+        _health?.TakeStatusDamage(pct, source(), t);
     }
 
     PlayerRef TopSource(StatusType t)

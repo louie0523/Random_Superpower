@@ -18,17 +18,25 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Description: 
   Tiers:
-  - Description: 
+  - Label: 
+    Description: 
     Effects:
     - Kind: 0
       Status: 2
       Value: 15
+      Value2: 30
       Duration: 3
+      Chance: 1
+      MaxStacks: 1
       IgnoreDefense: 0
-  - Description: II
+  - Label: 
+    Description: 
     Effects:
     - Kind: 0
       Status: 2
       Value: 25
+      Value2: 30
       Duration: 3
+      Chance: 1
+      MaxStacks: 1
       IgnoreDefense: 0

@@ -648,17 +648,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837762
-    m_Localized: "Br\xFBle la cible pendant {d0} secondes, infligeant des d\xE9g\xE2ts
-      fixes \xE9gaux \xE0 {v0}% de sa sant\xE9 maximale chaque seconde."
+    m_Localized: "Inflige <color=orange>Br\xFBlure</color> \xE0 la cible pendant
+      {d0} secondes, infligeant des d\xE9g\xE2ts fixes \xE9gaux \xE0 {v0}% de la
+      sant\xE9 maximale chaque seconde."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837763
-    m_Localized: Seohwasang
+    m_Localized: statue
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: "Inflige des br\xFBlures ({v0}%) et des gelures ({v1}%) pendant
-      {d0} secondes simultan\xE9ment."
+    m_Localized: "Inflige \xE0 la cible l'effet <color=sky>gel</color> pendant {d0}
+      secondes, r\xE9duisant sa vitesse d'attaque de {v1}%."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -666,8 +667,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
-    m_Localized: "Inflige des d\xE9g\xE2ts fixes suppl\xE9mentaires \xE9gaux \xE0
-      {v0}% des points de vie maximum de la cible lors de l'impact."
+    m_Localized: "En cas de coup r\xE9ussi, inflige des d\xE9g\xE2ts fixes suppl\xE9mentaires
+      \xE9gaux \xE0 {v0}% des PV maximum de la cible."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837767
@@ -675,6 +676,72 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837768
+    m_Localized: "R\xE9cup\xE8re {v0}% des d\xE9g\xE2ts inflig\xE9s par l'arme."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237727723520
+    m_Localized: empoisonnement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277952
+    m_Localized: "Avec une probabilit\xE9 de {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277953
+    m_Localized: "Voler {0}% des d\xE9g\xE2ts inflig\xE9s lors d'un coup"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277954
+    m_Localized: "Inflige {1}% de d\xE9g\xE2ts suppl\xE9mentaires aux cibles ayant
+      {0}% ou moins de points de vie."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277955
+    m_Localized: "P\xE9n\xE9trer {0}% de la d\xE9fense de la cible"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603072
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603073
+    m_Localized: "Br\xFBle la cible pendant {d0} secondes, infligeant {v0}% de sa
+      sant\xE9 maximale en d\xE9g\xE2ts fixes chaque seconde et r\xE9duisant sa vitesse
+      d'attaque de {v1}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603074
+    m_Localized: empoisonnement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603075
+    m_Localized: Empoisonne la cible pendant {d0} secondes, lui infligeant {v0}%
+      de ses points de vie maximum par seconde et par cumul. (Maximum {s0} cumuls)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603076
+    m_Localized: entaille
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603077
+    m_Localized: "Tous les effets de gu\xE9rison re\xE7us par la cible sont r\xE9duits
+      de {v0}% pendant {d0} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603078
+    m_Localized: tonnerre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603079
+    m_Localized: "En cas de coup re\xE7u, il y a {c0}% de chances que la cible soit
+      <color=yellow>\xE9tourdie</color> pendant {d0} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603080
+    m_Localized: "Lign\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603081
     m_Localized: "Cette arme ne permet pas de r\xE9cup\xE9rer de vie. Elle inflige
       en revanche des d\xE9g\xE2ts suppl\xE9mentaires \xE9gaux \xE0 {v0}% du montant
       de la r\xE9cup\xE9ration."

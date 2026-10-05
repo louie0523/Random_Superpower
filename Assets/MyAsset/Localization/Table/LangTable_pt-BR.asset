@@ -641,17 +641,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837762
-    m_Localized: "Queima o alvo por {d0} segundos, causando dano fixo igual a {v0}%
-      da sa\xFAde m\xE1xima dele a cada segundo."
+    m_Localized: "Inflige <color=orange>Queimadura</color> no alvo por {d0} segundos,
+      causando dano fixo igual a {v0}% da sa\xFAde m\xE1xima a cada segundo."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837763
-    m_Localized: Seohwasang
+    m_Localized: "est\xE1tua"
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Causa queimadura ({v0}%) e congelamento ({v1}%) por {d0} segundos
-      simultaneamente.
+    m_Localized: Aplica o efeito de <color=sky>gelo</color> no alvo por {d0} segundos,
+      reduzindo sua velocidade de ataque em {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -659,8 +659,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
-    m_Localized: "Causa dano fixo adicional igual a {v0}% da vida m\xE1xima do alvo
-      ao atingir o alvo."
+    m_Localized: "Ao acertar, causa dano fixo adicional igual a {v0}% do HP m\xE1ximo
+      do alvo."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837767
@@ -668,6 +668,72 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837768
+    m_Localized: Recupera {v0}% do dano causado pela arma.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237727723520
+    m_Localized: envenenamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277952
+    m_Localized: Com probabilidade de 0%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277953
+    m_Localized: Rouba {0}% do dano causado ao acertar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277954
+    m_Localized: Causa 1% de dano adicional a alvos com 0% ou menos de vida.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277955
+    m_Localized: Penetrar 0% da defesa do alvo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603072
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603073
+    m_Localized: "Queima o alvo por {d0} segundos, causando {v0}% da sua sa\xFAde
+      m\xE1xima como dano fixo a cada segundo e reduzindo sua velocidade de ataque
+      em {v1}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603074
+    m_Localized: envenenamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603075
+    m_Localized: "Envenena o alvo por {d0} segundos, causando dano equivalente a
+      {v0}% da sua vida m\xE1xima por segundo por ac\xFAmulo. (M\xE1ximo de {s0}
+      ac\xFAmulos)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603076
+    m_Localized: corte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603077
+    m_Localized: "Todos os efeitos de cura recebidos pelo alvo s\xE3o reduzidos em
+      {v0}% por {d0} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603078
+    m_Localized: "trov\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603079
+    m_Localized: "Ao acertar, h\xE1 uma chance de {c0}% de que o alvo fique atordoado
+      por {d0} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603080
+    m_Localized: "Linhagem sangu\xEDnea"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603081
     m_Localized: "Voc\xEA n\xE3o pode roubar vida com esta arma. Em vez disso, ela
       causa dano adicional igual a {v0}% da quantidade roubada."
     m_Metadata:

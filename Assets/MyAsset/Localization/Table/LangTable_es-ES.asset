@@ -644,17 +644,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837762
-    m_Localized: "Quema al objetivo durante {d0} segundos, infligiendo un da\xF1o
-      fijo igual al {v0}% de su salud m\xE1xima cada segundo."
+    m_Localized: "Inflige <color=orange>Quemadura</color> al objetivo durante {d0}
+      segundos, causando un da\xF1o fijo igual al {v0}% de la salud m\xE1xima cada
+      segundo."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837763
-    m_Localized: Seohwasang
+    m_Localized: estatua
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: "Inflige quemaduras ({v0}%) y congelaci\xF3n ({v1}%) durante {d0}
-      segundos simult\xE1neamente."
+    m_Localized: Inflige el efecto de <color=sky>escarcha</color> al objetivo durante
+      {d0} segundos, reduciendo su velocidad de ataque en un {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -662,8 +663,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
-    m_Localized: "Inflige da\xF1o fijo adicional equivalente al {v0}% de la salud
-      m\xE1xima del objetivo al impactar."
+    m_Localized: "Al golpear, inflige da\xF1o fijo adicional equivalente al {v0}%
+      de los PV m\xE1ximos del objetivo."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837767
@@ -671,6 +672,73 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837768
+    m_Localized: "Recupera el {v0}% del da\xF1o infligido por el arma."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237727723520
+    m_Localized: envenenamiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277952
+    m_Localized: Con una probabilidad del {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277953
+    m_Localized: "Roba el {0}% del da\xF1o infligido al golpear."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277954
+    m_Localized: "Inflige un {1}% de da\xF1o adicional a los objetivos con un {0}%
+      o menos de salud."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277955
+    m_Localized: Penetra el {0}% de la defensa del objetivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603072
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603073
+    m_Localized: "Quema al objetivo durante {d0} segundos, infligi\xE9ndole un {v0}%
+      de su salud m\xE1xima como da\xF1o fijo cada segundo y reduciendo su velocidad
+      de ataque en un {v1}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603074
+    m_Localized: envenenamiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603075
+    m_Localized: "Envenena al objetivo durante {d0} segundos, infligi\xE9ndole un
+      {v0}% de su salud m\xE1xima por segundo por acumulaci\xF3n. (M\xE1ximo {s0}
+      acumulaciones)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603076
+    m_Localized: tajo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603077
+    m_Localized: Todos los efectos curativos recibidos por el objetivo se reducen
+      en un {v0}% durante {d0} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603078
+    m_Localized: trueno
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603079
+    m_Localized: Al impactar, hay una probabilidad del {c0}% de que el objetivo quede
+      <color=yellow>aturdido</color> durante {d0} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603080
+    m_Localized: Linaje
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603081
     m_Localized: "No puedes robar vida con esta arma. En cambio, inflige da\xF1o
       adicional igual al {v0}% de la cantidad de robo de vida."
     m_Metadata:

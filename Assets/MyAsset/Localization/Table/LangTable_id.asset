@@ -87,7 +87,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943885
-    m_Localized: Pengukur Utama {0}
+    m_Localized: Pengukur Utama 0
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943886
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
@@ -656,17 +656,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837762
-    m_Localized: Membakar target selama {d0} detik, memberikan kerusakan tetap sebesar
-      {v0}% dari kesehatan maksimum mereka setiap detik.
+    m_Localized: Menimbulkan efek <color=orange>Luka Bakar</color> pada target selama
+      {d0} detik, memberikan kerusakan tetap sebesar {v0}% dari kesehatan maksimum
+      setiap detik.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837763
-    m_Localized: Seohwasang
+    m_Localized: patung
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Menimbulkan luka bakar ({v0}%) dan radang dingin ({v1}%) selama
-      {d0} detik secara bersamaan.
+    m_Localized: Memberikan efek <color=sky>embun beku</color> pada target selama
+      {d0} detik, mengurangi kecepatan serangan mereka sebesar {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -674,8 +675,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
-    m_Localized: Menimbulkan kerusakan tetap tambahan sebesar {v0}% dari kesehatan
-      maksimum target saat mengenai target.
+    m_Localized: Saat mengenai target, memberikan tambahan <b>kerusakan tetap sebesar
+      {v0}% dari HP maksimum target</b>.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837767
@@ -683,6 +684,72 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837768
+    m_Localized: Memulihkan {v0}% dari kerusakan yang ditimbulkan oleh senjata.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237727723520
+    m_Localized: peracunan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277952
+    m_Localized: Dengan probabilitas 0%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277953
+    m_Localized: Mencuri {0}% dari kerusakan yang ditimbulkan saat mengenai target
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277954
+    m_Localized: Memberikan tambahan kerusakan sebesar {1}% kepada target dengan
+      kesehatan {0}% atau kurang.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277955
+    m_Localized: Menembus {0}% pertahanan target
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603072
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603073
+    m_Localized: Membakar target selama {d0} detik, memberikan {v0}% dari kesehatan
+      maksimum mereka sebagai kerusakan tetap setiap detik dan mengurangi kecepatan
+      serangan mereka sebesar {v1}%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603074
+    m_Localized: peracunan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603075
+    m_Localized: Racuni target selama {d0} detik, memberikan kerusakan sebesar {v0}%
+      dari kesehatan maksimum mereka per detik per tumpukan. (Maksimal {s0} tumpukan)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603076
+    m_Localized: luka sayatan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603077
+    m_Localized: Semua efek penyembuhan yang diterima oleh target dikurangi sebesar
+      {v0}% selama {d0} detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603078
+    m_Localized: guruh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603079
+    m_Localized: Saat mengenai target, ada peluang {c0}% bahwa target akan <color=yellow>terp
+      stunned</color> selama {d0} detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603080
+    m_Localized: Garis keturunan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603081
     m_Localized: Anda tidak dapat melakukan pengisapan darah dengan senjata ini.
       Sebagai gantinya, senjata ini memberikan kerusakan tambahan sebesar {v0}% dari
       jumlah pengisapan darah.

@@ -653,16 +653,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837762
-    m_Localized: Burns the target for {d0} seconds, dealing fixed damage equal to
-      {v0}% of their maximum health every second.
+    m_Localized: Inflicts <color=orange>Burn</color> on the target for {d0} seconds,
+      dealing fixed damage equal to {v0}% of maximum health every second.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837763
-    m_Localized: Seohwasang
+    m_Localized: statue
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Inflicts burn ({v0}%) and frostbite ({v1}%) for {d0} seconds simultaneously.
+    m_Localized: Inflicts the target's <color=sky>frost</color> effect for {d0} seconds,
+      reducing their attack speed by {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -670,8 +671,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
-    m_Localized: Deals additional fixed damage equal to {v0}% of the target's maximum
-      health upon hitting.
+    m_Localized: When hitting, deals additional <b>fixed damage equal to {v0}% of
+      the target's maximum HP</b>.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837767
@@ -679,6 +680,70 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837768
+    m_Localized: Recovers {v0}% of the damage dealt by the weapon.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237727723520
+    m_Localized: poisoning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277952
+    m_Localized: With a {0}% probability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277953
+    m_Localized: Steal {0}% of damage dealt on hit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277954
+    m_Localized: Deals {1}% additional damage to targets with {0}% or less health.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277955
+    m_Localized: Penetrate {0}% of target's defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603072
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603073
+    m_Localized: Burns the target for {d0} seconds, dealing {v0}% of their maximum
+      health as fixed damage every second and reducing their attack speed by {v1}%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603074
+    m_Localized: poisoning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603075
+    m_Localized: Poison the target for {d0} seconds, dealing {v0}% of their maximum
+      health per second per stack. (Max {s0} stacks)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603076
+    m_Localized: gash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603077
+    m_Localized: All healing effects received by the target are reduced by {v0}%
+      for {d0} seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603078
+    m_Localized: thunder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603079
+    m_Localized: On hit, there is a {c0}% chance that the target will be <color=yellow>stunned</color>
+      for {d0} seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603080
+    m_Localized: Bloodline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603081
     m_Localized: You cannot leech with this weapon. Instead, it deals additional
       damage equal to {v0}% of the leech amount.
     m_Metadata:

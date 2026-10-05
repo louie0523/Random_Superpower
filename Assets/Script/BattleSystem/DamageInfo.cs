@@ -44,6 +44,15 @@ public struct DamageInfo : INetworkStruct
     /// <summary>처형 — 그때 피해 증가 비율 (0.3 = +30%)</summary>
     public float ExecuteBonus;
 
+    /// <summary>치명타였는가 (데미지 숫자 표시용)</summary>
+    public NetworkBool IsCrit;
+
+    /// <summary>상태이상 지속 피해 틱 (화상·중독) — 회피 중에도 들어감</summary>
+    public NetworkBool IsStatusTick;
+
+    /// <summary>IsStatusTick일 때 어떤 상태이상인지 (StatusType 값, 숫자 색 구분용)</summary>
+    public int TickStatus;
+
     public static DamageInfo FromPlayerHit(int amount, PlayerRef attacker, Vector3 pos,
                                            bool canCauseFall = false) => new()
                                            {

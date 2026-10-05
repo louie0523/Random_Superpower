@@ -459,6 +459,26 @@ MonoBehaviour:
     m_Key: ui.enchant.pick_normal
     m_Metadata:
       m_Items: []
+  - m_Id: 5448237727723520
+    m_Key: status.Poison
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277952
+    m_Key: ui.special.chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277953
+    m_Key: ui.special.lifesteal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277954
+    m_Key: ui.special.execute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277955
+    m_Key: ui.special.defpen
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:
@@ -653,6 +673,46 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5227191342837768
     m_Key: special.9505.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603072
+    m_Key: special.9506.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603073
+    m_Key: special.9506.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603074
+    m_Key: special.9507.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603075
+    m_Key: special.9507.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603076
+    m_Key: special.9508.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603077
+    m_Key: special.9508.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603078
+    m_Key: special.9509.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603079
+    m_Key: special.9509.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603080
+    m_Key: special.9510.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603081
+    m_Key: special.9510.desc
     m_Metadata:
       m_Items: []
   m_Metadata:

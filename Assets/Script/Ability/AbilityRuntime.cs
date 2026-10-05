@@ -998,8 +998,9 @@ public class AbilityRuntime : NetworkBehaviour
                 {
                     if (!target.TryGetComponent<PlayerHealth>(out var h)) break;
 
-                    float outgoing = DamageCalc.CalcOutgoing(_stats, v, src, true, out _);
+                    float outgoing = DamageCalc.CalcOutgoing(_stats, v, src, true, out bool crit);
                     var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, transform.position);
+                    info.IsCrit = crit;
 
                     if (_weaponHitSkill)
                     {

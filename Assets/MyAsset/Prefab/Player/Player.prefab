@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5960b318420fb8945b98013e47833a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  baseMaxHP: 100
+  baseMaxHP: 1000
   baseAttack: 25
   baseDefense: 0
   baseMoveSpeed: 12
@@ -708,6 +708,7 @@ MonoBehaviour:
   maxReduction: 90
   _Values: []
   _EndTimes: []
+  _PoisonStacks: 0
 --- !u!114 &8855885309026736249
 MonoBehaviour:
   m_ObjectHideFlags: 0

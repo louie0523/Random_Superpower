@@ -536,7 +536,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5221716631072769
     m_Localized: "Kaufe +1 Fertigkeitspunkt \u2014 Du kannst jede beliebige Fertigkeit
-      im F\xE4higkeitenpanel (F1) verbessern."
+      im F\xE4higkeiten-Panel (F1) verbessern."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072770
@@ -644,17 +644,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837762
-    m_Localized: "Verbrennt das Ziel f\xFCr {d0} Sekunden und verursacht jede Sekunde
-      einen fixen Schaden in H\xF6he von {v0}% seiner maximalen Gesundheit."
+    m_Localized: "Verursacht beim Ziel f\xFCr {d0} Sekunden <color=orange>Verbrennung</color>,
+      wodurch jede Sekunde ein fixer Schaden in H\xF6he von {v0}% der maximalen Gesundheit
+      verursacht wird."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837763
-    m_Localized: Seohwasang
+    m_Localized: Statue
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: "Verursacht gleichzeitig Verbrennungen ({v0}%) und Erfrierungen
-      ({v1}%) f\xFCr {d0} Sekunden."
+    m_Localized: "Belegt das Ziel mit dem <color=sky>Frost</color>-Effekt f\xFCr
+      {d0} Sekunden und verringert dessen Angriffsgeschwindigkeit um {v1}%."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -662,8 +663,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
-    m_Localized: "Verursacht beim Treffer zus\xE4tzlichen fixen Schaden in H\xF6he
-      von {v0}% der maximalen Gesundheit des Ziels."
+    m_Localized: "Beim Treffer wird zus\xE4tzlicher <b>fixer Schaden in H\xF6he von
+      {v0}% der maximalen Trefferpunkte des Ziels</b> verursacht."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837767
@@ -671,6 +672,72 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837768
+    m_Localized: Stellt {v0}% des durch die Waffe verursachten Schadens wieder her.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237727723520
+    m_Localized: Vergiftung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277952
+    m_Localized: Mit einer Wahrscheinlichkeit von {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277953
+    m_Localized: Stehle {0}% des beim Treffer verursachten Schadens.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277954
+    m_Localized: "Verursacht {1}% zus\xE4tzlichen Schaden an Zielen mit {0}% oder
+      weniger Gesundheit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237761277955
+    m_Localized: Durchdringe {0}% der Verteidigung des Ziels
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603072
+    m_Localized: Seohwasang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603073
+    m_Localized: "Verbrennt das Ziel f\xFCr {d0} Sekunden, verursacht jede Sekunde
+      {v0}% seiner maximalen Gesundheit als festen Schaden und verringert seine Angriffsgeschwindigkeit
+      um {v1}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603074
+    m_Localized: Vergiftung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603075
+    m_Localized: "Vergifte das Ziel f\xFCr {d0} Sekunden und verursache pro Stapel
+      {v0}% seiner maximalen Gesundheit pro Sekunde. (Maximal {s0} Stapel)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603076
+    m_Localized: Schnitt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603077
+    m_Localized: "Alle Heilungseffekte, die das Ziel erh\xE4lt, werden f\xFCr {d0}
+      Sekunden um {v0}% reduziert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603078
+    m_Localized: Donner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603079
+    m_Localized: "Bei einem Treffer besteht eine {c0}%ige Chance, dass das Ziel f\xFCr
+      {d0} Sekunden <color=yellow>bet\xE4ubt</color> wird."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603080
+    m_Localized: Blutlinie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5452611497603081
     m_Localized: "Mit dieser Waffe kann man keinen Lebensraub erzielen. Stattdessen
       verursacht sie zus\xE4tzlichen Schaden in H\xF6he von {v0}% des Lebensraubbetrags."
     m_Metadata:

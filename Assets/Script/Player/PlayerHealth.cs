@@ -173,6 +173,12 @@ public class PlayerHealth : NetworkBehaviour
     public void RPC_TakeDamage(DamageInfo info)
     {
         if (IsDead) return;
+        // 회피 — 상태이상 틱만 통과
+        if (_status != null && _status.IsEvading && !info.IsStatusTick)
+        {
+            NotifyNumber(info, 0, DamageNumberKind.Miss);
+            return;
+        }
 
         float maxHp = _stats.Get(StatType.MaxHP);
         float raw = info.Amount;
@@ -190,6 +196,7 @@ public class PlayerHealth : NetworkBehaviour
 
         LastHitFrom = info.SourcePos;
         HP -= final;
+        NotifyNumber(info, final, KindOf(info));
 
         // 피해 기록
         if (info.FromPlayer && info.Attacker != PlayerRef.None)
@@ -218,8 +225,32 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+    /// <summary>최종 피해를 공격자 한 명에게만 알려 데미지 숫자를 띄움</summary>
+    void NotifyNumber(in DamageInfo info, int amount, DamageNumberKind kind)
+    {
+        if (!info.FromPlayer || info.Attacker == PlayerRef.None) return;
+        if (info.Attacker == Object.InputAuthority) return;    // 자해는 표시 안 함
+
+        RPC_DamageNumber(info.Attacker, amount, transform.position, (int)kind);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_DamageNumber([RpcTarget] PlayerRef target, int amount, Vector3 pos, int kind)
+    {
+        DamageParticleManager.Instance?.Show(pos, amount, (DamageNumberKind)kind);
+    }
+
+    static DamageNumberKind KindOf(in DamageInfo info)
+    {
+        if (info.IsStatusTick)
+            return info.TickStatus == (int)StatusType.Poison ? DamageNumberKind.Poison : DamageNumberKind.Burn;
+        if (info.IgnoreDefense) return DamageNumberKind.True;
+        if (info.IsCrit) return DamageNumberKind.Crit;
+        return DamageNumberKind.Normal;
+    }
+
     /// <summary>상태이상 지속 피해 — 최대 체력 N% 고정 피해. 건 사람에게 킬 인정</summary>
-    public void TakeStatusDamage(float maxHpPercent, PlayerRef source)
+    public void TakeStatusDamage(float maxHpPercent, PlayerRef source, StatusType type)
     {
         if (!HasStateAuthority || IsDead) return;
 
@@ -230,6 +261,8 @@ public class PlayerHealth : NetworkBehaviour
         info.MaxHpPercent = maxHpPercent;
         info.IgnoreDefense = true;
         info.IsDot = true;
+        info.IsStatusTick = true;
+        info.TickStatus = (int)type;
 
         RPC_TakeDamage(info);
     }

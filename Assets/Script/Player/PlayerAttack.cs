@@ -298,6 +298,7 @@ public class PlayerAttack : NetworkBehaviour
             _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, hit.point);
+        info.IsCrit = crit;
         _enchant?.ModifyWeaponHit(ref info);
         target.RPC_TakeDamage(info);
 
@@ -468,6 +469,7 @@ public class PlayerAttack : NetworkBehaviour
             _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, point);
+        info.IsCrit = crit;
         _enchant?.ModifyWeaponHit(ref info);
         target.RPC_TakeDamage(info);
 
@@ -614,6 +616,8 @@ public class PlayerAttack : NetworkBehaviour
     /// <summary>무기 타격 후 공통 처리 — OnHit 트리거, 특수 인챈트, 흡혈</summary>
     void AfterWeaponHit(PlayerHealth target, GameObject targetObj, float outgoing, bool weaponEnchants = true)
     {
+        if (target.TryGetComponent<PlayerStatus>(out var ts) && ts.IsEvading) return;
+
         _ability?.FireTrigger(TriggerType.OnHit, targetObj);
 
         int heal = Mathf.RoundToInt(outgoing * _stats.Get(StatType.LifeSteal));
@@ -718,6 +722,7 @@ public class PlayerAttack : NetworkBehaviour
         bool ench = !step.NoWeaponEnchants;
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, cameraRoot.position);
+        info.IsCrit = crit;
         if (ench) _enchant?.ModifyWeaponHit(ref info);     // 관통·처형
         target.RPC_TakeDamage(info);
 
