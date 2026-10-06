@@ -220,8 +220,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   bodyRoot: {fileID: 6188621016137893528}
   armRoot: {fileID: 6430972180286868132}
-  walkSpeed: 6
-  runSpeed: 10
   jumpPower: 6
   gravity: -20
   fpsCamera: {fileID: 7430700015858829311}
@@ -249,11 +247,7 @@ MonoBehaviour:
   walkBobFreq: 1.8
   walkBobAmpY: 0.03
   walkBobAmpX: 0.02
-  runBobFreq: 2.6
-  runBobAmpY: 0.07
-  runBobAmpX: 0.04
   walkBobRoll: 0.5
-  runBobRoll: 2
   baseFov: 70
   fovMaxSpeed: 12
   fovMaxAdd: 3
@@ -302,12 +296,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   respawnDelay: 3
+  selfDeathDelayMul: 2
+  safeSpawnRadius: 15
   assistWindow: 8
   fallCreditWindow: 5
-  assistSoulRatio: 0.15
-  soulLossByPlayer: 0.35
-  soulLossBySelf: 0.1
+  soulPerKill: 20
+  soulPerAssist: 5
+  deathLossByPlayer: 0.1
+  deathLossByEnv: 0.1
   combatDuration: 8
+  regenPercent: 1
+  regenFlat: 2
   _HP: 0
   _IsDead:
     RawValue: 0
@@ -357,7 +356,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEquipment
   database: {fileID: 11400000, guid: fab1b4881b0d24544923c3252d281a4a, type: 2}
   armRig: {fileID: 4156331145891824284}
-  tpWeaponSocket: {fileID: 0}
   pickupPrefab: {fileID: 2764452217985399308, guid: 739c7ce734b87f144ae12706be957dc7, type: 3}
   _WeaponIds: 
   _ActiveWeaponSlot: 0
@@ -405,12 +403,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   weaponAnim: {fileID: 6649258101475754144}
-  forceMainId: 6002
+  forceMainId: 6001
   forceSubId: 0
   forceRandomId: 0
   logSkills: 0
   ghostLayerName: PlayerGhost
   dashDecayTime: 0.15
+  maxCooldownReduction: 0.9
   _MainAbilityId: 0
   _SubAbilityId: 0
   _RandomAbilityId: 0

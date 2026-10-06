@@ -650,8 +650,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Aplica o efeito de <color=sky>gelo</color> no alvo por {d0} segundos,
-      reduzindo sua velocidade de ataque em {v1}%.
+    m_Localized: Aplica o efeito <color=#00BBFF>Congelamento</color> no alvo por
+      {d0} segundos, reduzindo sua velocidade de ataque em {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -680,7 +680,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Rouba {0}% do dano causado ao acertar
+    m_Localized: Roubo de vida {0}% do dano causado ao acertar
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -706,9 +706,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
-    m_Localized: "Envenena o alvo por {d0} segundos, causando dano equivalente a
-      {v0}% da sua vida m\xE1xima por segundo por ac\xFAmulo. (M\xE1ximo de {s0}
-      ac\xFAmulos)"
+    m_Localized: "Envenena o alvo por {d0} segundos, causando {v0}% do dano m\xE1ximo
+      de vida por segundo por ac\xFAmulo. (M\xE1ximo de {s0} ac\xFAmulos)"
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -734,8 +733,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603081
-    m_Localized: "Voc\xEA n\xE3o pode roubar vida com esta arma. Em vez disso, ela
-      causa dano adicional igual a {v0}% da quantidade roubada."
+    m_Localized: "Voc\xEA n\xE3o pode drenar roubo de vida com esta arma. Em vez
+      disso, ela causa dano adicional igual a {v0}% do valor de drenagem."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265010724864
+    m_Localized: Jogador {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445120
+    m_Localized: "Jogador {0} Vit\xF3ria!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445121
+    m_Localized: '{0} Alma'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445122
+    m_Localized: "Nova rodada ap\xF3s {0} segundos"
     m_Metadata:
       m_Items: []
   references:

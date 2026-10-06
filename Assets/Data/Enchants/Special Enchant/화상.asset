@@ -33,7 +33,7 @@ MonoBehaviour:
     Description: 
     Effects:
     - Kind: 0
-      Status: 0
+      Status: 1
       Value: 3
       Value2: 30
       Duration: 3

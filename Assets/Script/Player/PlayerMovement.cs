@@ -9,8 +9,6 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private GameObject armRoot;
 
     [Header("Move")]
-    [SerializeField] private float walkSpeed = 6f;
-    [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float jumpPower = 6f;
     [SerializeField] private float gravity = -20f;
 

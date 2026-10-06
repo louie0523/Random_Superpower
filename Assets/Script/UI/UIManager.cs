@@ -29,7 +29,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private DetailWindow detailWindow;
 
     [Header("상태이상")]
-    [SerializeField] private StatusScreenTint statusTint;
+    [SerializeField] private StatusScreenEffects statusEffects;
+    [SerializeField] private StatusIconBar statusIcons;
+
 
     public DetailWindow Detail => detailWindow;
 
@@ -196,7 +198,10 @@ public class UIManager : MonoBehaviour
             ability,
             player.GetComponent<PlayerEquipment>(),
             player.GetComponent<PlayerEnchant>());
-        statusTint?.Bind(player.GetComponent<PlayerStatus>());
+
+        var status = player.GetComponent<PlayerStatus>();
+        statusEffects?.Bind(status);
+        statusIcons?.Bind(status);
 
 
     }

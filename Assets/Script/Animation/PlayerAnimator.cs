@@ -15,6 +15,8 @@ public class PlayerAnimator : NetworkBehaviour
     [Networked] public float AimPitch { get; set; }
     [Networked] public NetworkBool IsGrounded { get; set; }
 
+    private Quaternion _chestBase;
+
     private static readonly int PSpeed = Animator.StringToHash("Speed");
     private static readonly int PGround = Animator.StringToHash("Grounded");
     private static readonly int PCombo = Animator.StringToHash("ComboIndex");
@@ -25,6 +27,7 @@ public class PlayerAnimator : NetworkBehaviour
     public override void Spawned()
     {
         if (animator == null) animator = GetComponentInChildren<Animator>(true);
+        if (chestBone != null) _chestBase = chestBone.localRotation;
     }
 
     /// <summary>PlayerMovement가 매 틱 호출</summary>
@@ -46,19 +49,23 @@ public class PlayerAnimator : NetworkBehaviour
 
     void LateUpdate()
     {
-        // Animator가 본을 쓴 뒤에 덮어써야 함
         if (chestBone == null) return;
-        chestBone.localRotation *= Quaternion.Euler(AimPitch * chestPitchScale, 0f, 0f);
+
+        var tilt = Quaternion.Euler(AimPitch * chestPitchScale, 0f, 0f);
+
+        // Animator가 매 프레임 본을 덮어쓰면 그 위에 곱하고, 없으면 기준 자세에서 계산 (누적 방지)
+        bool animated = animator != null && animator.runtimeAnimatorController != null;
+        chestBone.localRotation = animated ? chestBone.localRotation * tilt : _chestBase * tilt;
     }
 
-        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        public void RPC_PlayAttack(int comboIndex, float attackSpeed)
-        {
-            if (animator == null) return;
-            animator.SetInteger(PCombo, comboIndex);
-            animator.SetFloat(PAtkSpd, attackSpeed);
-            animator.SetTrigger(TAttack);
-        }
+    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    //public void RPC_PlayAttack(int comboIndex, float attackSpeed)
+    //{
+    //    if (animator == null) return;
+    //    animator.SetInteger(PCombo, comboIndex);
+    //    animator.SetFloat(PAtkSpd, attackSpeed);
+    //    animator.SetTrigger(TAttack);
+    //}
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_PlayDeath()

@@ -22,6 +22,9 @@ public class SkillSlotView : MonoBehaviour
     [SerializeField] private TMP_Text soulCostText;
     [SerializeField] private GameObject emptyRoot;     // 스킬 없음
 
+    [Tooltip("봉인·기절 중일 때 켜짐 (자물쇠·X 표시 등)")]
+    [SerializeField] private GameObject blockedMark;
+
     [Header("연출")]
     [SerializeField] private RectTransform punchTarget;
     [SerializeField] private float punchScale = 0.18f;
@@ -92,7 +95,10 @@ public class SkillSlotView : MonoBehaviour
         // ── 조건 ──
         bool weaponOk = ar.CanUseWeapon(i);
         bool soulOk = skill.SoulCost <= 0 || (hp != null && hp.Soul >= skill.SoulCost);
-        bool usable = !cooling && weaponOk && soulOk;
+        bool blocked = ar.IsSealed || ar.IsStunned;
+        bool usable = !cooling && weaponOk && soulOk && !blocked && !ar.IsCasting;
+
+        if (blockedMark != null) blockedMark.SetActive(blocked);
 
         if (lockedMark != null) lockedMark.SetActive(!weaponOk);
 
@@ -127,6 +133,7 @@ public class SkillSlotView : MonoBehaviour
         if (keyText != null) keyText.gameObject.SetActive(false);   // 누를 키 없음
         if (cooldownFill != null) cooldownFill.fillAmount = 0f;
         if (cooldownText != null) cooldownText.gameObject.SetActive(false);
+        if (blockedMark != null) blockedMark.SetActive(false);
         if (lockedMark != null) lockedMark.SetActive(false);
         if (soulCostText != null) soulCostText.gameObject.SetActive(false);
         if (readyGlow != null) readyGlow.SetActive(false);
@@ -141,6 +148,7 @@ public class SkillSlotView : MonoBehaviour
         if (icon != null) icon.enabled = false;
         if (cooldownFill != null) cooldownFill.fillAmount = 0f;
         if (cooldownText != null) cooldownText.gameObject.SetActive(false);
+        if (blockedMark != null) blockedMark.SetActive(false);
         if (lockedMark != null) lockedMark.SetActive(false);
         if (soulCostText != null) soulCostText.gameObject.SetActive(false);
         if (readyGlow != null) readyGlow.SetActive(false);

@@ -15,6 +15,9 @@ public class RoundManager : NetworkBehaviour
     [Networked] public int WinnerSoul { get; set; }
     [Networked] private TickTimer RestartTimer { get; set; }
 
+    public float RestartRemaining =>
+    GameOver ? (RestartTimer.RemainingTime(Runner) ?? 0f) : 0f;
+
     public int TargetSoul => targetSoul;
 
     static RoundManager _inst;

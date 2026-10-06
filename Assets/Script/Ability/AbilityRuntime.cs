@@ -20,6 +20,10 @@ public class AbilityRuntime : NetworkBehaviour
     [SerializeField] private string ghostLayerName = "PlayerGhost";
     [SerializeField] private float dashDecayTime = 0.15f;
 
+    [Header("쿨감")]
+    [Tooltip("쿨타임 감소 상한")]
+    [Range(0f, 1f)][SerializeField] private float maxCooldownReduction = 0.9f;
+
 
     // ══════════════════ 네트워크 상태 ══════════════════
 
@@ -248,10 +252,11 @@ public class AbilityRuntime : NetworkBehaviour
         if (!CanUpgrade(owner, local)) return;
 
         int i = EntryIndex(owner, local);
+        float before = _stats.Get(StatType.MaxHP);
         EntryRanks.Set(i, EntryRanks[i] + 1);
         SkillPoints--;
-
-        RefreshPassiveStats();   // SA는 즉시 반영 (OnChangedRender는 렌더 시점)
+        RefreshPassiveStats();
+        _health.ApplyMaxHpGain(before);
     }
 
     public void AddSkillPoints(int n)
@@ -629,8 +634,8 @@ public class AbilityRuntime : NetworkBehaviour
         for (int i = 0; i < _behaviours.Count; i++)
             if (_behaviours[i].OnSkillUsed(slotIndex, skill)) handled = true;
 
-        float cdr = _stats.Get(StatType.CooldownReduction);
-        float cd = skill.GetCooldown(GetSkillRank(skill)) * (1f - Mathf.Clamp01(cdr));
+        float cdr = Mathf.Clamp(_stats.Get(StatType.CooldownReduction), 0f, maxCooldownReduction);
+        float cd = skill.GetCooldown(GetSkillRank(skill)) * (1f - cdr);
         CooldownEnd.Set(slotIndex, Runner.SimulationTime + cd);
         CooldownTotal.Set(slotIndex, cd);
 

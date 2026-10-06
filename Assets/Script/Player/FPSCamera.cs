@@ -16,11 +16,7 @@ public class FPSCamera : MonoBehaviour
     [SerializeField] private float walkBobFreq = 1.8f;
     [SerializeField] private float walkBobAmpY = 0.05f;
     [SerializeField] private float walkBobAmpX = 0.05f;
-    [SerializeField] private float runBobFreq = 3.0f;
-    [SerializeField] private float runBobAmpY = 0.09f;
-    [SerializeField] private float runBobAmpX = 0.09f;
     [SerializeField] private float walkBobRoll = 0.5f;
-    [SerializeField] private float runBobRoll = 2.0f;
 
     [Header("FOV")]
     [SerializeField] private float baseFov = 75f;

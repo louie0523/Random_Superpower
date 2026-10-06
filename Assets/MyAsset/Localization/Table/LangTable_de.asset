@@ -536,7 +536,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5221716631072769
     m_Localized: "Kaufe +1 Fertigkeitspunkt \u2014 Du kannst jede beliebige Fertigkeit
-      im F\xE4higkeiten-Panel (F1) verbessern."
+      im F\xE4higkeitenpanel (F1) verbessern."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072770
@@ -654,8 +654,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: "Belegt das Ziel mit dem <color=sky>Frost</color>-Effekt f\xFCr
-      {d0} Sekunden und verringert dessen Angriffsgeschwindigkeit um {v1}%."
+    m_Localized: "Verursacht beim Ziel den Effekt \u201EFrostbeule\u201C f\xFCr {d0}
+      Sekunden und verringert dessen Angriffsgeschwindigkeit um {v1}%."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Stehle {0}% des beim Treffer verursachten Schadens.
+    m_Localized: Lebensraub {0}% des beim Treffer verursachten Schadens
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -711,8 +711,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
-    m_Localized: "Vergifte das Ziel f\xFCr {d0} Sekunden und verursache pro Stapel
-      {v0}% seiner maximalen Gesundheit pro Sekunde. (Maximal {s0} Stapel)"
+    m_Localized: "Vergiftet das Ziel f\xFCr {d0} Sekunden und verursacht pro Stapel
+      {v0}% des maximalen Gesundheitsschadens pro Sekunde. (Maximal {s0} Stapel)"
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -738,8 +738,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603081
-    m_Localized: "Mit dieser Waffe kann man keinen Lebensraub erzielen. Stattdessen
+    m_Localized: "Mit dieser Waffe kannst du keinen Lebensraub durchf\xFChren. Stattdessen
       verursacht sie zus\xE4tzlichen Schaden in H\xF6he von {v0}% des Lebensraubbetrags."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265010724864
+    m_Localized: Spieler {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445120
+    m_Localized: Spieler {0} Sieg!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445121
+    m_Localized: '{0} Seele'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445122
+    m_Localized: Neue Runde nach {0} Sekunden
     m_Metadata:
       m_Items: []
   references:

@@ -77,8 +77,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKeyDown(healKey)) FullHeal();
         if (Input.GetKeyDown(soulGainKey)) GainSoul(soulCheatAmount); 
         if (Input.GetKeyDown(soulLoseKey)) GainSoul(-soulCheatAmount / 2);
-        if (Input.GetKeyDown(KeyCode.F10)) StatusSelf(StatusType.Slow, 50f, 3f);
-        if (Input.GetKeyDown(KeyCode.F11)) StatusSelf(StatusType.Burn, 5f, 4f);
+        if (Input.GetKeyDown(KeyCode.F10)) StatusSelf(StatusType.Frost, 15f, 3f);
+        if (Input.GetKeyDown(KeyCode.F11)) StatusSelf(StatusType.Poison, 5f, 4f);
         if (Input.GetKeyDown(KeyCode.F12)) StatusSelf(StatusType.Stun, 2f, 2f);
         if (Input.GetKeyDown(StoneGet)) StoneGive(100);
     }
@@ -171,13 +171,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         // Shared Mode에선 각자 자기 캐릭터만 스폰
-        if (player == runner.LocalPlayer)
+        if (player != runner.LocalPlayer) return;
+
+        if (!SpawnPoint.TryPick(runner, player, 15f, out var pos, out var rot))
         {
-            Vector3 pos = new Vector3(UnityEngine.Random.Range(-4f, 4f), 1f,
-                                      UnityEngine.Random.Range(-4f, 4f));
-            var obj = runner.Spawn(playerPrefab, pos, Quaternion.identity, player);
-            runner.SetPlayerObject(player, obj);   // ← 이 줄
+            pos = new Vector3(UnityEngine.Random.Range(-4f, 4f), 1f, UnityEngine.Random.Range(-4f, 4f));
+            rot = Quaternion.identity;
         }
+
+        var obj = runner.Spawn(playerPrefab, pos, rot, player);
+        runner.SetPlayerObject(player, obj);      // ★ 이게 빠지면 GetPlayerObject가 전부 null
     }
 
     // --- 아래는 전부 빈 스텁 ---

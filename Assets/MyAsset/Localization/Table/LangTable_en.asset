@@ -662,8 +662,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Inflicts the target's <color=sky>frost</color> effect for {d0} seconds,
-      reducing their attack speed by {v1}%.
+    m_Localized: Inflicts the target's <color=#00BBFF>Frostbite</color> effect for
+      {d0} seconds, reducing their attack speed by {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -692,7 +692,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Steal {0}% of damage dealt on hit
+    m_Localized: Lifesteal {0}% of damage dealt on hit
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -717,8 +717,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
-    m_Localized: Poison the target for {d0} seconds, dealing {v0}% of their maximum
-      health per second per stack. (Max {s0} stacks)
+    m_Localized: Poison the target for {d0} seconds, dealing {v0}% of maximum health
+      damage per second per stack. (Max {s0} stacks)
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -744,8 +744,25 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603081
-    m_Localized: You cannot leech with this weapon. Instead, it deals additional
-      damage equal to {v0}% of the leech amount.
+    m_Localized: You cannot <color=red>drain</color> lifesteal with this weapon.
+      Instead, it deals additional damage equal to {v0}% of <color=red>drain</color>
+      amount.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265010724864
+    m_Localized: Player {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445120
+    m_Localized: Player {0} Victory!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445121
+    m_Localized: '{0} Soul'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445122
+    m_Localized: New round after {0} seconds
     m_Metadata:
       m_Items: []
   references:

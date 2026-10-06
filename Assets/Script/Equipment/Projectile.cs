@@ -147,7 +147,7 @@ public class Projectile : MonoBehaviour
     }
 
     /// <summary>판정 없이 그림만 그리는 원격용 — 수명만 관리</summary>
-    public void SetVisualOnly() => _doHitCheck = false;
+    //public void SetVisualOnly() => _doHitCheck = false;
 
 #if UNITY_EDITOR
     [Header("Debug")]

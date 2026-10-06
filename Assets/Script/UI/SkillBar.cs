@@ -44,7 +44,7 @@ public class SkillBar : MonoBehaviour
 
             if (randomNameText != null)
                 randomNameText.text = rand != null
-                    ? LocUtil.GetOr($"ability.{rand.Id}.name", rand.DisplayName)
+                    ? LocUtil.GetOr($"ability.{rand.Id}.name", LocUtil.Resolve(rand.DisplayName))
                     : "";
 
             _nameTimer = rand != null ? nameShowTime : 0f;

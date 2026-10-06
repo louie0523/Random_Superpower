@@ -658,8 +658,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: "Inflige \xE0 la cible l'effet <color=sky>gel</color> pendant {d0}
-      secondes, r\xE9duisant sa vitesse d'attaque de {v1}%."
+    m_Localized: "Inflige \xE0 la cible l'effet <color=#00BBFF>Grostbite</color>
+      pendant {d0} secondes, r\xE9duisant sa vitesse d'attaque de {v1}%."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -688,7 +688,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: "Voler {0}% des d\xE9g\xE2ts inflig\xE9s lors d'un coup"
+    m_Localized: "Vol de vie {0}% des d\xE9g\xE2ts inflig\xE9s lors d'un coup"
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -715,8 +715,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
-    m_Localized: Empoisonne la cible pendant {d0} secondes, lui infligeant {v0}%
-      de ses points de vie maximum par seconde et par cumul. (Maximum {s0} cumuls)
+    m_Localized: Empoisonne la cible pendant {d0} secondes, infligeant {v0}% de ses
+      points de vie maximum par seconde et par cumul. (Maximum {s0} cumuls)
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -742,9 +742,25 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603081
-    m_Localized: "Cette arme ne permet pas de r\xE9cup\xE9rer de vie. Elle inflige
-      en revanche des d\xE9g\xE2ts suppl\xE9mentaires \xE9gaux \xE0 {v0}% du montant
-      de la r\xE9cup\xE9ration."
+    m_Localized: "Vous ne pouvez pas drainer le vol de vie avec cette arme. \xC0
+      la place, elle inflige des d\xE9g\xE2ts suppl\xE9mentaires \xE9gaux \xE0 {v0}%
+      du montant du drain."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265010724864
+    m_Localized: Joueur {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445120
+    m_Localized: "Joueur {0} Victoire\_!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445121
+    m_Localized: "{0} \xC2me"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445122
+    m_Localized: Nouvelle manche dans {0} secondes
     m_Metadata:
       m_Items: []
   references:

@@ -448,7 +448,7 @@ public class PlayerAttack : NetworkBehaviour
             pos, dir, speed,
             weapon.ProjectileGravity,
             weapon.ProjectileLifetime,
-            authoritative,
+            true,
             projectileMask,
             weapon.PierceCount,
             weapon.PierceDamageFalloff,

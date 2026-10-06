@@ -654,8 +654,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Inflige el efecto de <color=sky>escarcha</color> al objetivo durante
-      {d0} segundos, reduciendo su velocidad de ataque en un {v1}%.
+    m_Localized: "Inflige el efecto <color=#00BBFF>Congelaci\xF3n</color> al objetivo
+      durante {d0} segundos, reduciendo su velocidad de ataque en un {v1}%."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: "Roba el {0}% del da\xF1o infligido al golpear."
+    m_Localized: "Robo de vida {0}% del da\xF1o infligido al golpear"
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -711,9 +711,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
-    m_Localized: "Envenena al objetivo durante {d0} segundos, infligi\xE9ndole un
-      {v0}% de su salud m\xE1xima por segundo por acumulaci\xF3n. (M\xE1ximo {s0}
-      acumulaciones)"
+    m_Localized: "Envenena al objetivo durante {d0} segundos, infligiendo un {v0}%
+      del da\xF1o m\xE1ximo a la salud por segundo por acumulaci\xF3n. (M\xE1ximo
+      {s0} acumulaciones)"
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -739,8 +739,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603081
-    m_Localized: "No puedes robar vida con esta arma. En cambio, inflige da\xF1o
-      adicional igual al {v0}% de la cantidad de robo de vida."
+    m_Localized: "No puedes <color=red>drenar</color> robo de vida con esta arma.
+      En cambio, inflige da\xF1o adicional igual al {v0}% de la cantidad de <color=red>drenar</color>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265010724864
+    m_Localized: Jugador {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445120
+    m_Localized: "\xA1Victoria del jugador {0}!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445121
+    m_Localized: '{0} Alma'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445122
+    m_Localized: "Nueva ronda despu\xE9s de {0} segundos"
     m_Metadata:
       m_Items: []
   references:

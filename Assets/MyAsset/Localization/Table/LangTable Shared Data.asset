@@ -479,6 +479,22 @@ MonoBehaviour:
     m_Key: ui.special.defpen
     m_Metadata:
       m_Items: []
+  - m_Id: 5887265010724864
+    m_Key: ui.score.player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445120
+    m_Key: ui.round.winner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445121
+    m_Key: ui.round.winner_soul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445122
+    m_Key: ui.round.restart_in
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:

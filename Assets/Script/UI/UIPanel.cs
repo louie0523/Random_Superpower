@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class UIPanel : MonoBehaviour
 {
     [SerializeField] private GameObject root;
-    [SerializeField] private CanvasGroup canvasGroup;
+    //[SerializeField] private CanvasGroup canvasGroup;
 
     public bool IsOpen { get; private set; }
 

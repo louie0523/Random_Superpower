@@ -268,12 +268,15 @@ public class PlayerEnchant : NetworkBehaviour
         int stage = GetStage(slot);
         if (stage >= MaxEnchants) return;
 
+        float before = _stats != null ? _stats.Get(StatType.MaxHP) : 0f;
+
         SlotEnchants.Set(slot * MaxEnchants + stage, code);
         EnchantedWeaponIds.Set(slot, weaponId);
         LastRolled = code;
         LastRollTick = Runner.Tick;
 
         ApplyAll();
+        GetComponent<PlayerHealth>()?.ApplyMaxHpGain(before);
     }
 
     // ── 특수 선택지 추첨 ──

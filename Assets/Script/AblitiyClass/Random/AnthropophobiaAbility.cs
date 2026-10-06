@@ -100,6 +100,10 @@ public class AnthropophobiaAbility : AbilityBehaviour
         Broadcast(EvExplode, center);
 
         if (KillSelf && Ctx.Health != null)
-            Ctx.Health.RPC_TakeDamage(DamageInfo.FromEnvironment(99999, center));
+        {
+            var self = DamageInfo.FromEnvironment(99999, center);
+            self.NoDeathPenalty = true;
+            Ctx.Health.RPC_TakeDamage(self);
+        }
     }
 }

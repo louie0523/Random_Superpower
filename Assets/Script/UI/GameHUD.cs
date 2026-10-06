@@ -58,9 +58,9 @@ public class GameHUD : MonoBehaviour
             //DrawDanger(ar);
         }
 
-        DrawScoreboard(_runner);
+        //DrawScoreboard(_runner);
         DrawDebugKeys();
-        DrawRoundState();
+        //DrawRoundState();
         //DrawShop(local, local.GetComponent<PlayerShop>(), hp);
         //DrawInteract(local);
         DrawStoneGain(local.GetComponent<PlayerEnchant>());

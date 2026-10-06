@@ -4,26 +4,36 @@ using UnityEngine;
 
 public class PlayerHealth : NetworkBehaviour
 {
-    [Header("Stats")]
+    [Header("부활")]
     [SerializeField] private float respawnDelay = 3f;
+    [Tooltip("자해·환경사일 때 부활 대기 배율")]
+    [SerializeField] private float selfDeathDelayMul = 2f;
+    [Tooltip("이 반경 안에 살아 있는 적이 없는 부활 지점을 우선")]
+    [SerializeField] private float safeSpawnRadius = 15f;
 
-    [Header("Kill Credit")]
+    [Header("킬 인정")]
     [Tooltip("어시스트로 인정되는 시간 (초)")]
     [SerializeField] private float assistWindow = 8f;
     [Tooltip("넉백 후 이 시간 안에 낙사하면 막타로 인정")]
     [SerializeField] private float fallCreditWindow = 5f;
-    [Tooltip("어시스트 소울 비율")]
-    [SerializeField] private float assistSoulRatio = 0.15f;
 
-    [Header("Death Penalty")]
-    [Tooltip("플레이어에게 죽었을 때 소울 손실 비율")]
-    [SerializeField] private float soulLossByPlayer = 0.35f;
-    [Tooltip("자해/환경사 소울 손실 비율")]
-    [SerializeField] private float soulLossBySelf = 0.10f;
+    [Header("소울")]
+    [Tooltip("처치 시 고정 획득")]
+    [SerializeField] private int soulPerKill = 20;
+    [Tooltip("어시스트 시 고정 획득")]
+    [SerializeField] private int soulPerAssist = 5;
+    [Tooltip("플레이어에게 죽었을 때 잃는 비율 (처치자에게 가지 않고 사라짐). 0 = 안 잃음")]
+    [Range(0f, 1f)][SerializeField] private float deathLossByPlayer = 0.1f;
+    [Tooltip("낙사 등 환경사로 잃는 비율")]
+    [Range(0f, 1f)][SerializeField] private float deathLossByEnv = 0.1f;
 
-    [Header("전투 상태")]
+    [Header("전투 · 회복")]
     [Tooltip("피해를 주고받은 뒤 전투 중으로 유지되는 시간")]
     [SerializeField] private float combatDuration = 8f;
+    [Tooltip("비전투 중 매초 최대 체력의 % 회복")]
+    [SerializeField] private float regenPercent = 1f;
+    [Tooltip("비전투 중 매초 고정 회복")]
+    [SerializeField] private int regenFlat = 2;
 
     [Networked] private TickTimer CombatTimer { get; set; }
     public bool InCombat => CombatTimer.IsRunning && !CombatTimer.Expired(Runner);
@@ -39,7 +49,6 @@ public class PlayerHealth : NetworkBehaviour
     [Networked] private TickTimer RespawnTimer { get; set; }
     [Networked] private Vector3 LastHitFrom { get; set; }
 
-    /// <summary>최근 나를 때린 사람들 (어시스트 판정용)</summary>
     struct DamageRecord
     {
         public PlayerRef Player;
@@ -49,12 +58,16 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     private readonly List<DamageRecord> _recentDamage = new();
+    private readonly List<Renderer> _hiddenOnDeath = new();
 
     private int _prevHP;
+    private float _regenTimer;
     private PlayerStats _stats;
     private CharacterController _cc;
     private AbilityRuntime _ability;
     private PlayerStatus _status;
+
+
 
     [Header("Hit Flash")]
     [Tooltip("셰이더의 색 프로퍼티 이름. 비우면 자동 탐색")]
@@ -68,8 +81,8 @@ public class PlayerHealth : NetworkBehaviour
         _stats = GetComponent<PlayerStats>();
         _cc = GetComponent<CharacterController>();
         _ability = GetComponent<AbilityRuntime>();
-        _renderer = GetComponentInChildren<Renderer>();
         _status = GetComponent<PlayerStatus>();
+        _renderer = GetComponentInChildren<Renderer>();
         SetupColorProperty();
 
         if (HasStateAuthority)
@@ -89,8 +102,7 @@ public class PlayerHealth : NetworkBehaviour
 
     void ClampHP()
     {
-        if (!HasStateAuthority) return;
-        if (IsDead) return;
+        if (!HasStateAuthority || IsDead) return;
 
         int max = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         if (HP > max) HP = max;
@@ -103,7 +115,6 @@ public class PlayerHealth : NetworkBehaviour
         var mat = _renderer.sharedMaterial;
         if (mat == null) return;
 
-        // 후보 이름들
         string[] candidates = string.IsNullOrEmpty(colorProperty)
             ? new[] { "_BaseColor", "_Color", "_MainColor", "_Tint", "_ColorTint" }
             : new[] { colorProperty };
@@ -111,18 +122,32 @@ public class PlayerHealth : NetworkBehaviour
         foreach (var name in candidates)
         {
             if (!mat.HasProperty(name)) continue;
-
             _colorId = Shader.PropertyToID(name);
             _baseColor = mat.GetColor(_colorId);
             return;
         }
 
-        Debug.LogWarning(
-            $"[PlayerHealth] {mat.shader.name}에서 색 프로퍼티를 못 찾았습니다. " +
-            "피격 플래시가 비활성화됩니다.", this);
+        Debug.LogWarning($"[PlayerHealth] {mat.shader.name}에서 색 프로퍼티를 못 찾았습니다. 피격 플래시 비활성.", this);
     }
 
-    /// <summary>새 라운드 시작 시 초기화</summary>
+    // ══════════════════ 라운드 ══════════════════
+
+    /// <summary>RoundManager가 호출. 각자 자기 권한으로 처음 상태로</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ResetForNewRound()
+    {
+        // 순서 중요: 상태이상 → 스탯 비우기 → 각 시스템이 처음 상태로 다시 걸기 → HP·위치는 마지막
+        _status?.ClearAll();
+        _stats.ClearAll();
+
+        GetComponent<PlayerEquipment>()?.ResetForNewRound();
+        GetComponent<PlayerEnchant>()?.ResetForNewRound();
+        GetComponent<PlayerShop>()?.ResetForNewRound();
+        _ability?.ResetForNewRound();
+
+        ResetForNewRound();
+    }
+
     public void ResetForNewRound()
     {
         if (!HasStateAuthority) return;
@@ -131,37 +156,51 @@ public class PlayerHealth : NetworkBehaviour
         Kills = 0;
         Assists = 0;
         Deaths = 0;
-
-        _recentDamage.Clear();
         CombatTimer = default;
+        _recentDamage.Clear();
 
-        if (IsDead)
-        {
-            IsDead = false;
-            Respawn();
-        }
-        else
-        {
-            HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
-        }
+        HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
+        IsDead = false;
+
+        MoveToSpawn();
     }
+
+    // ══════════════════ 진행 ══════════════════
 
     public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
 
-
         if (IsDead && RespawnTimer.Expired(Runner)) Respawn();
 
-        // 오래된 피해 기록 정리
         float now = Runner.SimulationTime;
         for (int i = _recentDamage.Count - 1; i >= 0; i--)
             if (now - _recentDamage[i].Time > assistWindow)
                 _recentDamage.RemoveAt(i);
 
-        // 낙사 체크
         if (!IsDead && transform.position.y < -20f)
             Die(DeathCause.Environment, PlayerRef.None);
+
+        TickRegen();
+    }
+
+    /// <summary>비전투 중 매초 최대 체력 N% + 고정 회복</summary>
+    void TickRegen()
+    {
+        if (IsDead || InCombat || (regenPercent <= 0f && regenFlat <= 0))
+        {
+            _regenTimer = 0f;
+            return;
+        }
+
+        _regenTimer += Runner.DeltaTime;
+        if (_regenTimer < 1f) return;
+        _regenTimer -= 1f;
+
+        float max = _stats.Get(StatType.MaxHP);
+        if (HP >= Mathf.RoundToInt(max)) return;
+
+        HealInternal(Mathf.RoundToInt(max * regenPercent * 0.01f) + regenFlat);
     }
 
     // ══════════════════ 피해 ══════════════════
@@ -173,6 +212,7 @@ public class PlayerHealth : NetworkBehaviour
     public void RPC_TakeDamage(DamageInfo info)
     {
         if (IsDead) return;
+
         // 회피 — 상태이상 틱만 통과
         if (_status != null && _status.IsEvading && !info.IsStatusTick)
         {
@@ -192,24 +232,22 @@ public class PlayerHealth : NetworkBehaviour
 
         int final = info.IgnoreDefense
             ? Mathf.Max(1, Mathf.RoundToInt(raw))
-            : DamageCalc.CalcIncoming(_stats, raw, info.DefensePen);     // 관통
+            : DamageCalc.CalcIncoming(_stats, raw, info.DefensePen);
 
         LastHitFrom = info.SourcePos;
         HP -= final;
+
         NotifyNumber(info, final, KindOf(info));
 
-        // 피해 기록
         if (info.FromPlayer && info.Attacker != PlayerRef.None)
         {
             RecordDamage(info.Attacker, final, info.CanCauseFall);
             MarkCombat();
 
-            // 공격자도 전투 중
             var atk = Runner.GetPlayerObject(info.Attacker);
             if (atk != null && atk.TryGetComponent<PlayerHealth>(out var ah))
                 ah.RPC_MarkCombat();
         }
-
 
         if (!info.IsDot)
         {
@@ -221,32 +259,8 @@ public class PlayerHealth : NetworkBehaviour
         {
             HP = 0;
             Die(info.FromPlayer ? DeathCause.Player : DeathCause.Environment,
-                info.Attacker);
+                info.Attacker, info.NoDeathPenalty);
         }
-    }
-
-    /// <summary>최종 피해를 공격자 한 명에게만 알려 데미지 숫자를 띄움</summary>
-    void NotifyNumber(in DamageInfo info, int amount, DamageNumberKind kind)
-    {
-        if (!info.FromPlayer || info.Attacker == PlayerRef.None) return;
-        if (info.Attacker == Object.InputAuthority) return;    // 자해는 표시 안 함
-
-        RPC_DamageNumber(info.Attacker, amount, transform.position, (int)kind);
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    void RPC_DamageNumber([RpcTarget] PlayerRef target, int amount, Vector3 pos, int kind)
-    {
-        DamageParticleManager.Instance?.Show(pos, amount, (DamageNumberKind)kind);
-    }
-
-    static DamageNumberKind KindOf(in DamageInfo info)
-    {
-        if (info.IsStatusTick)
-            return info.TickStatus == (int)StatusType.Poison ? DamageNumberKind.Poison : DamageNumberKind.Burn;
-        if (info.IgnoreDefense) return DamageNumberKind.True;
-        if (info.IsCrit) return DamageNumberKind.Crit;
-        return DamageNumberKind.Normal;
     }
 
     /// <summary>상태이상 지속 피해 — 최대 체력 N% 고정 피해. 건 사람에게 킬 인정</summary>
@@ -265,32 +279,6 @@ public class PlayerHealth : NetworkBehaviour
         info.TickStatus = (int)type;
 
         RPC_TakeDamage(info);
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_Heal(int amount)
-    {
-        if (IsDead) return;
-
-        int healed = Mathf.RoundToInt(amount * (_status != null ? _status.HealMultiplier : 1f));
-        if (healed <= 0) return;
-
-        HP = Mathf.Min(HP + healed, Mathf.RoundToInt(_stats.Get(StatType.MaxHP)));
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_ResetForNewRound()
-    {
-        // 순서 중요: 스탯 비우기 → 각 시스템이 처음 상태로 다시 걸기 → HP는 마지막
-        GetComponent<PlayerStatus>()?.ClearAll();
-        _stats.ClearAll();
-
-        GetComponent<PlayerEquipment>()?.ResetForNewRound();
-        GetComponent<PlayerEnchant>()?.ResetForNewRound();
-        GetComponent<PlayerShop>()?.ResetForNewRound();
-        GetComponent<AbilityRuntime>()?.ResetForNewRound();
-
-        ResetForNewRound();
     }
 
     void RecordDamage(PlayerRef attacker, int amount, bool canCauseFall)
@@ -318,18 +306,44 @@ public class PlayerHealth : NetworkBehaviour
         });
     }
 
+    // ══════════════════ 데미지 숫자 ══════════════════
+
+    /// <summary>최종 피해를 공격자 한 명에게만 알려 데미지 숫자를 띄움</summary>
+    void NotifyNumber(in DamageInfo info, int amount, DamageNumberKind kind)
+    {
+        if (!info.FromPlayer || info.Attacker == PlayerRef.None) return;
+        if (info.Attacker == Object.InputAuthority) return;
+
+        RPC_DamageNumber(info.Attacker, amount, transform.position, (int)kind);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_DamageNumber([RpcTarget] PlayerRef target, int amount, Vector3 pos, int kind)
+    {
+        DamageParticleManager.Instance?.Show(pos, amount, (DamageNumberKind)kind);
+    }
+
+    static DamageNumberKind KindOf(in DamageInfo info)
+    {
+        if (info.IsStatusTick)
+            return info.TickStatus == (int)StatusType.Poison ? DamageNumberKind.Poison : DamageNumberKind.Burn;
+        if (info.IgnoreDefense) return DamageNumberKind.True;
+        if (info.IsCrit) return DamageNumberKind.Crit;
+        return DamageNumberKind.Normal;
+    }
+
     // ══════════════════ 사망 ══════════════════
 
-    void Die(DeathCause cause, PlayerRef killer)
+    /// <param name="noPenalty">소울을 잃지 않음 (대인기피증 자폭 등 의도치 않은 사망)</param>
+    void Die(DeathCause cause, PlayerRef killer, bool noPenalty = false)
     {
         if (IsDead) return;
 
         IsDead = true;
-        _status?.ClearAll();
         Deaths++;
-        RespawnTimer = TickTimer.CreateFromSeconds(Runner, respawnDelay);
+        _status?.ClearAll();
 
-        // 환경사인데 최근에 넉백당했으면 그 사람에게 킬 인정
+        // 환경사인데 최근 넉백을 맞았으면 그 사람에게 킬 인정
         if (cause == DeathCause.Environment)
         {
             var faller = FindFallCredit();
@@ -344,31 +358,26 @@ public class PlayerHealth : NetworkBehaviour
                         && killer != PlayerRef.None
                         && killer != Object.InputAuthority;
 
+        if (!noPenalty)
+        {
+            float ratio = byPlayer ? deathLossByPlayer : deathLossByEnv;
+            Soul -= Mathf.FloorToInt(Soul * ratio);
+        }
+
         if (byPlayer)
         {
-            int lost = Mathf.FloorToInt(Soul * soulLossByPlayer);
-            Soul -= lost;
+            GrantKill(killer);
+            GrantAssists(killer);
+        }
 
-            GrantKill(killer, 5 + lost);
-            GrantAssists(killer, lost);
-        }
-        else
-        {
-            // 자해 / 환경사 — 소울만 소폭 감소, 킬 인정 없음
-            int lost = Mathf.FloorToInt(Soul * soulLossBySelf);
-            Soul -= lost;
-            float delay = byPlayer ? respawnDelay : respawnDelay * 2f;
-            RespawnTimer = TickTimer.CreateFromSeconds(Runner, delay);
-        }
+        float delay = byPlayer || noPenalty ? respawnDelay : respawnDelay * selfDeathDelayMul;
+        RespawnTimer = TickTimer.CreateFromSeconds(Runner, delay);
 
         CombatTimer = default;
 
-        // 사망 원인과 무관하게 랜덤 능력 재추첨
         _ability?.RerollRandomAbility();
         _ability?.FireTrigger(TriggerType.OnDeath, null);
         _recentDamage.Clear();
-        CombatTimer = default;
-
     }
 
     PlayerRef FindFallCredit()
@@ -387,18 +396,15 @@ public class PlayerHealth : NetworkBehaviour
         return best;
     }
 
-    void GrantKill(PlayerRef killer, int soul)
+    void GrantKill(PlayerRef killer)
     {
         var obj = Runner.GetPlayerObject(killer);
-        if (obj == null) return;
-        if (!obj.TryGetComponent<PlayerHealth>(out var kh)) return;
-
-        kh.RPC_AddKill(soul);
+        if (obj == null || !obj.TryGetComponent<PlayerHealth>(out var kh)) return;
+        kh.RPC_AddKill(soulPerKill);
     }
 
-    void GrantAssists(PlayerRef killer, int lostSoul)
+    void GrantAssists(PlayerRef killer)
     {
-        int assistSoul = Mathf.Max(1, Mathf.RoundToInt(lostSoul * assistSoulRatio));
         float now = Runner.SimulationTime;
 
         foreach (var r in _recentDamage)
@@ -408,10 +414,9 @@ public class PlayerHealth : NetworkBehaviour
             if (now - r.Time > assistWindow) continue;
 
             var obj = Runner.GetPlayerObject(r.Player);
-            if (obj == null) continue;
-            if (!obj.TryGetComponent<PlayerHealth>(out var ah)) continue;
+            if (obj == null || !obj.TryGetComponent<PlayerHealth>(out var ah)) continue;
 
-            ah.RPC_AddAssist(assistSoul);
+            ah.RPC_AddAssist(soulPerAssist);
         }
     }
 
@@ -421,11 +426,12 @@ public class PlayerHealth : NetworkBehaviour
         Kills++;
         Soul += soul;
 
-        var ar = GetComponent<AbilityRuntime>();
-        ar?.FireTrigger(TriggerType.OnKill, null);
-        ar?.OnPlayerKill();                          // ★ 진화 카운트
+        _ability?.FireTrigger(TriggerType.OnKill, null);
+        _ability?.OnPlayerKill();
 
-        GetComponent<PlayerEnchant>()?.RPC_AddStones(1);
+        var en = GetComponent<PlayerEnchant>();
+        en?.AddKillToActive();
+        en?.RPC_AddStones(1);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -435,10 +441,37 @@ public class PlayerHealth : NetworkBehaviour
         Soul += soul;
     }
 
-
+    // ══════════════════ 회복 · 소울 ══════════════════
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_GainSoul(int amount) => Soul += amount;
+    public void RPC_Heal(int amount) => HealInternal(amount);
+
+    /// <summary>회복 — 깊은 상처 반영</summary>
+    void HealInternal(int amount)
+    {
+        if (!HasStateAuthority || IsDead || amount <= 0) return;
+
+        int healed = Mathf.RoundToInt(amount * (_status != null ? _status.HealMultiplier : 1f));
+        if (healed <= 0) return;
+
+        HP = Mathf.Min(HP + healed, Mathf.RoundToInt(_stats.Get(StatType.MaxHP)));
+    }
+
+    /// <summary>
+    /// 최대 체력이 오른 만큼 현재 체력도 올림.
+    /// 상점·인챈트·스킬 레벨업에서 호출 (장비 교체는 번갈아 끼우기 악용 때문에 X)
+    /// </summary>
+    public void ApplyMaxHpGain(float maxBefore)
+    {
+        if (!HasStateAuthority || IsDead) return;
+
+        float after = _stats.Get(StatType.MaxHP);
+        int gain = Mathf.RoundToInt(after - maxBefore);
+        if (gain > 0) HP = Mathf.Min(HP + gain, Mathf.RoundToInt(after));
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_GainSoul(int amount) => Soul = Mathf.Max(0, Soul + amount);
 
     public void SpendSoul(int amount)
     {
@@ -446,29 +479,49 @@ public class PlayerHealth : NetworkBehaviour
         Soul = Mathf.Max(0, Soul - amount);
     }
 
-    /// <summary>전투 중 상태 갱신</summary>
     public void MarkCombat()
     {
         if (!HasStateAuthority) return;
         CombatTimer = TickTimer.CreateFromSeconds(Runner, combatDuration);
     }
 
+    // ══════════════════ 부활 · 이동 ══════════════════
+
     void Respawn()
     {
         HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         IsDead = false;
 
-
-
-        Vector3 pos = new Vector3(Random.Range(-8f, 8f), 1f, Random.Range(-8f, 8f));
-        _cc.enabled = false;
-        transform.position = pos;
-        _cc.enabled = true;
+        MoveToSpawn();
 
         _ability?.FireTrigger(TriggerType.OnRespawn, null);
     }
 
-    // ---------- 시각 효과 (모든 클라이언트에서 실행) ----------
+    /// <summary>적이 없는 부활 지점 중 랜덤으로 이동. 지점이 없으면 원점 근처</summary>
+    public void MoveToSpawn()
+    {
+        if (!HasStateAuthority) return;
+
+        if (SpawnPoint.TryPick(Runner, Object.InputAuthority, safeSpawnRadius, out var pos, out var rot))
+            Teleport(pos, rot);
+        else
+            Teleport(new Vector3(Random.Range(-8f, 8f), 1f, Random.Range(-8f, 8f)), transform.rotation);
+    }
+
+    /// <summary>순간이동 — 다른 클라이언트에서 미끄러지듯 보간되지 않게</summary>
+    public void Teleport(Vector3 pos, Quaternion rot)
+    {
+        if (_cc != null) _cc.enabled = false;
+
+        transform.SetPositionAndRotation(pos, rot);
+
+        var nt = GetComponent<NetworkTransform>();
+        if (nt != null) nt.Teleport(pos, rot);
+
+        if (_cc != null) _cc.enabled = !IsDead;
+    }
+
+    // ══════════════════ 연출 (모든 클라이언트) ══════════════════
 
     void OnHPChanged()
     {
@@ -481,24 +534,39 @@ public class PlayerHealth : NetworkBehaviour
         StartCoroutine(FlashRed());
 
         if (!HasStateAuthority) return;
-        if (!TryGetComponent<FPSCamera>(out var cam)) return;
 
-        // 데미지 비례 강도 (25딜이면 0.5 정도)
+        var cam = GetComponentInChildren<FPSCamera>();
+        if (cam == null) return;
+
         float intensity = Mathf.Clamp01(delta / 50f);
 
-        // 맞은 방향을 내 로컬 기준으로 변환
         Vector3 toAttacker = (LastHitFrom - transform.position).normalized;
         Vector3 local = transform.InverseTransformDirection(toAttacker);
-
-        // 뒤에서 맞으면 화면이 위로, 앞에서 맞으면 아래로
-        Vector2 dir = new Vector2(-local.x, local.z);
-
-        cam.HitReact(intensity, dir);
+        cam.HitReact(intensity, new Vector2(-local.x, local.z));
     }
 
+    /// <summary>
+    /// 사망 — 몸에 달린 렌더러 전부(무기·팔 포함) 끄고, 부활하면 끈 것만 다시 켬
+    /// (원래 꺼져 있던 1인칭 몸 메시 등은 그대로)
+    /// </summary>
     void OnDeadChanged()
     {
-        _renderer.enabled = !IsDead;
+        if (IsDead)
+        {
+            _hiddenOnDeath.Clear();
+            foreach (var r in GetComponentsInChildren<Renderer>(true))
+                if (r.enabled)
+                {
+                    r.enabled = false;
+                    _hiddenOnDeath.Add(r);
+                }
+        }
+        else
+        {
+            foreach (var r in _hiddenOnDeath)
+                if (r != null) r.enabled = true;
+            _hiddenOnDeath.Clear();
+        }
 
         if (_cc != null) _cc.enabled = !IsDead;
     }

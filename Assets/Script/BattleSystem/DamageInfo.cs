@@ -53,6 +53,11 @@ public struct DamageInfo : INetworkStruct
     /// <summary>IsStatusTick일 때 어떤 상태이상인지 (StatusType 값, 숫자 색 구분용)</summary>
     public int TickStatus;
 
+    /// <summary>이 피해로 죽어도 소울을 잃지 않음 (의도치 않은 사망)</summary>
+    public NetworkBool NoDeathPenalty;
+
+
+
     public static DamageInfo FromPlayerHit(int amount, PlayerRef attacker, Vector3 pos,
                                            bool canCauseFall = false) => new()
                                            {

@@ -87,7 +87,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943885
-    m_Localized: Pengukur Utama 0
+    m_Localized: Pengukur Utama {0}
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943886
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
@@ -666,8 +666,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Memberikan efek <color=sky>embun beku</color> pada target selama
-      {d0} detik, mengurangi kecepatan serangan mereka sebesar {v1}%.
+    m_Localized: Menimbulkan efek <color=#00BBFF>Radang Dingin</color> pada target
+      selama {d0} detik, mengurangi kecepatan serangan mereka sebesar {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -696,7 +696,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Mencuri {0}% dari kerusakan yang ditimbulkan saat mengenai target
+    m_Localized: Lifesteal {0}% dari damage yang diberikan saat mengenai target
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -724,7 +724,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5452611497603075
     m_Localized: Racuni target selama {d0} detik, memberikan kerusakan sebesar {v0}%
-      dari kesehatan maksimum mereka per detik per tumpukan. (Maksimal {s0} tumpukan)
+      dari kesehatan maksimum per detik per tumpukan. (Maksimum {s0} tumpukan)
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -750,9 +750,25 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603081
-    m_Localized: Anda tidak dapat melakukan pengisapan darah dengan senjata ini.
-      Sebagai gantinya, senjata ini memberikan kerusakan tambahan sebesar {v0}% dari
-      jumlah pengisapan darah.
+    m_Localized: Anda tidak dapat <color=red>mengurangi</color> lifesteal dengan
+      senjata ini. Sebagai gantinya, senjata ini memberikan kerusakan tambahan sebesar
+      {v0}% dari jumlah <color=red>pengurasan</color>.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265010724864
+    m_Localized: Pemain {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445120
+    m_Localized: Pemain {0} Menang!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445121
+    m_Localized: Jiwa 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5887265069445122
+    m_Localized: Putaran baru setelah {0} detik
     m_Metadata:
       m_Items: []
   references:

@@ -5,10 +5,7 @@ public class PlayerEquipment : NetworkBehaviour
 {
     [SerializeField] private EquipmentDatabase database;
     [SerializeField] private FPArmRig armRig;
-    [SerializeField] private Transform tpWeaponSocket;
     [SerializeField] private NetworkObject pickupPrefab;
-    private GameObject _tpWeaponObj;
-    private int _tpMountedId = -1;
 
     public const int WeaponSlots = 3;
 
@@ -123,23 +120,23 @@ public class PlayerEquipment : NetworkBehaviour
 
     // ══════════════════ 표시 · 스탯 ══════════════════
 
-    void MountThirdPersonWeapon()
-    {
-        if (tpWeaponSocket == null) return;
-        if (_tpMountedId == WeaponId) return;
+    //void MountThirdPersonWeapon()
+    //{
+    //    if (tpWeaponSocket == null) return;
+    //    if (_tpMountedId == WeaponId) return;
 
-        _tpMountedId = WeaponId;
+    //    _tpMountedId = WeaponId;
 
-        if (_tpWeaponObj != null) Destroy(_tpWeaponObj);
+    //    if (_tpWeaponObj != null) Destroy(_tpWeaponObj);
 
-        var data = database.Get(WeaponId);
-        if (data == null || data.ModelPrefab == null) return;
+    //    var data = database.Get(WeaponId);
+    //    if (data == null || data.ModelPrefab == null) return;
 
-        _tpWeaponObj = Instantiate(data.ModelPrefab, tpWeaponSocket);
-        _tpWeaponObj.transform.localPosition = data.PositionOffset;   // 3인칭용 오프셋
-        _tpWeaponObj.transform.localRotation = Quaternion.Euler(data.RotationOffset);
-        _tpWeaponObj.transform.localScale = data.ScaleOverride;
-    }
+    //    _tpWeaponObj = Instantiate(data.ModelPrefab, tpWeaponSocket);
+    //    _tpWeaponObj.transform.localPosition = data.PositionOffset;   // 3인칭용 오프셋
+    //    _tpWeaponObj.transform.localRotation = Quaternion.Euler(data.RotationOffset);
+    //    _tpWeaponObj.transform.localScale = data.ScaleOverride;
+    //}
 
     void OnEquipChanged() => ApplyAll();
 
