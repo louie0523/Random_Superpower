@@ -29,6 +29,7 @@ public class PlayerAttack : NetworkBehaviour
     private PlayerShop _shop;
     private PlayerStatus _status;
     private PlayerEnchant _enchant;
+    private FPArmRig _fpRig;
 
     private float _atkSpd = 1f;         // 이번 공격의 공속 (시작 시점 고정)
     private int _overrideSource = -1;   // 공격을 대체한 Behaviour 번호. -1 = 일반 공격
@@ -80,14 +81,25 @@ public class PlayerAttack : NetworkBehaviour
         _shop = GetComponent<PlayerShop>();
         _status = GetComponent<PlayerStatus>();
         _enchant = GetComponent<PlayerEnchant>();
-
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
+
+        _fpRig = weaponAnim != null && weaponAnim.ArmRig != null
+            ? weaponAnim.ArmRig
+            : GetComponentInChildren<FPArmRig>(true);
 
         if (cameraRoot == null) Debug.LogError("[Attack] cameraRoot 비었음", this);
         if (fpsCamera == null) Debug.LogError("[Attack] fpsCamera 비었음", this);
         if (_stats == null) Debug.LogError("[Attack] PlayerStats 없음", this);
+    }
 
-        Debug.Log($"[Attack] weaponAnim id={weaponAnim?.GetInstanceID()}");
+    /// <summary>들고 있는 무기 모델의 WeaponRig (투사체 미리보기)</summary>
+    WeaponRig CurrentWeaponRig => _fpRig != null ? _fpRig.CurrentWeaponRig : null;
+
+    /// <summary>모든 클라이언트 — 장전형 무기(RPG 등)는 탄약이 있으면 탄두를 보여줌</summary>
+    public override void Render()
+    {
+        var wr = CurrentWeaponRig;
+        if (wr != null && _equip != null) wr.SetLoaded(_equip.Ammo > 0);
     }
 
 
@@ -148,7 +160,14 @@ public class PlayerAttack : NetworkBehaviour
             return;
         }
 
+        // 사망·기절 중엔 공격 불가 (차징·콤보도 끊음)
         if (_health.IsDead || (_status != null && _status.IsStunned))
+        {
+            ResetCombo();
+            _attackQueued = false;
+            CancelDraw();
+            return;
+        }
 
         // 스킬 시전 중이면 공격 불가
         if (_ability != null && _ability.IsCasting)
@@ -431,9 +450,14 @@ public class PlayerAttack : NetworkBehaviour
         return muzzle != null ? muzzle.position : cameraRoot.position + cameraRoot.forward * 0.5f;
     }
 
+    /// <summary>쏜 사람(authoritative)과 다른 사람 화면(RPC) 모두 여기를 거침</summary>
     void SpawnProjectile(EquipmentData weapon, Vector3 pos, Vector3 dir,
                      float speed, float baseDmg, bool authoritative)
     {
+        // 무기에 붙어 있던 화살·탄두를 숨김 — 실제 투사체로 교체
+        var wr = CurrentWeaponRig;
+        if (wr != null) wr.OnFired();
+
         var go = Instantiate(weapon.ProjectilePrefab, pos, Quaternion.LookRotation(dir));
         var proj = go.GetComponent<Projectile>();
 
@@ -497,7 +521,7 @@ public class PlayerAttack : NetworkBehaviour
             if (w == null || _drawTime < 0f) return 0f;
             return Mathf.Clamp01(_drawTime / Mathf.Max(0.01f, w.MaxDrawTime));
         }
-    }   
+    }
 
     void TickAttack(float dt, bool pressed)
     {

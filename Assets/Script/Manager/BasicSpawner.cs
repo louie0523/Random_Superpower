@@ -30,6 +30,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (!SceneManager.GetSceneByName("UI").isLoaded)
             SceneManager.LoadScene("UI", LoadSceneMode.Additive);
+
+        SpawnPoint.GroundMask = ~LayerMask.GetMask("Player");
     }
 
     async void StartGame()
@@ -173,9 +175,12 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Shared Mode에선 각자 자기 캐릭터만 스폰
         if (player != runner.LocalPlayer) return;
 
-        if (!SpawnPoint.TryPick(runner, player, 15f, out var pos, out var rot))
+        var body = playerPrefab.GetComponent<CharacterController>();
+
+        if (!SpawnPoint.TryPick(runner, player, 15f, out var pos, out var rot, body))
         {
-            pos = new Vector3(UnityEngine.Random.Range(-4f, 4f), 1f, UnityEngine.Random.Range(-4f, 4f));
+            pos = SpawnPoint.GroundedPosition(
+                new Vector3(UnityEngine.Random.Range(-4f, 4f), 0f, UnityEngine.Random.Range(-4f, 4f)), body);
             rot = Quaternion.identity;
         }
 

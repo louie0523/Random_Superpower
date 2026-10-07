@@ -363,28 +363,183 @@ public class HandRig : MonoBehaviour
         return a;
     }
 
-    /// <summary>다른 손의 본 로컬 회전을 그대로 가져옴</summary>
-    public void CopyBoneRotationsFrom(HandRig other)
+    /// <summary>
+    /// 다른 손의 손 모양을 가져옴. 각 손의 기준 자세(Rest) 대비 굽힘으로 옮기므로
+    /// 두 손의 본 기본 회전이 달라도 같은 모양이 됨. mirror로 관절 회전 축 반전 가능.
+    /// </summary>
+    public void CopyBoneRotationsFrom(HandRig other, MirrorMode mirror = MirrorMode.AsIs)
     {
-        if (other == null) return;
+        if (other == null || other == this) return;
 
         if (!_built) Build();
         if (!other.IsBuilt) other.Build();
         if (Chains == null || other.Chains == null) return;
 
+        var pose = new HandPose();
+        other.BakeAll(pose);
+
+        RecordUndo("Copy Hand Pose");
+        Apply(Mirror(pose, mirror));
+    }
+
+    // ══════════════════ 손 모양 복사 · 붙여넣기 ══════════════════
+    // 모션 편집 창(WeaponSetupWindow)의 '손가락 복사'와 같은 클립보드 형식 — 서로 오가며 붙여넣기 가능
+
+    public enum MirrorMode { AsIs, MirrorX, MirrorY, MirrorZ }
+
+    const string ClipPrefix = "MOTIONSETUP_HAND:";
+    const string PoseClipPrefix = "MOTIONSETUP_POSE:";
+
+    [System.Serializable] class HandClip { public HandPose Hand; }
+    [System.Serializable] class PoseClip { public ArmPose Pose; }
+
+    /// <summary>현재 손 모양을 시스템 클립보드로</summary>
+    public void CopyToClipboard()
+    {
+        if (!_built) Build();
+        var pose = new HandPose();
+        BakeAll(pose);
+        GUIUtility.systemCopyBuffer = ClipPrefix + JsonUtility.ToJson(new HandClip { Hand = pose });
+    }
+
+    /// <summary>클립보드의 손 모양을 적용. 모션 창에서 '포즈 복사'한 것도 받음 (이 손 쪽 손가락 사용)</summary>
+    public bool PasteFromClipboard(MirrorMode mirror = MirrorMode.AsIs)
+    {
+        if (!TryReadClipboard(out var pose)) return false;
+
+        RecordUndo("Paste Hand Pose");
+        Apply(Mirror(pose, mirror));
+        return true;
+    }
+
+    bool TryReadClipboard(out HandPose pose)
+    {
+        pose = null;
+        string s = GUIUtility.systemCopyBuffer;
+        if (string.IsNullOrEmpty(s)) return false;
+
+        if (s.StartsWith(ClipPrefix))
+        {
+            var clip = new HandClip();
+            JsonUtility.FromJsonOverwrite(s.Substring(ClipPrefix.Length), clip);
+            pose = clip.Hand;
+        }
+        else if (s.StartsWith(PoseClipPrefix))
+        {
+            var clip = new PoseClip();
+            JsonUtility.FromJsonOverwrite(s.Substring(PoseClipPrefix.Length), clip);
+            if (clip.Pose != null)
+                pose = IsLeftHand() ? (clip.Pose.LeftFingers ?? clip.Pose.RightFingers)
+                                    : (clip.Pose.RightFingers ?? clip.Pose.LeftFingers);
+        }
+
+        return pose != null;
+    }
+
+    /// <summary>관절 회전을 축 기준으로 반전한 복사본</summary>
+    public static HandPose Mirror(HandPose src, MirrorMode mode)
+    {
+        if (src == null) return null;
+        var c = src.Clone();
+        if (mode == MirrorMode.AsIs) return c;
+
+        c.EnsureValid();
         for (int f = 0; f < HandPose.FingerCount; f++)
         {
-            var dst = Chains[f];
-            var src = other.Chains[f];
-            if (dst == null || src == null) continue;
+            var fp = c.Get(f);
+            if (fp?.Joints == null) continue;
 
-            int n = Mathf.Min(dst.Length, src.Length);
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < fp.Joints.Length; j++)
             {
-                if (dst[j] == null || src[j] == null) continue;
-                dst[j].localRotation = src[j].localRotation;
+                var q = fp.Joints[j];
+                fp.Joints[j] = mode switch
+                {
+                    MirrorMode.MirrorX => new Quaternion(q.x, -q.y, -q.z, q.w),
+                    MirrorMode.MirrorY => new Quaternion(-q.x, q.y, -q.z, q.w),
+                    _ => new Quaternion(-q.x, -q.y, q.z, q.w),
+                };
             }
         }
+        return c;
+    }
+
+    /// <summary>같은 팔 리그의 반대쪽 손 (없으면 null)</summary>
+    public HandRig FindOpposite()
+    {
+        var arm = GetComponentInParent<FPArmRig>();
+        if (arm == null) arm = FindFirstObjectByType<FPArmRig>();
+        if (arm == null) return null;
+
+        if (arm.RightHandRig == this) return arm.LeftHandRig;
+        if (arm.LeftHandRig == this) return arm.RightHandRig;
+        return null;
+    }
+
+    bool IsLeftHand()
+    {
+        var arm = GetComponentInParent<FPArmRig>();
+        return arm != null && arm.LeftHandRig == this;
+    }
+
+    void RecordUndo(string label)
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying || Chains == null) return;
+
+        var list = new List<Object>();
+        foreach (var chain in Chains)
+            if (chain != null)
+                foreach (var t in chain)
+                    if (t != null) list.Add(t);
+
+        if (list.Count > 0) UnityEditor.Undo.RecordObjects(list.ToArray(), label);
+#endif
+    }
+
+    // ── 컴포넌트 ⋮ 메뉴 ──
+
+    [ContextMenu("손 모양/복사")]
+    void CtxCopy() => CopyToClipboard();
+
+    [ContextMenu("손 모양/붙여넣기")]
+    void CtxPaste() => CtxPasteWith(MirrorMode.AsIs);
+
+    [ContextMenu("손 모양/붙여넣기 (X축 반전)")]
+    void CtxPasteX() => CtxPasteWith(MirrorMode.MirrorX);
+
+    [ContextMenu("손 모양/붙여넣기 (Y축 반전)")]
+    void CtxPasteY() => CtxPasteWith(MirrorMode.MirrorY);
+
+    [ContextMenu("손 모양/붙여넣기 (Z축 반전)")]
+    void CtxPasteZ() => CtxPasteWith(MirrorMode.MirrorZ);
+
+    [ContextMenu("손 모양/반대 손에서 가져오기")]
+    void CtxFromOpposite()
+    {
+        var other = FindOpposite();
+        if (other == null) { Debug.LogWarning($"[HandRig] {name}: 반대 손을 못 찾았습니다 (FPArmRig의 Right/Left Hand Rig 확인)", this); return; }
+        CopyBoneRotationsFrom(other);
+    }
+
+    [ContextMenu("손 모양/반대 손에 보내기")]
+    void CtxToOpposite()
+    {
+        var other = FindOpposite();
+        if (other == null) { Debug.LogWarning($"[HandRig] {name}: 반대 손을 못 찾았습니다 (FPArmRig의 Right/Left Hand Rig 확인)", this); return; }
+        other.CopyBoneRotationsFrom(this);
+    }
+
+    [ContextMenu("손 모양/기준 자세로 되돌리기")]
+    void CtxReset()
+    {
+        RecordUndo("Reset Hand Pose");
+        ResetToRest();
+    }
+
+    void CtxPasteWith(MirrorMode mode)
+    {
+        if (!PasteFromClipboard(mode))
+            Debug.LogWarning($"[HandRig] {name}: 클립보드에 손 모양이 없습니다. 먼저 '손 모양/복사' 또는 모션 창의 '손가락 복사'를 하세요.", this);
     }
 
     // ══════════════════ 에디터 ══════════════════

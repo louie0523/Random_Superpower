@@ -35,6 +35,8 @@ MonoBehaviour:
   Slot: 0
   Class: 1
   Icon: {fileID: 0}
+  Grade: 0
+  IsSpecial: 0
   Tags:
   - basic
   Description: "\uB098\uB984 \uC4F8\uB9CC\uD569\uB2C8\uB2E4."
@@ -45,6 +47,7 @@ MonoBehaviour:
   EnchantTable: {fileID: 11400000, guid: 3a2b8ec9a01f7034eafc3ee8d659d072, type: 2}
   EnchantStoneCost: 1
   EnchantCostPerStage: 0
+  Upgrades: []
   ModelPrefab: {fileID: 1717406733745140, guid: d03c4353fda446d4f8df56d422578d64, type: 3}
   Grip: 0
   PositionOffset: {x: 0, y: 0, z: 0}
@@ -107,6 +110,7 @@ MonoBehaviour:
     CancelPoint: 0.95
     ComboResetTime: 0.8
     OverrideHitShape: 0
+    NoWeaponEnchants: 0
     HitMode: 0
     Range: 3
     HitAngle: 120
@@ -130,6 +134,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -203,6 +211,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -276,6 +288,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -349,6 +365,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -424,6 +444,8 @@ MonoBehaviour:
       Clip: {fileID: 8300000, guid: 9bc50c4f095ea1c40918161f09cea057, type: 3}
       Volume: 0.8
       Pitch: 1
+      Clips: []
+      PitchJitter: 0.08
       Prefab: {fileID: 0}
       Space: 1
       PositionOffset: {x: 0, y: 0, z: 0}
@@ -431,6 +453,11 @@ MonoBehaviour:
       Scale: 1
       Lifetime: 2
       ShakeAmount: 0.3
+      FlashColor: {r: 1, g: 1, b: 1, a: 0.35}
+      FlashDuration: 0.12
+      LightIntensity: 4
+      LightRange: 6
+      FovAmount: -4
       Key: 
       ShowFirstPerson: 1
       ShowThirdPerson: 1
@@ -441,6 +468,7 @@ MonoBehaviour:
     CancelPoint: 0.95
     ComboResetTime: 0.8
     OverrideHitShape: 0
+    NoWeaponEnchants: 0
     HitMode: 0
     Range: 3
     HitAngle: 120
@@ -464,6 +492,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -537,6 +569,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -610,6 +646,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -683,6 +723,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -758,6 +802,8 @@ MonoBehaviour:
       Clip: {fileID: 8300000, guid: 488c2b7daeef4d245a2f9539948c5e3a, type: 3}
       Volume: 0.8
       Pitch: 1
+      Clips: []
+      PitchJitter: 0.08
       Prefab: {fileID: 0}
       Space: 1
       PositionOffset: {x: 0, y: 0, z: 0}
@@ -765,6 +811,11 @@ MonoBehaviour:
       Scale: 1
       Lifetime: 2
       ShakeAmount: 0.3
+      FlashColor: {r: 1, g: 1, b: 1, a: 0.35}
+      FlashDuration: 0.12
+      LightIntensity: 4
+      LightRange: 6
+      FovAmount: -4
       Key: 
       ShowFirstPerson: 1
       ShowThirdPerson: 1
@@ -790,6 +841,10 @@ MonoBehaviour:
     CamPos: {x: 0, y: 0, z: 0}
     CamRot: {x: 0, y: 0, z: 0}
     CamFov: 0
+    BodyPos: {x: 0, y: 0, z: 0}
+    BodyRot: {x: 0, y: 0, z: 0}
+    HeadPos: {x: 0, y: 0, z: 0}
+    HeadRot: {x: 0, y: 0, z: 0}
     UseWeaponGrip: 1
     RightFingers:
       Fingers:
@@ -878,6 +933,10 @@ MonoBehaviour:
     CamPos: {x: 0, y: 0, z: 0}
     CamRot: {x: 0, y: 0, z: 0}
     CamFov: 0
+    BodyPos: {x: 0, y: 0, z: 0}
+    BodyRot: {x: 0, y: 0, z: 0}
+    HeadPos: {x: 0, y: 0, z: 0}
+    HeadRot: {x: 0, y: 0, z: 0}
     UseWeaponGrip: 1
     RightFingers:
       Fingers:

@@ -21,6 +21,14 @@ public class ArmPose
     public Vector3 CamRot;
     public float CamFov;
 
+    [Header("Body — 기준 자세 대비 오프셋 (다른 사람에게 보임)")]
+    public Vector3 BodyPos;
+    public Vector3 BodyRot;
+
+    [Header("Head — 기준 자세 대비 오프셋")]
+    public Vector3 HeadPos;
+    public Vector3 HeadRot;
+
     [System.NonSerialized]
     public HandVisibility HandOverride = HandVisibility.Auto;
 
@@ -46,6 +54,10 @@ public class ArmPose
             CamPos = Vector3.Lerp(a.CamPos, b.CamPos, t),
             CamRot = LerpEuler(a.CamRot, b.CamRot, t),
             CamFov = Mathf.Lerp(a.CamFov, b.CamFov, t),
+            BodyPos = Vector3.Lerp(a.BodyPos, b.BodyPos, t),
+            BodyRot = LerpEuler(a.BodyRot, b.BodyRot, t),
+            HeadPos = Vector3.Lerp(a.HeadPos, b.HeadPos, t),
+            HeadRot = LerpEuler(a.HeadRot, b.HeadRot, t),
             UseWeaponGrip = t < 0.5f ? a.UseWeaponGrip : b.UseWeaponGrip,
             RightFingers = HandPose.Lerp(a.RightFingers, b.RightFingers, t),
             LeftFingers = HandPose.Lerp(a.LeftFingers, b.LeftFingers, t),

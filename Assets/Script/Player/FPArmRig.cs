@@ -34,6 +34,20 @@ public class FPArmRig : MonoBehaviour
     public Transform RightHandTarget;
     public Transform LeftHandTarget;
 
+    [Header("전신 모션 (선택)")]
+    [Tooltip("모션의 Body 채널이 움직일 몸통 (Player/Body). 다른 사람 화면에 보임. 비우면 무시")]
+    public Transform Body;
+    [Tooltip("모션의 Head 채널이 움직일 머리. 비우면 무시")]
+    public Transform Head;
+
+    // 기준 자세 — 처음 쓸 때 잡음. 모션 오프셋은 이 위에 더해짐
+    private Vector3 _bodyRestPos, _headRestPos;
+    private Quaternion _bodyRestRot = Quaternion.identity, _headRestRot = Quaternion.identity;
+    private Transform _bodyRestOf, _headRestOf;
+
+    /// <summary>들고 있는 무기 모델의 WeaponRig (투사체 미리보기 등)</summary>
+    public WeaponRig CurrentWeaponRig { get; private set; }
+
     private Transform _stringBone;
     private Vector3 _stringRestPos;
     private Transform _muzzle;
@@ -73,8 +87,6 @@ public class FPArmRig : MonoBehaviour
 
     public void Mount(EquipmentData weapon)
     {
-        Debug.Log($"[FPArmRig] Mount 호출 — {(weapon == null ? "NULL" : $"{weapon.Id} {weapon.DisplayName}")}", this);
-
         DestroyWeapon();
         _leftGripNode = null;
         WeaponTip = null;
@@ -97,7 +109,7 @@ public class FPArmRig : MonoBehaviour
                 weapon.ModelPrefab, hand);
         else
 #endif
-         _weaponObj = Instantiate(weapon.ModelPrefab, hand);
+            _weaponObj = Instantiate(weapon.ModelPrefab, hand);
 
         _weaponObj.transform.localPosition = weapon.GetPosOffset(true);
         _weaponObj.transform.localRotation = Quaternion.Euler(weapon.GetRotOffset(true));
@@ -106,6 +118,7 @@ public class FPArmRig : MonoBehaviour
         _weaponObj.transform.localScale = weapon.ScaleOverride;
 
         var rig = _weaponObj.GetComponentInChildren<WeaponRig>(true);
+        CurrentWeaponRig = rig;
 
         _chargeVisual = _weaponObj.GetComponentInChildren<ChargeVisual>(true);
 
@@ -175,6 +188,9 @@ public class FPArmRig : MonoBehaviour
         // ★ 차징 연출 — 시위 유무와 무관
         if (_chargeVisual != null) _chargeVisual.SetAmount(_drawAmount);
 
+        // 투사체 미리보기 (활 화살)
+        if (CurrentWeaponRig != null) CurrentWeaponRig.OnDraw(_drawAmount);
+
         if (_stringBone == null || _weapon == null) return;
 
         Vector3 dir = _weapon.StringPullDir.sqrMagnitude > 0.0001f
@@ -194,6 +210,7 @@ public class FPArmRig : MonoBehaviour
         else DestroyImmediate(_weaponObj);
 
         _weaponObj = null;
+        CurrentWeaponRig = null;
         _stringBone = null;
         _muzzle = null;
         _drawAmount = 0f;
@@ -214,6 +231,7 @@ public class FPArmRig : MonoBehaviour
         CleanChildren(LeftHand);
 
         _weaponObj = null;
+        CurrentWeaponRig = null;
         _leftGripNode = null;
         WeaponTip = null;
         _weapon = null;
@@ -400,6 +418,74 @@ public class FPArmRig : MonoBehaviour
 
         ApplyFingers(pose, showLeft);
         ApplyCameraPose(pose);
+        ApplyBodyPose(pose);
+    }
+
+    // ══════════════════ 몸 · 머리 ══════════════════
+
+    void EnsureRest()
+    {
+        if (Body != null && _bodyRestOf != Body)
+        {
+            _bodyRestOf = Body;
+            _bodyRestPos = Body.localPosition;
+            _bodyRestRot = Body.localRotation;
+        }
+        if (Head != null && _headRestOf != Head)
+        {
+            _headRestOf = Head;
+            _headRestPos = Head.localPosition;
+            _headRestRot = Head.localRotation;
+        }
+    }
+
+    /// <summary>지금 몸·머리 위치를 기준 자세로 다시 잡음 (편집 창이 열릴 때 등)</summary>
+    public void CaptureBodyRest()
+    {
+        _bodyRestOf = null;
+        _headRestOf = null;
+        EnsureRest();
+    }
+
+    /// <summary>몸·머리를 기준 자세로 되돌림 (편집 창을 닫을 때 씬에 흔적이 남지 않게)</summary>
+    public void RestoreBodyRest()
+    {
+        if (Body != null && _bodyRestOf == Body)
+            Body.SetLocalPositionAndRotation(_bodyRestPos, _bodyRestRot);
+        if (Head != null && _headRestOf == Head)
+            Head.SetLocalPositionAndRotation(_headRestPos, _headRestRot);
+    }
+
+    /// <summary>지금 몸·머리가 기준 자세에서 얼마나 움직였는지 (편집 창의 '씬 포즈 저장'용)</summary>
+    public void GetBodyOffset(out Vector3 bodyPos, out Vector3 bodyRot, out Vector3 headPos, out Vector3 headRot)
+    {
+        EnsureRest();
+        bodyPos = bodyRot = headPos = headRot = Vector3.zero;
+
+        if (Body != null)
+        {
+            bodyPos = Body.localPosition - _bodyRestPos;
+            bodyRot = (Quaternion.Inverse(_bodyRestRot) * Body.localRotation).eulerAngles;
+        }
+        if (Head != null)
+        {
+            headPos = Head.localPosition - _headRestPos;
+            headRot = (Quaternion.Inverse(_headRestRot) * Head.localRotation).eulerAngles;
+        }
+    }
+
+    void ApplyBodyPose(ArmPose pose)
+    {
+        if (Body == null && Head == null) return;
+        EnsureRest();
+
+        if (Body != null)
+            Body.SetLocalPositionAndRotation(
+                _bodyRestPos + pose.BodyPos, _bodyRestRot * Quaternion.Euler(pose.BodyRot));
+
+        if (Head != null)
+            Head.SetLocalPositionAndRotation(
+                _headRestPos + pose.HeadPos, _headRestRot * Quaternion.Euler(pose.HeadRot));
     }
 
     bool ResolveShowLeftHand(ArmPose pose)

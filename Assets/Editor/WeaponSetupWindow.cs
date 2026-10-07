@@ -1,9 +1,23 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
+/// <summary>
+/// 모션 편집 창 (Tools → Motion Setup).
+///   탭: 무기·손 / 원거리 / 모션 / 도구
+///   모션 탭: 타임라인 하나에 판정 구간 · 키프레임(◆) · 이벤트를 같이 표시하고 드래그로 편집.
+///            클릭 = 선택, 오른쪽 클릭 = 추가·삭제 메뉴, Delete = 삭제, Space = 재생
+///   키프레임에 몸(Body) · 머리(Head) 채널 — FPArmRig의 Body/Head에 적용되어 다른 사람에게 보임
+/// </summary>
 public class WeaponSetupWindow : EditorWindow
 {
+    enum Tab { Weapon, Ranged, Motion, Tools }
+    enum Sel { None, Key, Event }
+    enum Drag { None, HitStart, HitEnd, Cancel, Key, Event, Scrub }
+
     // ── 대상 ──
     private Object _target;
     private IMotionSource _source;
@@ -12,27 +26,29 @@ public class WeaponSetupWindow : EditorWindow
     private FPArmRig _rig;
 
     // ── 상태 ──
+    private Tab _tab = Tab.Motion;
     private bool _firstPerson = true;
     private int _comboIndex;
-    private int _selectedKey = -1;
-    private int _selectedEvent = -1;
+    private Sel _sel;
+    private int _selIndex = -1;
     private SwingPresets.Kind _presetKind = SwingPresets.Kind.DiagonalSlash;
 
     // ── 재생 ──
     private bool _playing;
+    private bool _playAll;
     private float _playT;
     private float _playSpeed = 1f;
     private bool _loop;
     private double _lastTime;
 
+    // ── 타임라인 드래그 ──
+    private Drag _drag;
+    private PoseKey _dragKey;
+    private MotionEvent _dragEvent;
+
     // ── UI ──
     private Vector2 _scroll;
-    private bool _foldTransform = true;
-    private bool _foldMotion = true;
-    private bool _foldTools;
-    private int _dragHandle = -1;
-    private int _draggingKey = -1;
-    private bool _needsSort;
+    private readonly Dictionary<string, bool> _folds = new();
 
     // ── 씬 표시 ──
     private bool _showHitbox = true;
@@ -41,20 +57,59 @@ public class WeaponSetupWindow : EditorWindow
     private readonly List<Vector3> _tipTrail = new();
     private float _previewDraw;
     private float _previewRecoil;
+    private bool _forceProjectile;
+    private float _autoBodyStrength = 0.3f;
 
     private static readonly string[] FingerNames = { "엄지", "검지", "중지", "약지" };
     private static readonly float[] JointWeights = { 1f, 0.95f, 0.85f };
+
+    // ── 색 ──
+    static readonly Color CBg = new(0.13f, 0.13f, 0.14f);
+    static readonly Color CLane = new(0.18f, 0.18f, 0.19f);
+    static readonly Color CWindUp = new(0.26f, 0.31f, 0.45f);
+    static readonly Color CActive = new(0.80f, 0.26f, 0.18f);
+    static readonly Color CRecovery = new(0.22f, 0.22f, 0.24f);
+    static readonly Color CHandle = new(1f, 0.9f, 0.3f);
+    static readonly Color CCancel = new(0.4f, 0.95f, 0.5f);
+    static readonly Color CKey = new(0.92f, 0.92f, 0.92f);
+    static readonly Color CSelected = new(0.3f, 0.85f, 1f);
+    static readonly Color CPlayhead = Color.cyan;
+
+    // ── 이벤트 종류별 표시 — 새 종류를 추가하면 여기와 DrawEventFields에 한 줄씩 ──
+    static readonly Dictionary<MotionEventType, (string icon, string label, Color color)> EventMeta = new()
+    {
+        { MotionEventType.Sound,        ("♪", "사운드",       new Color(0.45f, 0.80f, 1.00f)) },
+        { MotionEventType.RandomSound,  ("♫", "랜덤 사운드",  new Color(0.35f, 0.65f, 1.00f)) },
+        { MotionEventType.Effect,       ("✦", "이펙트",       new Color(1.00f, 0.75f, 0.30f)) },
+        { MotionEventType.GroundEffect, ("▼", "지면 이펙트",  new Color(0.85f, 0.60f, 0.30f)) },
+        { MotionEventType.TrailStart,   ("▶", "트레일 켜기",  new Color(0.60f, 1.00f, 0.75f)) },
+        { MotionEventType.TrailEnd,     ("■", "트레일 끄기",  new Color(0.45f, 0.75f, 0.55f)) },
+        { MotionEventType.CameraShake,  ("≈", "화면 흔들림",  new Color(1.00f, 0.50f, 0.50f)) },
+        { MotionEventType.ScreenFlash,  ("□", "화면 번쩍",    new Color(1.00f, 1.00f, 0.80f)) },
+        { MotionEventType.FovKick,      ("○", "시야각",       new Color(0.80f, 0.60f, 1.00f)) },
+        { MotionEventType.LightFlash,   ("☆", "순간 조명",    new Color(1.00f, 0.95f, 0.50f)) },
+        { MotionEventType.Custom,       ("◆", "커스텀",       new Color(0.75f, 0.75f, 0.75f)) },
+    };
+
+    static (string icon, string label, Color color) Meta(MotionEventType t) =>
+        EventMeta.TryGetValue(t, out var m) ? m : ("◆", t.ToString(), Color.white);
+
+    /// <summary>본인 화면에서만 의미 있는 이벤트 (시점 토글을 숨김)</summary>
+    static bool LocalOnly(MotionEventType t) =>
+        t == MotionEventType.CameraShake || t == MotionEventType.ScreenFlash || t == MotionEventType.FovKick;
 
     [MenuItem("Tools/Motion Setup")]
     static void Open()
     {
         var w = GetWindow<WeaponSetupWindow>("Motion Setup");
-        w.minSize = new Vector2(380, 560);
+        w.minSize = new Vector2(400, 560);
     }
 
     void OnEnable()
     {
         FindRig();
+        _rig?.CaptureBodyRest();
+
         EditorApplication.update += OnEditorUpdate;
         SceneView.duringSceneGui += OnSceneGUI;
         Undo.undoRedoPerformed += OnUndo;
@@ -70,7 +125,11 @@ public class WeaponSetupWindow : EditorWindow
         HandRigEditor.EditTarget = null;
         HandRigEditor.OnPoseChanged = null;
 
-        if (_rig != null) _rig.CleanWeaponOnly();
+        if (_rig != null)
+        {
+            _rig.RestoreBodyRest();
+            _rig.CleanWeaponOnly();
+        }
     }
 
     void OnUndo() { RefreshPreview(); Repaint(); }
@@ -80,119 +139,149 @@ public class WeaponSetupWindow : EditorWindow
         if (_rig == null) _rig = FindFirstObjectByType<FPArmRig>();
     }
 
-    Object TargetAsset => _target;
+    EquipmentData ResolvePreviewWeapon() =>
+        _previewWeaponOverride != null ? _previewWeaponOverride : _source?.PreviewWeapon;
 
-    EquipmentData ResolvePreviewWeapon()
+    ComboStep CurrentStep => _source != null && _source.ComboLength > 0
+        ? _source.GetStep(Mathf.Clamp(_comboIndex, 0, _source.ComboLength - 1))
+        : null;
+
+    // ══════════════════════ 공통 도우미 ══════════════════════
+
+    /// <summary>접히는 구역 제목. 상태는 창이 열려 있는 동안 기억</summary>
+    bool Fold(string title, bool defaultOpen = true)
     {
-        if (_previewWeaponOverride != null) return _previewWeaponOverride;
-        return _source?.PreviewWeapon;
+        if (!_folds.TryGetValue(title, out bool open)) open = defaultOpen;
+        open = EditorGUILayout.BeginFoldoutHeaderGroup(open, title);
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        _folds[title] = open;
+        return open;
+    }
+
+    static IDisposable Box() => new EditorGUILayout.VerticalScope(EditorStyles.helpBox);
+
+    static void Hint(string s) => EditorGUILayout.LabelField(s, EditorStyles.wordWrappedMiniLabel);
+
+    /// <summary>메뉴 콜백 등 OnGUI 밖에서 에셋을 바꿀 때</summary>
+    void Modify(string undoName, Action action)
+    {
+        if (_target == null) return;
+        Undo.RecordObject(_target, undoName);
+        action();
+        EditorUtility.SetDirty(_target);
+        RefreshPreview();
+        Repaint();
+    }
+
+    static Vector3 NormalizeEuler(Vector3 e) => new(N(e.x), N(e.y), N(e.z));
+    static float N(float a)
+    {
+        a %= 360f;
+        if (a > 180f) a -= 360f;
+        if (a < -180f) a += 360f;
+        return a;
     }
 
     // ══════════════════════ GUI ══════════════════════
 
     void OnGUI()
     {
-
-
         if (Application.isPlaying)
         {
-            EditorGUILayout.HelpBox(
-                "플레이 모드에서는 편집할 수 없습니다.\nPlay를 중지한 뒤 사용하세요.",
-                MessageType.Warning);
+            EditorGUILayout.HelpBox("플레이 모드에서는 편집할 수 없습니다.\nPlay를 중지한 뒤 사용하세요.", MessageType.Warning);
             return;
         }
 
         EditorGUI.indentLevel = 0;
+        EditorGUIUtility.wideMode = position.width > 360f;
+        EditorGUIUtility.labelWidth = Mathf.Clamp(position.width * 0.32f, 90f, 150f);
 
+        // 입력이 있는 이벤트마다 기록 — 바뀐 게 있을 때만 실제 Undo 항목이 생김
+        var ev = Event.current;
+        if (_target != null && ev.type != EventType.Layout && ev.type != EventType.Repaint)
+            Undo.RecordObject(_target, "Motion Setup");
+
+        DrawHeader();
+
+        if (_source == null || _rig == null) return;
+
+        DrawTabs();
 
         _scroll = EditorGUILayout.BeginScrollView(_scroll);
+        EditorGUILayout.Space(4);
 
-        DrawTarget();
-
-        if (_source != null && _rig != null)
+        switch (_tab)
         {
-            if (_weapon != null)
-            {
-                EditorGUILayout.Space(6);
-                _foldTransform = EditorGUILayout.Foldout(_foldTransform,
-                    "무기 · 손 · 판정", true, EditorStyles.foldoutHeader);
-                if (_foldTransform) DrawWeaponSection();
-            }
-
-            EditorGUILayout.Space(6);
-            _foldMotion = EditorGUILayout.Foldout(_foldMotion,
-                "모션 편집", true, EditorStyles.foldoutHeader);
-            if (_foldMotion) DrawMotion();
-
-            EditorGUILayout.Space(6);
-            _foldTools = EditorGUILayout.Foldout(_foldTools,
-                "도구", true, EditorStyles.foldoutHeader);
-            if (_foldTools) DrawTools();
+            case Tab.Weapon: DrawWeaponTab(); break;
+            case Tab.Ranged: DrawRangedTab(); break;
+            case Tab.Motion: DrawMotionTab(); break;
+            case Tab.Tools: DrawToolsTab(); break;
         }
 
+        EditorGUILayout.Space(10);
         EditorGUILayout.EndScrollView();
+
+        if (GUI.changed && _target != null) EditorUtility.SetDirty(_target);
     }
 
-    // ─────────── 대상 ───────────
+    // ─────────── 머리말 (대상) ───────────
 
-    void DrawTarget()
+    void DrawHeader()
     {
-        EditorGUILayout.LabelField("대상", EditorStyles.boldLabel);
-
-        EditorGUI.BeginChangeCheck();
-        _target = EditorGUILayout.ObjectField("무기 / 능력 모션", _target, typeof(Object), false);
-        if (EditorGUI.EndChangeCheck()) OnTargetChanged();
-
-        _rig = (FPArmRig)EditorGUILayout.ObjectField("팔 리그", _rig, typeof(FPArmRig), true);
-
-        if (_rig == null)
-        {
-            EditorGUILayout.HelpBox(
-                "씬에 FPArmRig가 없습니다.\n\n" +
-                "PreviewCamera\n └ CamPivot\n    └ ArmRoot (FPArmRig)\n" +
-                "       ├ RightHand\n       └ LeftHand",
-                MessageType.Warning);
-
-            if (GUILayout.Button("씬에서 찾기")) FindRig();
-            return;
-        }
-
-        if (_target == null)
-        {
-            EditorGUILayout.HelpBox(
-                "EquipmentData(무기) 또는 AbilityMotionData(능력 모션)를 넣으세요.",
-                MessageType.Info);
-            return;
-        }
-
-        if (_source == null)
-        {
-            EditorGUILayout.HelpBox($"{_target.name}은(는) 모션 소스가 아닙니다.", MessageType.Error);
-            return;
-        }
-
-        // 능력 모션이면 테스트 무기 선택 가능
-        if (_weapon == null)
+        using (Box())
         {
             EditorGUI.BeginChangeCheck();
-            _previewWeaponOverride = (EquipmentData)EditorGUILayout.ObjectField(
-                new GUIContent("테스트 무기", "미리보기 전용. 에셋에 저장되지 않음"),
-                _previewWeaponOverride, typeof(EquipmentData), false);
-            if (EditorGUI.EndChangeCheck()) SpawnWeapon();
+            _target = EditorGUILayout.ObjectField("무기 / 능력 모션", _target, typeof(Object), false);
+            if (EditorGUI.EndChangeCheck()) OnTargetChanged();
+
+            EditorGUI.BeginChangeCheck();
+            _rig = (FPArmRig)EditorGUILayout.ObjectField("팔 리그", _rig, typeof(FPArmRig), true);
+            if (EditorGUI.EndChangeCheck() && _rig != null) _rig.CaptureBodyRest();
+
+            if (_rig == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "씬에 FPArmRig가 없습니다.\n\n" +
+                    "PreviewCamera\n └ CamPivot\n    └ ArmRoot (FPArmRig)\n       ├ RightHand\n       └ LeftHand",
+                    MessageType.Warning);
+                if (GUILayout.Button("씬에서 찾기")) { FindRig(); _rig?.CaptureBodyRest(); }
+                return;
+            }
+
+            if (_target == null)
+            {
+                EditorGUILayout.HelpBox("EquipmentData(무기) 또는 AbilityMotionData(능력 모션)를 넣으세요.", MessageType.Info);
+                return;
+            }
+
+            if (_source == null)
+            {
+                EditorGUILayout.HelpBox($"{_target.name}은(는) 모션 소스가 아닙니다.", MessageType.Error);
+                return;
+            }
+
+            if (_weapon == null)
+            {
+                EditorGUI.BeginChangeCheck();
+                _previewWeaponOverride = (EquipmentData)EditorGUILayout.ObjectField(
+                    new GUIContent("테스트 무기", "미리보기 전용. 에셋에 저장되지 않음"),
+                    _previewWeaponOverride, typeof(EquipmentData), false);
+                if (EditorGUI.EndChangeCheck()) SpawnWeapon();
+            }
+
+            string kind = _weapon != null ? "무기" : "능력 모션";
+            string body = _rig.Body != null ? _rig.Body.name : "없음";
+            string head = _rig.Head != null ? _rig.Head.name : "없음";
+            EditorGUILayout.LabelField($"{kind}  ·  몸 {body}  ·  머리 {head}", EditorStyles.miniLabel);
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("다시 로드", EditorStyles.miniButtonLeft)) SpawnWeapon();
+                if (GUILayout.Button("무기 치우기", EditorStyles.miniButtonMid)) ClearPreview();
+                if (GUILayout.Button("손 재생성", EditorStyles.miniButtonMid)) { _rig.RebuildHands(); SpawnWeapon(); }
+                if (GUILayout.Button("전부 정리", EditorStyles.miniButtonRight)) { _rig.CleanAll(); SceneView.RepaintAll(); }
+            }
         }
-
-        EditorGUILayout.LabelField("종류", _weapon != null ? "무기" : "능력 모션",
-            EditorStyles.miniLabel);
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("다시 로드")) SpawnWeapon();
-        if (GUILayout.Button("무기 치우기")) ClearPreview();
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("손 재생성")) { _rig.RebuildHands(); SpawnWeapon(); }
-        if (GUILayout.Button("전부 정리")) { _rig.CleanAll(); SceneView.RepaintAll(); }
-        EditorGUILayout.EndHorizontal();
     }
 
     void OnTargetChanged()
@@ -201,481 +290,428 @@ public class WeaponSetupWindow : EditorWindow
         _weapon = _target as EquipmentData;
 
         _comboIndex = 0;
-        _selectedKey = -1;
-        _selectedEvent = -1;
+        ClearSelection();
         _playT = 0f;
         _playing = false;
+
+        if (_weapon == null && (_tab == Tab.Weapon || _tab == Tab.Ranged)) _tab = Tab.Motion;
 
         SpawnWeapon();
     }
 
-    // ─────────── 무기 / 손 / 판정 ───────────
-
-    void DrawWeaponSection()
+    void DrawTabs()
     {
-        EditorGUI.BeginChangeCheck();
-        _firstPerson = EditorGUILayout.Toggle("1인칭 오프셋 편집", _firstPerson);
-        if (EditorGUI.EndChangeCheck()) RefreshPreview();
+        var tabs = new List<Tab>();
+        var names = new List<string>();
 
-        // ══ 무기 배치 ══
-        EditorGUILayout.Space(4);
-        EditorGUILayout.LabelField("무기 배치", EditorStyles.boldLabel);
+        if (_weapon != null) { tabs.Add(Tab.Weapon); names.Add("무기 · 손"); }
+        if (_weapon != null && _weapon.Class == WeaponClass.Ranged) { tabs.Add(Tab.Ranged); names.Add("원거리"); }
+        tabs.Add(Tab.Motion); names.Add("모션");
+        tabs.Add(Tab.Tools); names.Add("도구");
 
-        EditorGUI.BeginChangeCheck();
+        int cur = Mathf.Max(0, tabs.IndexOf(_tab));
+        if (!tabs.Contains(_tab)) _tab = tabs[cur];
 
-        EditorGUI.BeginChangeCheck();
-        var newGrip = (GripType)EditorGUILayout.EnumPopup("잡는 손", _weapon.Grip);
-        if (EditorGUI.EndChangeCheck())
-        {
-            Undo.RecordObject(_weapon, "Change Grip");
-            _weapon.Grip = newGrip;
+        int next = GUILayout.Toolbar(cur, names.ToArray(), GUILayout.Height(24));
+        if (next != cur) _tab = tabs[next];
+    }
 
-            if (newGrip == GripType.TwoHand) _weapon.UseLeftHand = true;
+    // ══════════════════════ 무기 · 손 탭 ══════════════════════
 
-            EditorUtility.SetDirty(_weapon);
-            SpawnWeapon();          // ★ 무기 재생성
-        }
-
-        if (_firstPerson)
-        {
-            _weapon.FpPositionOffset = EditorGUILayout.Vector3Field("위치", _weapon.FpPositionOffset);
-            _weapon.FpRotationOffset = EditorGUILayout.Vector3Field("회전", _weapon.FpRotationOffset);
-        }
-        else
-        {
-            _weapon.PositionOffset = EditorGUILayout.Vector3Field("위치", _weapon.PositionOffset);
-            _weapon.RotationOffset = EditorGUILayout.Vector3Field("회전", _weapon.RotationOffset);
-        }
-
-        _weapon.ScaleOverride = EditorGUILayout.Vector3Field("크기", _weapon.ScaleOverride);
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            EditorUtility.SetDirty(_weapon);
-            RefreshPreview();
-        }
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("크기 균일 (X기준)"))
-        {
-            Undo.RecordObject(_weapon, "Uniform Scale");
-            float s = _weapon.ScaleOverride.x;
-            _weapon.ScaleOverride = new Vector3(s, s, s);
-            EditorUtility.SetDirty(_weapon);
-            RefreshPreview();
-        }
-        if (GUILayout.Button("크기 1로"))
-        {
-            Undo.RecordObject(_weapon, "Reset Scale");
-            _weapon.ScaleOverride = Vector3.one;
-            EditorUtility.SetDirty(_weapon);
-            RefreshPreview();
-        }
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("씬 무기 위치 저장")) CaptureWeaponTransform();
-        if (GUILayout.Button("초기화")) ResetWeaponTransform();
-        EditorGUILayout.EndHorizontal();
-
-        // ══ 손 자세 ══
-        EditorGUILayout.Space(8);
-        EditorGUILayout.LabelField("손 자세", EditorStyles.boldLabel);
-
-        EditorGUI.BeginChangeCheck();
-
-        _weapon.OverrideIdlePose = EditorGUILayout.Toggle(
-            new GUIContent("무기 전용 기본 자세", "끄면 FPArmRig의 IdlePose 사용"),
-            _weapon.OverrideIdlePose);
-
-        if (_weapon.OverrideIdlePose)
-        {
-            EditorGUI.indentLevel++;
-
-            _weapon.RightHandPos = EditorGUILayout.Vector3Field("오른손 위치", _weapon.RightHandPos);
-            _weapon.RightHandRot = EditorGUILayout.Vector3Field("오른손 회전", _weapon.RightHandRot);
-
-            _weapon.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", _weapon.UseLeftHand);
-            if (_weapon.UseLeftHand)
+    void DrawWeaponTab()
+    {
+        // ── 배치 ──
+        if (Fold("무기 배치"))
+            using (Box())
             {
-                _weapon.LeftHandPos = EditorGUILayout.Vector3Field("왼손 위치", _weapon.LeftHandPos);
-                _weapon.LeftHandRot = EditorGUILayout.Vector3Field("왼손 회전", _weapon.LeftHandRot);
-            }
-
-            EditorGUI.indentLevel--;
-        }
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            EditorUtility.SetDirty(_weapon);
-            RefreshPreview();
-        }
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("씬 손 자세 저장")) CaptureWeaponIdlePose();
-        if (GUILayout.Button("리그 Idle 복사")) CopyRigIdle();
-        EditorGUILayout.EndHorizontal();
-
-        // ★ 추가
-        if (GUILayout.Button("ArmRoot 기본값 전부 가져오기 (자세 + 손가락)"))
-            PullFromRigDefaults();
-
-        // ══ 손가락 그립 ══
-        EditorGUILayout.Space(8);
-        EditorGUILayout.LabelField("손가락 그립", EditorStyles.boldLabel);
-
-        Vector3 axis = GetCurlAxis();
-
-        _weapon.RightGrip ??= HandPose.Grip(axis);
-        DrawGripEditor("오른손", ref _weapon.RightGrip, axis, _rig.RightHandRig, _weapon);
-
-        if (_weapon.Grip == GripType.TwoHand || _weapon.UseLeftHand)
-        {
-            _weapon.LeftGrip ??= HandPose.Relaxed(axis);
-            DrawGripEditor("왼손", ref _weapon.LeftGrip, axis, _rig.LeftHandRig, _weapon);
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("오른손 → 왼손 복사", EditorStyles.miniButton))
-            {
-                Undo.RecordObject(_weapon, "Copy Grip");
-                if (_rig.RightHandRig != null && _rig.LeftHandRig != null)
+                EditorGUI.BeginChangeCheck();
+                var grip = (GripType)EditorGUILayout.EnumPopup("잡는 손", _weapon.Grip);
+                var cls = (WeaponClass)EditorGUILayout.EnumPopup("무기 계열", _weapon.Class);
+                if (EditorGUI.EndChangeCheck())
                 {
-                    _rig.LeftHandRig.CopyBoneRotationsFrom(_rig.RightHandRig);
-                    _weapon.LeftGrip ??= new HandPose();
-                    _rig.LeftHandRig.BakeAll(_weapon.LeftGrip);
-                }
-                EditorUtility.SetDirty(_weapon);
-                RefreshPreview();
-            }
-            if (GUILayout.Button("왼손 → 오른손 복사", EditorStyles.miniButton))
-            {
-                Undo.RecordObject(_weapon, "Copy Grip");
-                if (_rig.RightHandRig != null && _rig.LeftHandRig != null)
-                {
-                    _rig.RightHandRig.CopyBoneRotationsFrom(_rig.LeftHandRig);
-                    _weapon.RightGrip ??= new HandPose();
-                    _rig.RightHandRig.BakeAll(_weapon.RightGrip);
-                }
-                EditorUtility.SetDirty(_weapon);
-                RefreshPreview();
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-
-        //// ★ 리그 기본값 가져오기
-        //if (GUILayout.Button("리그 기본 손가락 가져오기"))
-        //{
-        //    Undo.RecordObject(_weapon, "Pull Fingers");
-
-        //    if (_rig.IdleRightFingers != null)
-        //        _weapon.RightGrip = _rig.IdleRightFingers.Clone();
-        //    if (_rig.IdleLeftFingers != null)
-        //        _weapon.LeftGrip = _rig.IdleLeftFingers.Clone();
-
-        //    EditorUtility.SetDirty(_weapon);
-        //    RefreshPreview();
-        //    Debug.Log("[MotionSetup] 리그 기본 손가락 적용됨");
-        //}
-
-        // ══ 히트 판정 ══
-        EditorGUILayout.Space(8);
-        EditorGUILayout.LabelField("히트 판정", EditorStyles.boldLabel);
-
-        EditorGUI.BeginChangeCheck();
-
-        _weapon.Class = (WeaponClass)EditorGUILayout.EnumPopup("무기 계열", _weapon.Class);
-        // ══ 원거리 ══
-        if (_weapon.Class == WeaponClass.Ranged)
-        {
-            EditorGUI.indentLevel++;
-
-            _weapon.RangedKind = (RangedType)EditorGUILayout.EnumPopup("발사 방식", _weapon.RangedKind);
-            _weapon.ProjectilePrefab = (GameObject)EditorGUILayout.ObjectField(
-                "투사체 프리팹", _weapon.ProjectilePrefab, typeof(GameObject), false);
-            _weapon.ProjectileLifetime = EditorGUILayout.FloatField("투사체 수명 (초)", _weapon.ProjectileLifetime);
-
-
-            // 부착점 상태
-            var wr = _rig?.GetWeaponTransform()?.GetComponent<WeaponRig>();
-            if (wr == null)
-            {
-                EditorGUILayout.HelpBox(
-                    "무기 모델 프리팹에 WeaponRig 컴포넌트가 없습니다.\n" +
-                    "프리팹을 열고 루트에 추가한 뒤, Muzzle·StringBone을 지정하세요.",
-                    MessageType.Warning);
-
-                if (_rig?.GetWeaponTransform() != null && GUILayout.Button("모델 프리팹 열기"))
-                    AssetDatabase.OpenAsset(_weapon.ModelPrefab);
-            }
-            else
-            {
-                EditorGUILayout.LabelField("발사 지점",
-                    wr.Muzzle != null ? wr.Muzzle.name : "없음 (Tip 사용)", EditorStyles.miniLabel);
-
-                if (_weapon.RangedKind == RangedType.Bow)
-                    EditorGUILayout.LabelField("시위 본",
-                        wr.StringBone != null ? wr.StringBone.name : "없음", EditorStyles.miniLabel);
-            }
-
-            if (_weapon.RangedKind == RangedType.Bow ||
-      _weapon.RangedKind == RangedType.Staff)
-            {
-                EditorGUILayout.Space(4);
-                EditorGUILayout.LabelField("차징", EditorStyles.miniBoldLabel);
-
-                _weapon.MinDrawTime = EditorGUILayout.FloatField("최소 차징 (초)", _weapon.MinDrawTime);
-                _weapon.MaxDrawTime = EditorGUILayout.FloatField("최대 차징 (초)", _weapon.MaxDrawTime);
-
-                EditorGUILayout.BeginHorizontal();
-                _weapon.MinDrawDamageMul = EditorGUILayout.FloatField("피해× 최소", _weapon.MinDrawDamageMul);
-                _weapon.MaxDrawDamageMul = EditorGUILayout.FloatField("최대", _weapon.MaxDrawDamageMul);
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.BeginHorizontal();
-                _weapon.MinDrawSpeed = EditorGUILayout.FloatField("속도 최소", _weapon.MinDrawSpeed);
-                _weapon.MaxDrawSpeed = EditorGUILayout.FloatField("최대", _weapon.MaxDrawSpeed);
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.Space(2);
-                _weapon.ProjectileGravity = EditorGUILayout.FloatField("투사체 중력", _weapon.ProjectileGravity);
-
-                EditorGUILayout.BeginHorizontal();
-                _weapon.PierceCount = EditorGUILayout.IntSlider("관통", _weapon.PierceCount, 0, 1);
-                using (new EditorGUI.DisabledScope(_weapon.PierceCount == 0))
-                    _weapon.PierceDamageFalloff = EditorGUILayout.Slider(
-                        "감쇠", _weapon.PierceDamageFalloff, 0f, 1f);
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.Space(4);
-                _weapon.UseChargePose = EditorGUILayout.Toggle("차징 자세 사용", _weapon.UseChargePose);
-
-                if (_weapon.UseChargePose)
-                {
-                    EditorGUI.indentLevel++;
-
-                    _weapon.ChargeCurve = EditorGUILayout.CurveField("보간 곡선", _weapon.ChargeCurve);
-
-                    EditorGUILayout.BeginHorizontal();
-                    using (new EditorGUI.DisabledScope(_previewDraw < 0.999f))
-                    if (GUILayout.Button("씬 자세를 차징 자세로 저장", GUILayout.Height(22)))
-                    {
-                        Undo.RecordObject(_weapon, "Capture Charge Pose");
-                        _weapon.ChargePose = CaptureCurrentPose();
-                        EditorUtility.SetDirty(_weapon);
-                        ApplyPreviewDraw();
-                    }
-                    if (GUILayout.Button("기본 자세 복사", GUILayout.Width(100)))
-                    {
-                        Undo.RecordObject(_weapon, "Copy Idle to Charge");
-                        _weapon.ChargePose = _rig.GetEffectiveIdle().Clone();
-                        EditorUtility.SetDirty(_weapon);
-                    }
-                    EditorGUILayout.EndHorizontal();
-
-
-                    if (_weapon.ChargePose != null)
-                    {
-                        EditorGUI.BeginChangeCheck();
-
-                        var cp = _weapon.ChargePose;
-
-                        EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
-                        cp.RightPos = EditorGUILayout.Vector3Field("위치", cp.RightPos);
-                        cp.RightRot = EditorGUILayout.Vector3Field("회전", cp.RightRot);
-
-                        cp.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", cp.UseLeftHand);
-                        if (cp.UseLeftHand)
-                        {
-                            EditorGUILayout.LabelField("왼손", EditorStyles.miniBoldLabel);
-                            cp.LeftPos = EditorGUILayout.Vector3Field("위치", cp.LeftPos);
-                            cp.LeftRot = EditorGUILayout.Vector3Field("회전", cp.LeftRot);
-                        }
-
-                        EditorGUILayout.LabelField("무기 오프셋", EditorStyles.miniBoldLabel);
-                        cp.WeaponPos = EditorGUILayout.Vector3Field("위치", cp.WeaponPos);
-                        cp.WeaponRot = EditorGUILayout.Vector3Field("회전", cp.WeaponRot);
-
-                        EditorGUILayout.LabelField("카메라", EditorStyles.miniBoldLabel);
-                        cp.CamRot = EditorGUILayout.Vector3Field("회전", cp.CamRot);
-                        cp.CamFov = EditorGUILayout.FloatField("FOV 추가", cp.CamFov);
-
-                        if (EditorGUI.EndChangeCheck())
-                        {
-                            EditorUtility.SetDirty(_weapon);
-                            ApplyPreviewDraw();
-                        }
-                    }
-
-                    // 손가락 편집
-                    if (_rig.RightHandRig != null && _weapon.ChargePose != null)
-                    {
-                        _weapon.ChargePose.UseWeaponGrip = EditorGUILayout.Toggle(
-                            new GUIContent("무기 그립 사용", "끄면 차징 중 손 모양을 따로 지정"),
-                            _weapon.ChargePose.UseWeaponGrip);
-
-                        if (!_weapon.ChargePose.UseWeaponGrip)
-                        {
-                            Vector3 ax = GetCurlAxis();
-                            _weapon.ChargePose.RightFingers ??= HandPose.Grip(ax);
-                            DrawSceneEditToggle(_weapon.ChargePose.RightFingers, _rig.RightHandRig, _weapon);
-                            DrawFingerSliders(_weapon.ChargePose.RightFingers, ax, _rig.RightHandRig, _weapon);
-                        }
-                    }
-
-                    DrawChargePreview();
-
-                    EditorGUI.indentLevel--;
+                    bool gripChanged = grip != _weapon.Grip;
+                    _weapon.Grip = grip;
+                    _weapon.Class = cls;
+                    if (grip == GripType.TwoHand) _weapon.UseLeftHand = true;
+                    if (gripChanged) SpawnWeapon();
                 }
 
-            }
+                EditorGUI.BeginChangeCheck();
+                _firstPerson = EditorGUILayout.Toggle("1인칭 오프셋 편집", _firstPerson);
 
-            if (_weapon.RangedKind == RangedType.Gun)
-            {
-                _weapon.FireMode = (GunFireMode)EditorGUILayout.EnumPopup("판정 방식", _weapon.FireMode);
-                _weapon.MaxAmmo = EditorGUILayout.IntField("탄약", _weapon.MaxAmmo);
-                _weapon.RoundsPerMinute = EditorGUILayout.FloatField("분당 발사", _weapon.RoundsPerMinute);
-                _weapon.FullAuto = EditorGUILayout.Toggle("연사", _weapon.FullAuto);
-
-                EditorGUILayout.Space(2);
-                EditorGUILayout.LabelField("반동", EditorStyles.miniBoldLabel);
-                _weapon.RecoilVertical = EditorGUILayout.FloatField("수직", _weapon.RecoilVertical);
-                _weapon.RecoilHorizontal = EditorGUILayout.FloatField("수평", _weapon.RecoilHorizontal);
-                _weapon.RecoilRamp = EditorGUILayout.FloatField("누적 배율", _weapon.RecoilRamp);
-                _weapon.RecoilMaxMul = EditorGUILayout.FloatField("누적 상한", _weapon.RecoilMaxMul);
-
-                EditorGUILayout.Space(2);
-                if (_weapon.FireMode == GunFireMode.Hitscan)
+                if (_firstPerson)
                 {
-                    _weapon.HitscanRange = EditorGUILayout.FloatField("사거리 (m)", _weapon.HitscanRange);
-                    _weapon.TracerPrefab = (GameObject)EditorGUILayout.ObjectField(
-                        "예광탄", _weapon.TracerPrefab, typeof(GameObject), false);
+                    _weapon.FpPositionOffset = EditorGUILayout.Vector3Field("위치", _weapon.FpPositionOffset);
+                    _weapon.FpRotationOffset = EditorGUILayout.Vector3Field("회전", _weapon.FpRotationOffset);
                 }
                 else
                 {
-                    _weapon.ProjectileSpeed = EditorGUILayout.FloatField("투사체 속도", _weapon.ProjectileSpeed);
-                    _weapon.ProjectileGravity = EditorGUILayout.FloatField("투사체 중력", _weapon.ProjectileGravity);
+                    _weapon.PositionOffset = EditorGUILayout.Vector3Field("위치", _weapon.PositionOffset);
+                    _weapon.RotationOffset = EditorGUILayout.Vector3Field("회전", _weapon.RotationOffset);
                 }
+                _weapon.ScaleOverride = EditorGUILayout.Vector3Field("크기", _weapon.ScaleOverride);
+                if (EditorGUI.EndChangeCheck()) RefreshPreview();
 
-                EditorGUILayout.Space(4);
-                _weapon.UseRecoilPose = EditorGUILayout.Toggle("반동 자세 사용", _weapon.UseRecoilPose);
-
-                if (_weapon.UseRecoilPose)
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUI.indentLevel++;
-
-                    _weapon.RecoilRiseTime = EditorGUILayout.FloatField("올라가는 시간", _weapon.RecoilRiseTime);
-                    _weapon.RecoilFallTime = EditorGUILayout.FloatField("돌아오는 시간", _weapon.RecoilFallTime);
-                    _weapon.RecoilPoseMaxStack = EditorGUILayout.Slider("연사 누적 상한", _weapon.RecoilPoseMaxStack, 1f, 3f);
-                    _weapon.RecoilSwayAmount = EditorGUILayout.FloatField("흔들림 폭 (수평)", _weapon.RecoilSwayAmount);
-                    _weapon.RecoilSwayVertical = EditorGUILayout.FloatField("흔들림 폭 (수직)", _weapon.RecoilSwayVertical);
-                    _weapon.RecoilSwaySpeed = EditorGUILayout.FloatField("흔들림 속도", _weapon.RecoilSwaySpeed);
-
-                    EditorGUILayout.BeginHorizontal();
-                    using (new EditorGUI.DisabledScope(_previewRecoil < 0.999f))
-                        if (GUILayout.Button("씬 자세를 반동 자세로 저장", GUILayout.Height(22)))
-                        {
-                            Undo.RecordObject(_weapon, "Capture Recoil Pose");
-                            _weapon.RecoilPose = CaptureCurrentPose();
-                            EditorUtility.SetDirty(_weapon);
-                            ApplyPreviewRecoil();
-                        }
-                    if (GUILayout.Button("기본 자세 복사", GUILayout.Width(100)))
+                    if (GUILayout.Button("크기 균일", EditorStyles.miniButtonLeft))
                     {
-                        Undo.RecordObject(_weapon, "Copy Idle to Recoil");
-                        _weapon.RecoilPose = _rig.GetEffectiveIdle().Clone();
-                        EditorUtility.SetDirty(_weapon);
+                        float s = _weapon.ScaleOverride.x;
+                        _weapon.ScaleOverride = new Vector3(s, s, s);
+                        RefreshPreview();
                     }
-                    EditorGUILayout.EndHorizontal();
-
-                    // ── 반동 자세 값 직접 편집 ──
-                    if (_weapon.RecoilPose != null)
+                    if (GUILayout.Button("크기 1", EditorStyles.miniButtonMid))
                     {
-                        EditorGUI.BeginChangeCheck();
-                        var rp = _weapon.RecoilPose;
-
-                        EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
-                        rp.RightPos = EditorGUILayout.Vector3Field("위치", rp.RightPos);
-                        rp.RightRot = EditorGUILayout.Vector3Field("회전", rp.RightRot);
-
-                        rp.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", rp.UseLeftHand);
-                        if (rp.UseLeftHand)
-                        {
-                            rp.LeftPos = EditorGUILayout.Vector3Field("왼손 위치", rp.LeftPos);
-                            rp.LeftRot = EditorGUILayout.Vector3Field("왼손 회전", rp.LeftRot);
-                        }
-
-                        EditorGUILayout.LabelField("무기 오프셋", EditorStyles.miniBoldLabel);
-                        rp.WeaponPos = EditorGUILayout.Vector3Field("위치", rp.WeaponPos);
-                        rp.WeaponRot = EditorGUILayout.Vector3Field("회전", rp.WeaponRot);
-
-                        EditorGUILayout.LabelField("카메라", EditorStyles.miniBoldLabel);
-                        rp.CamRot = EditorGUILayout.Vector3Field("회전", rp.CamRot);
-                        rp.CamFov = EditorGUILayout.FloatField("FOV 추가", rp.CamFov);
-
-                        if (EditorGUI.EndChangeCheck())
-                        {
-                            EditorUtility.SetDirty(_weapon);
-                            ApplyPreviewRecoil();
-                        }
+                        _weapon.ScaleOverride = Vector3.one;
+                        RefreshPreview();
                     }
+                    if (GUILayout.Button("씬 위치 저장", EditorStyles.miniButtonMid)) CaptureWeaponTransform();
+                    if (GUILayout.Button("초기화", EditorStyles.miniButtonRight)) ResetWeaponTransform();
+                }
+                Hint("씬에서 무기를 직접 옮긴 뒤 '씬 위치 저장'을 누르면 편합니다.");
+            }
 
-                    EditorGUI.BeginChangeCheck();
-                    _previewRecoil = EditorGUILayout.Slider("반동 미리보기", _previewRecoil, 0f, 1f);
-                    if (EditorGUI.EndChangeCheck()) ApplyPreviewRecoil();
+        // ── 손 자세 ──
+        if (Fold("손 기본 자세"))
+            using (Box())
+            {
+                EditorGUI.BeginChangeCheck();
+                _weapon.OverrideIdlePose = EditorGUILayout.Toggle(
+                    new GUIContent("무기 전용 자세", "끄면 FPArmRig의 IdlePose 사용"), _weapon.OverrideIdlePose);
 
-                    EditorGUI.indentLevel--;
+                if (_weapon.OverrideIdlePose)
+                {
+                    _weapon.RightHandPos = EditorGUILayout.Vector3Field("오른손 위치", _weapon.RightHandPos);
+                    _weapon.RightHandRot = EditorGUILayout.Vector3Field("오른손 회전", _weapon.RightHandRot);
+
+                    _weapon.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", _weapon.UseLeftHand);
+                    if (_weapon.UseLeftHand)
+                    {
+                        _weapon.LeftHandPos = EditorGUILayout.Vector3Field("왼손 위치", _weapon.LeftHandPos);
+                        _weapon.LeftHandRot = EditorGUILayout.Vector3Field("왼손 회전", _weapon.LeftHandRot);
+                    }
+                }
+                if (EditorGUI.EndChangeCheck()) RefreshPreview();
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button("씬 손 자세 저장", EditorStyles.miniButtonLeft)) CaptureWeaponIdlePose();
+                    if (GUILayout.Button("리그 Idle 복사", EditorStyles.miniButtonMid)) CopyRigIdle();
+                    if (GUILayout.Button("리그 기본값 전부", EditorStyles.miniButtonRight)) PullFromRigDefaults();
                 }
             }
 
-
-            // ── 시위 (활만) ──
-            if (_weapon.RangedKind == RangedType.Bow)
+        // ── 손가락 ──
+        if (Fold("손가락 그립"))
+            using (Box())
             {
-                EditorGUILayout.Space(4);
-                EditorGUILayout.LabelField("시위", EditorStyles.miniBoldLabel);
+                Vector3 axis = GetCurlAxis();
 
-                _weapon.StringPullDir = EditorGUILayout.Vector3Field("당기는 방향", _weapon.StringPullDir);
-                _weapon.StringPullDistance = EditorGUILayout.FloatField("당기는 거리 (m)", _weapon.StringPullDistance);
+                _weapon.RightGrip ??= HandPose.Grip(axis);
+                DrawGripEditor("오른손", ref _weapon.RightGrip, axis, _rig.RightHandRig, _weapon);
 
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("-Z (뒤)", EditorStyles.miniButtonLeft))
-                    _weapon.StringPullDir = Vector3.back;
-                if (GUILayout.Button("-X", EditorStyles.miniButtonMid))
-                    _weapon.StringPullDir = Vector3.left;
-                if (GUILayout.Button("-Y", EditorStyles.miniButtonRight))
-                    _weapon.StringPullDir = Vector3.down;
-                EditorGUILayout.EndHorizontal();
+                if (_weapon.Grip == GripType.TwoHand || _weapon.UseLeftHand)
+                {
+                    EditorGUILayout.Space(4);
+                    _weapon.LeftGrip ??= HandPose.Relaxed(axis);
+                    DrawGripEditor("왼손", ref _weapon.LeftGrip, axis, _rig.LeftHandRig, _weapon);
 
-                EditorGUILayout.Space(4);
-                EditorGUILayout.LabelField("시위 잡는 손", EditorStyles.miniBoldLabel);
-
-                _weapon.StringHandOffset = EditorGUILayout.Vector3Field("손 오프셋", _weapon.StringHandOffset);
-                _weapon.StringHandRot = EditorGUILayout.Vector3Field("손 회전", _weapon.StringHandRot);
-                _weapon.StringHandBlendTime = EditorGUILayout.FloatField("블렌드 시간 (초)", _weapon.StringHandBlendTime);
-
-                if (GUILayout.Button("씬 왼손 위치를 시위 손으로 저장"))
-                    CaptureStringHand();
-
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        if (GUILayout.Button("오른손 → 왼손", EditorStyles.miniButtonLeft)
+                            && _rig.RightHandRig != null && _rig.LeftHandRig != null)
+                        {
+                            _rig.LeftHandRig.CopyBoneRotationsFrom(_rig.RightHandRig);
+                            _weapon.LeftGrip ??= new HandPose();
+                            _rig.LeftHandRig.BakeAll(_weapon.LeftGrip);
+                            RefreshPreview();
+                        }
+                        if (GUILayout.Button("왼손 → 오른손", EditorStyles.miniButtonRight)
+                            && _rig.RightHandRig != null && _rig.LeftHandRig != null)
+                        {
+                            _rig.RightHandRig.CopyBoneRotationsFrom(_rig.LeftHandRig);
+                            _weapon.RightGrip ??= new HandPose();
+                            _rig.RightHandRig.BakeAll(_weapon.RightGrip);
+                            RefreshPreview();
+                        }
+                    }
+                }
             }
 
-            EditorGUI.indentLevel--;
-            EditorGUILayout.Space(4);
+        // ── 판정 ──
+        if (Fold("기본 판정 범위"))
+            using (Box())
+            {
+                EditorGUI.BeginChangeCheck();
+                _weapon.HitMode = (WeaponHitMode)EditorGUILayout.EnumPopup("판정 방식", _weapon.HitMode);
+                _weapon.Range = EditorGUILayout.FloatField("사거리 (m)", _weapon.Range);
+                if (_weapon.HitMode == WeaponHitMode.ForwardArc)
+                    _weapon.HitAngle = EditorGUILayout.Slider("각도 (°)", _weapon.HitAngle, 20f, 360f);
+                _weapon.HitHeight = EditorGUILayout.FloatField("수직 허용 (m)", _weapon.HitHeight);
+                _weapon.MinRange = EditorGUILayout.FloatField("최소 사거리", _weapon.MinRange);
+                if (EditorGUI.EndChangeCheck()) SceneView.RepaintAll();
+                Hint("씬 뷰에 부채꼴로 표시됩니다. 타격마다 다르게 하려면 모션 탭 → 타격 설정 → 판정 범위 개별 설정.");
+            }
+    }
+
+    // ══════════════════════ 원거리 탭 ══════════════════════
+
+    void DrawRangedTab()
+    {
+        if (Fold("발사"))
+            using (Box())
+            {
+                _weapon.RangedKind = (RangedType)EditorGUILayout.EnumPopup("발사 방식", _weapon.RangedKind);
+                _weapon.ProjectilePrefab = (GameObject)EditorGUILayout.ObjectField(
+                    "투사체 프리팹", _weapon.ProjectilePrefab, typeof(GameObject), false);
+                _weapon.ProjectileLifetime = EditorGUILayout.FloatField("투사체 수명 (초)", _weapon.ProjectileLifetime);
+
+                var wr = _rig.CurrentWeaponRig;
+                if (wr == null)
+                {
+                    EditorGUILayout.HelpBox(
+                        "무기 모델 프리팹에 WeaponRig가 없습니다.\n프리팹 루트에 추가한 뒤 Muzzle · StringBone을 지정하세요.",
+                        MessageType.Warning);
+                    if (_weapon.ModelPrefab != null && GUILayout.Button("모델 프리팹 열기"))
+                        AssetDatabase.OpenAsset(_weapon.ModelPrefab);
+                }
+                else
+                {
+                    EditorGUILayout.LabelField("발사 지점", wr.Muzzle != null ? wr.Muzzle.name : "없음 (Tip 사용)", EditorStyles.miniLabel);
+                    if (_weapon.RangedKind == RangedType.Bow)
+                        EditorGUILayout.LabelField("시위 본", wr.StringBone != null ? wr.StringBone.name : "없음", EditorStyles.miniLabel);
+                }
+            }
+
+        bool charge = _weapon.RangedKind == RangedType.Bow || _weapon.RangedKind == RangedType.Staff;
+
+        if (charge && Fold("차징"))
+            using (Box()) DrawChargeSection();
+
+        if (_weapon.RangedKind == RangedType.Bow && Fold("시위"))
+            using (Box()) DrawStringSection();
+
+        if (_weapon.RangedKind == RangedType.Gun && Fold("총"))
+            using (Box()) DrawGunSection();
+
+        if (Fold("투사체 미리보기"))
+            using (Box()) DrawProjectilePreviewSection();
+    }
+
+    void DrawChargeSection()
+    {
+        _weapon.MinDrawTime = EditorGUILayout.FloatField("최소 차징 (초)", _weapon.MinDrawTime);
+        _weapon.MaxDrawTime = EditorGUILayout.FloatField("최대 차징 (초)", _weapon.MaxDrawTime);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            _weapon.MinDrawDamageMul = EditorGUILayout.FloatField("피해× 최소", _weapon.MinDrawDamageMul);
+            _weapon.MaxDrawDamageMul = EditorGUILayout.FloatField("최대", _weapon.MaxDrawDamageMul);
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            _weapon.MinDrawSpeed = EditorGUILayout.FloatField("속도 최소", _weapon.MinDrawSpeed);
+            _weapon.MaxDrawSpeed = EditorGUILayout.FloatField("최대", _weapon.MaxDrawSpeed);
         }
 
-        _weapon.HitMode = (WeaponHitMode)EditorGUILayout.EnumPopup("판정 방식", _weapon.HitMode);
-        _weapon.Range = EditorGUILayout.FloatField("사거리 (m)", _weapon.Range);
+        _weapon.ProjectileGravity = EditorGUILayout.FloatField("투사체 중력", _weapon.ProjectileGravity);
 
-        if (_weapon.HitMode == WeaponHitMode.ForwardArc)
-            _weapon.HitAngle = EditorGUILayout.Slider("각도 (°)", _weapon.HitAngle, 20f, 360f);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            _weapon.PierceCount = EditorGUILayout.IntSlider("관통", _weapon.PierceCount, 0, 1);
+            using (new EditorGUI.DisabledScope(_weapon.PierceCount == 0))
+                _weapon.PierceDamageFalloff = EditorGUILayout.Slider("감쇠", _weapon.PierceDamageFalloff, 0f, 1f);
+        }
 
-        _weapon.HitHeight = EditorGUILayout.FloatField("수직 허용 (m)", _weapon.HitHeight);
-        _weapon.MinRange = EditorGUILayout.FloatField("최소 사거리", _weapon.MinRange);
+        EditorGUILayout.Space(4);
+        DrawDrawPreview();
 
+        EditorGUILayout.Space(4);
+        _weapon.UseChargePose = EditorGUILayout.Toggle("차징 자세 사용", _weapon.UseChargePose);
+        if (!_weapon.UseChargePose) return;
+
+        _weapon.ChargeCurve = EditorGUILayout.CurveField("보간 곡선", _weapon.ChargeCurve);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            using (new EditorGUI.DisabledScope(_previewDraw < 0.999f))
+                if (GUILayout.Button(new GUIContent("씬 자세 → 차징 자세", "차징 미리보기를 1로 둔 상태에서 저장"), GUILayout.Height(22)))
+                {
+                    _weapon.ChargePose = CaptureCurrentPose();
+                    ApplyPreviewDraw();
+                }
+            if (GUILayout.Button("기본 자세 복사", GUILayout.Width(100), GUILayout.Height(22)))
+                _weapon.ChargePose = _rig.GetEffectiveIdle().Clone();
+        }
+
+        if (_weapon.ChargePose != null)
+        {
+            EditorGUI.BeginChangeCheck();
+            DrawPoseValues(_weapon.ChargePose, false);
+            if (EditorGUI.EndChangeCheck()) ApplyPreviewDraw();
+
+            if (_rig.RightHandRig != null)
+            {
+                _weapon.ChargePose.UseWeaponGrip = EditorGUILayout.Toggle(
+                    new GUIContent("무기 그립 사용", "끄면 차징 중 손 모양을 따로 지정"), _weapon.ChargePose.UseWeaponGrip);
+
+                if (!_weapon.ChargePose.UseWeaponGrip)
+                {
+                    Vector3 ax = GetCurlAxis();
+                    _weapon.ChargePose.RightFingers ??= HandPose.Grip(ax);
+                    DrawSceneEditToggle(_weapon.ChargePose.RightFingers, _rig.RightHandRig, _weapon);
+                    DrawFingerSliders(_weapon.ChargePose.RightFingers, ax, _rig.RightHandRig, _weapon);
+                }
+            }
+        }
+    }
+
+    void DrawDrawPreview()
+    {
+        EditorGUI.BeginChangeCheck();
+        _previewDraw = EditorGUILayout.Slider("차징 미리보기", _previewDraw, 0f, 1f);
+        if (EditorGUI.EndChangeCheck()) ApplyPreviewDraw();
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (_weapon.RangedKind == RangedType.Bow && GUILayout.Button("씬 시위를 방향·거리로 읽기"))
+                CaptureStringPull();
+            if (GUILayout.Button("놓기", GUILayout.Width(50)))
+            {
+                _previewDraw = 0f;
+                ApplyPreviewDraw();
+            }
+        }
+
+        if (_weapon.RangedKind == RangedType.Bow && !_rig.HasBowString)
+            EditorGUILayout.HelpBox("시위 본이 없습니다. 무기 모델 프리팹의 WeaponRig에서 StringBone을 지정하세요.", MessageType.Warning);
+    }
+
+    void DrawStringSection()
+    {
+        _weapon.StringPullDir = EditorGUILayout.Vector3Field("당기는 방향", _weapon.StringPullDir);
+        _weapon.StringPullDistance = EditorGUILayout.FloatField("당기는 거리 (m)", _weapon.StringPullDistance);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("-Z (뒤)", EditorStyles.miniButtonLeft)) _weapon.StringPullDir = Vector3.back;
+            if (GUILayout.Button("-X", EditorStyles.miniButtonMid)) _weapon.StringPullDir = Vector3.left;
+            if (GUILayout.Button("-Y", EditorStyles.miniButtonRight)) _weapon.StringPullDir = Vector3.down;
+        }
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField("시위 잡는 손 (왼손)", EditorStyles.miniBoldLabel);
+        _weapon.StringHandOffset = EditorGUILayout.Vector3Field("손 오프셋", _weapon.StringHandOffset);
+        _weapon.StringHandRot = EditorGUILayout.Vector3Field("손 회전", _weapon.StringHandRot);
+        _weapon.StringHandBlendTime = EditorGUILayout.FloatField("블렌드 시간 (초)", _weapon.StringHandBlendTime);
+
+        if (GUILayout.Button("씬 왼손 위치를 시위 손으로 저장")) CaptureStringHand();
+    }
+
+    void DrawGunSection()
+    {
+        _weapon.FireMode = (GunFireMode)EditorGUILayout.EnumPopup("판정 방식", _weapon.FireMode);
+        _weapon.MaxAmmo = EditorGUILayout.IntField("탄약", _weapon.MaxAmmo);
+        _weapon.RoundsPerMinute = EditorGUILayout.FloatField("분당 발사", _weapon.RoundsPerMinute);
+        _weapon.FullAuto = EditorGUILayout.Toggle("연사", _weapon.FullAuto);
+
+        if (_weapon.FireMode == GunFireMode.Hitscan)
+        {
+            _weapon.HitscanRange = EditorGUILayout.FloatField("사거리 (m)", _weapon.HitscanRange);
+            _weapon.TracerPrefab = (GameObject)EditorGUILayout.ObjectField("예광탄", _weapon.TracerPrefab, typeof(GameObject), false);
+        }
+        else
+        {
+            _weapon.ProjectileSpeed = EditorGUILayout.FloatField("투사체 속도", _weapon.ProjectileSpeed);
+            _weapon.ProjectileGravity = EditorGUILayout.FloatField("투사체 중력", _weapon.ProjectileGravity);
+        }
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField("카메라 반동", EditorStyles.miniBoldLabel);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            _weapon.RecoilVertical = EditorGUILayout.FloatField("수직", _weapon.RecoilVertical);
+            _weapon.RecoilHorizontal = EditorGUILayout.FloatField("수평", _weapon.RecoilHorizontal);
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            _weapon.RecoilRamp = EditorGUILayout.FloatField("누적 배율", _weapon.RecoilRamp);
+            _weapon.RecoilMaxMul = EditorGUILayout.FloatField("누적 상한", _weapon.RecoilMaxMul);
+        }
+
+        EditorGUILayout.Space(4);
+        _weapon.UseRecoilPose = EditorGUILayout.Toggle("팔 반동 자세 사용", _weapon.UseRecoilPose);
+        if (!_weapon.UseRecoilPose) return;
+
+        _weapon.RecoilRiseTime = EditorGUILayout.FloatField("올라가는 시간", _weapon.RecoilRiseTime);
+        _weapon.RecoilFallTime = EditorGUILayout.FloatField("돌아오는 시간", _weapon.RecoilFallTime);
+        _weapon.RecoilPoseMaxStack = EditorGUILayout.Slider("연사 누적 상한", _weapon.RecoilPoseMaxStack, 1f, 3f);
+        _weapon.RecoilSwayAmount = EditorGUILayout.FloatField("흔들림 (수평)", _weapon.RecoilSwayAmount);
+        _weapon.RecoilSwayVertical = EditorGUILayout.FloatField("흔들림 (수직)", _weapon.RecoilSwayVertical);
+        _weapon.RecoilSwaySpeed = EditorGUILayout.FloatField("흔들림 속도", _weapon.RecoilSwaySpeed);
+
+        EditorGUI.BeginChangeCheck();
+        _previewRecoil = EditorGUILayout.Slider("반동 미리보기", _previewRecoil, 0f, 1f);
+        if (EditorGUI.EndChangeCheck()) ApplyPreviewRecoil();
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            using (new EditorGUI.DisabledScope(_previewRecoil < 0.999f))
+                if (GUILayout.Button(new GUIContent("씬 자세 → 반동 자세", "반동 미리보기를 1로 둔 상태에서 저장"), GUILayout.Height(22)))
+                {
+                    _weapon.RecoilPose = CaptureCurrentPose();
+                    ApplyPreviewRecoil();
+                }
+            if (GUILayout.Button("기본 자세 복사", GUILayout.Width(100), GUILayout.Height(22)))
+                _weapon.RecoilPose = _rig.GetEffectiveIdle().Clone();
+        }
+
+        if (_weapon.RecoilPose != null)
+        {
+            EditorGUI.BeginChangeCheck();
+            DrawPoseValues(_weapon.RecoilPose, false);
+            if (EditorGUI.EndChangeCheck()) ApplyPreviewRecoil();
+        }
+    }
+
+    void DrawProjectilePreviewSection()
+    {
+        var wr = _rig.CurrentWeaponRig;
+        if (wr == null)
+        {
+            Hint("무기 모델에 WeaponRig가 없습니다.");
+            return;
+        }
+
+        EditorGUILayout.LabelField("모델", wr.ProjectileVisual != null ? wr.ProjectileVisual.name : "없음");
+        EditorGUILayout.LabelField("표시 방식", wr.PreviewMode switch
+        {
+            ProjectilePreviewMode.WhileDrawing => "당기는 동안 (활)",
+            ProjectilePreviewMode.WhileLoaded => "탄약이 있는 동안 (RPG 등)",
+            _ => "사용 안 함",
+        });
+
+        if (wr.ProjectileVisual == null)
+            EditorGUILayout.HelpBox(
+                "모델 프리팹 안에 화살·탄두를 자식으로 만들고 WeaponRig의 Projectile Visual에 연결하세요.\n" +
+                "활은 StringBone의 자식으로 두면 시위를 따라 움직입니다.", MessageType.Info);
+        else if (wr.PreviewMode == ProjectilePreviewMode.WhileDrawing && wr.StringBone != null
+                 && !wr.ProjectileVisual.transform.IsChildOf(wr.StringBone))
+            EditorGUILayout.HelpBox("화살이 시위 본의 자식이 아니라서 시위를 당겨도 따라오지 않습니다.", MessageType.Warning);
+
+        EditorGUI.BeginChangeCheck();
+        _forceProjectile = EditorGUILayout.Toggle("항상 보이기 (위치 확인용)", _forceProjectile);
         if (EditorGUI.EndChangeCheck())
         {
-            EditorUtility.SetDirty(_weapon);
+            if (_forceProjectile) wr.ForcePreview(true);
+            else { wr.SetLoaded(true); wr.OnDraw(_previewDraw); }
             SceneView.RepaintAll();
         }
+
+        if (_weapon.ModelPrefab != null && GUILayout.Button("모델 프리팹 열기 (위치는 프리팹에서 직접)"))
+            AssetDatabase.OpenAsset(_weapon.ModelPrefab);
+
+        Hint("모드와 화살 연결은 프리팹의 WeaponRig에서 정합니다. 차징 미리보기 슬라이더로 따라오는지 확인하세요.");
     }
 
     void ApplyPreviewRecoil()
@@ -685,208 +721,1687 @@ public class WeaponSetupWindow : EditorWindow
         SceneView.RepaintAll();
     }
 
-
-    void DrawChargePreview()
-    {
-        if (_rig == null) return;
-
-        EditorGUILayout.Space(4);
-
-        EditorGUI.BeginChangeCheck();
-        _previewDraw = EditorGUILayout.Slider("차징 미리보기", _previewDraw, 0f, 1f);
-        if (EditorGUI.EndChangeCheck()) ApplyPreviewDraw();
-
-        EditorGUILayout.BeginHorizontal();
-
-        if (_weapon.RangedKind == RangedType.Bow &&
-            GUILayout.Button("씬 시위를 방향·거리로 읽기", GUILayout.Height(22)))
-            CaptureStringPull();
-
-        if (GUILayout.Button("놓기", GUILayout.Width(50), GUILayout.Height(22)))
-        {
-            _previewDraw = 0f;
-            ApplyPreviewDraw();
-        }
-
-        EditorGUILayout.EndHorizontal();
-
-        if (_weapon.RangedKind == RangedType.Bow && !_rig.HasBowString)
-            EditorGUILayout.HelpBox(
-                "시위 본이 없습니다. 무기 모델 프리팹의 WeaponRig에서 StringBone을 지정하세요.",
-                MessageType.Warning);
-    }
-
     void ApplyPreviewDraw()
     {
         _rig.SetDrawAmount(_previewDraw);
         _rig.ApplyPose(_rig.GetEffectiveIdle());
+        if (_forceProjectile) _rig.CurrentWeaponRig?.ForcePreview(true);
         SceneView.RepaintAll();
     }
 
-    void CaptureStringPull()
+    // ══════════════════════ 모션 탭 ══════════════════════
+
+    void DrawMotionTab()
     {
-        var bone = _rig?.StringBone;
-        if (bone == null)
+        int len = _source.ComboLength;
+
+        if (len == 0)
         {
-            Debug.LogWarning("[MotionSetup] 시위 본이 없습니다. WeaponRig의 StringBone을 확인하세요.");
+            EditorGUILayout.HelpBox("모션이 비어 있습니다.", MessageType.Warning);
+            if (_source.SupportsMultiStep && GUILayout.Button("1타 추가"))
+                Modify("Add Combo", () => _source.SetSteps(new[] { new ComboStep { Name = "1타" } }));
             return;
         }
 
-        Vector3 delta = bone.localPosition - _rig.StringRestPos;
+        _comboIndex = Mathf.Clamp(_comboIndex, 0, len - 1);
+        DrawComboBar(len);
 
-        if (delta.sqrMagnitude < 1e-6f)
+        var step = CurrentStep;
+        if (step == null) return;
+
+        step.Motion ??= new SwingMotion();
+        step.Motion.Keys ??= new List<PoseKey>();
+        step.Events ??= new MotionEvent[0];
+
+        HandleShortcuts(step);
+
+        // ── 이름 · 길이 · 프리셋 ──
+        using (Box())
         {
-            Debug.LogWarning("[MotionSetup] 시위를 먼저 씬에서 당겨 주세요.");
-            return;
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                step.Name = EditorGUILayout.TextField(step.Name);
+                EditorGUILayout.LabelField("길이", GUILayout.Width(28));
+                step.Duration = Mathf.Max(0.05f, EditorGUILayout.FloatField(step.Duration, GUILayout.Width(48)));
+                EditorGUILayout.LabelField("초", GUILayout.Width(16));
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                _presetKind = (SwingPresets.Kind)EditorGUILayout.EnumPopup(_presetKind);
+                if (GUILayout.Button("프리셋 적용", GUILayout.Width(80))) ApplyPreset(step, _rig.GetEffectiveIdle());
+                if (GUILayout.Button(new GUIContent("현재 포즈 기준", "지금 씬 포즈를 기준으로 프리셋 적용"), GUILayout.Width(96)))
+                    ApplyPreset(step, CaptureCurrentPose());
+            }
         }
 
-        Undo.RecordObject(_weapon, "Capture String Pull");
-        _weapon.StringPullDir = delta.normalized;
-        _weapon.StringPullDistance = delta.magnitude;
-        EditorUtility.SetDirty(_weapon);
+        // ── 타임라인 ──
+        EditorGUILayout.Space(4);
+        DrawTimeline(step);
+        DrawAddBar(step);
+        DrawPlayback(step);
 
-        Debug.Log($"[MotionSetup] 시위 — 방향 {_weapon.StringPullDir}, " +
-                  $"거리 {_weapon.StringPullDistance:F3}m");
+        // ── 선택한 것 ──
+        EditorGUILayout.Space(6);
+        using (Box())
+        {
+            if (_sel == Sel.Key && _selIndex >= 0 && _selIndex < step.Motion.Keys.Count)
+                DrawKeyInspector(step, _selIndex);
+            else if (_sel == Sel.Event && _selIndex >= 0 && _selIndex < step.Events.Length)
+                DrawEventInspector(step, _selIndex);
+            else
+            {
+                ClearSelection();
+                EditorGUILayout.LabelField("선택한 항목 없음", EditorStyles.boldLabel);
+                Hint("타임라인에서 ◆ 키나 이벤트를 클릭하세요.\n" + ShortcutHelp);
+            }
+        }
+
+        // ── 타격 설정 ──
+        EditorGUILayout.Space(4);
+        if (Fold("타격 설정 (판정 · 피해 · 연출)", false))
+            using (Box()) DrawStepSettings(step);
+
+        // ── 목록 ──
+        if (Fold("키 순서 · 이벤트 목록", true))
+            using (Box()) DrawLists(step);
     }
 
-    void CaptureStringHand()
+    float NowT(ComboStep step) => Mathf.Clamp01(_playT / Mathf.Max(0.01f, step.TotalTime));
+
+    void DrawComboBar(int len)
     {
-        var bone = _rig?.StringBone;
-        if (bone == null || _rig.LeftHand == null)
+        using (new EditorGUILayout.HorizontalScope())
         {
-            Debug.LogWarning("[MotionSetup] 시위 본 또는 왼손이 없습니다.");
+            if (len > 1)
+            {
+                for (int i = 0; i < len; i++)
+                {
+                    var s = _source.GetStep(i);
+                    var style = i == 0 ? EditorStyles.miniButtonLeft
+                        : i == len - 1 ? EditorStyles.miniButtonRight
+                        : EditorStyles.miniButtonMid;
+
+                    bool on = _comboIndex == i;
+                    if (GUILayout.Toggle(on, s?.Name ?? $"{i + 1}타", style) && !on)
+                    {
+                        _comboIndex = i;
+                        ClearSelection();
+                        _playT = 0f;
+                        _playing = false;
+                        RefreshPreview();
+                    }
+                }
+            }
+            else GUILayout.FlexibleSpace();
+
+            GUILayout.Space(6);
+            if (GUILayout.Button(new GUIContent("⇋ 좌우 반전 ▾", "오른손 ↔ 왼손을 바꾼 모션 만들기"), EditorStyles.miniButton, GUILayout.Width(92)))
+                ShowMirrorMenu();
+
+            if (!_source.SupportsMultiStep) return;
+
+            GUILayout.Space(4);
+            if (GUILayout.Button(new GUIContent("+", "타 추가"), EditorStyles.miniButtonLeft, GUILayout.Width(24))) AddComboStep();
+            if (GUILayout.Button(new GUIContent("⧉", "이 타 복제"), EditorStyles.miniButtonMid, GUILayout.Width(24))) DuplicateComboStep();
+            using (new EditorGUI.DisabledScope(len <= 1))
+                if (GUILayout.Button(new GUIContent("−", "이 타 삭제"), EditorStyles.miniButtonRight, GUILayout.Width(24))) DeleteComboStep();
+        }
+    }
+
+    // ─────────── 좌우 반전 ───────────
+
+    /// <summary>손가락 관절 회전을 반전할 축. 왼손 모델이 오른손의 거울상이면 보통 '그대로'가 맞음</summary>
+    enum FingerMirror { AsIs, MirrorX, MirrorY, MirrorZ }
+    private FingerMirror _fingerMirror = FingerMirror.AsIs;
+
+    void ShowMirrorMenu()
+    {
+        var menu = new GenericMenu();
+
+        if (_source.SupportsMultiStep)
+        {
+            menu.AddItem(new GUIContent("반전한 타를 바로 다음에 추가"), false, () => AddMirroredStep(false));
+            menu.AddItem(new GUIContent("반전한 타를 맨 끝에 추가"), false, () => AddMirroredStep(true));
+        }
+        menu.AddItem(new GUIContent("이 타를 그대로 반전"), false, MirrorCurrentInPlace);
+        menu.AddSeparator("");
+        menu.AddItem(new GUIContent("손가락 회전/그대로 (왼손이 거울 모델)"), _fingerMirror == FingerMirror.AsIs, () => _fingerMirror = FingerMirror.AsIs);
+        menu.AddItem(new GUIContent("손가락 회전/X축 반전"), _fingerMirror == FingerMirror.MirrorX, () => _fingerMirror = FingerMirror.MirrorX);
+        menu.AddItem(new GUIContent("손가락 회전/Y축 반전"), _fingerMirror == FingerMirror.MirrorY, () => _fingerMirror = FingerMirror.MirrorY);
+        menu.AddItem(new GUIContent("손가락 회전/Z축 반전"), _fingerMirror == FingerMirror.MirrorZ, () => _fingerMirror = FingerMirror.MirrorZ);
+        menu.ShowAsContext();
+    }
+
+    void AddMirroredStep(bool atEnd)
+    {
+        var list = new List<ComboStep>(_source.GetSteps());
+        var src = list[_comboIndex];
+        var m = MirrorStep(src);
+        m.Name = $"{list.Count + 1}타";
+
+        int at = atEnd ? list.Count : _comboIndex + 1;
+        list.Insert(at, m);
+
+        Modify("Add Mirrored Step", () => _source.SetSteps(list.ToArray()));
+        _comboIndex = at;
+        ClearSelection();
+        _playT = 0f;
+        RefreshPreview();
+    }
+
+    void MirrorCurrentInPlace()
+    {
+        var step = CurrentStep;
+        if (step == null) return;
+
+        var m = MirrorStep(step);
+        Modify("Mirror Step", () =>
+        {
+            step.Motion = m.Motion;
+            step.Events = m.Events;
+            step.HandMode = m.HandMode;
+        });
+        RefreshPreview();
+    }
+
+    /// <summary>오른손 ↔ 왼손 바꾸고 좌우(X) 대칭. 타이밍·판정·피해 설정은 그대로</summary>
+    ComboStep MirrorStep(ComboStep src)
+    {
+        var c = CloneStep(src);
+
+        c.HandMode = src.HandMode switch
+        {
+            HandVisibility.RightOnly => HandVisibility.LeftOnly,
+            HandVisibility.LeftOnly => HandVisibility.RightOnly,
+            _ => src.HandMode,
+        };
+
+        if (c.Motion?.Keys != null)
+            foreach (var k in c.Motion.Keys)
+                k.Pose = MirrorPose(k.Pose, _fingerMirror);
+
+        if (c.Events != null)
+            foreach (var e in c.Events)
+            {
+                if (e == null) continue;
+
+                e.Space = e.Space switch
+                {
+                    EventSpace.AttachToRightHand => EventSpace.AttachToLeftHand,
+                    EventSpace.AttachToLeftHand => EventSpace.AttachToRightHand,
+                    _ => e.Space,
+                };
+
+                // 무기·총구 기준은 무기 쪽 좌표라 그대로, 나머지는 좌우 대칭
+                if (e.Space != EventSpace.AttachToWeapon && e.Space != EventSpace.AttachToMuzzle)
+                {
+                    e.PositionOffset = MirrorPos(e.PositionOffset);
+                    e.RotationOffset = MirrorRot(e.RotationOffset);
+                }
+            }
+
+        return c;
+    }
+
+    static Vector3 MirrorPos(Vector3 v) => new(-v.x, v.y, v.z);
+    static Vector3 MirrorRot(Vector3 e) => new(e.x, -e.y, -e.z);
+
+    static ArmPose MirrorPose(ArmPose p, FingerMirror fm)
+    {
+        if (p == null) return null;
+        var r = p.Clone();
+
+        r.RightPos = MirrorPos(p.LeftPos);
+        r.RightRot = MirrorRot(p.LeftRot);
+        r.LeftPos = MirrorPos(p.RightPos);
+        r.LeftRot = MirrorRot(p.RightRot);
+        r.UseLeftHand = true;                       // 왼손이 주인공이 되므로 항상 보이게
+
+        r.RightFingers = MirrorHand(p.LeftFingers, fm);
+        r.LeftFingers = MirrorHand(p.RightFingers, fm);
+
+        r.CamPos = MirrorPos(p.CamPos);
+        r.CamRot = MirrorRot(p.CamRot);
+        r.BodyPos = MirrorPos(p.BodyPos);
+        r.BodyRot = MirrorRot(p.BodyRot);
+        r.HeadPos = MirrorPos(p.HeadPos);
+        r.HeadRot = MirrorRot(p.HeadRot);
+
+        // 무기 오프셋은 무기를 든 손 기준이라 그대로
+        return r;
+    }
+
+    static HandPose MirrorHand(HandPose h, FingerMirror fm)
+    {
+        if (h == null) return null;
+        var c = h.Clone();
+        if (fm == FingerMirror.AsIs) return c;
+
+        c.EnsureValid();
+        for (int f = 0; f < HandPose.FingerCount; f++)
+        {
+            var fp = c.Get(f);
+            if (fp?.Joints == null) continue;
+
+            for (int j = 0; j < fp.Joints.Length; j++)
+            {
+                var q = fp.Joints[j];
+                fp.Joints[j] = fm switch
+                {
+                    FingerMirror.MirrorX => new Quaternion(q.x, -q.y, -q.z, q.w),
+                    FingerMirror.MirrorY => new Quaternion(-q.x, q.y, -q.z, q.w),
+                    _ => new Quaternion(-q.x, -q.y, q.z, q.w),
+                };
+            }
+        }
+        return c;
+    }
+
+    static ComboStep CloneStep(ComboStep src)
+    {
+        var c = new ComboStep();
+        EditorJsonUtility.FromJsonOverwrite(EditorJsonUtility.ToJson(src), c);
+        return c;
+    }
+
+    void AddComboStep()
+    {
+        var list = new List<ComboStep>(_source.GetSteps() ?? new ComboStep[0]);
+        var src = list.Count > 0 ? list[^1] : null;
+
+        var next = src != null ? CloneStep(src) : new ComboStep();
+        next.Name = $"{list.Count + 1}타";
+        next.DamageMultiplier = (src?.DamageMultiplier ?? 1f) + 0.15f;
+        next.Events = new MotionEvent[0];
+
+        var kind = list.Count % 2 == 0 ? SwingPresets.Kind.DiagonalSlash : SwingPresets.Kind.BackhandReturn;
+        next.Motion = SwingPresets.Create(kind, _rig.GetEffectiveIdle(), IsTwoHand());
+
+        list.Add(next);
+        Modify("Add Combo Step", () => _source.SetSteps(list.ToArray()));
+
+        _comboIndex = list.Count - 1;
+        ClearSelection();
+        _playT = 0f;
+        RefreshPreview();
+    }
+
+    void DuplicateComboStep()
+    {
+        var list = new List<ComboStep>(_source.GetSteps());
+        var copy = CloneStep(list[_comboIndex]);
+        copy.Name = $"{list.Count + 1}타";
+        list.Insert(_comboIndex + 1, copy);
+
+        Modify("Duplicate Step", () => _source.SetSteps(list.ToArray()));
+        _comboIndex++;
+        ClearSelection();
+    }
+
+    void DeleteComboStep()
+    {
+        if (!EditorUtility.DisplayDialog("확인", $"{CurrentStep?.Name}를 삭제할까요?", "삭제", "취소")) return;
+
+        var list = new List<ComboStep>(_source.GetSteps());
+        list.RemoveAt(_comboIndex);
+        Modify("Delete Combo Step", () => _source.SetSteps(list.ToArray()));
+
+        _comboIndex = Mathf.Clamp(_comboIndex, 0, Mathf.Max(0, list.Count - 1));
+        ClearSelection();
+    }
+
+    void ApplyPreset(ComboStep step, ArmPose baseIdle)
+    {
+        Modify("Apply Preset", () => step.Motion = SwingPresets.Create(_presetKind, baseIdle, IsTwoHand()));
+        ClearSelection();
+        _playT = 0f;
+        RefreshPreview();
+    }
+
+    bool IsTwoHand()
+    {
+        var w = ResolvePreviewWeapon();
+        return w != null && w.Grip == GripType.TwoHand;
+    }
+
+    // ─────────── 타임라인 ───────────
+
+    const float LabelW = 46f;
+
+    void DrawTimeline(ComboStep step)
+    {
+        Rect full = GUILayoutUtility.GetRect(0, 104, GUILayout.ExpandWidth(true));
+        EditorGUI.DrawRect(full, CBg);
+
+        Rect area = new(full.x + LabelW, full.y + 2, full.width - LabelW - 8, full.height - 4);
+        Rect ruler = new(area.x, area.y, area.width, 14);
+        Rect phase = new(area.x, ruler.yMax + 2, area.width, 24);
+        Rect keys = new(area.x, phase.yMax + 6, area.width, 22);
+        Rect evs = new(area.x, keys.yMax + 6, area.width, 22);
+
+        float X(float t) => area.x + area.width * Mathf.Clamp01(t);
+
+        // 왼쪽 이름
+        var lab = EditorStyles.miniLabel;
+        GUI.Label(new Rect(full.x + 4, phase.y + 4, LabelW, 16), "타격", lab);
+        GUI.Label(new Rect(full.x + 4, keys.y + 3, LabelW, 16), "키", lab);
+        GUI.Label(new Rect(full.x + 4, evs.y + 3, LabelW, 16), "이벤트", lab);
+
+        // 눈금
+        for (int i = 0; i <= 20; i++)
+        {
+            float t = i / 20f;
+            bool major = i % 5 == 0;
+            EditorGUI.DrawRect(new Rect(X(t), ruler.yMax - (major ? 8 : 4), 1, major ? 8 : 4), new Color(1, 1, 1, 0.25f));
+            if (major)
+                GUI.Label(new Rect(X(t) + 2, ruler.y - 2, 50, 14), $"{t * step.Duration:0.##}s", EditorStyles.miniLabel);
+        }
+
+        // 판정 구간
+        float xs = X(step.HitStart), xe = X(step.HitEnd), xc = X(step.CancelPoint);
+        EditorGUI.DrawRect(new Rect(phase.x, phase.y, xs - phase.x, phase.height), CWindUp);
+        EditorGUI.DrawRect(new Rect(xs, phase.y, xe - xs, phase.height), CActive);
+        EditorGUI.DrawRect(new Rect(xe, phase.y, phase.xMax - xe, phase.height), CRecovery);
+        DrawHandle(xs, phase, CHandle);
+        DrawHandle(xe, phase, CHandle);
+        DrawHandle(xc, phase, CCancel);
+        GUI.Label(new Rect(xs + 3, phase.y + 4, Mathf.Max(0, xe - xs), 16), "판정", EditorStyles.whiteMiniLabel);
+
+        // 레인
+        EditorGUI.DrawRect(keys, CLane);
+        EditorGUI.DrawRect(evs, CLane);
+
+        // 키
+        var kl = step.Motion.Keys;
+        for (int i = 0; i < kl.Count; i++)
+        {
+            bool sel = _sel == Sel.Key && _selIndex == i;
+            float x = X(kl[i].Time);
+            DrawDiamond(new Vector2(x, keys.center.y), sel ? 7f : 5.5f, sel ? CSelected : CKey);
+        }
+
+        // 이벤트
+        for (int i = 0; i < step.Events.Length; i++)
+        {
+            var e = step.Events[i];
+            if (e == null) continue;
+            var m = Meta(e.Type);
+            bool sel = _sel == Sel.Event && _selIndex == i;
+            Rect r = new(X(e.Time) - 8, evs.y + 2, 16, evs.height - 4);
+            EditorGUI.DrawRect(r, sel ? CSelected : m.color * 0.85f);
+            var st = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter, fontSize = 10 };
+            st.normal.textColor = Color.black;
+            GUI.Label(r, m.icon, st);
+        }
+
+        // 재생 위치
+        float px = X(NowT(step));
+        EditorGUI.DrawRect(new Rect(px - 1, area.y, 2, area.height), CPlayhead);
+
+        HandleTimelineInput(step, area, ruler, phase, keys, evs);
+    }
+
+    static void DrawHandle(float x, Rect r, Color c)
+    {
+        EditorGUI.DrawRect(new Rect(x - 1.5f, r.y, 3, r.height), c);
+        EditorGUIUtility.AddCursorRect(new Rect(x - 6, r.y, 12, r.height), MouseCursor.ResizeHorizontal);
+    }
+
+    static GUIStyle _diamondStyle;
+
+    static void DrawDiamond(Vector2 c, float s, Color col)
+    {
+        _diamondStyle ??= new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter, padding = new RectOffset() };
+        _diamondStyle.fontSize = Mathf.RoundToInt(s * 2.2f);
+        _diamondStyle.normal.textColor = col;
+        GUI.Label(new Rect(c.x - 10, c.y - 10, 20, 20), "◆", _diamondStyle);
+    }
+
+    void HandleTimelineInput(ComboStep step, Rect area, Rect ruler, Rect phase, Rect keys, Rect evs)
+    {
+        int id = GUIUtility.GetControlID(FocusType.Passive);
+        Event e = Event.current;
+        float T(float mx) => Mathf.Clamp01((mx - area.x) / area.width);
+        float X(float t) => area.x + area.width * t;
+
+        switch (e.GetTypeForControl(id))
+        {
+            case EventType.MouseDown when e.button == 0 && area.Contains(e.mousePosition):
+                {
+                    Vector2 m = e.mousePosition;
+                    _drag = Drag.Scrub;
+
+                    if (evs.Contains(m) && Nearest(step.Events.Length, i => step.Events[i] != null ? X(step.Events[i].Time) : -999, m.x, 9f, out int ei))
+                    {
+                        Select(Sel.Event, ei, step);
+                        _drag = Drag.Event;
+                        _dragEvent = step.Events[ei];
+                    }
+                    else if (keys.Contains(m) && Nearest(step.Motion.Keys.Count, i => X(step.Motion.Keys[i].Time), m.x, 8f, out int ki))
+                    {
+                        Select(Sel.Key, ki, step);
+                        _drag = Drag.Key;
+                        _dragKey = step.Motion.Keys[ki];
+                    }
+                    else if (phase.Contains(m))
+                    {
+                        float ds = Mathf.Abs(m.x - X(step.HitStart));
+                        float de = Mathf.Abs(m.x - X(step.HitEnd));
+                        float dc = Mathf.Abs(m.x - X(step.CancelPoint));
+                        float min = Mathf.Min(ds, Mathf.Min(de, dc));
+                        if (min < 7f) _drag = min == ds ? Drag.HitStart : min == de ? Drag.HitEnd : Drag.Cancel;
+                    }
+                    else if (keys.Contains(m) || evs.Contains(m))
+                    {
+                        ClearSelection();
+                    }
+
+                    if (_drag == Drag.Scrub) Scrub(step, T(m.x));
+
+                    GUIUtility.hotControl = id;
+                    e.Use();
+                    break;
+                }
+
+            case EventType.MouseDrag when GUIUtility.hotControl == id:
+                {
+                    float t = T(e.mousePosition.x);
+                    switch (_drag)
+                    {
+                        case Drag.Scrub: Scrub(step, t); break;
+                        case Drag.HitStart: step.HitStart = Mathf.Min(t, step.HitEnd - 0.02f); break;
+                        case Drag.HitEnd: step.HitEnd = Mathf.Max(t, step.HitStart + 0.02f); break;
+                        case Drag.Cancel: step.CancelPoint = t; break;
+                        case Drag.Key:
+                            if (_dragKey != null) { _dragKey.Time = t; Scrub(step, t); }
+                            break;
+                        case Drag.Event:
+                            if (_dragEvent != null) _dragEvent.Time = t;
+                            break;
+                    }
+                    GUI.changed = true;
+                    e.Use();
+                    Repaint();
+                    break;
+                }
+
+            case EventType.MouseUp when GUIUtility.hotControl == id:
+                {
+                    if (_drag == Drag.Key && _dragKey != null)
+                    {
+                        step.Motion.SortKeys();
+                        _selIndex = step.Motion.Keys.IndexOf(_dragKey);
+                    }
+                    _drag = Drag.None;
+                    _dragKey = null;
+                    _dragEvent = null;
+                    GUIUtility.hotControl = 0;
+                    EditorUtility.SetDirty(_target);
+                    e.Use();
+                    break;
+                }
+
+            case EventType.ContextClick when area.Contains(e.mousePosition):
+                {
+                    ShowContextMenu(step, T(e.mousePosition.x), e.mousePosition, keys, evs, X);
+                    e.Use();
+                    break;
+                }
+        }
+    }
+
+    static bool Nearest(int count, Func<int, float> xOf, float mx, float within, out int index)
+    {
+        index = -1;
+        float best = within;
+        for (int i = 0; i < count; i++)
+        {
+            float d = Mathf.Abs(xOf(i) - mx);
+            if (d <= best) { best = d; index = i; }
+        }
+        return index >= 0;
+    }
+
+    void Scrub(ComboStep step, float t)
+    {
+        _playing = false;
+        _playT = t * step.TotalTime;
+        RefreshPreview();
+    }
+
+    void ShowContextMenu(ComboStep step, float t, Vector2 mouse, Rect keys, Rect evs, Func<float, float> X)
+    {
+        var menu = new GenericMenu();
+
+        bool onKey = keys.Contains(mouse) && Nearest(step.Motion.Keys.Count, i => X(step.Motion.Keys[i].Time), mouse.x, 8f, out int ki);
+        bool onEvent = evs.Contains(mouse) && Nearest(step.Events.Length, i => step.Events[i] != null ? X(step.Events[i].Time) : -999, mouse.x, 9f, out int ei);
+
+        // 컴파일러가 위 out 값을 '항상 할당됨'으로 보지 않아서 한 번 더 구함 (onKey/onEvent가 true일 때만 사용)
+        Nearest(step.Motion.Keys.Count, i => X(step.Motion.Keys[i].Time), mouse.x, 8f, out ki);
+        Nearest(step.Events.Length, i => step.Events[i] != null ? X(step.Events[i].Time) : -999, mouse.x, 9f, out ei);
+
+        if (onKey)
+        {
+            var key = step.Motion.Keys[ki];
+            menu.AddItem(new GUIContent("키 복제"), false, () => DuplicateKey(step, key));
+            menu.AddItem(new GUIContent("키 삭제"), false, () => DeleteKey(step, key));
+            menu.AddSeparator("");
+        }
+        if (onEvent)
+        {
+            var ev = step.Events[ei];
+            menu.AddItem(new GUIContent("이벤트 복제"), false, () => DuplicateEvent(step, ev));
+            menu.AddItem(new GUIContent("이벤트 삭제"), false, () => DeleteEvent(step, ev));
+            menu.AddSeparator("");
+        }
+
+        menu.AddItem(new GUIContent($"여기({t * step.Duration:0.00}s)에 키 — 현재 씬 포즈"), false,
+            () => AddKeyAt(step, t, CaptureCurrentPose()));
+        menu.AddItem(new GUIContent("여기에 키 — 이 시점 모션 그대로"), false,
+            () => AddKeyAt(step, t, EvaluateAt(step, t)));
+
+        foreach (MotionEventType type in Enum.GetValues(typeof(MotionEventType)))
+        {
+            var m = Meta(type);
+            var tt = type;
+            menu.AddItem(new GUIContent($"이벤트 추가/{m.icon}  {m.label}"), false, () => AddEventAt(step, t, tt));
+        }
+
+        menu.ShowAsContext();
+    }
+
+    void ShowAddEventMenu(ComboStep step, float t)
+    {
+        var menu = new GenericMenu();
+        foreach (MotionEventType type in Enum.GetValues(typeof(MotionEventType)))
+        {
+            var m = Meta(type);
+            var tt = type;
+            menu.AddItem(new GUIContent($"{m.icon}  {m.label}"), false, () => AddEventAt(step, t, tt));
+        }
+        menu.ShowAsContext();
+    }
+
+    ArmPose EvaluateAt(ComboStep step, float t)
+    {
+        var idle = _rig.GetEffectiveIdle();
+        return step.Motion != null && step.Motion.IsValid ? step.Motion.Evaluate(t, idle) : idle.Clone();
+    }
+
+    const string ShortcutHelp =
+        "K 키 추가 · Shift+K 씬 포즈로 키 · E 이벤트 추가 · D 복제 · Delete 삭제\n" +
+        "Ctrl+C / Ctrl+V 키 포즈 복사·붙여넣기 · ← → 이전/다음 키 · Esc 선택 해제 · Space 재생";
+
+    /// <summary>타임라인 바로 아래 — 선택 상태와 상관없이 항상 보이는 추가 버튼</summary>
+    void DrawAddBar(ComboStep step)
+    {
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button(new GUIContent("+ 키", "K — 선택한 키 다음(또는 재생 위치)에 지금 모션 그대로 키를 끼워 넣음"), EditorStyles.miniButtonLeft))
+                AddInterpolatedKey(step);
+            if (GUILayout.Button(new GUIContent("+ 씬 포즈로 키", "Shift+K — 재생 위치에 지금 씬 포즈로 키"), EditorStyles.miniButtonMid))
+                AddKeyAt(step, NowT(step), CaptureCurrentPose());
+            if (GUILayout.Button(new GUIContent("+ 이벤트 ▾", "E — 재생 위치(또는 선택한 키 시점)에 이벤트"), EditorStyles.miniButtonMid))
+                ShowAddEventMenu(step, EventTime(step));
+
+            using (new EditorGUI.DisabledScope(_sel == Sel.None))
+                if (GUILayout.Button(new GUIContent("복제", "D"), EditorStyles.miniButtonRight, GUILayout.Width(44)))
+                    DuplicateSelection(step);
+
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent("단축키 ?", ShortcutHelp), EditorStyles.miniLabel);
+        }
+    }
+
+    /// <summary>새 키 시점 — 선택한 키와 다음 키 사이, 없으면 재생 위치 (같은 자리에 키가 있으면 옆으로)</summary>
+    float NewKeyTime(ComboStep step)
+    {
+        var keys = step.Motion.Keys;
+
+        if (_sel == Sel.Key && _selIndex >= 0 && _selIndex < keys.Count)
+        {
+            float cur = keys[_selIndex].Time;
+            float next = _selIndex + 1 < keys.Count ? keys[_selIndex + 1].Time : 1f;
+            return next - cur > 0.01f ? (cur + next) * 0.5f : Mathf.Clamp01(cur + 0.05f);
+        }
+
+        float t = NowT(step);
+        for (int i = 0; i < keys.Count; i++)
+            if (Mathf.Abs(keys[i].Time - t) < 0.005f)
+            {
+                float next = i + 1 < keys.Count ? keys[i + 1].Time : 1f;
+                return (t + next) * 0.5f;
+            }
+        return t;
+    }
+
+    float EventTime(ComboStep step) =>
+        _sel == Sel.Key && _selIndex >= 0 && _selIndex < step.Motion.Keys.Count
+            ? step.Motion.Keys[_selIndex].Time
+            : NowT(step);
+
+    /// <summary>모션 모양을 바꾸지 않고 키만 끼워 넣음 — 그 다음 원하는 대로 수정</summary>
+    void AddInterpolatedKey(ComboStep step)
+    {
+        float t = NewKeyTime(step);
+        AddKeyAt(step, t, EvaluateAt(step, t));
+    }
+
+    void DuplicateSelection(ComboStep step)
+    {
+        if (_sel == Sel.Key && _selIndex >= 0 && _selIndex < step.Motion.Keys.Count)
+            DuplicateKey(step, step.Motion.Keys[_selIndex]);
+        else if (_sel == Sel.Event && _selIndex >= 0 && _selIndex < step.Events.Length)
+            DuplicateEvent(step, step.Events[_selIndex]);
+    }
+
+    void HandleShortcuts(ComboStep step)
+    {
+        var e = Event.current;
+
+        // Ctrl+C / Ctrl+V / Ctrl+D — 키를 선택했고 글자 입력 중이 아닐 때만 (아니면 Unity 기본 동작)
+        if ((e.type == EventType.ValidateCommand || e.type == EventType.ExecuteCommand)
+            && !EditorGUIUtility.editingTextField
+            && _sel == Sel.Key && _selIndex >= 0 && _selIndex < step.Motion.Keys.Count)
+        {
+            string cmd = e.commandName;
+            bool ours = cmd == "Copy" || cmd == "Duplicate" || (cmd == "Paste" && TryGetClipPose(out _));
+            if (!ours) return;
+
+            if (e.type == EventType.ExecuteCommand)
+            {
+                var k = step.Motion.Keys[_selIndex];
+                if (cmd == "Copy") CopyPose(k.Pose);
+                else if (cmd == "Paste" && TryGetClipPose(out var clip)) PasteInto(step, _selIndex, _selIndex, clip, PosePart.All);
+                else if (cmd == "Duplicate") DuplicateKey(step, k);
+            }
+            e.Use();
             return;
         }
 
-        Undo.RecordObject(_weapon, "Capture String Hand");
+        if (e.type != EventType.KeyDown || EditorGUIUtility.editingTextField) return;
+        if (e.control || e.command || e.alt) return;      // Ctrl+Z 등은 Unity에 맡김
 
-        _weapon.StringHandOffset = bone.InverseTransformPoint(_rig.LeftHand.position);
-        _weapon.StringHandRot = NormalizeEuler(_rig.LeftHand.localRotation.eulerAngles);
+        var keys = step.Motion.Keys;
 
+        switch (e.keyCode)
+        {
+            case KeyCode.Delete:
+            case KeyCode.Backspace:
+                if (_sel == Sel.Key && _selIndex < keys.Count) DeleteKey(step, keys[_selIndex]);
+                else if (_sel == Sel.Event && _selIndex < step.Events.Length) DeleteEvent(step, step.Events[_selIndex]);
+                else return;
+                break;
+
+            case KeyCode.K:
+                if (e.shift) AddKeyAt(step, NowT(step), CaptureCurrentPose());
+                else AddInterpolatedKey(step);
+                break;
+
+            case KeyCode.E:
+                ShowAddEventMenu(step, EventTime(step));
+                break;
+
+            case KeyCode.D:
+                DuplicateSelection(step);
+                break;
+
+            case KeyCode.LeftArrow:
+            case KeyCode.RightArrow:
+                {
+                    if (keys.Count == 0) return;
+                    int dir = e.keyCode == KeyCode.RightArrow ? 1 : -1;
+                    int next;
+
+                    if (_sel == Sel.Key) next = Mathf.Clamp(_selIndex + dir, 0, keys.Count - 1);
+                    else
+                    {
+                        // 선택이 없으면 재생 위치 기준 앞/뒤 키
+                        float t = NowT(step);
+                        next = dir > 0 ? keys.FindIndex(k => k.Time > t + 0.001f) : keys.FindLastIndex(k => k.Time < t - 0.001f);
+                        if (next < 0) next = dir > 0 ? keys.Count - 1 : 0;
+                    }
+                    Select(Sel.Key, next, step);
+                    break;
+                }
+
+            case KeyCode.Escape:
+                if (_sel == Sel.None) return;
+                ClearSelection();
+                break;
+
+            case KeyCode.Space:
+                TogglePlay();
+                break;
+
+            default:
+                return;
+        }
+
+        e.Use();
+        Repaint();
+    }
+
+    // ─────────── 선택 · 추가 · 삭제 ───────────
+
+    void Select(Sel kind, int index, ComboStep step)
+    {
+        _sel = kind;
+        _selIndex = index;
+
+        if (kind == Sel.Key && index >= 0 && index < step.Motion.Keys.Count)
+            Scrub(step, step.Motion.Keys[index].Time);
+        else if (kind == Sel.Event && index >= 0 && index < step.Events.Length)
+            Scrub(step, step.Events[index].Time);
+
+        GUI.FocusControl(null);
+    }
+
+    void ClearSelection()
+    {
+        _sel = Sel.None;
+        _selIndex = -1;
+    }
+
+    void AddKeyAt(ComboStep step, float t, ArmPose pose)
+    {
+        var key = new PoseKey { Time = t, Pose = pose };
+        Modify("Add Key", () =>
+        {
+            step.Motion.Keys.Add(key);
+            step.Motion.SortKeys();
+        });
+        Select(Sel.Key, step.Motion.Keys.IndexOf(key), step);
+    }
+
+    void DuplicateKey(ComboStep step, PoseKey src)
+    {
+        var copy = new PoseKey
+        {
+            Time = Mathf.Clamp01(src.Time + 0.05f),
+            Pose = src.Pose.Clone(),
+            Ease = src.Ease != null ? new AnimationCurve(src.Ease.keys) : AnimationCurve.EaseInOut(0, 0, 1, 1),
+        };
+        Modify("Duplicate Key", () =>
+        {
+            step.Motion.Keys.Add(copy);
+            step.Motion.SortKeys();
+        });
+        Select(Sel.Key, step.Motion.Keys.IndexOf(copy), step);
+    }
+
+    void DeleteKey(ComboStep step, PoseKey key)
+    {
+        Modify("Delete Key", () => step.Motion.Keys.Remove(key));
+        ClearSelection();
+    }
+
+    void AddEventAt(ComboStep step, float t, MotionEventType type)
+    {
+        var ev = new MotionEvent { Time = t, Type = type };
+        if (type == MotionEventType.Effect || type == MotionEventType.LightFlash) ev.Space = EventSpace.AttachToWeapon;
+        if (type == MotionEventType.GroundEffect) ev.PositionOffset = new Vector3(0f, 0f, 1f);
+
+        Modify("Add Event", () =>
+        {
+            var list = new List<MotionEvent>(step.Events) { ev };
+            step.Events = list.ToArray();
+        });
+        Select(Sel.Event, Array.IndexOf(step.Events, ev), step);
+    }
+
+    void DuplicateEvent(ComboStep step, MotionEvent src)
+    {
+        var copy = src.Clone();
+        copy.Time = Mathf.Clamp01(src.Time + 0.03f);
+        Modify("Duplicate Event", () =>
+        {
+            var list = new List<MotionEvent>(step.Events) { copy };
+            step.Events = list.ToArray();
+        });
+        Select(Sel.Event, Array.IndexOf(step.Events, copy), step);
+    }
+
+    void DeleteEvent(ComboStep step, MotionEvent ev)
+    {
+        Modify("Delete Event", () =>
+        {
+            var list = new List<MotionEvent>(step.Events);
+            list.Remove(ev);
+            step.Events = list.ToArray();
+        });
+        ClearSelection();
+    }
+
+    // ─────────── 재생 ───────────
+
+    void DrawPlayback(ComboStep step)
+    {
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button(_playing ? "■ 정지" : "▶ 재생", GUILayout.Height(24), GUILayout.Width(70)))
+                TogglePlay();
+
+            using (new EditorGUI.DisabledScope(_source.ComboLength <= 1))
+                if (GUILayout.Button("▶▶ 전체", GUILayout.Height(24), GUILayout.Width(66)))
+                {
+                    _playing = true;
+                    _playAll = true;
+                    _comboIndex = 0;
+                    _playT = 0f;
+                    _tipTrail.Clear();
+                }
+
+            _loop = GUILayout.Toggle(_loop, "반복", EditorStyles.miniButton, GUILayout.Width(40), GUILayout.Height(24));
+
+            GUILayout.Label("속도", GUILayout.Width(28));
+            _playSpeed = EditorGUILayout.Slider(_playSpeed, 0.05f, 2f);
+        }
+
+        EditorGUILayout.LabelField(
+            $"선딜 {step.WindUp:F2}s · 판정 {step.ActiveWindow:F2}s · 후딜 {step.Recovery:F2}s · 캔슬 {step.CancelTime:F2}s",
+            EditorStyles.miniLabel);
+
+        if (step.ActiveWindow < 0.05f)
+            EditorGUILayout.HelpBox($"판정 구간이 {step.ActiveWindow:F3}초로 너무 짧습니다. 0.1초 이상 권장.", MessageType.Warning);
+    }
+
+    void TogglePlay()
+    {
+        _playing = !_playing;
+        _playAll = false;
+        if (_playing) { _playT = 0f; _tipTrail.Clear(); }
+        else RefreshPreview();
+    }
+
+    // ─────────── 키 인스펙터 ───────────
+
+    void DrawKeyInspector(ComboStep step, int index)
+    {
+        var motion = step.Motion;
+        var k = motion.Keys[index];
+        var p = k.Pose;
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            EditorGUILayout.LabelField($"◆ 키 {index}  ·  {k.Time * step.Duration:F2}s", EditorStyles.boldLabel);
+            if (GUILayout.Button("◀", EditorStyles.miniButtonLeft, GUILayout.Width(24)) && index > 0) Select(Sel.Key, index - 1, step);
+            if (GUILayout.Button("▶", EditorStyles.miniButtonRight, GUILayout.Width(24)) && index < motion.Keys.Count - 1) Select(Sel.Key, index + 1, step);
+        }
+
+        EditorGUI.BeginChangeCheck();
+        float nt = EditorGUILayout.Slider("시점", k.Time, 0f, 1f);
+        if (EditorGUI.EndChangeCheck())
+        {
+            k.Time = nt;
+            motion.SortKeys();
+            _selIndex = motion.Keys.IndexOf(k);
+            Scrub(step, nt);
+        }
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("씬 포즈 저장", EditorStyles.miniButtonLeft))
+            {
+                var cap = CaptureCurrentPose();
+                cap.CamPos = p.CamPos; cap.CamRot = p.CamRot; cap.CamFov = p.CamFov;   // 카메라는 유지
+                k.Pose = cap;
+                PreviewPose(cap);
+            }
+            if (GUILayout.Button("Idle 복사", EditorStyles.miniButtonMid)) { k.Pose = _rig.GetEffectiveIdle().Clone(); PreviewPose(k.Pose); }
+            using (new EditorGUI.DisabledScope(index == 0))
+                if (GUILayout.Button("앞 키 복사", EditorStyles.miniButtonMid)) { k.Pose = motion.Keys[index - 1].Pose.Clone(); PreviewPose(k.Pose); }
+            if (GUILayout.Button("복제", EditorStyles.miniButtonMid)) { DuplicateKey(step, k); return; }
+            if (GUILayout.Button("삭제", EditorStyles.miniButtonRight)) { DeleteKey(step, k); return; }
+        }
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button(new GUIContent("포즈 복사", "Ctrl+C — 이 키 포즈 전체를 클립보드로"), EditorStyles.miniButtonLeft))
+                CopyPose(k.Pose);
+            if (GUILayout.Button(new GUIContent("붙여넣기 ▾", "Ctrl+V = 전체. 메뉴에서 손·손가락·몸 등 일부만"), EditorStyles.miniButtonMid))
+                ShowPasteMenu(step, index);
+            using (new EditorGUI.DisabledScope(index >= motion.Keys.Count - 1))
+                if (GUILayout.Button(new GUIContent("다음 키로 보내기 ▾", "이 키 포즈(또는 일부)를 다음 키·뒤의 모든 키에 그대로"), EditorStyles.miniButtonRight))
+                    ShowSendMenu(step, index);
+        }
+
+        p = k.Pose;
+        EditorGUI.BeginChangeCheck();
+
+        if (Fold("키 · 손", true))
+            using (Box())
+            {
+                p.RightPos = EditorGUILayout.Vector3Field("오른손 위치", p.RightPos);
+                p.RightRot = EditorGUILayout.Vector3Field("오른손 회전", p.RightRot);
+
+                p.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", p.UseLeftHand);
+                if (p.UseLeftHand)
+                {
+                    p.LeftPos = EditorGUILayout.Vector3Field("왼손 위치", p.LeftPos);
+                    p.LeftRot = EditorGUILayout.Vector3Field("왼손 회전", p.LeftRot);
+                    if (GUILayout.Button("오른손 좌우 반전 복사", EditorStyles.miniButton))
+                    {
+                        p.LeftPos = new Vector3(-p.RightPos.x, p.RightPos.y, p.RightPos.z);
+                        p.LeftRot = new Vector3(p.RightRot.x, -p.RightRot.y, -p.RightRot.z);
+                    }
+                }
+            }
+
+        if (Fold("키 · 무기 · 카메라", false))
+            using (Box())
+            {
+                p.WeaponPos = EditorGUILayout.Vector3Field("무기 추가 위치", p.WeaponPos);
+                p.WeaponRot = EditorGUILayout.Vector3Field("무기 추가 회전", p.WeaponRot);
+                EditorGUILayout.Space(2);
+                p.CamPos = EditorGUILayout.Vector3Field("카메라 위치", p.CamPos);
+                p.CamRot = EditorGUILayout.Vector3Field("카메라 회전", p.CamRot);
+                p.CamFov = EditorGUILayout.FloatField("FOV 추가", p.CamFov);
+                Hint("카메라는 본인 화면만 움직입니다.");
+            }
+
+        if (Fold("키 · 몸 · 머리 (다른 사람에게 보임)", true))
+            using (Box()) DrawBodyFields(p);
+
+        if (Fold("키 · 보간", false))
+            using (Box())
+                k.Ease = EditorGUILayout.CurveField("이 키로 오는 곡선", k.Ease);
+
+        if (EditorGUI.EndChangeCheck()) PreviewPose(p);
+
+        if (Fold("키 · 손가락", false))
+            using (Box()) DrawKeyFingers(p);
+    }
+
+    void DrawBodyFields(ArmPose p)
+    {
+        if (_rig.Body == null && _rig.Head == null)
+            EditorGUILayout.HelpBox(
+                "FPArmRig의 Body · Head가 비어 있어 미리보기에 안 보입니다. 값은 저장됩니다.\n" +
+                "플레이어 프리팹: Body = Player/Body. 미리보기 씬에도 같은 Body를 두고 연결하세요.",
+                MessageType.Info);
+
+        p.BodyPos = EditorGUILayout.Vector3Field("몸 위치", p.BodyPos);
+        p.BodyRot = EditorGUILayout.Vector3Field("몸 회전", p.BodyRot);
+        p.HeadPos = EditorGUILayout.Vector3Field("머리 위치", p.HeadPos);
+        p.HeadRot = EditorGUILayout.Vector3Field("머리 회전", p.HeadRot);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            using (new EditorGUI.DisabledScope(_rig.Body == null))
+                if (GUILayout.Button("몸 선택", EditorStyles.miniButtonLeft)) Selection.activeTransform = _rig.Body;
+            using (new EditorGUI.DisabledScope(_rig.Head == null))
+                if (GUILayout.Button("머리 선택", EditorStyles.miniButtonMid)) Selection.activeTransform = _rig.Head;
+            if (GUILayout.Button(new GUIContent("씬 몸·머리 저장", "씬에서 몸·머리를 직접 움직인 뒤 누르기"), EditorStyles.miniButtonMid))
+            {
+                _rig.GetBodyOffset(out var bp, out var br, out var hp, out var hr);
+                p.BodyPos = bp; p.BodyRot = NormalizeEuler(br);
+                p.HeadPos = hp; p.HeadRot = NormalizeEuler(hr);
+                GUI.changed = true;
+            }
+            if (GUILayout.Button("0으로", EditorStyles.miniButtonRight))
+            {
+                p.BodyPos = p.BodyRot = p.HeadPos = p.HeadRot = Vector3.zero;
+                GUI.changed = true;
+            }
+        }
+        Hint("기준 자세 대비 오프셋입니다. 회전 Y = 허리 비틀기, X = 숙이기, Z = 기울이기.");
+    }
+
+    void DrawKeyFingers(ArmPose p)
+    {
+        bool prev = p.UseWeaponGrip;
+        p.UseWeaponGrip = EditorGUILayout.Toggle(
+            new GUIContent("무기 그립 사용", "끄면 이 키에서 손 모양을 직접 지정"), p.UseWeaponGrip);
+        if (prev != p.UseWeaponGrip) PreviewPose(p);
+        if (p.UseWeaponGrip) return;
+
+        Vector3 axis = GetCurlAxis();
+
+        EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
+        p.RightFingers ??= HandPose.Relaxed(axis);
+        DrawFingerPresets(p, axis, true);
+        DrawFingerClipRow(p, true, _rig.RightHandRig);
+        if (_rig.RightHandRig != null)
+        {
+            DrawSceneEditToggle(p.RightFingers, _rig.RightHandRig, _target);
+            DrawFingerSliders(p.RightFingers, axis, _rig.RightHandRig, _target);
+        }
+
+        if (!p.UseLeftHand) return;
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField("왼손", EditorStyles.miniBoldLabel);
+        p.LeftFingers ??= HandPose.Relaxed(axis);
+        DrawFingerPresets(p, axis, false);
+        DrawFingerClipRow(p, false, _rig.LeftHandRig);
         if (_rig.LeftHandRig != null)
         {
-            _weapon.StringHandPose = new HandPose();
-            _rig.LeftHandRig.BakeAll(_weapon.StringHandPose);
+            DrawSceneEditToggle(p.LeftFingers, _rig.LeftHandRig, _target);
+            DrawFingerSliders(p.LeftFingers, axis, _rig.LeftHandRig, _target);
         }
 
-        EditorUtility.SetDirty(_weapon);
-        Debug.Log($"[MotionSetup] 시위 손 저장 — 오프셋 {_weapon.StringHandOffset}");
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("오른손 → 왼손", EditorStyles.miniButtonLeft))
+            {
+                p.LeftFingers = p.RightFingers?.Clone() ?? HandPose.Relaxed(axis);
+                EditorUtility.SetDirty(_target);
+                PreviewPose(p);
+            }
+            if (GUILayout.Button("왼손 → 오른손", EditorStyles.miniButtonRight))
+            {
+                p.RightFingers = p.LeftFingers?.Clone() ?? HandPose.Relaxed(axis);
+                EditorUtility.SetDirty(_target);
+                PreviewPose(p);
+            }
+        }
     }
 
-    //void DrawBowPreview()
-    //{
-    //    if (_rig == null) return;
-
-    //    EditorGUILayout.Space(4);
-
-    //    EditorGUI.BeginChangeCheck();
-    //    _previewDraw = EditorGUILayout.Slider("시위 미리보기", _previewDraw, 0f, 1f);
-    //    if (EditorGUI.EndChangeCheck())
-    //    {
-    //        _rig.SetDrawAmount(_previewDraw);
-    //        _rig.ApplyPose(_rig.GetEffectiveIdle());
-    //        SceneView.RepaintAll();
-    //    }
-
-    //    EditorGUILayout.BeginHorizontal();
-
-    //    if (GUILayout.Button("씬 시위를 방향·거리로 읽기", GUILayout.Height(22)))
-    //        CaptureStringPull();
-
-    //    if (GUILayout.Button("놓기", GUILayout.Width(50), GUILayout.Height(22)))
-    //    {
-    //        _previewDraw = 0f;
-    //        _rig.SetDrawAmount(0f);
-    //        _rig.ApplyPose(_rig.GetEffectiveIdle());
-    //        SceneView.RepaintAll();
-    //    }
-
-    //    EditorGUILayout.EndHorizontal();
-
-    //    if (!_rig.HasBowString)
-    //        EditorGUILayout.HelpBox(
-    //            "시위 본이 없습니다. 무기 모델 프리팹의 WeaponRig에서 " +
-    //            "StringBone을 지정하세요.",
-    //            MessageType.Warning);
-    //}
-
-
-
-    void PullFromRigDefaults()
+    /// <summary>손 하나의 손가락 — 씬에서 저장 / 복사 / 붙여넣기</summary>
+    void DrawFingerClipRow(ArmPose p, bool right, HandRig rig)
     {
-        if (_rig == null || _weapon == null) return;
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            using (new EditorGUI.DisabledScope(rig == null))
+                if (GUILayout.Button(new GUIContent("씬 손가락 저장", "씬에서 IK·회전으로 만든 손 모양을 이 키에"), EditorStyles.miniButtonLeft))
+                {
+                    var hp = new HandPose();
+                    rig.BakeAll(hp);
+                    if (right) p.RightFingers = hp; else p.LeftFingers = hp;
+                    EditorUtility.SetDirty(_target);
+                }
 
-        Undo.RecordObject(_weapon, "Pull Rig Defaults");
+            if (GUILayout.Button(new GUIContent("손가락 복사", "이 손 모양만 클립보드로 — 다른 키·다른 손에 붙여넣기"), EditorStyles.miniButtonMid))
+                CopyHand(right ? p.RightFingers : p.LeftFingers);
 
-        // 손 위치/회전
-        var idle = _rig.IdlePose;
-        _weapon.RightHandPos = idle.RightPos;
-        _weapon.RightHandRot = idle.RightRot;
-        _weapon.LeftHandPos = idle.LeftPos;
-        _weapon.LeftHandRot = idle.LeftRot;
-        _weapon.UseLeftHand = idle.UseLeftHand || _weapon.Grip == GripType.TwoHand;
-        _weapon.OverrideIdlePose = true;
-
-        //// 손가락
-        //if (_rig.IdleRightFingers != null)
-        //    _weapon.RightGrip = _rig.IdleRightFingers.Clone();
-        //if (_rig.IdleLeftFingers != null)
-        //    _weapon.LeftGrip = _rig.IdleLeftFingers.Clone();
-
-        EditorUtility.SetDirty(_weapon);
-        SpawnWeapon();
-
-        Debug.Log($"[MotionSetup] {_weapon.DisplayName}에 리그 기본값 적용됨");
+            bool has = TryGetClipHand(out var clip);
+            using (new EditorGUI.DisabledScope(!has))
+                if (GUILayout.Button("붙여넣기", EditorStyles.miniButtonRight))
+                {
+                    if (right) p.RightFingers = clip.Clone(); else p.LeftFingers = clip.Clone();
+                    EditorUtility.SetDirty(_target);
+                    PreviewPose(p);
+                }
+        }
     }
+
+    void DrawFingerPresets(ArmPose p, Vector3 axis, bool right)
+    {
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            HandPose np = null;
+            if (GUILayout.Button("펌", EditorStyles.miniButtonLeft)) np = HandPose.Open(axis);
+            if (GUILayout.Button("자연", EditorStyles.miniButtonMid)) np = HandPose.Relaxed(axis);
+            if (GUILayout.Button("쥠", EditorStyles.miniButtonMid)) np = HandPose.Grip(axis);
+            if (GUILayout.Button("주먹", EditorStyles.miniButtonRight)) np = HandPose.Fist(axis);
+
+            if (np == null) return;
+            if (right) p.RightFingers = np; else p.LeftFingers = np;
+            EditorUtility.SetDirty(_target);
+            PreviewPose(p);
+        }
+    }
+
+    // ─────────── 이벤트 인스펙터 ───────────
+
+    void DrawEventInspector(ComboStep step, int index)
+    {
+        var ev = step.Events[index];
+        var m = Meta(ev.Type);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            var st = new GUIStyle(EditorStyles.boldLabel);
+            st.normal.textColor = m.color;
+            EditorGUILayout.LabelField($"{m.icon}  {m.label}  ·  {ev.Time * step.Duration:F2}s", st);
+            if (GUILayout.Button("복제", EditorStyles.miniButtonLeft, GUILayout.Width(40))) { DuplicateEvent(step, ev); return; }
+            if (GUILayout.Button("삭제", EditorStyles.miniButtonRight, GUILayout.Width(40))) { DeleteEvent(step, ev); return; }
+        }
+
+        ev.Time = EditorGUILayout.Slider("시점", ev.Time, 0f, 1f);
+        ev.Type = (MotionEventType)EditorGUILayout.EnumPopup("종류", ev.Type);
+
+        EditorGUILayout.Space(2);
+        DrawEventFields(ev);
+
+        EditorGUILayout.Space(2);
+        if (LocalOnly(ev.Type))
+            Hint("본인 화면에서만 재생됩니다.");
+        else
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                ev.ShowFirstPerson = EditorGUILayout.ToggleLeft("본인 화면", ev.ShowFirstPerson, GUILayout.Width(90));
+                ev.ShowThirdPerson = EditorGUILayout.ToggleLeft("다른 사람 화면", ev.ShowThirdPerson);
+            }
+    }
+
+    /// <summary>종류별 입력 칸. 새 종류는 여기에 case 하나 추가</summary>
+    void DrawEventFields(MotionEvent ev)
+    {
+        switch (ev.Type)
+        {
+            case MotionEventType.Sound:
+                ev.Clip = (AudioClip)EditorGUILayout.ObjectField("사운드", ev.Clip, typeof(AudioClip), false);
+                ev.Volume = EditorGUILayout.Slider("볼륨", ev.Volume, 0f, 1f);
+                ev.Pitch = EditorGUILayout.Slider("피치", ev.Pitch, 0.5f, 1.5f);
+                break;
+
+            case MotionEventType.RandomSound:
+                DrawClipArray(ev);
+                ev.Volume = EditorGUILayout.Slider("볼륨", ev.Volume, 0f, 1f);
+                ev.Pitch = EditorGUILayout.Slider("피치", ev.Pitch, 0.5f, 1.5f);
+                ev.PitchJitter = EditorGUILayout.Slider("피치 랜덤 ±", ev.PitchJitter, 0f, 0.5f);
+                break;
+
+            case MotionEventType.Effect:
+                ev.Prefab = (GameObject)EditorGUILayout.ObjectField("프리팹", ev.Prefab, typeof(GameObject), false);
+                ev.Space = (EventSpace)EditorGUILayout.EnumPopup("붙을 곳", ev.Space);
+                ev.PositionOffset = EditorGUILayout.Vector3Field("위치", ev.PositionOffset);
+                ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
+                ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
+                ev.Lifetime = EditorGUILayout.FloatField("수명 (초, 0 = 프리팹이 정리)", ev.Lifetime);
+                break;
+
+            case MotionEventType.GroundEffect:
+                ev.Prefab = (GameObject)EditorGUILayout.ObjectField("프리팹", ev.Prefab, typeof(GameObject), false);
+                ev.PositionOffset = EditorGUILayout.Vector3Field("발밑 기준 위치", ev.PositionOffset);
+                ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
+                ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
+                ev.Lifetime = EditorGUILayout.FloatField("수명 (초)", ev.Lifetime);
+                Hint("플레이어 기준 위치(Z = 앞)에서 바닥을 찾아 바닥 기울기에 맞춰 생성합니다. 충격파·바닥 자국용.");
+                break;
+
+            case MotionEventType.TrailStart:
+            case MotionEventType.TrailEnd:
+                Hint("무기 끝(WeaponRig.Tip) 아래의 TrailRenderer를 켜고 끕니다.");
+                break;
+
+            case MotionEventType.CameraShake:
+                ev.ShakeAmount = EditorGUILayout.FloatField("강도", ev.ShakeAmount);
+                break;
+
+            case MotionEventType.ScreenFlash:
+                ev.FlashColor = EditorGUILayout.ColorField("색 (알파 = 진하기)", ev.FlashColor);
+                ev.FlashDuration = EditorGUILayout.FloatField("지속 (초)", ev.FlashDuration);
+                break;
+
+            case MotionEventType.FovKick:
+                ev.FovAmount = EditorGUILayout.FloatField("시야각 변화 (− 좁아짐)", ev.FovAmount);
+                break;
+
+            case MotionEventType.LightFlash:
+                ev.Space = (EventSpace)EditorGUILayout.EnumPopup("붙을 곳", ev.Space);
+                ev.PositionOffset = EditorGUILayout.Vector3Field("위치", ev.PositionOffset);
+                ev.FlashColor = EditorGUILayout.ColorField("색", ev.FlashColor);
+                ev.LightIntensity = EditorGUILayout.FloatField("밝기", ev.LightIntensity);
+                ev.LightRange = EditorGUILayout.FloatField("범위 (m)", ev.LightRange);
+                ev.FlashDuration = EditorGUILayout.FloatField("지속 (초)", ev.FlashDuration);
+                break;
+
+            case MotionEventType.Custom:
+                ev.Key = EditorGUILayout.TextField("키", ev.Key);
+                Hint("MotionEventPlayer.OnCustomEvent로 이 문자열이 전달됩니다.");
+                break;
+        }
+    }
+
+    void DrawClipArray(MotionEvent ev)
+    {
+        ev.Clips ??= new AudioClip[0];
+
+        int n = Mathf.Max(0, EditorGUILayout.IntField("소리 개수", ev.Clips.Length));
+        if (n != ev.Clips.Length) Array.Resize(ref ev.Clips, n);
+
+        for (int i = 0; i < ev.Clips.Length; i++)
+            ev.Clips[i] = (AudioClip)EditorGUILayout.ObjectField($"  {i + 1}", ev.Clips[i], typeof(AudioClip), false);
+    }
+
+    // ─────────── 타격 설정 ───────────
+
+    void DrawStepSettings(ComboStep step)
+    {
+        EditorGUILayout.LabelField("타이밍 (비율 0~1 — 타임라인에서 드래그해도 됨)", EditorStyles.miniBoldLabel);
+        step.HitStart = EditorGUILayout.Slider("판정 시작", step.HitStart, 0f, 1f);
+        step.HitEnd = EditorGUILayout.Slider("판정 끝", step.HitEnd, 0f, 1f);
+        step.CancelPoint = EditorGUILayout.Slider("캔슬 지점", step.CancelPoint, 0f, 1f);
+        step.ComboResetTime = EditorGUILayout.FloatField("콤보 유지 (초)", step.ComboResetTime);
+        step.HitEnd = Mathf.Max(step.HitEnd, step.HitStart + 0.02f);
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField("피해", EditorStyles.miniBoldLabel);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            step.DamageMultiplier = EditorGUILayout.FloatField("피해×", step.DamageMultiplier);
+            step.RangeMultiplier = EditorGUILayout.FloatField("사거리×", step.RangeMultiplier);
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            step.MaxTargets = EditorGUILayout.IntField("최대 대상", step.MaxTargets);
+            step.LungeDistance = EditorGUILayout.FloatField("전진 (m)", step.LungeDistance);
+        }
+        step.NoWeaponEnchants = EditorGUILayout.Toggle(
+            new GUIContent("특수 인챈트 끄기", "이 타격에는 무기의 특수 인챈트 효과가 붙지 않음"), step.NoWeaponEnchants);
+
+        EditorGUILayout.Space(4);
+        step.OverrideHitShape = EditorGUILayout.Toggle(
+            new GUIContent("판정 범위 개별 설정", "체크하면 무기 값 대신 이 값 사용"), step.OverrideHitShape);
+
+        if (step.OverrideHitShape)
+        {
+            EditorGUI.indentLevel++;
+            step.HitMode = (WeaponHitMode)EditorGUILayout.EnumPopup("방식", step.HitMode);
+            step.Range = EditorGUILayout.FloatField("사거리", step.Range);
+            if (step.HitMode == WeaponHitMode.ForwardArc)
+                step.HitAngle = EditorGUILayout.Slider("각도", step.HitAngle, 20f, 360f);
+            step.HitHeight = EditorGUILayout.FloatField("수직 허용", step.HitHeight);
+            step.MinRange = EditorGUILayout.FloatField("최소 사거리", step.MinRange);
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("주변 구체", EditorStyles.miniButtonLeft))
+                { step.HitMode = WeaponHitMode.ForwardSphere; step.Range = 2f; step.HitHeight = 1.5f; }
+                if (GUILayout.Button("전방 넓게", EditorStyles.miniButtonMid))
+                { step.HitMode = WeaponHitMode.ForwardArc; step.Range = 3.5f; step.HitAngle = 160f; }
+                if (GUILayout.Button("찌르기", EditorStyles.miniButtonRight))
+                { step.HitMode = WeaponHitMode.ForwardArc; step.Range = 5f; step.HitAngle = 40f; }
+            }
+            EditorGUI.indentLevel--;
+        }
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField("손맛", EditorStyles.miniBoldLabel);
+        step.HandMode = (HandVisibility)EditorGUILayout.EnumPopup("손 표시", step.HandMode);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            step.HitStopDuration = EditorGUILayout.FloatField("히트스톱", step.HitStopDuration);
+            step.CameraKickFov = EditorGUILayout.FloatField("FOV킥", step.CameraKickFov);
+        }
+        step.CameraShake = EditorGUILayout.FloatField("셰이크", step.CameraShake);
+    }
+
+    // ─────────── 목록 ───────────
+
+    private ReorderableList _keyList;
+    private List<PoseKey> _keyListSource;
+
+    void DrawLists(ComboStep step)
+    {
+        DrawKeyOrderList(step);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("모든 키 왼손 켜기", EditorStyles.miniButtonLeft)) SetAllLeftHand(step.Motion, true);
+            if (GUILayout.Button("모든 키 왼손 끄기", EditorStyles.miniButtonRight)) SetAllLeftHand(step.Motion, false);
+        }
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField($"이벤트 ({step.Events.Length})", EditorStyles.miniBoldLabel);
+        for (int i = 0; i < step.Events.Length; i++)
+        {
+            var ev = step.Events[i];
+            if (ev == null) continue;
+            var m = Meta(ev.Type);
+            bool sel = _sel == Sel.Event && _selIndex == i;
+            if (GUILayout.Toggle(sel, $"{m.icon} {m.label}   {ev.Time * step.Duration:F2}s", EditorStyles.miniButton) && !sel)
+                Select(Sel.Event, i, step);
+        }
+    }
+
+    /// <summary>
+    /// 키 목록 — 끌어서 순서 바꾸기. 시점(0~1)은 자리에 그대로 남고 포즈·곡선이 이동.
+    /// 예) 키 1을 맨 아래로 끌면 그 포즈가 마지막 시점에서 나옴
+    /// </summary>
+    void DrawKeyOrderList(ComboStep step)
+    {
+        var keys = step.Motion.Keys;
+
+        if (_keyList == null || !ReferenceEquals(_keyListSource, keys))
+        {
+            _keyListSource = keys;
+            _keyList = new ReorderableList(keys, typeof(PoseKey), true, true, false, false)
+            {
+                elementHeight = EditorGUIUtility.singleLineHeight + 4,
+                drawHeaderCallback = r => EditorGUI.LabelField(r, $"키 {keys.Count}개 — ≡ 를 끌어 순서 변경 (시점은 그대로, 포즈가 이동)"),
+            };
+
+            _keyList.drawElementCallback = (r, i, active, focused) =>
+            {
+                if (i < 0 || i >= keys.Count) return;
+                var cur = CurrentStep;
+                float dur = cur != null ? cur.Duration : 1f;
+                r.y += 2;
+                r.height = EditorGUIUtility.singleLineHeight;
+                EditorGUI.LabelField(r, $"◆ {i}    {keys[i].Time * dur:F2}s    {Summary(keys[i].Pose)}");
+            };
+
+            _keyList.onSelectCallback = l =>
+            {
+                var cur = CurrentStep;
+                if (cur != null && l.index >= 0) Select(Sel.Key, l.index, cur);
+            };
+
+            _keyList.onReorderCallback = l =>
+            {
+                // 시점은 자리 순서대로 다시 배정 → 포즈만 자리를 바꾼 효과
+                var times = new List<float>(keys.Count);
+                foreach (var k in keys) times.Add(k.Time);
+                times.Sort();
+                for (int i = 0; i < keys.Count; i++) keys[i].Time = times[i];
+
+                var cur = CurrentStep;
+                if (cur != null) Select(Sel.Key, l.index, cur);
+                EditorUtility.SetDirty(_target);
+                RefreshPreview();
+            };
+        }
+
+        _keyList.index = _sel == Sel.Key ? _selIndex : -1;
+        _keyList.DoLayoutList();
+    }
+
+    static string Summary(ArmPose p)
+    {
+        if (p == null) return "";
+        var s = p.UseLeftHand ? "양손" : "오른손";
+        if (!p.UseWeaponGrip) s += " · 손가락";
+        if (p.BodyRot != Vector3.zero || p.BodyPos != Vector3.zero) s += " · 몸";
+        if (p.CamRot != Vector3.zero || p.CamFov != 0f) s += " · 카메라";
+        return s;
+    }
+
+    // ══════════════════════ 포즈 클립보드 ══════════════════════
+    // 시스템 클립보드에 JSON으로 저장 — 다른 무기·능력 모션, 스크립트 재컴파일 뒤에도 붙여넣기 가능
+
+    [Flags]
+    enum PosePart
+    {
+        RightHand = 1, LeftHand = 2, RightFingers = 4, LeftFingers = 8,
+        Weapon = 16, Camera = 32, Body = 64,
+        Fingers = RightFingers | LeftFingers,
+        All = 127,
+    }
+
+    static readonly (PosePart part, string label)[] PasteChoices =
+    {
+        (PosePart.All, "전체"),
+        (PosePart.RightHand, "오른손 위치·회전"),
+        (PosePart.LeftHand, "왼손 위치·회전"),
+        (PosePart.Fingers, "손가락 (양손)"),
+        (PosePart.RightFingers, "오른손 손가락"),
+        (PosePart.LeftFingers, "왼손 손가락"),
+        (PosePart.Weapon, "무기 오프셋"),
+        (PosePart.Camera, "카메라"),
+        (PosePart.Body, "몸 · 머리"),
+    };
+
+    const string PoseClipPrefix = "MOTIONSETUP_POSE:";
+    const string HandClipPrefix = "MOTIONSETUP_HAND:";
+
+    [Serializable] class PoseClip { public ArmPose Pose; }
+    [Serializable] class HandClip { public HandPose Hand; }
+
+    static void CopyPose(ArmPose p) =>
+        EditorGUIUtility.systemCopyBuffer = PoseClipPrefix + EditorJsonUtility.ToJson(new PoseClip { Pose = p });
+
+    static bool TryGetClipPose(out ArmPose pose)
+    {
+        pose = null;
+        var s = EditorGUIUtility.systemCopyBuffer;
+        if (string.IsNullOrEmpty(s) || !s.StartsWith(PoseClipPrefix)) return false;
+
+        var clip = new PoseClip();
+        EditorJsonUtility.FromJsonOverwrite(s.Substring(PoseClipPrefix.Length), clip);
+        pose = clip.Pose;
+        return pose != null;
+    }
+
+    static void CopyHand(HandPose h) =>
+        EditorGUIUtility.systemCopyBuffer = HandClipPrefix + EditorJsonUtility.ToJson(new HandClip { Hand = h });
+
+    static bool TryGetClipHand(out HandPose hand)
+    {
+        hand = null;
+        var s = EditorGUIUtility.systemCopyBuffer;
+        if (string.IsNullOrEmpty(s)) return false;
+
+        if (s.StartsWith(HandClipPrefix))
+        {
+            var clip = new HandClip();
+            EditorJsonUtility.FromJsonOverwrite(s.Substring(HandClipPrefix.Length), clip);
+            hand = clip.Hand;
+        }
+        else if (TryGetClipPose(out var pose))
+        {
+            hand = pose.RightFingers ?? pose.LeftFingers;     // 포즈 전체를 복사해 뒀으면 오른손 손가락을 씀
+        }
+        return hand != null;
+    }
+
+    /// <summary>src의 고른 부분만 dst에 덮어씀 (시점·곡선은 그대로)</summary>
+    static void PasteParts(ArmPose src, ArmPose dst, PosePart parts)
+    {
+        if (src == null || dst == null) return;
+
+        if ((parts & PosePart.RightHand) != 0) { dst.RightPos = src.RightPos; dst.RightRot = src.RightRot; }
+        if ((parts & PosePart.LeftHand) != 0) { dst.UseLeftHand = src.UseLeftHand; dst.LeftPos = src.LeftPos; dst.LeftRot = src.LeftRot; }
+        if ((parts & PosePart.Weapon) != 0) { dst.WeaponPos = src.WeaponPos; dst.WeaponRot = src.WeaponRot; }
+        if ((parts & PosePart.Camera) != 0) { dst.CamPos = src.CamPos; dst.CamRot = src.CamRot; dst.CamFov = src.CamFov; }
+        if ((parts & PosePart.Body) != 0)
+        {
+            dst.BodyPos = src.BodyPos; dst.BodyRot = src.BodyRot;
+            dst.HeadPos = src.HeadPos; dst.HeadRot = src.HeadRot;
+        }
+
+        bool rf = (parts & PosePart.RightFingers) != 0;
+        bool lf = (parts & PosePart.LeftFingers) != 0;
+        if (!rf && !lf) return;
+
+        if (src.UseWeaponGrip)
+        {
+            // 원본이 무기 그립을 쓰면 — 양손 다 고른 경우에만 무기 그립으로
+            if (rf && lf) dst.UseWeaponGrip = true;
+            return;
+        }
+
+        dst.UseWeaponGrip = false;
+        if (rf && src.RightFingers != null) dst.RightFingers = src.RightFingers.Clone();
+        if (lf && src.LeftFingers != null) dst.LeftFingers = src.LeftFingers.Clone();
+    }
+
+    void ShowPasteMenu(ComboStep step, int index)
+    {
+        var menu = new GenericMenu();
+        bool has = TryGetClipPose(out var clip);
+
+        foreach (var (part, label) in PasteChoices)
+        {
+            var p = part;
+            if (has) menu.AddItem(new GUIContent($"이 키에/{label}"), false, () => PasteInto(step, index, index, clip, p));
+            else menu.AddDisabledItem(new GUIContent($"이 키에/{label}"));
+        }
+        foreach (var (part, label) in PasteChoices)
+        {
+            var p = part;
+            if (has) menu.AddItem(new GUIContent($"이 키부터 끝까지/{label}"), false,
+                () => PasteInto(step, index, step.Motion.Keys.Count - 1, clip, p));
+            else menu.AddDisabledItem(new GUIContent($"이 키부터 끝까지/{label}"));
+        }
+
+        menu.AddSeparator("");
+        if (has) menu.AddItem(new GUIContent("이 키에 좌우 반전해서 (전체)"), false,
+            () => PasteInto(step, index, index, MirrorPose(clip, _fingerMirror), PosePart.All));
+        else menu.AddDisabledItem(new GUIContent("이 키에 좌우 반전해서 (전체)"));
+
+        if (!has) { menu.AddSeparator(""); menu.AddDisabledItem(new GUIContent("먼저 '포즈 복사'를 누르세요")); }
+        menu.ShowAsContext();
+    }
+
+    /// <summary>이 키의 포즈를 다음 키(또는 끝까지)에 그대로 보냄 — 복사·붙여넣기 한 번에</summary>
+    void ShowSendMenu(ComboStep step, int index)
+    {
+        var menu = new GenericMenu();
+        var keys = step.Motion.Keys;
+        bool hasNext = index + 1 < keys.Count;
+        var src = keys[index].Pose;
+
+        foreach (var (part, label) in PasteChoices)
+        {
+            var p = part;
+            if (hasNext)
+            {
+                menu.AddItem(new GUIContent($"다음 키로/{label}"), false, () => PasteInto(step, index + 1, index + 1, src.Clone(), p));
+                menu.AddItem(new GUIContent($"뒤의 모든 키로/{label}"), false, () => PasteInto(step, index + 1, keys.Count - 1, src.Clone(), p));
+            }
+        }
+        if (!hasNext) menu.AddDisabledItem(new GUIContent("마지막 키입니다"));
+        menu.ShowAsContext();
+    }
+
+    void PasteInto(ComboStep step, int from, int to, ArmPose src, PosePart parts)
+    {
+        Modify("Paste Pose", () =>
+        {
+            var keys = step.Motion.Keys;
+            for (int i = Mathf.Max(0, from); i <= to && i < keys.Count; i++)
+            {
+                keys[i].Pose ??= new ArmPose();
+                PasteParts(src, keys[i].Pose, parts);
+            }
+        });
+
+        if (_sel == Sel.Key && _selIndex >= 0 && _selIndex < step.Motion.Keys.Count)
+            PreviewPose(step.Motion.Keys[_selIndex].Pose);
+    }
+
+    void SetAllLeftHand(SwingMotion motion, bool on)
+    {
+        Modify("Toggle Left Hand", () => { foreach (var k in motion.Keys) k.Pose.UseLeftHand = on; });
+    }
+
+    // ══════════════════════ 도구 탭 ══════════════════════
+
+    void DrawToolsTab()
+    {
+        if (Fold("보기"))
+            using (Box())
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button("씬 뷰를 무기에 맞추기")) FrameWeapon();
+                    if (GUILayout.Button("1인칭 시점으로 보기")) LookThroughEye();
+                }
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button("에셋 선택")) Selection.activeObject = _target;
+                    if (GUILayout.Button("FPArmRig 선택")) Selection.activeGameObject = _rig.gameObject;
+                }
+
+                EditorGUILayout.Space(4);
+                _showHitbox = EditorGUILayout.Toggle("판정 범위 표시", _showHitbox);
+                _showTrail = EditorGUILayout.Toggle("무기 궤적 표시", _showTrail);
+                _showOnlyDuringActive = EditorGUILayout.Toggle("판정 중에만", _showOnlyDuringActive);
+                if (GUILayout.Button("궤적 지우기")) _tipTrail.Clear();
+            }
+
+        if (Fold("리그"))
+            using (Box())
+            {
+                if (GUILayout.Button("Idle 포즈를 씬에서 저장 (FPArmRig)"))
+                {
+                    Undo.RecordObject(_rig, "Capture Idle");
+                    _rig.IdlePose = CaptureCurrentPose();
+                    EditorUtility.SetDirty(_rig);
+                }
+
+                if (GUILayout.Button(new GUIContent("몸·머리 기준 자세 다시 잡기", "지금 씬의 몸·머리 위치를 0 오프셋으로")))
+                {
+                    _rig.CaptureBodyRest();
+                    RefreshPreview();
+                }
+            }
+
+        var step = CurrentStep;
+        if (step?.Motion?.Keys != null && Fold("몸 동작 자동 생성"))
+            using (Box())
+            {
+                Hint("손 동작을 보고 몸 비틀기·머리 따라가기를 키마다 채웁니다. 시작점으로 쓰고 직접 다듬으세요.");
+                _autoBodyStrength = EditorGUILayout.Slider("세기", _autoBodyStrength, 0f, 1f);
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button("이 타에 적용")) AutoBody(step, _autoBodyStrength);
+                    if (GUILayout.Button("이 타 몸·머리 전부 0")) AutoBody(step, 0f);
+                }
+            }
+    }
+
+    /// <summary>오른손이 기본 자세에서 벗어난 만큼 몸·머리를 같은 방향으로 따라가게</summary>
+    void AutoBody(ComboStep step, float strength)
+    {
+        var idle = _rig.GetEffectiveIdle();
+
+        Modify("Auto Body", () =>
+        {
+            foreach (var k in step.Motion.Keys)
+            {
+                var p = k.Pose;
+                Vector3 dr = NormalizeEuler(p.RightRot - idle.RightRot);
+                Vector3 dp = p.RightPos - idle.RightPos;
+
+                p.BodyRot = new Vector3(dr.x * 0.25f, dr.y * 0.5f + dp.x * 40f, -dp.x * 15f) * strength;
+                p.BodyPos = new Vector3(0f, Mathf.Min(0f, dp.y) * 0.3f, dp.z * 0.3f) * strength;
+                p.HeadRot = p.BodyRot * 0.4f;
+                p.HeadPos = Vector3.zero;
+            }
+        });
+    }
+
+    // ══════════════════════ 손가락 편집 공통 ══════════════════════
 
     Vector3 GetCurlAxis() =>
         _rig?.RightHandRig != null ? _rig.RightHandRig.CurlAxis : new Vector3(0f, 0f, -70f);
 
-    void DrawGripEditor(string label, ref HandPose grip, Vector3 axis,
-                     HandRig handRig, Object dirtyTarget)
+    void DrawGripEditor(string label, ref HandPose grip, Vector3 axis, HandRig handRig, Object dirtyTarget)
     {
         EditorGUILayout.LabelField(label, EditorStyles.miniBoldLabel);
-        EditorGUI.indentLevel++;
 
-        // 프리셋
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("펌", EditorStyles.miniButtonLeft))
-            SetGripPose(ref grip, HandPose.Open(axis), dirtyTarget, handRig);
-        if (GUILayout.Button("자연", EditorStyles.miniButtonMid))
-            SetGripPose(ref grip, HandPose.Relaxed(axis), dirtyTarget, handRig);
-        if (GUILayout.Button("쥠", EditorStyles.miniButtonMid))
-            SetGripPose(ref grip, HandPose.Grip(axis), dirtyTarget, handRig);
-        if (GUILayout.Button("주먹", EditorStyles.miniButtonRight))
-            SetGripPose(ref grip, HandPose.Fist(axis), dirtyTarget, handRig);
-        EditorGUILayout.EndHorizontal();
-
-        if (handRig != null)
+        using (new EditorGUILayout.HorizontalScope())
         {
-            // ★ 씬 → 데이터
-            if (GUILayout.Button("씬 손가락을 이 무기에 저장", GUILayout.Height(22)))
+            HandPose np = null;
+            if (GUILayout.Button("펌", EditorStyles.miniButtonLeft)) np = HandPose.Open(axis);
+            if (GUILayout.Button("자연", EditorStyles.miniButtonMid)) np = HandPose.Relaxed(axis);
+            if (GUILayout.Button("쥠", EditorStyles.miniButtonMid)) np = HandPose.Grip(axis);
+            if (GUILayout.Button("주먹", EditorStyles.miniButtonRight)) np = HandPose.Fist(axis);
+            if (np != null)
             {
-                Undo.RegisterCompleteObjectUndo(dirtyTarget, "Bake Grip");
+                grip = np;
+                EditorUtility.SetDirty(dirtyTarget);
+                handRig?.Apply(np);
+                RefreshPreview();
+            }
+        }
+
+        if (handRig == null) return;
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("씬 손가락 → 저장"))
+            {
                 grip ??= new HandPose();
                 handRig.BakeAll(grip);
                 EditorUtility.SetDirty(dirtyTarget);
-
-                Debug.Log($"[MotionSetup] {label} 그립 저장됨 — " +
-                          $"엄지1 {grip.Get(0).Joints[0]}");
-                Repaint();
             }
-
-            // ★ 데이터 → 씬
-            if (GUILayout.Button("저장된 값을 씬에 적용", EditorStyles.miniButton))
+            if (GUILayout.Button("저장값 → 씬"))
             {
                 if (grip != null) handRig.Apply(grip);
                 SceneView.RepaintAll();
             }
-
-            DrawSceneEditToggle(grip, handRig, dirtyTarget);
-            DrawFingerSliders(grip, axis, handRig, dirtyTarget);
         }
 
-        EditorGUI.indentLevel--;
+        DrawSceneEditToggle(grip, handRig, dirtyTarget);
+        DrawFingerSliders(grip, axis, handRig, dirtyTarget);
     }
 
     void DrawSceneEditToggle(HandPose pose, HandRig handRig, Object dirtyTarget)
@@ -894,11 +2409,7 @@ public class WeaponSetupWindow : EditorWindow
         if (pose == null) return;
 
         bool editing = ReferenceEquals(HandRigEditor.EditTarget, pose);
-
-        bool now = GUILayout.Toggle(editing,
-            editing ? "■ 씬 IK 편집 중 (끄기)" : "▶ 씬에서 IK로 편집",
-            "Button", GUILayout.Height(20));
-
+        bool now = GUILayout.Toggle(editing, editing ? "■ 씬 IK 편집 중 (끄기)" : "▶ 씬에서 IK로 편집", "Button", GUILayout.Height(20));
         if (now == editing) return;
 
         if (now)
@@ -931,17 +2442,14 @@ public class WeaponSetupWindow : EditorWindow
             if (fp == null || fp.Joints == null || fp.Joints.Length == 0) continue;
 
             float cur = fp.EstimateCurl(axis);
-
             if (cur > 1.2f)
             {
-                EditorGUILayout.LabelField(FingerNames[f],
-                    $"{cur:F2}  (IK 편집됨)", EditorStyles.miniLabel);
+                EditorGUILayout.LabelField(FingerNames[f], $"{cur:F2}  (IK 편집됨)", EditorStyles.miniLabel);
                 continue;
             }
 
             EditorGUI.BeginChangeCheck();
             float nv = EditorGUILayout.Slider(FingerNames[f], cur, 0f, 1.2f);
-
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RegisterCompleteObjectUndo(dirtyTarget, "Finger Curl");
@@ -953,917 +2461,24 @@ public class WeaponSetupWindow : EditorWindow
         }
     }
 
-    void SetGripPose(ref HandPose grip, HandPose np, Object dirty, HandRig handRig)
+    /// <summary>차징·반동 자세 값 편집 (손·무기·카메라)</summary>
+    static void DrawPoseValues(ArmPose cp, bool body)
     {
-        Undo.RecordObject(dirty, "Set Grip");
-        grip = np;
-        EditorUtility.SetDirty(dirty);
-        handRig?.Apply(np);
-        RefreshPreview();
-        SceneView.RepaintAll();
-    }
-
-    // ─────────── 모션 ───────────
-
-    void DrawMotion()
-    {
-        int len = _source.ComboLength;
-
-        if (len == 0)
+        cp.RightPos = EditorGUILayout.Vector3Field("오른손 위치", cp.RightPos);
+        cp.RightRot = EditorGUILayout.Vector3Field("오른손 회전", cp.RightRot);
+        cp.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", cp.UseLeftHand);
+        if (cp.UseLeftHand)
         {
-            EditorGUILayout.HelpBox("모션이 비어 있습니다.", MessageType.Warning);
-            if (_source.SupportsMultiStep && GUILayout.Button("1타 추가"))
-            {
-                Undo.RecordObject(TargetAsset, "Add Combo");
-                _source.SetSteps(new[] { new ComboStep { Name = "1타" } });
-                EditorUtility.SetDirty(TargetAsset);
-            }
-            return;
+            cp.LeftPos = EditorGUILayout.Vector3Field("왼손 위치", cp.LeftPos);
+            cp.LeftRot = EditorGUILayout.Vector3Field("왼손 회전", cp.LeftRot);
         }
-
-        // 콤보 탭
-        if (len > 1)
-        {
-            EditorGUILayout.BeginHorizontal();
-            for (int i = 0; i < len; i++)
-            {
-                var s = _source.GetStep(i);
-                bool on = _comboIndex == i;
-                var style = i == 0 ? EditorStyles.miniButtonLeft
-                    : i == len - 1 ? EditorStyles.miniButtonRight
-                    : EditorStyles.miniButtonMid;
-
-                if (GUILayout.Toggle(on, s?.Name ?? $"{i + 1}타", style) && !on)
-                {
-                    _comboIndex = i;
-                    _selectedKey = -1;
-                    _selectedEvent = -1;
-                    _playT = 0f;
-                    _playing = false;
-                    RefreshPreview();
-                }
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-
-        _comboIndex = Mathf.Clamp(_comboIndex, 0, len - 1);
-        var step = _source.GetStep(_comboIndex);
-        if (step == null) return;
-
-        EditorGUILayout.Space(4);
-
-        // 프리셋
-        EditorGUILayout.BeginHorizontal();
-        _presetKind = (SwingPresets.Kind)EditorGUILayout.EnumPopup("모션 프리셋", _presetKind);
-        if (GUILayout.Button("적용", GUILayout.Width(52)))
-            ApplyPreset(step, _rig.GetEffectiveIdle());
-        EditorGUILayout.EndHorizontal();
-
-        if (GUILayout.Button("현재 씬 포즈 기준으로 적용"))
-            ApplyPreset(step, CaptureCurrentPose());
-
-        if (_source.SupportsMultiStep)
-        {
-            EditorGUILayout.Space(4);
-            DrawComboButtons(len);
-        }
-
-        EditorGUILayout.Space(4);
-        DrawStepTiming(step);
-
-        EditorGUILayout.Space(4);
-        DrawTimelineBar(step);
-
-        EditorGUILayout.Space(6);
-        DrawPlayback(step);
-
-        EditorGUILayout.Space(6);
-        DrawKeyList(step);
-
-        EditorGUILayout.Space(6);
-        DrawEventList(step);
-    }
-
-    void ApplyPreset(ComboStep step, ArmPose baseIdle)
-    {
-        Undo.RecordObject(TargetAsset, "Apply Preset");
-        step.Motion = SwingPresets.Create(_presetKind, baseIdle, IsTwoHand());
-        EditorUtility.SetDirty(TargetAsset);
-        _selectedKey = -1;
-        _playT = 0f;
-        RefreshPreview();
-    }
-
-    bool IsTwoHand()
-    {
-        var w = ResolvePreviewWeapon();
-        return w != null && w.Grip == GripType.TwoHand;
-    }
-
-    void DrawComboButtons(int len)
-    {
-        EditorGUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("+ 타 추가", EditorStyles.miniButton))
-        {
-            Undo.RecordObject(TargetAsset, "Add Combo Step");
-
-            var list = new List<ComboStep>(_source.GetSteps() ?? new ComboStep[0]);
-            var src = list.Count > 0 ? list[^1] : null;
-
-            var next = new ComboStep
-            {
-                Name = $"{list.Count + 1}타",
-                Duration = src?.Duration ?? 0.55f,
-                HitStart = src?.HitStart ?? 0.30f,
-                HitEnd = src?.HitEnd ?? 0.55f,
-                CancelPoint = src?.CancelPoint ?? 0.75f,
-                ComboResetTime = src?.ComboResetTime ?? 0.8f,
-                DamageMultiplier = (src?.DamageMultiplier ?? 1f) + 0.15f,
-                RangeMultiplier = src?.RangeMultiplier ?? 1f,
-                RadiusMultiplier = src?.RadiusMultiplier ?? 1f,
-                MaxTargets = src?.MaxTargets ?? 1,
-                HitStopDuration = src?.HitStopDuration ?? 0.05f,
-                CameraKickFov = src?.CameraKickFov ?? 4f,
-                CameraShake = src?.CameraShake ?? 0.3f,
-                LungeDistance = src?.LungeDistance ?? 0f,
-            };
-
-            var kind = (list.Count % 2 == 0)
-                ? SwingPresets.Kind.DiagonalSlash
-                : SwingPresets.Kind.BackhandReturn;
-            next.Motion = SwingPresets.Create(kind, _rig.GetEffectiveIdle(), IsTwoHand());
-
-            list.Add(next);
-            _source.SetSteps(list.ToArray());
-            EditorUtility.SetDirty(TargetAsset);
-
-            _comboIndex = list.Count - 1;
-            _selectedKey = -1;
-            _playT = 0f;
-            RefreshPreview();
-        }
-
-        using (new EditorGUI.DisabledScope(len <= 1))
-        {
-            if (GUILayout.Button("− 삭제", EditorStyles.miniButton))
-            {
-                if (EditorUtility.DisplayDialog("확인",
-                    $"{_source.GetStep(_comboIndex)?.Name}를 삭제할까요?", "삭제", "취소"))
-                {
-                    Undo.RecordObject(TargetAsset, "Delete Combo Step");
-
-                    var list = new List<ComboStep>(_source.GetSteps());
-                    list.RemoveAt(_comboIndex);
-                    _source.SetSteps(list.ToArray());
-                    EditorUtility.SetDirty(TargetAsset);
-
-                    _comboIndex = Mathf.Clamp(_comboIndex, 0, Mathf.Max(0, list.Count - 1));
-                    _selectedKey = -1;
-                    RefreshPreview();
-                }
-            }
-        }
-
-        if (GUILayout.Button("복제", EditorStyles.miniButton, GUILayout.Width(46)))
-        {
-            Undo.RecordObject(TargetAsset, "Duplicate Step");
-
-            var list = new List<ComboStep>(_source.GetSteps());
-            var copy = JsonUtility.FromJson<ComboStep>(JsonUtility.ToJson(list[_comboIndex]));
-            copy.Name = $"{list.Count + 1}타";
-            list.Insert(_comboIndex + 1, copy);
-
-            _source.SetSteps(list.ToArray());
-            EditorUtility.SetDirty(TargetAsset);
-            _comboIndex++;
-            RefreshPreview();
-        }
-
-        EditorGUILayout.EndHorizontal();
-    }
-
-    void DrawStepTiming(ComboStep step)
-    {
-        EditorGUI.BeginChangeCheck();
-
-        step.Name = EditorGUILayout.TextField("이름", step.Name);
-
-        EditorGUILayout.Space(2);
-        EditorGUILayout.LabelField("타이밍", EditorStyles.miniBoldLabel);
-
-        step.Duration = EditorGUILayout.FloatField("전체 길이 (초)", step.Duration);
-        step.HitStart = EditorGUILayout.Slider("판정 시작", step.HitStart, 0f, 1f);
-        step.HitEnd = EditorGUILayout.Slider("판정 끝", step.HitEnd, 0f, 1f);
-        step.CancelPoint = EditorGUILayout.Slider("캔슬 지점", step.CancelPoint, 0f, 1f);
-        step.ComboResetTime = EditorGUILayout.FloatField("콤보 유지 (초)", step.ComboResetTime);
-
-        EditorGUILayout.Space(2);
-        EditorGUILayout.LabelField("피해", EditorStyles.miniBoldLabel);
-
-        EditorGUILayout.BeginHorizontal();
-        step.DamageMultiplier = EditorGUILayout.FloatField("피해×", step.DamageMultiplier);
-        step.RangeMultiplier = EditorGUILayout.FloatField("사거리×", step.RangeMultiplier);
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        step.MaxTargets = EditorGUILayout.IntField("최대 대상", step.MaxTargets);
-        step.LungeDistance = EditorGUILayout.FloatField("전진 (m)", step.LungeDistance);
-        EditorGUILayout.EndHorizontal();
-
-        // 판정 오버라이드
-        EditorGUILayout.Space(2);
-        step.OverrideHitShape = EditorGUILayout.Toggle(
-            new GUIContent("판정 범위 개별 설정", "체크하면 무기 값 대신 이 값 사용"),
-            step.OverrideHitShape);
-
-        if (step.OverrideHitShape)
-        {
-            EditorGUI.indentLevel++;
-
-            step.HitMode = (WeaponHitMode)EditorGUILayout.EnumPopup("방식", step.HitMode);
-            step.Range = EditorGUILayout.FloatField("사거리", step.Range);
-
-            if (step.HitMode == WeaponHitMode.ForwardArc)
-                step.HitAngle = EditorGUILayout.Slider("각도", step.HitAngle, 20f, 360f);
-
-            step.HitHeight = EditorGUILayout.FloatField("수직 허용", step.HitHeight);
-            step.MinRange = EditorGUILayout.FloatField("최소 사거리", step.MinRange);
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("주변 구체", EditorStyles.miniButton))
-            {
-                step.HitMode = WeaponHitMode.ForwardSphere;
-                step.Range = 2f; step.HitHeight = 1.5f;
-            }
-            if (GUILayout.Button("전방 넓게", EditorStyles.miniButton))
-            {
-                step.HitMode = WeaponHitMode.ForwardArc;
-                step.Range = 3.5f; step.HitAngle = 160f;
-            }
-            if (GUILayout.Button("찌르기", EditorStyles.miniButton))
-            {
-                step.HitMode = WeaponHitMode.ForwardArc;
-                step.Range = 5f; step.HitAngle = 40f;
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUI.indentLevel--;
-        }
-
-        EditorGUILayout.Space(2);
-        EditorGUILayout.LabelField("연출", EditorStyles.miniBoldLabel);
-        step.HandMode = (HandVisibility)EditorGUILayout.EnumPopup("손 표시", step.HandMode);
-
-        EditorGUILayout.BeginHorizontal();
-        step.HitStopDuration = EditorGUILayout.FloatField("히트스톱", step.HitStopDuration);
-        step.CameraKickFov = EditorGUILayout.FloatField("FOV킥", step.CameraKickFov);
-        EditorGUILayout.EndHorizontal();
-
-        step.CameraShake = EditorGUILayout.FloatField("셰이크", step.CameraShake);
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            step.HitEnd = Mathf.Max(step.HitEnd, step.HitStart + 0.02f);
-            EditorUtility.SetDirty(TargetAsset);
-        }
-
-        EditorGUILayout.Space(2);
-        EditorGUILayout.LabelField(
-            $"선딜 {step.WindUp:F2}s · 판정 {step.ActiveWindow:F2}s · 후딜 {step.Recovery:F2}s",
-            EditorStyles.miniLabel);
-
-        if (step.ActiveWindow < 0.05f)
-            EditorGUILayout.HelpBox(
-                $"판정 구간이 {step.ActiveWindow:F3}초로 너무 짧습니다. 0.08초 이상 권장.",
-                MessageType.Warning);
-    }
-
-    void DrawTimelineBar(ComboStep step)
-    {
-        Rect r = GUILayoutUtility.GetRect(0, 44, GUILayout.ExpandWidth(true));
-        EditorGUI.DrawRect(r, new Color(0.14f, 0.14f, 0.14f));
-
-        float xs = r.x + r.width * step.HitStart;
-        float xe = r.x + r.width * step.HitEnd;
-        float xc = r.x + r.width * step.CancelPoint;
-
-        EditorGUI.DrawRect(new Rect(r.x, r.y, xs - r.x, r.height), new Color(0.26f, 0.31f, 0.45f));
-        EditorGUI.DrawRect(new Rect(xs, r.y, xe - xs, r.height), new Color(0.80f, 0.26f, 0.18f));
-        EditorGUI.DrawRect(new Rect(xe, r.y, r.x + r.width - xe, r.height), new Color(0.22f, 0.22f, 0.24f));
-
-        DrawHandle(xs, r, new Color(1f, 0.9f, 0.3f));
-        DrawHandle(xe, r, new Color(1f, 0.9f, 0.3f));
-        DrawHandle(xc, r, new Color(0.4f, 0.95f, 0.5f));
-
-        // 키 마커 (아래)
-        if (step.Motion?.Keys != null)
-            foreach (var k in step.Motion.Keys)
-            {
-                float kx = r.x + r.width * Mathf.Clamp01(k.Time);
-                EditorGUI.DrawRect(new Rect(kx - 1, r.y + r.height - 7, 2, 7),
-                    new Color(1f, 1f, 1f, 0.75f));
-            }
-
-        // 이벤트 마커 (위)
-        if (step.Events != null)
-            foreach (var ev in step.Events)
-            {
-                float ex = r.x + r.width * Mathf.Clamp01(ev.Time);
-                EditorGUI.DrawRect(new Rect(ex - 1, r.y, 2, 7),
-                    new Color(0.3f, 1f, 0.9f, 0.95f));
-            }
-
-        float p = Mathf.Clamp01(_playT / Mathf.Max(0.01f, step.Duration));
-        EditorGUI.DrawRect(new Rect(r.x + r.width * p - 1, r.y, 2, r.height), Color.cyan);
-
-        HandleTimelineInput(r, step);
-
-        GUI.Label(new Rect(r.x + 4, r.y + 2, r.width, 14),
-            $"판정 {step.WindUp:F2}s ~ {(step.WindUp + step.ActiveWindow):F2}s / 전체 {step.Duration:F2}s",
-            EditorStyles.miniLabel);
-    }
-
-    void DrawHandle(float x, Rect r, Color c)
-    {
-        EditorGUI.DrawRect(new Rect(x - 2, r.y, 4, r.height), c);
-        EditorGUI.DrawRect(new Rect(x - 6, r.y + r.height - 12, 12, 12),
-            new Color(c.r, c.g, c.b, 0.85f));
-        EditorGUIUtility.AddCursorRect(new Rect(x - 6, r.y, 12, r.height),
-            MouseCursor.ResizeHorizontal);
-    }
-
-    void HandleTimelineInput(Rect r, ComboStep step)
-    {
-        Event e = Event.current;
-        float t = Mathf.Clamp01((e.mousePosition.x - r.x) / r.width);
-
-        if (e.type == EventType.MouseDown && r.Contains(e.mousePosition))
-        {
-            float dS = Mathf.Abs(t - step.HitStart);
-            float dE = Mathf.Abs(t - step.HitEnd);
-            float dC = Mathf.Abs(t - step.CancelPoint);
-            float min = Mathf.Min(dS, Mathf.Min(dE, dC));
-
-            if (min < 0.03f)
-            {
-                _dragHandle = min == dS ? 0 : (min == dE ? 1 : 2);
-                Undo.RecordObject(TargetAsset, "Edit Timing");
-            }
-            else
-            {
-                _playing = false;
-                _playT = t * step.Duration;
-                RefreshPreview();
-            }
-            e.Use();
-        }
-        else if (e.type == EventType.MouseDrag && _dragHandle >= 0)
-        {
-            switch (_dragHandle)
-            {
-                case 0: step.HitStart = Mathf.Min(t, step.HitEnd - 0.02f); break;
-                case 1: step.HitEnd = Mathf.Max(t, step.HitStart + 0.02f); break;
-                case 2: step.CancelPoint = t; break;
-            }
-            step.HitStart = Mathf.Clamp01(step.HitStart);
-            step.HitEnd = Mathf.Clamp01(step.HitEnd);
-
-            EditorUtility.SetDirty(TargetAsset);
-            e.Use(); Repaint();
-        }
-        else if (e.type == EventType.MouseUp && _dragHandle >= 0)
-        {
-            _dragHandle = -1;
-            e.Use();
-        }
-        else if (e.type == EventType.MouseDrag && _dragHandle < 0 && r.Contains(e.mousePosition))
-        {
-            _playing = false;
-            _playT = t * step.Duration;
-            RefreshPreview();
-            e.Use(); Repaint();
-        }
-    }
-
-    void DrawPlayback(ComboStep step)
-    {
-        EditorGUILayout.BeginHorizontal();
-
-        if (GUILayout.Button(_playing ? "■ 정지" : "▶ 재생", GUILayout.Height(26)))
-        {
-            _playing = !_playing;
-            if (_playing) { _playT = 0f; _tipTrail.Clear(); }
-            else RefreshPreview();
-        }
-
-        if (_source.ComboLength > 1 && GUILayout.Button("▶▶ 전체", GUILayout.Height(26)))
-        {
-            _playing = true; _comboIndex = 0; _playT = 0f; _tipTrail.Clear();
-        }
-
-        _loop = GUILayout.Toggle(_loop, "반복", EditorStyles.miniButton,
-            GUILayout.Width(46), GUILayout.Height(26));
-
-        EditorGUILayout.EndHorizontal();
-
-        _playSpeed = EditorGUILayout.Slider("재생 속도", _playSpeed, 0.05f, 2f);
-
-        EditorGUI.BeginChangeCheck();
-        float p = EditorGUILayout.Slider("진행도",
-            _playT / Mathf.Max(0.01f, step.TotalTime), 0f, 1f);
-        if (EditorGUI.EndChangeCheck())
-        {
-            _playing = false;
-            _playT = p * step.TotalTime;
-            RefreshPreview();
-        }
-    }
-
-    // ─────────── 키프레임 ───────────
-
-    void DrawKeyList(ComboStep step)
-    {
-        var motion = step.Motion;
-        if (motion == null)
-        {
-            step.Motion = motion = new SwingMotion();
-            EditorUtility.SetDirty(TargetAsset);
-        }
-        motion.Keys ??= new List<PoseKey>();
-
-        EditorGUILayout.LabelField($"키프레임 ({motion.Keys.Count})", EditorStyles.boldLabel);
-
-        for (int i = 0; i < motion.Keys.Count; i++)
-        {
-            var k = motion.Keys[i];
-            bool sel = _selectedKey == i;
-
-            EditorGUILayout.BeginHorizontal();
-
-            bool newSel = GUILayout.Toggle(sel, $"{i}", EditorStyles.miniButtonLeft, GUILayout.Width(26));
-            if (newSel != sel)
-            {
-                _selectedKey = newSel ? i : -1;
-                if (_selectedKey >= 0) PreviewPose(k.Pose);
-            }
-
-            EditorGUI.BeginChangeCheck();
-            float nt = EditorGUILayout.Slider(k.Time, 0f, 1f);
-            if (EditorGUI.EndChangeCheck())
-            {
-                k.Time = nt;
-                _draggingKey = i;
-                _needsSort = true;
-                EditorUtility.SetDirty(TargetAsset);
-                PreviewPose(k.Pose);
-            }
-
-            GUILayout.Label($"{k.Time * step.Duration:F2}s",
-                EditorStyles.miniLabel, GUILayout.Width(42));
-
-            using (new EditorGUI.DisabledScope(i == 0))
-                if (GUILayout.Button("▲", EditorStyles.miniButtonMid, GUILayout.Width(22)))
-                {
-                    SwapKeyPose(motion, i, i - 1);
-                    _selectedKey = i - 1;
-                    EditorGUILayout.EndHorizontal();
-                    break;
-                }
-
-            using (new EditorGUI.DisabledScope(i == motion.Keys.Count - 1))
-                if (GUILayout.Button("▼", EditorStyles.miniButtonMid, GUILayout.Width(22)))
-                {
-                    SwapKeyPose(motion, i, i + 1);
-                    _selectedKey = i + 1;
-                    EditorGUILayout.EndHorizontal();
-                    break;
-                }
-
-            if (GUILayout.Button("보기", EditorStyles.miniButtonMid, GUILayout.Width(34)))
-                PreviewPose(k.Pose);
-
-            if (GUILayout.Button("−", EditorStyles.miniButtonRight, GUILayout.Width(22)))
-            {
-                Undo.RecordObject(TargetAsset, "Delete Key");
-                motion.Keys.RemoveAt(i);
-                EditorUtility.SetDirty(TargetAsset);
-                _selectedKey = -1;
-                EditorGUILayout.EndHorizontal();
-                break;
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            if (_selectedKey == i) DrawKeyDetail(k);
-        }
-
-        // 드래그 끝났을 때만 정렬
-        if (_needsSort && Event.current.type == EventType.MouseUp)
-        {
-            var keep = (_draggingKey >= 0 && _draggingKey < motion.Keys.Count)
-                ? motion.Keys[_draggingKey] : null;
-
-            motion.SortKeys();
-
-            if (keep != null) _selectedKey = motion.Keys.IndexOf(keep);
-
-            _needsSort = false;
-            _draggingKey = -1;
-            EditorUtility.SetDirty(TargetAsset);
-            Repaint();
-        }
-
-        EditorGUILayout.Space(2);
-        EditorGUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("+ 현재 포즈로 키 추가"))
-        {
-            Undo.RecordObject(TargetAsset, "Add Key");
-
-            float t;
-
-            if (motion.Keys.Count == 0)
-            {
-                t = 0f;
-            }
-            else if (_selectedKey >= 0 && _selectedKey < motion.Keys.Count)
-            {
-                float cur = motion.Keys[_selectedKey].Time;
-
-                // 다음 키가 있으면 그 사이, 없으면 1.0
-                if (_selectedKey + 1 < motion.Keys.Count)
-                    t = (cur + motion.Keys[_selectedKey + 1].Time) * 0.5f;
-                else
-                    t = 1f;
-            }
-            else
-            {
-                // 선택 없으면 맨 끝
-                t = 1f;
-            }
-
-            // 1.0 자리가 이미 차 있으면 기존 키들을 앞으로 밀어 자리 확보
-            if (t >= 0.999f && motion.Keys.Count > 0 && motion.Keys[^1].Time >= 0.999f)
-            {
-                foreach (var kk in motion.Keys) kk.Time *= 0.9f;
-                t = 1f;
-            }
-
-            var nk = new PoseKey { Time = t, Pose = CaptureCurrentPose() };
-            motion.Keys.Add(nk);
-            motion.SortKeys();
-
-            EditorUtility.SetDirty(TargetAsset);
-            _selectedKey = motion.Keys.IndexOf(nk);
-            _playT = t * step.TotalTime;
-            PreviewPose(nk.Pose);
-        }
-
-        if (GUILayout.Button("정렬", GUILayout.Width(50)))
-        {
-            motion.SortKeys();
-            EditorUtility.SetDirty(TargetAsset);
-        }
-
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("모든 키 왼손 켜기", EditorStyles.miniButton))
-            SetAllLeftHand(motion, true);
-        if (GUILayout.Button("모든 키 왼손 끄기", EditorStyles.miniButton))
-            SetAllLeftHand(motion, false);
-        EditorGUILayout.EndHorizontal();
-    }
-
-    void SetAllLeftHand(SwingMotion motion, bool on)
-    {
-        Undo.RecordObject(TargetAsset, "Toggle Left Hand");
-        foreach (var k in motion.Keys) k.Pose.UseLeftHand = on;
-        EditorUtility.SetDirty(TargetAsset);
-        RefreshPreview();
-    }
-
-    void SwapKeyPose(SwingMotion motion, int a, int b)
-    {
-        Undo.RecordObject(TargetAsset, "Reorder Keys");
-
-        // 요소를 통째로 교환 (Time 포함)
-        (motion.Keys[a], motion.Keys[b]) = (motion.Keys[b], motion.Keys[a]);
-
-        // Time도 함께 갔으므로 시간 순서를 다시 맞춤
-        float ta = motion.Keys[a].Time;
-        float tb = motion.Keys[b].Time;
-        motion.Keys[a].Time = Mathf.Min(ta, tb);
-        motion.Keys[b].Time = Mathf.Max(ta, tb);
-
-        EditorUtility.SetDirty(TargetAsset);
-        RefreshPreview();
-    }
-
-    void DrawKeyDetail(PoseKey k)
-    {
-        EditorGUI.indentLevel++;
-        EditorGUI.BeginChangeCheck();
-
-        var p = k.Pose;
-
-        // 오른손
-        EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
-        p.RightPos = EditorGUILayout.Vector3Field("위치", p.RightPos);
-        p.RightRot = EditorGUILayout.Vector3Field("회전", p.RightRot);
-
-        // 왼손
-        EditorGUILayout.Space(2);
-        p.UseLeftHand = EditorGUILayout.Toggle("왼손 표시", p.UseLeftHand);
-
-        if (p.UseLeftHand)
-        {
-            EditorGUI.indentLevel++;
-            p.LeftPos = EditorGUILayout.Vector3Field("위치", p.LeftPos);
-            p.LeftRot = EditorGUILayout.Vector3Field("회전", p.LeftRot);
-
-            if (GUILayout.Button("오른손 좌우 반전 복사", EditorStyles.miniButton))
-            {
-                p.LeftPos = new Vector3(-p.RightPos.x, p.RightPos.y, p.RightPos.z);
-                p.LeftRot = new Vector3(p.RightRot.x, -p.RightRot.y, -p.RightRot.z);
-            }
-            EditorGUI.indentLevel--;
-        }
-
-        // 카메라
-        EditorGUILayout.Space(2);
-        EditorGUILayout.LabelField("카메라", EditorStyles.miniBoldLabel);
-        p.CamPos = EditorGUILayout.Vector3Field("위치 오프셋", p.CamPos);
-        p.CamRot = EditorGUILayout.Vector3Field("회전 오프셋", p.CamRot);
-        p.CamFov = EditorGUILayout.FloatField("FOV 추가", p.CamFov);
-
-        // 무기
-        EditorGUILayout.Space(2);
-        EditorGUILayout.LabelField("무기 추가 오프셋", EditorStyles.miniBoldLabel);
-        p.WeaponPos = EditorGUILayout.Vector3Field("위치", p.WeaponPos);
-        p.WeaponRot = EditorGUILayout.Vector3Field("회전", p.WeaponRot);
-
-        EditorGUILayout.Space(2);
-        k.Ease = EditorGUILayout.CurveField("보간 곡선", k.Ease);
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            EditorUtility.SetDirty(TargetAsset);
-            PreviewPose(p);
-        }
-
-        // 손가락
-        EditorGUILayout.Space(2);
-        EditorGUILayout.LabelField("손가락", EditorStyles.miniBoldLabel);
-
-        bool prevGrip = p.UseWeaponGrip;
-        p.UseWeaponGrip = EditorGUILayout.Toggle(
-            new GUIContent("무기 그립 사용", "끄면 이 키에서 손 모양을 직접 지정"),
-            p.UseWeaponGrip);
-
-        if (prevGrip != p.UseWeaponGrip)
-        {
-            EditorUtility.SetDirty(TargetAsset);
-            PreviewPose(p);
-        }
-
-        if (!p.UseWeaponGrip)
-        {
-            EditorGUI.indentLevel++;
-
-            Vector3 axis = GetCurlAxis();
-
-            // ── 오른손 ──
-            EditorGUILayout.LabelField("오른손", EditorStyles.miniBoldLabel);
-            p.RightFingers ??= HandPose.Relaxed(axis);
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("펌", EditorStyles.miniButtonLeft))
-                SetKeyFingers(p, HandPose.Open(axis), true);
-            if (GUILayout.Button("자연", EditorStyles.miniButtonMid))
-                SetKeyFingers(p, HandPose.Relaxed(axis), true);
-            if (GUILayout.Button("쥠", EditorStyles.miniButtonMid))
-                SetKeyFingers(p, HandPose.Grip(axis), true);
-            if (GUILayout.Button("주먹", EditorStyles.miniButtonRight))
-                SetKeyFingers(p, HandPose.Fist(axis), true);
-            EditorGUILayout.EndHorizontal();
-
-            if (_rig.RightHandRig != null)
-            {
-                DrawSceneEditToggle(p.RightFingers, _rig.RightHandRig, TargetAsset);
-                DrawFingerSliders(p.RightFingers, axis, _rig.RightHandRig, TargetAsset);
-            }
-
-            // ── 왼손 ──
-            if (p.UseLeftHand)
-            {
-                EditorGUILayout.Space(4);
-                EditorGUILayout.LabelField("왼손", EditorStyles.miniBoldLabel);
-                p.LeftFingers ??= HandPose.Relaxed(axis);
-
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("펌", EditorStyles.miniButtonLeft))
-                    SetKeyFingers(p, HandPose.Open(axis), false);
-                if (GUILayout.Button("자연", EditorStyles.miniButtonMid))
-                    SetKeyFingers(p, HandPose.Relaxed(axis), false);
-                if (GUILayout.Button("쥠", EditorStyles.miniButtonMid))
-                    SetKeyFingers(p, HandPose.Grip(axis), false);
-                if (GUILayout.Button("주먹", EditorStyles.miniButtonRight))
-                    SetKeyFingers(p, HandPose.Fist(axis), false);
-                EditorGUILayout.EndHorizontal();
-
-                if (_rig.LeftHandRig != null)
-                {
-                    DrawSceneEditToggle(p.LeftFingers, _rig.LeftHandRig, TargetAsset);
-                    DrawFingerSliders(p.LeftFingers, axis, _rig.LeftHandRig, TargetAsset);
-                }
-
-                if (GUILayout.Button("오른손 손가락 복사", EditorStyles.miniButton))
-                {
-                    Undo.RecordObject(TargetAsset, "Copy Fingers");
-                    p.LeftFingers = p.RightFingers?.Clone() ?? HandPose.Relaxed(axis);
-                    EditorUtility.SetDirty(TargetAsset);
-                    PreviewPose(p);
-                }
-            }
-
-            EditorGUI.indentLevel--;
-        }
-
-        // 버튼
-        EditorGUILayout.Space(2);
-        EditorGUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("씬 포즈 저장"))
-        {
-            Undo.RecordObject(TargetAsset, "Capture Pose");
-            k.Pose = CaptureCurrentPose();
-            EditorUtility.SetDirty(TargetAsset);
-        }
-
-        if (GUILayout.Button("Idle 복사"))
-        {
-            Undo.RecordObject(TargetAsset, "Copy Idle");
-            k.Pose = _rig.GetEffectiveIdle().Clone();
-            EditorUtility.SetDirty(TargetAsset);
-            PreviewPose(k.Pose);
-        }
-
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUI.indentLevel--;
-    }
-
-    void SetKeyFingers(ArmPose p, HandPose hp, bool right)
-    {
-        Undo.RecordObject(TargetAsset, "Set Key Fingers");
-
-        if (right) p.RightFingers = hp;
-        else p.LeftFingers = hp;
-
-        EditorUtility.SetDirty(TargetAsset);
-        PreviewPose(p);
-        SceneView.RepaintAll();
-    }
-
-    // ─────────── 이벤트 ───────────
-
-    void DrawEventList(ComboStep step)
-    {
-        step.Events ??= new MotionEvent[0];
-
-        EditorGUILayout.LabelField($"이벤트 ({step.Events.Length})", EditorStyles.boldLabel);
-
-        for (int i = 0; i < step.Events.Length; i++)
-        {
-            var ev = step.Events[i];
-            bool sel = _selectedEvent == i;
-
-            EditorGUILayout.BeginHorizontal();
-
-            bool ns = GUILayout.Toggle(sel, EventIcon(ev.Type),
-                EditorStyles.miniButtonLeft, GUILayout.Width(30));
-            if (ns != sel) _selectedEvent = ns ? i : -1;
-
-            EditorGUI.BeginChangeCheck();
-            ev.Time = EditorGUILayout.Slider(ev.Time, 0f, 1f);
-            if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(TargetAsset);
-
-            GUILayout.Label($"{ev.Time * step.Duration:F2}s",
-                EditorStyles.miniLabel, GUILayout.Width(42));
-
-            if (GUILayout.Button("−", EditorStyles.miniButtonRight, GUILayout.Width(22)))
-            {
-                Undo.RecordObject(TargetAsset, "Delete Event");
-                var list = new List<MotionEvent>(step.Events);
-                list.RemoveAt(i);
-                step.Events = list.ToArray();
-                EditorUtility.SetDirty(TargetAsset);
-                _selectedEvent = -1;
-                EditorGUILayout.EndHorizontal();
-                break;
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            if (_selectedEvent == i) DrawEventDetail(ev);
-        }
-
-        if (GUILayout.Button("+ 이벤트 추가"))
-        {
-            Undo.RecordObject(TargetAsset, "Add Event");
-            var list = new List<MotionEvent>(step.Events);
-            list.Add(new MotionEvent
-            {
-                Time = Mathf.Clamp01(_playT / Mathf.Max(0.01f, step.Duration))
-            });
-            step.Events = list.ToArray();
-            EditorUtility.SetDirty(TargetAsset);
-            _selectedEvent = list.Count - 1;
-        }
-    }
-
-    string EventIcon(MotionEventType t) => t switch
-    {
-        MotionEventType.Sound => "♪",
-        MotionEventType.Effect => "✦",
-        MotionEventType.TrailStart => "▶",
-        MotionEventType.TrailEnd => "■",
-        MotionEventType.CameraShake => "≈",
-        _ => "◆",
-    };
-
-    void DrawEventDetail(MotionEvent ev)
-    {
-        EditorGUI.indentLevel++;
-        EditorGUI.BeginChangeCheck();
-
-        ev.Type = (MotionEventType)EditorGUILayout.EnumPopup("종류", ev.Type);
-
-        switch (ev.Type)
-        {
-            case MotionEventType.Sound:
-                ev.Clip = (AudioClip)EditorGUILayout.ObjectField("사운드", ev.Clip, typeof(AudioClip), false);
-                ev.Volume = EditorGUILayout.Slider("볼륨", ev.Volume, 0f, 1f);
-                ev.Pitch = EditorGUILayout.Slider("피치", ev.Pitch, 0.5f, 1.5f);
-                break;
-
-            case MotionEventType.Effect:
-                ev.Prefab = (GameObject)EditorGUILayout.ObjectField("프리팹", ev.Prefab, typeof(GameObject), false);
-                ev.Space = (EventSpace)EditorGUILayout.EnumPopup("기준", ev.Space);
-                ev.PositionOffset = EditorGUILayout.Vector3Field("위치", ev.PositionOffset);
-                ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
-                ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
-                ev.Lifetime = EditorGUILayout.FloatField("수명 (초)", ev.Lifetime);
-                break;
-
-            case MotionEventType.CameraShake:
-                ev.ShakeAmount = EditorGUILayout.FloatField("강도", ev.ShakeAmount);
-                break;
-
-            case MotionEventType.Custom:
-                ev.Key = EditorGUILayout.TextField("키", ev.Key);
-                break;
-        }
-
-        EditorGUILayout.BeginHorizontal();
-        ev.ShowFirstPerson = EditorGUILayout.Toggle("1인칭", ev.ShowFirstPerson);
-        ev.ShowThirdPerson = EditorGUILayout.Toggle("3인칭", ev.ShowThirdPerson);
-        EditorGUILayout.EndHorizontal();
-
-        if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(TargetAsset);
-
-        EditorGUI.indentLevel--;
-    }
-
-    // ─────────── 도구 ───────────
-
-    void DrawTools()
-    {
-        if (GUILayout.Button("씬 뷰를 무기에 맞추기")) FrameWeapon();
-        if (GUILayout.Button("1인칭 시점으로 보기")) LookThroughEye();
-
-        EditorGUILayout.Space(2);
-        if (GUILayout.Button("에셋 선택")) Selection.activeObject = TargetAsset;
-        if (_rig != null && GUILayout.Button("FPArmRig 선택"))
-            Selection.activeGameObject = _rig.gameObject;
-
-        EditorGUILayout.Space(4);
-        if (GUILayout.Button("Idle 포즈를 씬에서 저장") && _rig != null)
-        {
-            Undo.RecordObject(_rig, "Capture Idle");
-            _rig.IdlePose = CaptureCurrentPose();
-            EditorUtility.SetDirty(_rig);
-        }
-
-        EditorGUILayout.Space(4);
-        EditorGUILayout.LabelField("씬 표시", EditorStyles.miniBoldLabel);
-        _showHitbox = EditorGUILayout.Toggle("판정 범위", _showHitbox);
-        _showTrail = EditorGUILayout.Toggle("무기 궤적", _showTrail);
-        _showOnlyDuringActive = EditorGUILayout.Toggle("판정 중에만", _showOnlyDuringActive);
-
-        if (GUILayout.Button("궤적 지우기")) _tipTrail.Clear();
+        cp.WeaponPos = EditorGUILayout.Vector3Field("무기 위치", cp.WeaponPos);
+        cp.WeaponRot = EditorGUILayout.Vector3Field("무기 회전", cp.WeaponRot);
+        cp.CamRot = EditorGUILayout.Vector3Field("카메라 회전", cp.CamRot);
+        cp.CamFov = EditorGUILayout.FloatField("FOV 추가", cp.CamFov);
+        if (!body) return;
+        cp.BodyRot = EditorGUILayout.Vector3Field("몸 회전", cp.BodyRot);
+        cp.HeadRot = EditorGUILayout.Vector3Field("머리 회전", cp.HeadRot);
     }
 
     // ══════════════════════ 프리뷰 ══════════════════════
@@ -1881,14 +2496,14 @@ public class WeaponSetupWindow : EditorWindow
         }
 
         var w = ResolvePreviewWeapon();
-
-        if (w == null) _rig.Mount(null);
-        else { _rig.Mount(w); MarkPreviewWeapon(); }
+        _rig.Mount(w);
+        if (w != null) MarkPreviewWeapon();
 
         _playing = false;
         _playT = 0f;
-        _selectedKey = -1;
+        ClearSelection();
         _previewDraw = 0f;
+        _forceProjectile = false;
         _rig.ApplyPose(_rig.GetEffectiveIdle());
         SceneView.RepaintAll();
     }
@@ -1910,7 +2525,7 @@ public class WeaponSetupWindow : EditorWindow
     {
         if (_rig == null || _source == null) return;
 
-        var step = _source.GetStep(_comboIndex);
+        var step = CurrentStep;
         if (step?.Motion != null && step.Motion.IsValid)
             _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
         else
@@ -1931,7 +2546,6 @@ public class WeaponSetupWindow : EditorWindow
         var p = new ArmPose();
         if (_rig == null) return p;
 
-        // 손 위치/회전
         if (_rig.RightHand != null)
         {
             p.RightPos = _rig.RightHand.localPosition;
@@ -1945,29 +2559,31 @@ public class WeaponSetupWindow : EditorWindow
             p.LeftRot = NormalizeEuler(_rig.LeftHand.localRotation.eulerAngles);
         }
 
-        // ★ 무기 추가 오프셋 (기본 오프셋 대비 차이)
+        // 무기 추가 오프셋 (기본 오프셋 대비 차이)
         var weaponT = _rig.GetWeaponTransform();
         var w = ResolvePreviewWeapon();
-
         if (weaponT != null && w != null)
         {
             Vector3 baseP = w.GetPosOffset(true);
             Vector3 baseR = w.GetRotOffset(true);
-
             p.WeaponPos = weaponT.localPosition - baseP;
-            p.WeaponRot = NormalizeEuler(
-                (Quaternion.Inverse(Quaternion.Euler(baseR)) * weaponT.localRotation).eulerAngles);
+            p.WeaponRot = NormalizeEuler((Quaternion.Inverse(Quaternion.Euler(baseR)) * weaponT.localRotation).eulerAngles);
         }
+
+        // 몸 · 머리
+        _rig.GetBodyOffset(out var bp, out var br, out var hp, out var hr);
+        p.BodyPos = bp;
+        p.BodyRot = NormalizeEuler(br);
+        p.HeadPos = hp;
+        p.HeadRot = NormalizeEuler(hr);
 
         // 손가락
         p.UseWeaponGrip = false;
-
         if (_rig.RightHandRig != null)
         {
             p.RightFingers = new HandPose();
             _rig.RightHandRig.BakeAll(p.RightFingers);
         }
-
         if (_rig.LeftHandRig != null)
         {
             p.LeftFingers = new HandPose();
@@ -1977,27 +2593,14 @@ public class WeaponSetupWindow : EditorWindow
         return p;
     }
 
-    static Vector3 NormalizeEuler(Vector3 e) => new(N(e.x), N(e.y), N(e.z));
-    static float N(float a)
-    {
-        a %= 360f;
-        if (a > 180f) a -= 360f;
-        if (a < -180f) a += 360f;
-        return a;
-    }
-
     void CaptureWeaponTransform()
     {
-        if (_rig == null || _weapon == null) return;
-
         Transform t = _rig.GetWeaponTransform();
         if (t == null)
         {
             Debug.LogWarning("[MotionSetup] 손에 무기가 없습니다.");
             return;
         }
-
-        Undo.RecordObject(_weapon, "Capture Weapon Transform");
 
         if (_firstPerson)
         {
@@ -2010,15 +2613,11 @@ public class WeaponSetupWindow : EditorWindow
             _weapon.RotationOffset = NormalizeEuler(t.localRotation.eulerAngles);
         }
         _weapon.ScaleOverride = t.localScale;
-
         EditorUtility.SetDirty(_weapon);
-        Debug.Log($"[MotionSetup] {_weapon.DisplayName} 무기 배치 저장됨");
     }
 
     void ResetWeaponTransform()
     {
-        Undo.RecordObject(_weapon, "Reset Weapon Transform");
-
         if (_firstPerson)
         {
             _weapon.FpPositionOffset = Vector3.zero;
@@ -2030,57 +2629,95 @@ public class WeaponSetupWindow : EditorWindow
             _weapon.RotationOffset = Vector3.zero;
         }
         _weapon.ScaleOverride = Vector3.one;
-
         EditorUtility.SetDirty(_weapon);
         SpawnWeapon();
     }
 
     void CaptureWeaponIdlePose()
     {
-        if (_rig == null || _weapon == null) return;
-
-        Undo.RecordObject(_weapon, "Capture Hand Pose");
-
         if (_rig.RightHand != null)
         {
             _weapon.RightHandPos = _rig.RightHand.localPosition;
             _weapon.RightHandRot = NormalizeEuler(_rig.RightHand.localRotation.eulerAngles);
         }
-
         if (_rig.LeftHand != null)
         {
             _weapon.UseLeftHand = _rig.LeftHand.gameObject.activeSelf;
             _weapon.LeftHandPos = _rig.LeftHand.localPosition;
             _weapon.LeftHandRot = NormalizeEuler(_rig.LeftHand.localRotation.eulerAngles);
         }
-
         _weapon.OverrideIdlePose = true;
-
         EditorUtility.SetDirty(_weapon);
-        Debug.Log($"[MotionSetup] {_weapon.DisplayName} 손 자세 저장됨");
     }
 
     void CopyRigIdle()
     {
-        if (_rig == null || _weapon == null) return;
-
-        Undo.RecordObject(_weapon, "Copy Rig Idle");
-
         var idle = _rig.IdlePose;
         _weapon.RightHandPos = idle.RightPos;
         _weapon.RightHandRot = idle.RightRot;
         _weapon.UseLeftHand = idle.UseLeftHand;
         _weapon.LeftHandPos = idle.LeftPos;
         _weapon.LeftHandRot = idle.LeftRot;
-
         EditorUtility.SetDirty(_weapon);
         RefreshPreview();
     }
 
+    void PullFromRigDefaults()
+    {
+        var idle = _rig.IdlePose;
+        _weapon.RightHandPos = idle.RightPos;
+        _weapon.RightHandRot = idle.RightRot;
+        _weapon.LeftHandPos = idle.LeftPos;
+        _weapon.LeftHandRot = idle.LeftRot;
+        _weapon.UseLeftHand = idle.UseLeftHand || _weapon.Grip == GripType.TwoHand;
+        _weapon.OverrideIdlePose = true;
+        EditorUtility.SetDirty(_weapon);
+        SpawnWeapon();
+    }
+
+    void CaptureStringPull()
+    {
+        var bone = _rig.StringBone;
+        if (bone == null)
+        {
+            Debug.LogWarning("[MotionSetup] 시위 본이 없습니다. WeaponRig의 StringBone을 확인하세요.");
+            return;
+        }
+
+        Vector3 delta = bone.localPosition - _rig.StringRestPos;
+        if (delta.sqrMagnitude < 1e-6f)
+        {
+            Debug.LogWarning("[MotionSetup] 시위를 먼저 씬에서 당겨 주세요.");
+            return;
+        }
+
+        _weapon.StringPullDir = delta.normalized;
+        _weapon.StringPullDistance = delta.magnitude;
+        EditorUtility.SetDirty(_weapon);
+    }
+
+    void CaptureStringHand()
+    {
+        var bone = _rig.StringBone;
+        if (bone == null || _rig.LeftHand == null)
+        {
+            Debug.LogWarning("[MotionSetup] 시위 본 또는 왼손이 없습니다.");
+            return;
+        }
+
+        _weapon.StringHandOffset = bone.InverseTransformPoint(_rig.LeftHand.position);
+        _weapon.StringHandRot = NormalizeEuler(_rig.LeftHand.localRotation.eulerAngles);
+
+        if (_rig.LeftHandRig != null)
+        {
+            _weapon.StringHandPose = new HandPose();
+            _rig.LeftHandRig.BakeAll(_weapon.StringHandPose);
+        }
+        EditorUtility.SetDirty(_weapon);
+    }
+
     void FrameWeapon()
     {
-        if (_rig == null) return;
-
         Transform t = _rig.GetWeaponTransform();
         if (t == null) t = _rig.RightHand;
         if (t == null) return;
@@ -2092,10 +2729,10 @@ public class WeaponSetupWindow : EditorWindow
     void LookThroughEye()
     {
         var sv = SceneView.lastActiveSceneView;
-        if (sv == null || _rig == null) return;
+        if (sv == null) return;
 
-        Transform arm = _rig.ArmRoot != null ? _rig.ArmRoot : _rig.transform;
-        Transform eye = arm.parent != null ? arm.parent : arm;
+        Transform eye = GetEyeTransform();
+        if (eye == null) return;
 
         sv.pivot = eye.position + eye.forward * 0.6f;
         sv.rotation = eye.rotation;
@@ -2114,7 +2751,7 @@ public class WeaponSetupWindow : EditorWindow
         if (Application.isPlaying) return;
         if (!_playing || _source == null || _rig == null) return;
 
-        var step = _source.GetStep(_comboIndex);
+        var step = CurrentStep;
         if (step == null) { _playing = false; return; }
 
         _playT += dt * _playSpeed;
@@ -2123,7 +2760,7 @@ public class WeaponSetupWindow : EditorWindow
         {
             _playT = 0f;
 
-            if (_source.ComboLength > 1)
+            if (_playAll && _source.ComboLength > 1)
             {
                 _comboIndex++;
                 if (_comboIndex >= _source.ComboLength)
@@ -2131,12 +2768,13 @@ public class WeaponSetupWindow : EditorWindow
                     _comboIndex = 0;
                     if (!_loop) { StopPlay(); return; }
                 }
-                step = _source.GetStep(_comboIndex);
+                ClearSelection();
+                step = CurrentStep;
             }
             else if (!_loop) { StopPlay(); return; }
         }
 
-        _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime));
+        _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
         SceneView.RepaintAll();
         Repaint();
     }
@@ -2144,6 +2782,7 @@ public class WeaponSetupWindow : EditorWindow
     void StopPlay()
     {
         _playing = false;
+        _playAll = false;
         _rig.ApplyPose(_rig.GetEffectiveIdle());
         SceneView.RepaintAll();
         Repaint();
@@ -2156,7 +2795,7 @@ public class WeaponSetupWindow : EditorWindow
         if (Application.isPlaying) return;
         if (_source == null || _rig == null) return;
 
-        var step = _source.GetStep(_comboIndex);
+        var step = CurrentStep;
         if (step == null) return;
 
         Transform eye = GetEyeTransform();
@@ -2164,13 +2803,13 @@ public class WeaponSetupWindow : EditorWindow
 
         float total = Mathf.Max(0.01f, step.TotalTime);
         float p = Mathf.Clamp01(_playT / total);
-        bool inActive = _playT >= step.WindUp &&
-                        _playT <= step.WindUp + step.ActiveWindow;
+        bool inActive = _playT >= step.WindUp && _playT <= step.WindUp + step.ActiveWindow;
 
         var hitSrc = ResolvePreviewWeapon();
 
         if (_showHitbox && hitSrc != null) DrawHitArc(eye, step, hitSrc, inActive);
         if (_showTrail) DrawTipTrail(inActive);
+        DrawEventMarkers(step, p);
 
         DrawInfoLabel(step, p, inActive, hitSrc);
     }
@@ -2182,21 +2821,46 @@ public class WeaponSetupWindow : EditorWindow
         return arm.parent != null ? arm.parent : arm;
     }
 
+    /// <summary>선택한 이펙트·조명 이벤트가 생길 위치를 씬에 표시</summary>
+    void DrawEventMarkers(ComboStep step, float p)
+    {
+        if (_sel != Sel.Event || _selIndex < 0 || _selIndex >= step.Events.Length) return;
+
+        var ev = step.Events[_selIndex];
+        if (ev == null) return;
+        if (ev.Type != MotionEventType.Effect && ev.Type != MotionEventType.LightFlash) return;
+
+        Transform basis = ev.Space switch
+        {
+            EventSpace.AttachToWeapon => _rig.WeaponTip,
+            EventSpace.AttachToMuzzle => _rig.Muzzle,
+            EventSpace.AttachToBody => _rig.Body,
+            EventSpace.AttachToHead => _rig.Head,
+            EventSpace.AttachToRightHand => _rig.RightHand,
+            EventSpace.AttachToLeftHand => _rig.LeftHand,
+            EventSpace.AttachToCamera => GetEyeTransform(),
+            _ => _rig.Body != null ? _rig.Body : GetEyeTransform(),
+        };
+        if (basis == null) return;
+
+        Vector3 pos = basis.TransformPoint(ev.PositionOffset);
+        var m = Meta(ev.Type);
+        Handles.color = m.color;
+        Handles.SphereHandleCap(0, pos, Quaternion.identity, 0.06f, EventType.Repaint);
+        Handles.Label(pos + Vector3.up * 0.06f, $"{m.icon} {m.label}", EditorStyles.whiteMiniLabel);
+    }
+
     void DrawHitArc(Transform eye, ComboStep step, EquipmentData w, bool inActive)
     {
         if (_showOnlyDuringActive && !inActive) return;
 
-        step.ResolveHitShape(w, out var mode, out float range,
-                             out float angle, out float height, out float minRange);
+        step.ResolveHitShape(w, out var mode, out float range, out float angle, out float height, out float minRange);
 
         Vector3 o = eye.position - Vector3.up * 0.7f;
         Vector3 f = new Vector3(eye.forward.x, 0f, eye.forward.z).normalized;
         if (f.sqrMagnitude < 0.001f) f = Vector3.forward;
 
-        Color c = inActive
-            ? new Color(1f, 0.25f, 0.15f, 1f)
-            : new Color(0.5f, 0.55f, 0.6f, 0.6f);
-
+        Color c = inActive ? new Color(1f, 0.25f, 0.15f, 1f) : new Color(0.5f, 0.55f, 0.6f, 0.6f);
         if (step.OverrideHitShape)
             c = inActive ? new Color(1f, 0.5f, 0.1f, 1f) : new Color(0.6f, 0.5f, 0.3f, 0.6f);
 
@@ -2236,14 +2900,11 @@ public class WeaponSetupWindow : EditorWindow
 
         Handles.color = Color.yellow;
         Handles.Label(o + f * range + Vector3.up * 0.12f,
-            $"{range:F2}m{(step.OverrideHitShape ? " (개별)" : "")}",
-            EditorStyles.whiteMiniLabel);
+            $"{range:F2}m{(step.OverrideHitShape ? " (개별)" : "")}", EditorStyles.whiteMiniLabel);
     }
 
     void DrawTipTrail(bool inActive)
     {
-        if (_rig == null) return;
-
         Transform tip = _rig.WeaponTip;
         if (tip == null) return;
 
@@ -2281,16 +2942,12 @@ public class WeaponSetupWindow : EditorWindow
 
         if (w != null)
         {
-            step.ResolveHitShape(w, out var mode, out float range,
-                                 out float angle, out _, out _);
-
-            GUILayout.Label(mode == WeaponHitMode.ForwardArc
-                ? $"부채꼴 {range:F2}m / {angle:F0}°"
-                : $"구체 {range:F2}m", EditorStyles.whiteMiniLabel);
+            step.ResolveHitShape(w, out var mode, out float range, out float angle, out _, out _);
+            GUILayout.Label(mode == WeaponHitMode.ForwardArc ? $"부채꼴 {range:F2}m / {angle:F0}°" : $"구체 {range:F2}m",
+                EditorStyles.whiteMiniLabel);
         }
 
-        GUILayout.Label($"피해 ×{step.DamageMultiplier:F2}   대상 {step.MaxTargets}",
-            EditorStyles.whiteMiniLabel);
+        GUILayout.Label($"피해 ×{step.DamageMultiplier:F2}   대상 {step.MaxTargets}", EditorStyles.whiteMiniLabel);
 
         GUILayout.EndArea();
         Handles.EndGUI();

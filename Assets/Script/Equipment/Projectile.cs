@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>네트워크를 모르는 순수 투사체. 판정은 발사자 클라이언트만 수행.</summary>
+/// <summary>네트워크를 모르는 순수 투사체. 피해는 발사자 클라이언트만, 멈추는 판정은 모두가 같게.</summary>
 public class Projectile : MonoBehaviour
 {
     [Header("Visual")]
@@ -9,15 +9,32 @@ public class Projectile : MonoBehaviour
     [SerializeField] private bool alignToVelocity = true;
     [Tooltip("적중 시 생성")]
     [SerializeField] private GameObject hitEffect;
-    [Tooltip("지형 충돌 시 남는 시간 (0이면 즉시 제거)")]
+
+    [Header("박히기")]
+    [Tooltip("박힌 채 남는 시간 (0이면 즉시 제거)")]
     [SerializeField] private float stickTime = 0f;
+
+    [Tooltip("모델 피벗에서 화살촉까지 앞쪽(+Z) 거리 (m). 촉이 표면에 닿게 위치를 맞춤.\n" +
+             "피벗이 촉에 있으면 0, 화살 가운데면 길이의 절반")]
+    [SerializeField] private float tipOffset = 0f;
+
+    [Tooltip("표면 안으로 파고드는 깊이 (m)")]
+    [SerializeField] private float embedDepth = 0.12f;
+
+    [Tooltip("0 = 날아온 각도 그대로 박힘 (자연스러움)\n1 = 표면에 수직으로 박힘")]
+    [Range(0f, 1f)][SerializeField] private float alignToSurface = 0f;
+
+    [Tooltip("박힐 때 각도를 살짝 흔들기 (도). 여러 발이 똑같이 꽂혀 보이지 않게")]
+    [SerializeField] private float stickJitter = 3f;
+
+    [Tooltip("움직이는 대상(플레이어 등)에 박히면 따라다님")]
+    [SerializeField] private bool stickToTargets = true;
 
     private Vector3 _vel;
     private float _gravity;
     private float _life;
     private bool _doHitCheck;
     private LayerMask _hitMask;
-
 
     private int _pierceLeft;
     private float _falloff;
@@ -125,29 +142,63 @@ public class Projectile : MonoBehaviour
                 continue;
             }
 
-            Stop(h.point, h.normal);
+            // 시작부터 겹쳐 있으면 point가 (0,0,0) — 이번 프레임 시작 위치로 대신
+            Vector3 point = h.distance <= 0f && h.point == Vector3.zero ? from : h.point;
+            Vector3 normal = h.normal.sqrMagnitude > 0.001f ? h.normal : -seg / dist;
+
+            Stop(point, normal, h.collider);
             return;
         }
     }
 
-    void Stop(Vector3 point, Vector3 normal)
+    void Stop(Vector3 point, Vector3 normal, Collider hitCol)
     {
         _dead = true;
-        transform.position = point;
 
         if (hitEffect != null)
             Instantiate(hitEffect, point, Quaternion.LookRotation(normal));
 
-        if (stickTime > 0f)
+        if (stickTime <= 0f)
         {
-            _stickTimer = stickTime;
-            transform.rotation = Quaternion.LookRotation(-normal);
+            Destroy(gameObject);
+            return;
         }
-        else Destroy(gameObject);
+
+        _stickTimer = stickTime;
+
+        // ── 박히는 방향: 날아온 방향(포물선 끝 기울기 포함) ↔ 표면 수직 사이 ──
+        Vector3 flight = _vel.sqrMagnitude > 0.001f ? _vel.normalized : transform.forward;
+        Vector3 dir = Vector3.Slerp(flight, -normal, alignToSurface).normalized;
+
+        // 표면 뒤쪽을 향하지 않게 (스치듯 맞았을 때 표면을 뚫고 튀어나오는 것 방지)
+        if (Vector3.Dot(dir, -normal) < 0.15f)
+            dir = Vector3.Slerp(dir, -normal, 0.35f).normalized;
+
+        var rot = Quaternion.LookRotation(dir);
+        if (stickJitter > 0f)
+            rot *= Quaternion.Euler(Random.Range(-stickJitter, stickJitter),
+                                    Random.Range(-stickJitter, stickJitter),
+                                    Random.Range(0f, 360f));   // 축 회전은 깃털 방향만 바뀜
+
+        // ── 위치: 촉이 표면에서 embedDepth만큼 들어가게 ──
+        Vector3 fwd = rot * Vector3.forward;
+        transform.SetPositionAndRotation(point + fwd * (embedDepth - tipOffset), rot);
+
+        // ── 움직이는 대상이면 따라다님 ──
+        if (stickToTargets && hitCol != null && !hitCol.gameObject.isStatic)
+        {
+            var rb = hitCol.attachedRigidbody;
+            Transform parent = rb != null ? rb.transform : hitCol.transform;
+
+            // 비균등 스케일 부모 아래에선 모델이 찌그러지므로 그럴 땐 붙이지 않음
+            Vector3 s = parent.lossyScale;
+            bool uniform = Mathf.Approximately(s.x, s.y) && Mathf.Approximately(s.y, s.z);
+            if (uniform) transform.SetParent(parent, true);
+        }
     }
 
-    /// <summary>판정 없이 그림만 그리는 원격용 — 수명만 관리</summary>
-    //public void SetVisualOnly() => _doHitCheck = false;
+    /// <summary>판정 없이 그림만 그리는 원격용 — 수명만 관리 (지금은 원격도 판정함, 호환용)</summary>
+    public void SetVisualOnly() => _doHitCheck = false;
 
 #if UNITY_EDITOR
     [Header("Debug")]
@@ -165,6 +216,10 @@ public class Projectile : MonoBehaviour
             ? new Color(0.4f, 0.4f, 0.4f, 0.4f)
             : new Color(1f, 0.85f, 0.2f, 0.5f);
         Gizmos.DrawWireSphere(transform.position, hitRadius);
+
+        // 화살촉 위치 (tipOffset 맞추기용)
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + transform.forward * tipOffset, 0.015f);
 
         if (!Application.isPlaying) return;
 

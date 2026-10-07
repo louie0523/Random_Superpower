@@ -502,10 +502,13 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        if (SpawnPoint.TryPick(Runner, Object.InputAuthority, safeSpawnRadius, out var pos, out var rot))
+        if (SpawnPoint.TryPick(Runner, Object.InputAuthority, safeSpawnRadius, out var pos, out var rot, _cc))
             Teleport(pos, rot);
         else
-            Teleport(new Vector3(Random.Range(-8f, 8f), 1f, Random.Range(-8f, 8f)), transform.rotation);
+        {
+            var p = new Vector3(Random.Range(-8f, 8f), 0f, Random.Range(-8f, 8f));
+            Teleport(SpawnPoint.GroundedPosition(p, _cc), transform.rotation);
+        }
     }
 
     /// <summary>순간이동 — 다른 클라이언트에서 미끄러지듯 보간되지 않게</summary>

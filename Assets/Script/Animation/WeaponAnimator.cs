@@ -92,6 +92,7 @@ public class WeaponAnimator : MonoBehaviour
             p.LeftRot = armRig.LeftHand.localRotation.eulerAngles;
         }
 
+        armRig.GetBodyOffset(out p.BodyPos, out p.BodyRot, out p.HeadPos, out p.HeadRot);
         return p;
     }
 
