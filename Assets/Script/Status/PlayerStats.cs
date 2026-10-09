@@ -23,6 +23,9 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private float baseSkillDamage = 1f;
     [SerializeField] private float baseUltimateDamage = 1f;
 
+    private float _itemEffectMul = 1f;
+
+
     /// <summary>배율 스탯 — Percent를 곱연산으로 처리</summary>
     static bool IsMultiplierStat(StatType s) =>
         s == StatType.DamageDealt ||
@@ -49,6 +52,20 @@ public class PlayerStats : NetworkBehaviour
         s == StatType.LifeSteal;
 
     // ---------- 조회 ----------
+
+    /// <summary>장비·상점 물품 스탯 배율 (대장장이 궁극기 1.25)</summary>
+    public float ItemEffectMul
+    {
+        get => _itemEffectMul;
+        set { if (!Mathf.Approximately(_itemEffectMul, value)) { _itemEffectMul = value; _dirty = true; } }
+    }
+
+    /// <summary>아이템에서 온 수정자인가 — 장비 100001~100004, 상점 110000~110999</summary>
+    static bool IsItemSource(int id) =>
+        (id >= 100001 && id <= 100004) || (id >= 110000 && id < 111000);
+    // 인챈트까지 넣으려면: || id == 100100
+
+    float ValueOf(StatModifier m) => IsItemSource(m.SourceId) ? m.Value * _itemEffectMul : m.Value;
 
     public float Get(StatType stat)
     {
@@ -102,6 +119,35 @@ public class PlayerStats : NetworkBehaviour
         _mods.Clear();
         _dirty = true;
     }
+
+    /// <summary>디버그 — 이 스탯에 걸린 수정자와 출처</summary>
+    public string Dump(StatType stat)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"[Stats] {stat} = {Get(stat):0.###}  (기본 {GetBase(stat)})");
+        foreach (var m in _mods)
+            if (m.Stat == stat)
+                sb.AppendLine($"   {m.Type} {m.Value}   ← {SourceName(m.SourceId)} ({m.SourceId})");
+        return sb.ToString();
+    }
+
+    static string SourceName(int id) => id switch
+    {
+        >= 700000 => "변화",
+        >= 600000 => "상태이상",
+        >= 500000 => "능력 Behaviour",
+        >= 400000 => "능력 상태",
+        >= 300000 => "버프 (내가 건 효과)",
+        >= 200000 => "저주 (남이 건 효과)",
+        >= 110500 => "상점 전용",
+        >= 110000 => "상점 공용",
+        100100 => "인챈트",
+        100010 => "메인 능력 패시브",
+        100011 => "서브 능력 패시브",
+        100012 => "랜덤 능력 패시브",
+        >= 100001 and <= 100004 => "장비",
+        _ => "?",
+    };
 
     // ---------- 계산 ----------
 

@@ -13,6 +13,8 @@ public enum StatusType
     DeepWound,  // 깊은 상처 — 받는 회복 N% 감소
     Poison,     // 중독 — 1초마다 최대 체력 (N × 중첩)% 고정 피해. 맞을 때마다 중첩 +1, 지속 갱신
     Evade,      // 회피 - 받는 공격을 모두 회피
+    ArmorBreak, // 방어력 감소 — 방어력 N% 감소
+    Ghost,      // 고스트 — 모든 공격 MISS + 사람 통과
 }
 
 /// <summary>
@@ -29,7 +31,7 @@ public enum StatusType
 /// </summary>
 public class PlayerStatus : NetworkBehaviour
 {
-    public const int Capacity = 8;
+    public const int Capacity = 16;
     static readonly int TypeCount = System.Enum.GetValues(typeof(StatusType)).Length;
 
     [Tooltip("둔화·동상이 깎을 수 있는 최대치 (%)")]
@@ -67,6 +69,9 @@ public class PlayerStatus : NetworkBehaviour
 
     // ══════════════════ 조회 (모든 클라이언트) ══════════════════
 
+    static bool IsFlag(StatusType t) =>
+    t == StatusType.Seal || t == StatusType.Stun || t == StatusType.Evade || t == StatusType.Ghost;
+
     public bool Has(StatusType t) => Values[(int)t] > 0f;
     public float Get(StatusType t) => Values[(int)t];
 
@@ -78,8 +83,6 @@ public class PlayerStatus : NetworkBehaviour
 
     public float HealMultiplier => 1f - Mathf.Clamp01(Get(StatusType.DeepWound) * 0.01f);
 
-    static bool IsFlag(StatusType t) =>
-        t == StatusType.Seal || t == StatusType.Stun || t == StatusType.Evade;
 
     public bool IsEvading => Has(StatusType.Evade);
 
@@ -252,6 +255,7 @@ public class PlayerStatus : NetworkBehaviour
         StatType stat;
         if (t == StatusType.Slow) stat = StatType.MoveSpeed;
         else if (t == StatusType.Frost) stat = StatType.AttackSpeed;
+        else if (t == StatusType.ArmorBreak) stat = StatType.Defense;
         else return;
 
         int src = SourceId.StatusBase + (int)t;

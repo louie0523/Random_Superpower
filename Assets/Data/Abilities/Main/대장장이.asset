@@ -50,6 +50,7 @@ MonoBehaviour:
       Effect: 0
       Target: 0
       RequireStateId: 0
+      RequireWeapon: 0
       ChargeSlot: 0
       CostChargeSlot: 0
       ChargeCost: 0
@@ -62,9 +63,73 @@ MonoBehaviour:
       Stat: 0
       ModType: 0
       Status: 0
+      Alter: {fileID: 0}
       PerTargetCooldown: 0
       Interval: 1
-  Skills: []
+  Skills:
+  - Name: "\uD30C\uC1C4"
+    Icon: {fileID: 0}
+    Description: "\uC804\uBC29\uC5D0 \uB9DD\uCE58\uB97C \uD718\uB458\uB7EC {dmg:SmashCoef+SmashFlat}\uC758
+      \uD53C\uD574\uB97C \uAC00\uD558\uACE0, \uC801\uC911\uB2F9\uD55C \uC801\uC774
+      0.25\uCD08\uAC04 \uAE30\uC808\uD569\uB2C8\uB2E4. \uB610\uD55C \uC801\uC911\uB2F9\uD55C
+      \uC801\uC740 5\uCD08\uAC04 \uBC29\uC5B4\uB825\uC774 {b:ArmorBreakPct}% \uAC10\uC18C\uD558\uB294
+      \uC0C1\uD0DC\uC774\uC0C1\uD6A8\uACFC\uB97C \uC5BB\uC2B5\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 0
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 2
+    CooldownByLevel: []
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  - Name: "\uC6A9\uAD11\uB85C \uBD84\uCD9C"
+    Icon: {fileID: 0}
+    Description: "\uC8FC\uC704 {b:FurnaceRadius}m\uC5D0 \uC6A9\uC554\uC744 \uD130\uB728\uB824
+      {dmg:FurnaceCoef+FurnaceFlat}\uC758 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4.\r\n\uCCB4\uB825\uC774
+      \uB0AE\uC744\uC218\uB85D \uCD5C\uB300 {b:FurnaceMaxMul}\uBC30\uAE4C\uC9C0 \uAC15\uD574\uC9C0\uACE0,
+      {b:BurnChance:pct}% \uD655\uB960\uB85C \uD654\uC0C1\uC744 \uAC81\uB2C8\uB2E4."
+    DetailedInfo: "\uCCB4\uB825\uC774 30%\uAE4C\uC9C0 \uAC10\uC18C\uD558\uC600\uC744\uB54C
+      \uCD5C\uB300 \uC704\uB825\uC774 \uB429\uB2C8\uB2E4."
+    Tip: 
+    DevNote: 
+    Slot: 1
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel:
+    - 18
+    - 16
+    - 14
+    - 12
+    - 10
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
   Behaviour: {fileID: 11400000, guid: 5250274e57b2c654aa89a102c81e7775, type: 2}
   MaxConcurrent: 0
   ExcludeFromRoll: 0

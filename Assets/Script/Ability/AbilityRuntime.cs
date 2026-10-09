@@ -25,6 +25,7 @@ public class AbilityRuntime : NetworkBehaviour
     [Range(0f, 1f)][SerializeField] private float maxCooldownReduction = 0.9f;
 
 
+
     // ══════════════════ 네트워크 상태 ══════════════════
 
     [Networked, OnChangedRender(nameof(OnAbilityChanged))]
@@ -34,11 +35,21 @@ public class AbilityRuntime : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnAbilityChanged))]
     public int RandomAbilityId { get; set; }
 
+    [Networked, Capacity(4)] public NetworkArray<int> SavedKeys { get; }
+    [Networked, Capacity(4)] public NetworkArray<int> SavedValues { get; }
+
     [Networked] private int RandomAbilityKills { get; set; }
 
     [Networked, Capacity(5)] public NetworkArray<float> CooldownEnd { get; }
+    /// <summary>쿨타임 대기 중이면 > 0 (안전장치 만료 시각)</summary>
+    [Networked, Capacity(5)] public NetworkArray<float> HoldUntil { get; }
+    /// <summary>대기가 풀리면 걸 쿨타임 (사용 순간 계산해 둔 값 — 쿨감 그대로)</summary>
+    [Networked, Capacity(5)] public NetworkArray<float> HeldCooldown { get; }
     [Networked, Capacity(5)] public NetworkArray<float> Charges { get; }
     [Networked, Capacity(5)] public NetworkArray<float> MaxCharges { get; }
+
+    [Tooltip("'효과 끝나고 쿨타임' 스킬이 이 시간이 지나도 안 풀리면 자동으로 쿨 시작 (안전장치)")]
+    [SerializeField] private float maxCooldownHold = 60f;
 
     [Networked] public TickTimer StateTimer { get; set; }
     [Networked] public int ActiveStateId { get; set; }
@@ -62,9 +73,17 @@ public class AbilityRuntime : NetworkBehaviour
 
     // ══════════════════ 내부 상태 ══════════════════
 
+    private bool _ghostOn;
+
     private AbilityData.SkillDef _casting;
     private float _castTimer = -1f;
     private bool _castHitApplied;
+
+    private ComboStep _castStep;                 // 지금 재생 중인 시전 모션 (스킬 or 이어진 모션)
+    private AbilityBehaviour _chainOwner;        // 이어진 모션 중이면 그 주인
+    private int _chainTag;
+    private AbilityBehaviour _nextChainOwner;    // 지금 모션이 끝나면 이어갈 것
+    private int _nextChainTag;
 
     private Vector3 _dashDir;
     private float _dashSpeed;
@@ -89,6 +108,8 @@ public class AbilityRuntime : NetworkBehaviour
 
     private bool _weaponHitSkill;   // 지금 실행 중인 스킬이 무기 판정인가
     private float _skillDealt;      // 그 스킬로 준 피해 합 (탐식 흡혈용)
+
+    private int _lastWeaponId = -1;
 
     private readonly List<AbilityData> _active = new();
     private readonly List<AbilityBehaviour> _behaviours = new();
@@ -130,11 +151,38 @@ public class AbilityRuntime : NetworkBehaviour
     public bool IsMoving => _movement != null && _movement.IsMoving;
     public bool DashIgnoresGravity => _dashTimer > 0f && _dashParams.IgnoreGravity;
 
+    /// <summary>능력이 라운드 동안 저장하는 값 (key = 능력 ID). 없으면 0</summary>
+    public int GetSaved(int key)
+    {
+        for (int i = 0; i < SavedKeys.Length; i++)
+            if (SavedKeys[i] == key) return SavedValues[i];
+        return 0;
+    }
+
+    public void SetSaved(int key, int value)
+    {
+        if (!HasStateAuthority) return;
+        int empty = -1;
+        for (int i = 0; i < SavedKeys.Length; i++)
+        {
+            if (SavedKeys[i] == key) { SavedValues.Set(i, value); return; }
+            if (empty < 0 && SavedKeys[i] == 0) empty = i;
+        }
+        if (empty >= 0) { SavedKeys.Set(empty, key); SavedValues.Set(empty, value); }
+    }
+
     public AbilityData.SkillDef GetSlot(int i) =>
         (i >= 0 && i < _slots.Length) ? _slots[i] : null;
 
     public bool HasState(int id) =>
         ActiveStateId == id && !StateTimer.ExpiredOrNotRunning(Runner);
+
+    /// <summary>이 슬롯의 쿨타임을 즉시 끝냄 (SA)</summary>
+    public void ResetCooldown(int slot)
+    {
+        if (!HasStateAuthority) return;
+        if (slot >= 0 && slot < CooldownEnd.Length) CooldownEnd.Set(slot, 0f);
+    }
 
     public T FindAbility<T>() where T : AbilityBehaviour
     {
@@ -274,6 +322,13 @@ public class AbilityRuntime : NetworkBehaviour
 
     void OnRanksChanged() => RefreshPassiveStats();
 
+    bool WeaponOk(AbilityData.EffectDef e)
+    {
+        if (e.RequireWeapon == WeaponRequirement.None) return true;
+        var w = Equipment?.GetWeapon();
+        return w != null && (e.RequireWeapon & w.ToRequirementFlag()) != 0;
+    }
+
     // ══════════════════ 초기화 ══════════════════
 
     public override void Spawned()
@@ -300,16 +355,20 @@ public class AbilityRuntime : NetworkBehaviour
 
         if (HasStateAuthority) AssignAbilities();
 
+
         RebuildAbilities();
 
         if (logSkills)
             Debug.Log($"[Ability] input={_input != null} behaviours={_behaviours.Count} " +
                       $"slots=[{_slots[0]?.Name ?? "-"}] [{_slots[1]?.Name ?? "-"}] " +
                       $"[{_slots[2]?.Name ?? "-"}] [{_slots[3]?.Name ?? "-"}] [{_slots[4]?.Name ?? "-"}]");
+
+        if (HasInputAuthority) AbilityDescTokens.Local = this;
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
+        if (AbilityDescTokens.Local == this) AbilityDescTokens.Local = null;
         // 상태 접근 없이 인스턴스만 정리
         foreach (var b in _behaviours)
             if (b != null) Destroy(b);
@@ -343,16 +402,18 @@ public class AbilityRuntime : NetworkBehaviour
         _casting = null;
         _castTimer = -1f;
         _castHitApplied = false;
+        CancelCast();
         _dashTimer = 0f;
         _dashDecayTimer = 0f;
         _moveTickAccum = 0f;
         RPC_SetGhost(false);
+        _ghostOn = false;
         _input?.ClearAll();
 
         for (int i = 0; i < SkillSlotExt.Count; i++)
         {
             CooldownEnd.Set(i, 0f);
-            CooldownTotal.Set(i, 0f);
+            HoldUntil.Set(i, 0f);
         }
         for (int i = 0; i < ChargeSlotCount; i++)
         {
@@ -366,6 +427,8 @@ public class AbilityRuntime : NetworkBehaviour
 
         SkillPoints = 0;
         for (int i = 0; i < EntryRanks.Length; i++) EntryRanks.Set(i, 0);
+
+        for (int i = 0; i < SavedKeys.Length; i++) { SavedKeys.Set(i, 0); SavedValues.Set(i, 0); }
 
         AssignAbilities();
         RebuildAbilities();     // ID가 같아도 OnEquip을 다시 부르게 강제
@@ -479,7 +542,7 @@ public class AbilityRuntime : NetworkBehaviour
         {
             if (p?.Effects == null) continue;
             foreach (var e in p.Effects)
-                if (e.Trigger == TriggerType.Passive && e.Effect == EffectType.StatMod)
+                if (e.Trigger == TriggerType.Passive && e.Effect == EffectType.StatMod && WeaponOk(e))
                     _stats.AddModifier(new StatModifier(
                         e.Stat, e.ModType, e.GetValue(RankOf(e)), sourceId));
         }
@@ -491,15 +554,29 @@ public class AbilityRuntime : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
+        TickCooldownHolds(_health != null && _health.IsDead);   // 사망 → 바로 쿨 시작, 그 외엔 안전장치만
+
         if (_health.IsDead)
         {
             _castTimer = -1f;
             _casting = null;
+            CancelCast();
             if (_dashTimer > 0f) { _dashTimer = 0f; RPC_SetGhost(false); }
             _dashDecayTimer = 0f;       // 부활 직후 미끄러짐 방지
             _input?.ClearAll();
             return;
         }
+
+        int wid = Equipment?.GetWeapon()?.Id ?? 0;
+        if (wid != _lastWeaponId)
+        {
+            _lastWeaponId = wid;
+            RefreshPassiveStats();
+        }
+
+        bool ghost = (_dashTimer > 0f && _dashParams.PassThroughPlayers)
+          || (_status != null && _status.Has(StatusType.Ghost));
+        if (ghost != _ghostOn) { _ghostOn = ghost; RPC_SetGhost(ghost); }
 
         float dt = Runner.DeltaTime;
 
@@ -516,7 +593,6 @@ public class AbilityRuntime : NetworkBehaviour
 
             if (_dashTimer <= 0f)
             {
-                if (_dashParams.PassThroughPlayers) RPC_SetGhost(false);
                 _dashDecayTimer = dashDecayTime;
             }
         }
@@ -576,10 +652,15 @@ public class AbilityRuntime : NetworkBehaviour
     {
         _castTimer += dt;
 
-        var m = _casting.Motion;
-        if (m == null) { _castTimer = -1f; _casting = null; return; }
+        var m = _castStep;
+        if (m == null) { EndCast(); return; }
 
-        if (_casting.EffectTiming == AbilityData.SkillEffectTiming.OnHitFrame && !_castHitApplied)
+        bool chain = _chainOwner != null;
+        var timing = chain || _casting == null
+            ? AbilityData.SkillEffectTiming.OnHitFrame
+            : _casting.EffectTiming;
+
+        if (timing == AbilityData.SkillEffectTiming.OnHitFrame && !_castHitApplied)
         {
             float activeStart = m.WindUp;
             float activeEnd = m.WindUp + m.ActiveWindow;
@@ -590,20 +671,87 @@ public class AbilityRuntime : NetworkBehaviour
             if (inWindow || missed)
             {
                 _castHitApplied = true;
-                FireSkillEffects(_casting);
+                if (chain) _chainOwner.OnChainHit(_chainTag);
+                else FireSkillEffects(_casting);
             }
         }
 
         if (_castTimer >= m.TotalTime)
         {
-            if (_casting.EffectTiming == AbilityData.SkillEffectTiming.OnCastEnd && !_castHitApplied)
+            if (!chain && timing == AbilityData.SkillEffectTiming.OnCastEnd && !_castHitApplied)
             {
                 _castHitApplied = true;
                 FireSkillEffects(_casting);
             }
 
-            _castTimer = -1f;
-            _casting = null;
+            if (_nextChainOwner != null) { StartChain(); return; }
+            EndCast();
+        }
+    }
+
+    void EndCast()
+    {
+        _castTimer = -1f;
+        _casting = null;
+        _castStep = null;
+        _chainOwner = null;
+    }
+
+    /// <summary>시전·이어진 모션 전부 취소 (사망·라운드 리셋)</summary>
+    void CancelCast()
+    {
+        EndCast();
+        _castHitApplied = false;
+        _nextChainOwner = null;
+    }
+
+    /// <summary>Behaviour용 — 지금 모션이 끝나면 이어서. 시전 중이 아니면 바로</summary>
+    public void QueueChain(AbilityBehaviour owner, int tag)
+    {
+        if (!HasStateAuthority || owner == null) return;
+        _nextChainOwner = owner;
+        _nextChainTag = tag;
+        if (!IsCasting) StartChain();
+    }
+
+    void StartChain()
+    {
+        var owner = _nextChainOwner;
+        int tag = _nextChainTag;
+        _nextChainOwner = null;
+
+        var m = owner.GetChainMotion(tag);
+        if (m == null || m.Step == null)
+        {
+            owner.OnChainHit(tag);      // 모션 없으면 바로
+            EndCast();
+            return;
+        }
+
+        _casting = null;
+        _chainOwner = owner;
+        _chainTag = tag;
+        _castStep = m.Step;
+        _castTimer = 0f;
+        _castHitApplied = false;
+
+        RPC_PlayChainMotion(owner.SourceData != null ? owner.SourceData.Id : 0, tag);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_PlayChainMotion(int abilityId, int tag)
+    {
+        for (int i = 0; i < _behaviours.Count; i++)
+        {
+            var b = _behaviours[i];
+            if (b == null || b.SourceData == null || b.SourceData.Id != abilityId) continue;
+
+            var m = b.GetChainMotion(tag);
+            if (m == null || m.Step == null) return;
+
+            weaponAnim?.Play(m.Step);
+            _events?.Play(m.Step, HasStateAuthority);
+            return;
         }
     }
 
@@ -627,6 +775,8 @@ public class AbilityRuntime : NetworkBehaviour
         if (Runner.SimulationTime < CooldownEnd[slotIndex])
         { if (logSkills) Debug.Log($"[Skill] {skill.Name} → 쿨타임"); return false; }
 
+        if (HoldUntil[slotIndex] > 0f) return false;     // 지속형 — 효과 중
+
         if (_health.Soul < skill.SoulCost)
         { if (logSkills) Debug.Log($"[Skill] {skill.Name} → 소울 부족"); return false; }
 
@@ -636,7 +786,13 @@ public class AbilityRuntime : NetworkBehaviour
 
         float cdr = Mathf.Clamp(_stats.Get(StatType.CooldownReduction), 0f, maxCooldownReduction);
         float cd = skill.GetCooldown(GetSkillRank(skill)) * (1f - cdr);
-        CooldownEnd.Set(slotIndex, Runner.SimulationTime + cd);
+        if (skill.CooldownAfterEffect)
+        {
+            HeldCooldown.Set(slotIndex, cd);
+            HoldUntil.Set(slotIndex, Runner.SimulationTime + maxCooldownHold);
+            CooldownEnd.Set(slotIndex, 0f);
+        }
+        else CooldownEnd.Set(slotIndex, Runner.SimulationTime + cd);
         CooldownTotal.Set(slotIndex, cd);
 
         if (skill.SoulCost > 0) _health.SpendSoul(skill.SoulCost);
@@ -650,6 +806,7 @@ public class AbilityRuntime : NetworkBehaviour
         if (motion != null && motion.Duration > 0.01f)
         {
             _casting = skill;
+            _castStep = motion;
             _castTimer = 0f;
             _castHitApplied = handled;
             RPC_PlaySkillMotion(slotIndex);
@@ -689,6 +846,11 @@ public class AbilityRuntime : NetworkBehaviour
 
     void FireSkillEffects(AbilityData.SkillDef skill)
     {
+        bool handled = false;
+        for (int i = 0; i < _behaviours.Count; i++)
+            if (_behaviours[i].OnSkillEffect(skill)) handled = true;
+        if (handled) return;
+
         if (skill.Effects == null || skill.Effects.Length == 0) return;
 
         GameObject target = null;
@@ -807,7 +969,6 @@ public class AbilityRuntime : NetworkBehaviour
         _dashSpeed = p.Distance / Mathf.Max(0.05f, p.Duration);
         _dashTimer = Mathf.Max(0.05f, p.Duration);
 
-        if (p.PassThroughPlayers) RPC_SetGhost(true);
     }
 
     Vector3 ResolveDashDirection(DashParams p)
@@ -862,6 +1023,30 @@ public class AbilityRuntime : NetworkBehaviour
     {
         if (slot < 0 || slot >= SkillSlotExt.Count) return 0f;
         return Mathf.Max(0f, CooldownEnd[slot] - Runner.SimulationTime);
+    }
+
+    /// <summary>지속형 스킬이 효과 중이라 쿨타임 대기 중</summary>
+    public bool IsCooldownHeld(int slot) =>
+        slot >= 0 && slot < SkillSlotExt.Count && HoldUntil[slot] > 0f;
+
+    public void ReleaseCooldown(AbilityData.SkillDef skill)
+    {
+        if (!HasStateAuthority || skill == null) return;
+        ReleaseCooldownSlot(skill.Slot.Index());
+    }
+
+    void ReleaseCooldownSlot(int slot)
+    {
+        if (slot < 0 || slot >= SkillSlotExt.Count || HoldUntil[slot] <= 0f) return;
+        HoldUntil.Set(slot, 0f);
+        CooldownEnd.Set(slot, Runner.SimulationTime + HeldCooldown[slot]);
+    }
+
+    void TickCooldownHolds(bool releaseAll)
+    {
+        for (int i = 0; i < SkillSlotExt.Count; i++)
+            if (HoldUntil[i] > 0f && (releaseAll || Runner.SimulationTime >= HoldUntil[i]))
+                ReleaseCooldownSlot(i);
     }
 
     public float GetCooldownRatio(int slot)
@@ -960,6 +1145,7 @@ public class AbilityRuntime : NetworkBehaviour
         // ① 발동 조건
         if (e.Chance < 1f && Random.value > e.Chance) return;
         if (e.RequireStateId != 0 && !HasState(e.RequireStateId)) return;
+        if (!WeaponOk(e)) return;
 
         // ② 대상
         GameObject target = ResolveTarget(e.Target, other);
@@ -1065,6 +1251,16 @@ public class AbilityRuntime : NetworkBehaviour
             case EffectType.ApplyStatus:
                 if (target.TryGetComponent<PlayerStatus>(out var st))
                     st.Apply(e.Status, v, e.Duration, Object.InputAuthority);
+                break;
+
+            case EffectType.AddAlter:
+                if (e.Alter != null && target.TryGetComponent<PlayerAlter>(out var addTo))
+                    addTo.Add(e.Alter);
+                break;
+
+            case EffectType.RemoveAlter:
+                if (e.Alter != null && target.TryGetComponent<PlayerAlter>(out var removeFrom))
+                    removeFrom.Remove(e.Alter);
                 break;
 
             default:

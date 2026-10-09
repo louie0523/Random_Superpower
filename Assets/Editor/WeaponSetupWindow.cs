@@ -502,6 +502,8 @@ public class WeaponSetupWindow : EditorWindow
     {
         _weapon.MinDrawTime = EditorGUILayout.FloatField("최소 차징 (초)", _weapon.MinDrawTime);
         _weapon.MaxDrawTime = EditorGUILayout.FloatField("최대 차징 (초)", _weapon.MaxDrawTime);
+        _weapon.AttackSpeedScale = EditorGUILayout.Slider(new GUIContent("공속 반영 비율",
+            "차징 속도에 공속을 얼마나 반영할지. 1 = 그대로"), _weapon.AttackSpeedScale, 0f, 1f);
 
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -614,6 +616,9 @@ public class WeaponSetupWindow : EditorWindow
         _weapon.MaxAmmo = EditorGUILayout.IntField("탄약", _weapon.MaxAmmo);
         _weapon.RoundsPerMinute = EditorGUILayout.FloatField("분당 발사", _weapon.RoundsPerMinute);
         _weapon.FullAuto = EditorGUILayout.Toggle("연사", _weapon.FullAuto);
+        _weapon.SpreadAngle = EditorGUILayout.Slider(new GUIContent("탄퍼짐 (°)", "0 = 조준점 정확히"), _weapon.SpreadAngle, 0f, 15f);
+        _weapon.AttackSpeedScale = EditorGUILayout.Slider(new GUIContent("공속 반영 비율",
+            "1 = 공속 증가분 그대로, 0.5 = 절반만, 0 = 공속 무시 (RPM 고정)"), _weapon.AttackSpeedScale, 0f, 1f);
 
         if (_weapon.FireMode == GunFireMode.Hitscan)
         {
@@ -764,6 +769,22 @@ public class WeaponSetupWindow : EditorWindow
                 EditorGUILayout.LabelField("길이", GUILayout.Width(28));
                 step.Duration = Mathf.Max(0.05f, EditorGUILayout.FloatField(step.Duration, GUILayout.Width(48)));
                 EditorGUILayout.LabelField("초", GUILayout.Width(16));
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                var m = step.Motion;
+                EditorGUILayout.LabelField(new GUIContent("보간", "직선 = 키마다 곡선(Ease)으로 가감속, 키에서 멈추기 쉬움\n" +
+                    "부드럽게 = 모든 키를 지나는 곡선. 중간 키를 멈춤 없이 통과하고, 회전도 입력한 방향 그대로 돎"), GUILayout.Width(28));
+                int mode = GUILayout.Toolbar((int)m.Interp, new[] { "직선", "부드럽게" }, EditorStyles.miniButton, GUILayout.Width(120));
+                if (mode != (int)m.Interp) { m.Interp = (MotionInterp)mode; Scrub(step, NowT(step)); }
+
+                using (new EditorGUI.DisabledScope(m.Interp != MotionInterp.Smooth))
+                {
+                    EditorGUILayout.LabelField(new GUIContent("탄력", "0 = 키마다 멈춤, 1 = 자연스럽게 통과, 1 초과 = 더 크게 휘어짐"), GUILayout.Width(28));
+                    float sm = EditorGUILayout.Slider(m.Smoothness, 0f, 1.5f);
+                    if (!Mathf.Approximately(sm, m.Smoothness)) { m.Smoothness = sm; Scrub(step, NowT(step)); }
+                }
             }
 
             using (new EditorGUILayout.HorizontalScope())
@@ -1522,6 +1543,7 @@ public class WeaponSetupWindow : EditorWindow
             Time = Mathf.Clamp01(src.Time + 0.05f),
             Pose = src.Pose.Clone(),
             Ease = src.Ease != null ? new AnimationCurve(src.Ease.keys) : AnimationCurve.EaseInOut(0, 0, 1, 1),
+            Hold = src.Hold,
         };
         Modify("Duplicate Key", () =>
         {
@@ -1704,9 +1726,24 @@ public class WeaponSetupWindow : EditorWindow
         if (Fold("키 · 몸 · 머리 (다른 사람에게 보임)", true))
             using (Box()) DrawBodyFields(p);
 
-        if (Fold("키 · 보간", false))
+        if (Fold("키 · 보간", motion.Interp == MotionInterp.Smooth))
             using (Box())
-                k.Ease = EditorGUILayout.CurveField("이 키로 오는 곡선", k.Ease);
+            {
+                if (motion.Interp == MotionInterp.Smooth)
+                {
+                    bool ends = index == 0 || index == motion.Keys.Count - 1;
+                    using (new EditorGUI.DisabledScope(ends))
+                        k.Hold = EditorGUILayout.Toggle(new GUIContent("여기서 멈춤",
+                            "켜면 이 키에서 속도 0 (치켜든 자세에서 잠깐 멈췄다 휘두르기 등).\n끄면 멈추지 않고 그대로 통과"), ends || k.Hold);
+                    Hint(ends ? "첫·끝 키는 항상 멈춤" :
+                         k.Hold ? "이 키에서 잠깐 멈췄다 출발" : "이 키를 멈추지 않고 통과 — 휘두르는 중간 지점용");
+                }
+                else
+                {
+                    k.Ease = EditorGUILayout.CurveField("이 키로 오는 곡선", k.Ease);
+                    Hint("중간 키에서 투툭 끊기면 위의 보간을 '부드럽게'로 바꿔보세요.");
+                }
+            }
 
         if (EditorGUI.EndChangeCheck()) PreviewPose(p);
 
@@ -1962,6 +1999,15 @@ public class WeaponSetupWindow : EditorWindow
 
     void DrawStepSettings(ComboStep step)
     {
+        EditorGUILayout.LabelField("무기", EditorStyles.miniBoldLabel);
+        EditorGUI.BeginChangeCheck();
+        step.WeaponOverride = (EquipmentData)EditorGUILayout.ObjectField(new GUIContent("이 모션 동안 쥘 무기",
+            "모션이 재생되는 동안만 이 무기 모델로 바꿔 쥠 (그립·위치는 그 무기 설정을 따름).\n" +
+            "모델만 바뀌고 판정·스탯은 실제 무기 그대로. 비우면 들고 있는 무기"), step.WeaponOverride, typeof(EquipmentData), false);
+        if (EditorGUI.EndChangeCheck()) SyncPreviewWeapon();
+        if (step.WeaponOverride != null) Hint("모션이 끝나면 원래 무기로 돌아갑니다. 판정 범위 미리보기는 원래 무기 기준.");
+        EditorGUILayout.Space(4);
+
         EditorGUILayout.LabelField("타이밍 (비율 0~1 — 타임라인에서 드래그해도 됨)", EditorStyles.miniBoldLabel);
         step.HitStart = EditorGUILayout.Slider("판정 시작", step.HitStart, 0f, 1f);
         step.HitEnd = EditorGUILayout.Slider("판정 끝", step.HitEnd, 0f, 1f);
@@ -2495,7 +2541,7 @@ public class WeaponSetupWindow : EditorWindow
             return;
         }
 
-        var w = ResolvePreviewWeapon();
+        var w = DesiredPreviewWeapon();
         _rig.Mount(w);
         if (w != null) MarkPreviewWeapon();
 
@@ -2521,9 +2567,28 @@ public class WeaponSetupWindow : EditorWindow
         SceneView.RepaintAll();
     }
 
+    /// <summary>모션 탭에서 지금 타가 '쥘 무기'를 지정했으면 그걸로, 아니면 미리보기 무기로</summary>
+    EquipmentData DesiredPreviewWeapon()
+    {
+        var step = _tab == Tab.Motion ? CurrentStep : null;
+        if (step != null && step.WeaponOverride != null) return step.WeaponOverride;
+        return ResolvePreviewWeapon();
+    }
+
+    void SyncPreviewWeapon()
+    {
+        if (_rig == null || _source == null) return;
+        var w = DesiredPreviewWeapon();
+        if (_rig.CurrentWeapon == w) return;
+        _rig.Mount(w);
+        if (w != null) MarkPreviewWeapon();
+        RefreshPreview();
+    }
+
     void RefreshPreview()
     {
         if (_rig == null || _source == null) return;
+        if (_rig.CurrentWeapon != DesiredPreviewWeapon()) { SyncPreviewWeapon(); return; }
 
         var step = CurrentStep;
         if (step?.Motion != null && step.Motion.IsValid)

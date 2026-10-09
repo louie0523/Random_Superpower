@@ -56,6 +56,12 @@ public struct DamageInfo : INetworkStruct
     /// <summary>이 피해로 죽어도 소울을 잃지 않음 (의도치 않은 사망)</summary>
     public NetworkBool NoDeathPenalty;
 
+    /// <summary>근접 무기 타격인가 (불의 후예 반격 등)</summary>
+    public NetworkBool IsMelee;
+
+    /// <summary>대상이 잃은 체력의 N% 추가</summary>
+    public float MissingHpPercent;
+
 
 
     public static DamageInfo FromPlayerHit(int amount, PlayerRef attacker, Vector3 pos,

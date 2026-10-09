@@ -48,6 +48,9 @@ public class FPArmRig : MonoBehaviour
     /// <summary>들고 있는 무기 모델의 WeaponRig (투사체 미리보기 등)</summary>
     public WeaponRig CurrentWeaponRig { get; private set; }
 
+    /// <summary>탈것 높이 (m) — 몸·머리를 이만큼 올림. PlayerAlter가 설정</summary>
+    public float BodyLift { get; set; }
+
     private Transform _stringBone;
     private Vector3 _stringRestPos;
     private Transform _muzzle;
@@ -85,7 +88,79 @@ public class FPArmRig : MonoBehaviour
 
     // ══════════════════ 무기 장착 ══════════════════
 
+    // ══════════════════ 모션 동안 다른 무기 (모델만) ══════════════════
+
+    private bool _overriding;
+    private EquipmentData _overrideRestore;
+
+    /// <summary>모션 전용 무기를 쥐고 있는 중 (실제 장착 무기는 그대로)</summary>
+    public bool IsWeaponOverridden => _overriding;
+
+    /// <summary>
+    /// 모델만 잠깐 바꿔 쥠 — 판정·스탯은 실제 무기 그대로. EndWeaponOverride로 원래 무기 복귀.
+    /// 보이기 여부(사망 중 숨김)와 레이어는 바꾸기 전 무기를 따라감
+    /// </summary>
+    public void BeginWeaponOverride(EquipmentData temp)
+    {
+        if (temp == null) return;
+        if (_overriding && temp == _weapon) return;
+
+        if (!_overriding)
+        {
+            _overriding = true;
+            _overrideRestore = _weapon;
+        }
+        SwapKeepingLook(temp);
+    }
+
+    public void EndWeaponOverride()
+    {
+        if (!_overriding) return;
+        _overriding = false;
+        var back = _overrideRestore;
+        _overrideRestore = null;
+        SwapKeepingLook(back);
+    }
+
+    void SwapKeepingLook(EquipmentData w)
+    {
+        int layer = _weaponObj != null ? _weaponObj.layer : -1;
+        bool visible = true;
+        if (_weaponObj != null)
+        {
+            var rs = _weaponObj.GetComponentsInChildren<Renderer>(true);
+            if (rs.Length > 0)
+            {
+                visible = false;
+                foreach (var r in rs) if (r.enabled) { visible = true; break; }
+            }
+        }
+
+        MountInternal(w);
+
+        if (_weaponObj == null) return;
+        foreach (var t in _weaponObj.GetComponentsInChildren<Transform>(true))
+            if (layer >= 0) t.gameObject.layer = layer;
+        if (!visible)
+            foreach (var r in _weaponObj.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+    }
+
+    // ══════════════════ 무기 장착 ══════════════════
+
+    /// <summary>실제 장착. 모션 무기를 쥐고 있는 중이면 끝난 뒤 이 무기로 돌아감</summary>
     public void Mount(EquipmentData weapon)
+    {
+        if (_overriding && Application.isPlaying)
+        {
+            _overrideRestore = weapon;
+            return;
+        }
+        _overriding = false;
+        _overrideRestore = null;
+        MountInternal(weapon);
+    }
+
+    void MountInternal(EquipmentData weapon)
     {
         DestroyWeapon();
         _leftGripNode = null;
@@ -479,13 +554,19 @@ public class FPArmRig : MonoBehaviour
         if (Body == null && Head == null) return;
         EnsureRest();
 
+        Vector3 lift = Vector3.up * BodyLift;
+
         if (Body != null)
             Body.SetLocalPositionAndRotation(
-                _bodyRestPos + pose.BodyPos, _bodyRestRot * Quaternion.Euler(pose.BodyRot));
+                _bodyRestPos + lift + pose.BodyPos, _bodyRestRot * Quaternion.Euler(pose.BodyRot));
 
         if (Head != null)
+        {
+            // 머리가 몸의 자식이면 몸과 함께 올라가므로 따로 올리지 않음
+            Vector3 headLift = Body != null && Head.IsChildOf(Body) ? Vector3.zero : lift;
             Head.SetLocalPositionAndRotation(
-                _headRestPos + pose.HeadPos, _headRestRot * Quaternion.Euler(pose.HeadRot));
+                _headRestPos + headLift + pose.HeadPos, _headRestRot * Quaternion.Euler(pose.HeadRot));
+        }
     }
 
     bool ResolveShowLeftHand(ArmPose pose)

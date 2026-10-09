@@ -37,7 +37,6 @@ public class FPSCamera : MonoBehaviour
     [SerializeField] private float hitPunchAmount = 6f;
 
 
-
     // 모션 카메라 오프셋
     private Vector3 _motionPos;
     private Vector3 _motionRot;
@@ -62,8 +61,14 @@ public class FPSCamera : MonoBehaviour
     private float _leanSpeed = 10f;
 
     private float _recoilPitch;
-
     public float Pitch => _pitch;
+    private float _zoomFov;
+
+    private float _heightOffset;
+    public void SetHeightOffset(float y) => _heightOffset = y;
+
+    /// <summary>지속 줌 (음수 = 확대). 0이면 해제</summary>
+    public void SetZoom(float fovAdd) => _zoomFov = fovAdd;
 
     void Awake()
     {
@@ -187,7 +192,9 @@ public class FPSCamera : MonoBehaviour
 
         // 위치 적용
         cameraHolder.localPosition = Vector3.Lerp(
-                  cameraHolder.localPosition, bob + _motionPos, Time.deltaTime * 12f);
+                  cameraHolder.localPosition, bob + _motionPos + Vector3.up * _heightOffset, Time.deltaTime * 12f);
+
+
 
         // 셰이크 감쇠
         _shakeAmount = Mathf.Lerp(_shakeAmount, 0f, Time.deltaTime * shakeDecay);
@@ -229,7 +236,7 @@ public class FPSCamera : MonoBehaviour
     void HandleFov(float speed)
     {
         float t = Mathf.Clamp01(speed / Mathf.Max(0.01f, fovMaxSpeed));
-        _targetFov = baseFov + fovMaxAdd * t + _motionFov;
+        _targetFov = baseFov + fovMaxAdd * t + _motionFov + _zoomFov;
 
         _kickFov = Mathf.Lerp(_kickFov, 0f, Time.deltaTime * 4f);
         cam.fieldOfView = Mathf.Lerp(

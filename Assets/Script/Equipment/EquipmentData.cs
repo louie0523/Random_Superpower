@@ -67,6 +67,7 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Tooltip("EnchantRules가 연결되지 않았을 때만 사용 — 단계마다 추가 스톤")]
     public int EnchantCostPerStage = 0;
 
+
     public bool CanEnchant => EnchantTable != null && EnchantTable.MaxStage > 0;
     public int MaxEnchantStage => EnchantTable != null ? EnchantTable.MaxStage : 0;
 
@@ -198,6 +199,12 @@ public class EquipmentData : ScriptableObject, IMotionSource
 
     [Tooltip("투사체 속도. 차징 무기는 min/max를 사용")]
     public float ProjectileSpeed = 60f;
+
+    [Tooltip("탄퍼짐 원뿔 각도 (°). 0 = 조준점 정확히")]
+    [Range(0f, 15f)] public float SpreadAngle = 0f;
+
+    [Tooltip("공속 반영 비율. 1 = 공속 증가분 그대로, 0.5 = 절반만, 0 = 공속 무시")]
+    [Range(0f, 1f)] public float AttackSpeedScale = 1f;
 
     [Header("─── Ranged: 발사 연출 ───")]
 

@@ -48,6 +48,84 @@ public class PlayerAttack : NetworkBehaviour
     private int _shotsInBurst;      // 연사 반동 누적용
     private float _burstResetTimer;
 
+    // ── 총기 보정 — 능력이 설정 (SA) ──
+    /// <summary>탄퍼짐 배율 (무기 SpreadAngle에 곱함)</summary>
+    public float SpreadMul { get; set; } = 1f;
+    /// <summary>탄퍼짐 추가 각도 (°)</summary>
+    public float SpreadAdd { get; set; }
+    /// <summary>히트스캔이 벽에 튕기는 횟수</summary>
+    public int Ricochets { get; set; }
+
+    // 다음 한 발 강화 (정밀사격 등)
+    private float _armedBonusPct;
+    private bool _armedCrit;
+    private float _armedTimer = -1f;
+
+    public bool HasArmedShot => _armedTimer > 0f;
+
+    /// <summary>총을 쏠 때마다 (SA). 능력이 반응용으로 구독</summary>
+    public event System.Action<EquipmentData> GunFired;
+
+    /// <summary>다음 총알 한 발 — 추가 피해 %, 반드시 치명타. timeout 초 안에 안 쏘면 사라짐</summary>
+    public void ArmNextShot(float bonusPct, bool forceCrit, float timeout)
+    {
+        _armedBonusPct = bonusPct;
+        _armedCrit = forceCrit;
+        _armedTimer = Mathf.Max(0.05f, timeout);
+    }
+
+    public void DisarmShot() => _armedTimer = -1f;
+
+    /// <summary>
+    /// 이 무기에 적용되는 공속. 무기의 AttackSpeedScale만큼만 반영
+    /// 예) 공속 1.4, 반영 0.5 → 1 + 0.4 × 0.5 = 1.2
+    /// </summary>
+    float WeaponAtkSpd(EquipmentData weapon)
+    {
+        float raw = Mathf.Max(0.1f, _stats.Get(StatType.AttackSpeed));
+        float scale = weapon != null ? weapon.AttackSpeedScale : 1f;
+        return Mathf.Max(0.1f, 1f + (raw - 1f) * scale);
+    }
+
+    bool ConsumeArmedShot(out float bonusMul, out bool forceCrit)
+    {
+        bonusMul = 1f;
+        forceCrit = false;
+        if (_armedTimer <= 0f) return false;
+
+        bonusMul = 1f + _armedBonusPct * 0.01f;
+        forceCrit = _armedCrit;
+        _armedTimer = -1f;
+        return true;
+    }
+
+    /// <summary>CalcOutgoing + 치명타 강제</summary>
+    float Outgoing(float baseDmg, DamageSource src, bool forceCrit, out bool crit)
+    {
+        float v = DamageCalc.CalcOutgoing(_stats, baseDmg, src, true, out crit);
+        if (forceCrit && !crit)
+        {
+            v *= _stats.Get(StatType.CritDamage);
+            crit = true;
+        }
+        return v;
+    }
+
+    /// <summary>원뿔 안에서 무작위로 흩뿌린 방향</summary>
+    Vector3 ApplySpread(Vector3 dir, EquipmentData weapon)
+    {
+        float deg = (weapon != null ? weapon.SpreadAngle : 0f) * SpreadMul + SpreadAdd;
+        if (deg <= 0.001f) return dir;
+
+        Vector2 r = Random.insideUnitCircle * deg;
+        Vector3 right = Vector3.Cross(Vector3.up, dir);
+        if (right.sqrMagnitude < 0.0001f) right = cameraRoot.right;
+        right.Normalize();
+        Vector3 up = Vector3.Cross(dir, right);
+
+        return (Quaternion.AngleAxis(r.x, up) * Quaternion.AngleAxis(-r.y, right) * dir).normalized;
+    }
+
 
     [SerializeField] private GameObject tracerPrefab;
 
@@ -211,7 +289,7 @@ public class PlayerAttack : NetworkBehaviour
     {
         if (weapon.RangedKind == RangedType.Gun) { TickGun(weapon, dt); return; }
 
-        float spd = Mathf.Max(0.1f, _stats.Get(StatType.AttackSpeed));
+        float spd = WeaponAtkSpd(weapon);
 
         if (_releaseQueued)
         {
@@ -235,9 +313,22 @@ public class PlayerAttack : NetworkBehaviour
     }
 
 
+    /// <summary>한 틱에 쏠 수 있는 최대 발 수 (틱보다 연사 간격이 짧을 때)</summary>
+    const int MaxShotsPerTick = 3;
+
+    [Header("Debug — 연사 측정")]
+    [Tooltip("켜면 1초마다 실제 발사 수·공속·간격·틱레이트를 콘솔에 출력")]
+    [SerializeField] private bool logFireRate = false;
+    private int _rateShots, _rateTicks, _rateCalls;
+    private float _rateTime;
+
     void TickGun(EquipmentData weapon, float dt)
     {
-        _fireTimer -= dt;
+        if (logFireRate) LogFireRate(weapon, dt);
+
+        // 쉬는 동안 음수로 무한히 쌓이지 않게 — 한 틱만큼만 앞당겨 둠
+        _fireTimer = Mathf.Max(_fireTimer - dt, -dt);
+        if (_armedTimer > 0f) _armedTimer -= dt;
 
         // 연사 끊기면 반동 누적 초기화
         _burstResetTimer -= dt;
@@ -247,32 +338,67 @@ public class PlayerAttack : NetworkBehaviour
         _attackQueued = false;
 
         if (_fireTimer > 0f) return;
-        if (!_equip.ConsumeAmmo())
+
+        float spd = WeaponAtkSpd(weapon);
+        float interval = 60f / Mathf.Max(1f, weapon.RoundsPerMinute * spd);
+
+        // 남은 시간을 버리지 않고 이어서 계산 — 틱 단위로 끊겨서 연사 속도가 계단처럼 튀는 것 방지
+        // (예: 30틱이면 공속 1.1 → 1.2에서 초당 10발 → 15발로 갑자기 뛰던 문제)
+        for (int n = 0; n < MaxShotsPerTick && _fireTimer <= 0f; n++)
         {
-            if (weapon.EmptySound != null && weaponAudio != null)
-                weaponAudio.PlayOneShot(weapon.EmptySound, 0.5f);
-            _fireTimer = 0.3f;      // 딸깍 소리가 연타되지 않게
-            return;
+            if (!_equip.ConsumeAmmo())
+            {
+                if (weapon.EmptySound != null && weaponAudio != null)
+                    weaponAudio.PlayOneShot(weapon.EmptySound, 0.5f);
+                _fireTimer = 0.3f;      // 딸깍 소리가 연타되지 않게
+                return;
+            }
+
+            FireGun(weapon);
+            _rateShots++;
+            _fireTimer += interval;
+            _shotsInBurst++;
+            _burstResetTimer = 0.35f;
+
+            if (!weapon.FullAuto) break;   // 단발은 클릭당 한 발
         }
-
-
-        FireGun(weapon);
-
-        float spd = Mathf.Max(0.1f, _stats.Get(StatType.AttackSpeed));
-        _fireTimer = 60f / Mathf.Max(1f, weapon.RoundsPerMinute * spd);
-        _shotsInBurst++;
-        _burstResetTimer = 0.35f;
     }
+
+    void LogFireRate(EquipmentData weapon, float dt)
+    {
+        _rateCalls++;
+        int tick = Runner.Tick.Raw;
+        if (tick != _lastRateTick) { _rateTicks++; _lastRateTick = tick; }
+
+        _rateTime += dt;
+        if (_rateTime < 1f) return;
+
+        float spd = WeaponAtkSpd(weapon);
+        float interval = 60f / Mathf.Max(1f, weapon.RoundsPerMinute * spd);
+
+        Debug.Log($"[Gun] {_rateTime:F2}초 동안 {_rateShots}발 (기대 {_rateTime / interval:F1}발) | " +
+                  $"공속 {spd:F2} · RPM {weapon.RoundsPerMinute} · 간격 {interval * 1000f:F0}ms | " +
+                  $"틱 {Runner.TickRate}Hz · dt {dt * 1000f:F1}ms · TickGun 호출 {_rateCalls}회 / 틱 {_rateTicks}개 | " +
+                  $"이 컴포넌트 {GetInstanceID()} ({name})", this);
+
+        _rateShots = _rateCalls = _rateTicks = 0;
+        _rateTime = 0f;
+    }
+    private int _lastRateTick = -1;
 
     void FireGun(EquipmentData weapon)
     {
+        ConsumeArmedShot(out float bonusMul, out bool forceCrit);
+
         if (weapon.FireMode == GunFireMode.Hitscan)
-            FireHitscan(weapon);
+            FireHitscan(weapon, bonusMul, forceCrit);
         else
-            FireGunProjectile(weapon);
+            FireGunProjectile(weapon, bonusMul, forceCrit);
 
         PlayFireFx(weapon);
         ApplyGunRecoil(weapon);
+
+        GunFired?.Invoke(weapon);
     }
 
     void ApplyGunRecoil(EquipmentData weapon)
@@ -291,7 +417,7 @@ public class PlayerAttack : NetworkBehaviour
         armRig?.AddRecoil(mul);      // ★
     }
 
-    void FireGunProjectile(EquipmentData weapon)
+    void FireGunProjectile(EquipmentData weapon, float bonusMul = 1f, bool forceCrit = false)
     {
         if (weapon.ProjectilePrefab == null)
         {
@@ -300,21 +426,20 @@ public class PlayerAttack : NetworkBehaviour
         }
 
         Vector3 origin = GetMuzzlePos();
-        Vector3 dir = GetAimDirection(origin);
-        float baseDmg = _stats.Get(StatType.AttackPower);
+        Vector3 dir = ApplySpread(GetAimDirection(origin), weapon);
+        float baseDmg = _stats.Get(StatType.AttackPower) * bonusMul;
 
-        SpawnProjectile(weapon, origin, dir, weapon.ProjectileSpeed, baseDmg, true);
+        SpawnProjectile(weapon, origin, dir, weapon.ProjectileSpeed, baseDmg, true, forceCrit);
         RPC_PlayProjectile(origin, dir, weapon.ProjectileSpeed);
     }
 
-    void OnHitscanHit(RaycastHit hit, EquipmentData weapon)
+    void OnHitscanHit(RaycastHit hit, EquipmentData weapon, float bonusMul = 1f, bool forceCrit = false)
     {
         if (!hit.collider.TryGetComponent<PlayerHealth>(out var target)) return;
         if (target.IsDead) return;
 
-        float baseDmg = _stats.Get(StatType.AttackPower);
-        float outgoing = DamageCalc.CalcOutgoing(
-            _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
+        float baseDmg = _stats.Get(StatType.AttackPower) * bonusMul;
+        float outgoing = Outgoing(baseDmg, DamageSource.RangedWeapon, forceCrit, out bool crit);
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, hit.point);
         info.IsCrit = crit;
@@ -326,27 +451,47 @@ public class PlayerAttack : NetworkBehaviour
         if (fpsCamera != null) fpsCamera.Shake(0.15f);
     }
 
-    void FireHitscan(EquipmentData weapon)
+    void FireHitscan(EquipmentData weapon, float bonusMul = 1f, bool forceCrit = false)
     {
-        Vector3 origin = GetMuzzlePos();
-        Vector3 camPos = cameraRoot.position;
-        Vector3 dir = cameraRoot.forward;
+        Vector3 tracerFrom = GetMuzzlePos();
+        Vector3 from = cameraRoot.position;                  // 판정은 카메라 기준 — 조준선과 일치
+        Vector3 dir = ApplySpread(cameraRoot.forward, weapon);
 
-        float range = Mathf.Max(1f, weapon.HitscanRange);
-        Vector3 endPoint = camPos + dir * range;
+        float remaining = Mathf.Max(1f, weapon.HitscanRange);
+        int bounces = Mathf.Max(0, Ricochets);
+        bool first = true;
 
-        // 판정은 카메라 기준 — 조준선과 정확히 일치
-        if (Physics.Raycast(camPos, dir, out var hit, range,
-                            projectileMask, QueryTriggerInteraction.Ignore)
-            && hit.collider.gameObject != gameObject)
+        while (true)
         {
-            endPoint = hit.point;
-            OnHitscanHit(hit, weapon);
-        }
+            Vector3 endPoint = from + dir * remaining;
+            bool hitSomething = Physics.Raycast(from, dir, out var hit, remaining,
+                                                projectileMask, QueryTriggerInteraction.Ignore)
+                                && hit.collider.gameObject != gameObject;
 
-        // 연출은 총구에서 착탄점까지
-        SpawnTracer(weapon, origin, endPoint);
-        RPC_PlayHitscan(origin, endPoint);
+            bool hitPlayer = false;
+            if (hitSomething)
+            {
+                endPoint = hit.point;
+                hitPlayer = hit.collider.TryGetComponent<PlayerHealth>(out _);
+                if (hitPlayer) OnHitscanHit(hit, weapon, bonusMul, forceCrit);
+            }
+
+            // 연출은 총구 → 착탄점, 도탄이면 이어서 튕긴 구간
+            SpawnTracer(weapon, tracerFrom, endPoint);
+            RPC_PlayHitscan(tracerFrom, endPoint, first);
+            first = false;
+
+            // 벽에 맞았고 도탄이 남았으면 반사해서 한 번 더
+            if (!hitSomething || hitPlayer || bounces <= 0) break;
+
+            bounces--;
+            remaining -= hit.distance;
+            if (remaining <= 0.5f) break;
+
+            dir = Vector3.Reflect(dir, hit.normal);
+            from = hit.point + hit.normal * 0.02f;
+            tracerFrom = hit.point;
+        }
     }
 
     void SpawnTracer(EquipmentData weapon, Vector3 from, Vector3 to)
@@ -361,13 +506,13 @@ public class PlayerAttack : NetworkBehaviour
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    void RPC_PlayHitscan(Vector3 from, Vector3 to)
+    void RPC_PlayHitscan(Vector3 from, Vector3 to, NetworkBool fireFx)
     {
         if (HasStateAuthority) return;   // 발사자는 이미 로컬로 만들었음
 
         var weapon = _equip != null ? _equip.GetWeapon() : null;
         SpawnTracer(weapon, from, to);
-        PlayFireFx(weapon);
+        if (fireFx) PlayFireFx(weapon);  // 도탄 구간은 총구 연출 없이 궤적만
     }
 
     void PlayFireFx(EquipmentData weapon)
@@ -452,7 +597,7 @@ public class PlayerAttack : NetworkBehaviour
 
     /// <summary>쏜 사람(authoritative)과 다른 사람 화면(RPC) 모두 여기를 거침</summary>
     void SpawnProjectile(EquipmentData weapon, Vector3 pos, Vector3 dir,
-                     float speed, float baseDmg, bool authoritative)
+                     float speed, float baseDmg, bool authoritative, bool forceCrit = false)
     {
         // 무기에 붙어 있던 화살·탄두를 숨김 — 실제 투사체로 교체
         var wr = CurrentWeaponRig;
@@ -478,19 +623,18 @@ public class PlayerAttack : NetworkBehaviour
             weapon.PierceDamageFalloff,
             _cc,
             authoritative
-                ? (col, point, mul) => OnProjectileHit(col, point, baseDmg * mul)
+                ? (col, point, mul) => OnProjectileHit(col, point, baseDmg * mul, forceCrit)
                 : null);
     }
 
-    void OnProjectileHit(Collider col, Vector3 point, float baseDmg)
+    void OnProjectileHit(Collider col, Vector3 point, float baseDmg, bool forceCrit = false)
     {
         if (col == null) return;
         if (!col.TryGetComponent<PlayerHealth>(out var target)) return;   // 지형이면 그냥 멈춤
         if (target.IsDead) return;
         if (col.gameObject == gameObject) return;
 
-        float outgoing = DamageCalc.CalcOutgoing(
-            _stats, baseDmg, DamageSource.RangedWeapon, true, out bool crit);
+        float outgoing = Outgoing(baseDmg, DamageSource.RangedWeapon, forceCrit, out bool crit);
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, point);
         info.IsCrit = crit;
@@ -608,7 +752,7 @@ public class PlayerAttack : NetworkBehaviour
         _hitThisAttack.Clear();
 
         // 공속은 시작 시점 값으로 고정 (휘두르는 도중 버프가 바뀌어도 모션이 안 튐)
-        _atkSpd = Mathf.Max(0.1f, _stats.Get(StatType.AttackSpeed));
+        _atkSpd = WeaponAtkSpd(weapon);
 
         if (_ability != null && _ability.TryOverrideAttack(out _override, out _overrideSource))
         {
@@ -747,6 +891,7 @@ public class PlayerAttack : NetworkBehaviour
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, cameraRoot.position);
         info.IsCrit = crit;
+        info.IsMelee = src == DamageSource.MeleeWeapon;
         if (ench) _enchant?.ModifyWeaponHit(ref info);     // 관통·처형
         target.RPC_TakeDamage(info);
 

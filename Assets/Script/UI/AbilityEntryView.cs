@@ -13,6 +13,7 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
         public string SlotLabel;
         public string Title;
         public string Body;
+        public string BodyFull;
         public string Detail;
         public Color Accent;
 
@@ -20,6 +21,8 @@ public class AbilityEntryView : MonoBehaviour, IPointerClickHandler,
         public int Level;
         public int MaxLevel;
         public bool CanUpgrade;
+
+
     }
 
     [SerializeField] private Image background;

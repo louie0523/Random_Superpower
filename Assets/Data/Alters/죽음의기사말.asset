@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97f4f6a54dd5a9a48a5a4168edbc4561, type: 3}
+  m_Name: "\uC8FD\uC74C\uC758\uAE30\uC0AC\uB9D0"
+  m_EditorClassIdentifier: Assembly-CSharp::AlterData
+  Id: 11002
+  DisplayName: "\uC8FD\uC74C\uC758 \uAE30\uC0AC\uC758 \uB9D0"
+  Icon: {fileID: 0}
+  Description: 
+  Prefab: {fileID: 4982161356119463420, guid: 0fef0592d618457489275359028591b4, type: 3}
+  Attach: 5
+  BoneName: 
+  Position: {x: 0, y: 0, z: 0}
+  Rotation: {x: 0, y: 0, z: 0}
+  Scale: {x: 1, y: 1, z: 1}
+  Lift: 0.9
+  ShowForSelf: 1
+  SelfShadow: 1
+  MaxStack: 1
+  StackOffset: {x: 0, y: 0, z: 0}
+  Group: 
+  Stats: []

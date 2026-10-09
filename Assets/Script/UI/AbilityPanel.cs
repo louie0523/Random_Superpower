@@ -282,7 +282,7 @@ public class AbilityPanel : UIPanel
             Icon = d.Icon,
             Title = d.Title,
             Subtitle = d.SlotLabel,
-            Description = d.Body,      // 카드에 있던 기본 설명
+            Description = string.IsNullOrEmpty(d.BodyFull) ? d.Body : d.BodyFull,
             Body = d.Detail,    // 레벨·쿨타임·사거리·팁 등 추가 정보
         });
     }
@@ -330,9 +330,16 @@ public class AbilityPanel : UIPanel
             m.Icon = s.Icon;
             m.SlotLabel = s.Slot.Label();
             m.Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(s.Name));
-            m.Body = AbilityData.FormatSkill(s,
-                        LocUtil.GetOr($"{prefix}.desc", LocUtil.Resolve(s.Description)), rank);
-            m.Detail = BuildSkillDetail(s, prefix, rank, max, ranked);
+            string desc = LocUtil.GetOr($"{prefix}.desc", LocUtil.Resolve(s.Description));
+            m.Body = AbilityData.FormatSkill(s, desc, rank);
+
+            AbilityDescTokens.Detailed = true;
+            try
+            {
+                m.BodyFull = AbilityData.FormatSkill(s, desc, rank);
+                m.Detail = BuildSkillDetail(s, prefix, rank, max, ranked);
+            }
+            finally { AbilityDescTokens.Detailed = false; }
         }
         else
         {
@@ -342,9 +349,16 @@ public class AbilityPanel : UIPanel
             m.Icon = p.Icon;
             m.SlotLabel = LocUtil.Get("ui.ability.passive");
             m.Title = LocUtil.GetOr($"{prefix}.name", LocUtil.Resolve(p.Name));
-            m.Body = AbilityData.FormatPassive(p,
-                        LocUtil.GetOr($"{prefix}.desc", LocUtil.Resolve(p.Description)), rank);
-            m.Detail = BuildPassiveDetail(p, prefix, rank, max, ranked);
+            string desc = LocUtil.GetOr($"{prefix}.desc", LocUtil.Resolve(p.Description));
+            m.Body = AbilityData.FormatPassive(p, desc, rank);
+
+            AbilityDescTokens.Detailed = true;
+            try
+            {
+                m.BodyFull = AbilityData.FormatPassive(p, desc, rank);
+                m.Detail = BuildPassiveDetail(p, prefix, rank, max, ranked);
+            }
+            finally { AbilityDescTokens.Detailed = false; }
         }
 
         return m;

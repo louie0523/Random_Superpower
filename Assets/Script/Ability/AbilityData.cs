@@ -50,6 +50,8 @@ public class AbilityData : ScriptableObject
 
 
 
+
+
     [System.Serializable]
     public struct ChargeInfo
     {
@@ -89,6 +91,7 @@ public class AbilityData : ScriptableObject
     [System.Serializable]
     public class PassiveDef
     {
+        [System.NonSerialized] public AbilityData Owner;
         public string Name;
         public Sprite Icon;
         [TextArea(2, 4), Tooltip(TextHelp)] public string Description;
@@ -116,6 +119,7 @@ public class AbilityData : ScriptableObject
     [System.Serializable]
     public class SkillDef
     {
+        [System.NonSerialized] public AbilityData Owner;
         public string Name;
         public Sprite Icon;
 
@@ -162,6 +166,9 @@ public class AbilityData : ScriptableObject
         public float Cooldown = 8f;
         public int SoulCost = 0;
 
+        [Tooltip("켜면 사용 시 쿨타임이 멈춘 채 대기 → Behaviour가 효과를 끝낼 때(ReleaseCooldown) 쿨타임 시작. 승마·변신 같은 지속형")]
+        public bool CooldownAfterEffect;
+
         [Tooltip("궁극기는 소울을 모아야 쓸 수 있게 할 때")]
         public int UltimateChargeCost = 0;
 
@@ -201,6 +208,9 @@ public class AbilityData : ScriptableObject
         [Tooltip("이 상태일 때만 발동 (0 = 조건 없음)")]
         public int RequireStateId = 0;
 
+        [Tooltip("이 무기를 들고 있을 때만 발동 (None = 항상). 패시브 StatMod에도 적용")]
+        public WeaponRequirement RequireWeapon = WeaponRequirement.None;
+
         [Header("Charge 전용")]
         [Tooltip("게이지 슬롯 번호 (0~3)")]
         [Range(0, 3)] public int ChargeSlot = 0;
@@ -228,6 +238,10 @@ public class AbilityData : ScriptableObject
         [Header("상태이상 전용")]
         [Tooltip("ApplyStatus일 때 부여할 상태이상. Values = 수치(둔화 25 = 25%), Duration = 지속(초)")]
         public StatusType Status;
+
+        [Header("변화 전용")]
+        [Tooltip("AddAlter / RemoveAlter 대상 변화")]
+        public AlterData Alter;
 
         [Header("Trigger 옵션")]
         [Tooltip("대상별 재발동 쿨타임 (0이면 없음)")]
@@ -258,18 +272,20 @@ public class AbilityData : ScriptableObject
         readonly float[] _values;
         readonly int _rank;
         readonly int _levels;
+        readonly float _scale;
 
-        public RankedArg(float[] values, int rank, int levels)
+        public RankedArg(float[] values, int rank, int levels, float scale = 1f)
         {
             _values = values;
             _rank = rank;
             _levels = Mathf.Max(1, levels);
+            _scale = scale;
         }
 
         float At(int r) =>
             _values == null || _values.Length == 0
                 ? 0f
-                : _values[Mathf.Clamp(r, 0, _values.Length - 1)];
+                : _values[Mathf.Clamp(r, 0, _values.Length - 1)] * _scale;
 
         public override string ToString() => ToString(null, null);
 
@@ -320,7 +336,7 @@ public class AbilityData : ScriptableObject
         if (e + v == 0) return text;
 
         var args = new object[e + v];
-        for (int i = 0; i < e; i++) args[i] = new RankedArg(effects[i]?.Values, rank, maxLevel);
+        for (int i = 0; i < e; i++) args[i] = new RankedArg(effects[i]?.Values, rank, maxLevel, PercentScale(effects[i]));
         for (int i = 0; i < v; i++) args[e + i] = new RankedArg(vars[i]?.Values, rank, maxLevel);
 
         // {v0} → {e+0} 로 번호 변환
@@ -338,15 +354,53 @@ public class AbilityData : ScriptableObject
         }
     }
 
+    /// <summary>비율 스탯(치확·치피·쿨감·흡혈)의 Flat 값은 0~1 단위라 설명에선 ×100 (0.2 → 20)</summary>
+    static float PercentScale(EffectDef e) =>
+        e != null && e.Effect == EffectType.StatMod && e.ModType == ModType.Flat &&
+        (e.Stat == StatType.CritChance || e.Stat == StatType.CritDamage ||
+         e.Stat == StatType.CooldownReduction || e.Stat == StatType.LifeSteal)
+            ? 100f : 1f;
+
     /// <summary>레벨별 값을 "8 / 7.5 / 7" 형태로 (현재 레벨 굵게)</summary>
     public static string FormatLevels(float[] values, int rank, int levels, string num = "0.#") =>
         new RankedArg(values, rank, levels).ToString("all|" + num, null);
 
     public static string FormatPassive(PassiveDef p, string text, int rank) =>
-        p == null ? text : FormatRanked(text, p.Effects, p.Vars, rank, p.MaxLevel);
+      p == null ? text : FormatRanked(AbilityDescTokens.Apply(text, p.Owner, p.Vars, rank, p.MaxLevel),
+                                      p.Effects, p.Vars, rank, p.MaxLevel);
 
     public static string FormatSkill(SkillDef s, string text, int rank) =>
-        s == null ? text : FormatRanked(text, s.Effects, s.Vars, rank, s.MaxLevel);
+        s == null ? text : FormatRanked(AbilityDescTokens.Apply(text, s.Owner, s.Vars, rank, s.MaxLevel),
+                                        s.Effects, s.Vars, rank, s.MaxLevel);
+
+    static readonly Regex BehaviourToken = new(@"\{b:(\w+)(?::([^}]*))?\}", RegexOptions.Compiled);
+
+    /// <summary>
+    /// {b:필드} = 현재 레벨 값 · {b:필드:all} = 전 레벨 · {b:필드:0.#} = 서식 지정.
+    /// Behaviour의 LevelValue(또는 float·int) 필드를 읽음
+    /// </summary>
+    public static string ApplyBehaviourTokens(string text, AbilityBehaviour b, int rank, int maxLevel)
+    {
+        if (string.IsNullOrEmpty(text) || text.IndexOf("{b:", System.StringComparison.Ordinal) < 0) return text;
+
+        return BehaviourToken.Replace(text, m =>
+        {
+            var f = b != null ? b.GetType().GetField(m.Groups[1].Value, LevelBinding.Flags) : null;
+            object raw = f != null ? f.GetValue(b) : null;
+
+            float[] values = raw switch
+            {
+                LevelValue lv => lv.Values,
+                float x => new[] { x },
+                int i => new[] { (float)i },
+                _ => null,
+            };
+            if (values == null) return $"<color=#E05050>[b:{m.Groups[1].Value}?]</color>";
+
+            string fmt = m.Groups[2].Success ? m.Groups[2].Value : null;
+            return new RankedArg(values, rank, maxLevel).ToString(fmt, null);
+        });
+    }
 
     /// <summary>기존 호출부 호환 — Vars 없이 Effects만</summary>
     public static string Format(string desc, EffectDef[] effects, int rank = 0) =>
@@ -397,9 +451,19 @@ public class AbilityData : ScriptableObject
         return $"{shape}, 사거리 {s.Range:0.#}m, 최대 {s.MaxTargets}명";
     }
 
+    void OnEnable() => LinkOwner();
+
+    /// <summary>패시브·스킬이 자기 능력(Behaviour)을 알게 — 설명의 {b:} 토큰용</summary>
+    public void LinkOwner()
+    {
+        if (Passives != null) foreach (var p in Passives) if (p != null) p.Owner = this;
+        if (Skills != null) foreach (var s in Skills) if (s != null) s.Owner = this;
+    }
+
 #if UNITY_EDITOR
     void OnValidate()
     {
+        LinkOwner();
         FixEffects(Passives);
         FixEffects(Skills);
     }

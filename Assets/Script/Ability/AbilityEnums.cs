@@ -34,6 +34,8 @@ public enum EffectType
     AddCharge,
     EnterState,
     ApplyStatus,
+    AddAlter,       // 변화 붙이기 (EffectDef.Alter)
+    RemoveAlter,    // 변화 떼기
 }
 
 /// <summary>누구에게</summary>

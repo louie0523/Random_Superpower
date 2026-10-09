@@ -36,6 +36,8 @@ public class AbilityDataEditor : Editor
     static GUIStyle _preview, _hint, _token, _section, _entryTitle, _richFoldout, _lv, _lvUnused, _ok;
     static readonly Regex VarToken = new(@"\{v(\d+)", RegexOptions.Compiled);
 
+    SerializedObject _bSO;
+
     // ══════════════════ 생명주기 ══════════════════
 
     void OnEnable()
@@ -483,6 +485,7 @@ public class AbilityDataEditor : Editor
             DrawVars(el.FindPropertyRelative("Vars"), 1);
         }
 
+        DrawBehaviourParams(data, false, index, Kind != AbilityKind.Random ? max : 1);
         Section("효과");
         DrawEffects(el.FindPropertyRelative("Effects"), max, false, false);
     }
@@ -508,7 +511,13 @@ public class AbilityDataEditor : Editor
         EditorGUILayout.PropertyField(el.FindPropertyRelative("Slot"), new GUIContent("슬롯"));
         if (Kind != AbilityKind.Random) DrawMaxLevel(el, true);
         DrawCooldown(el, Kind != AbilityKind.Random ? max : 1);
+        var after = el.FindPropertyRelative("CooldownAfterEffect");
+        EditorGUILayout.PropertyField(after, new GUIContent("효과 끝나고 쿨타임",
+            "켜면 쓰는 동안 쿨이 멈추고, Behaviour가 효과를 끝낼 때부터 돎 (승마·변신·궁 등 지속형)"));
+        if (after.boolValue && data.Behaviour == null)
+            Warn("Behaviour가 없으면 끝을 알려줄 수 없어 안전장치 시간(60초) 뒤에 쿨이 돕니다.");
         DrawVars(el.FindPropertyRelative("Vars"), Kind != AbilityKind.Random ? max : 1);
+        DrawBehaviourParams(data, true, index, Kind != AbilityKind.Random ? max : 1);
 
         Section("비용 · 조건");
         EditorGUILayout.PropertyField(el.FindPropertyRelative("SoulCost"), new GUIContent("소울 비용", "쓸 때마다 소모"));
@@ -636,6 +645,10 @@ public class AbilityDataEditor : Editor
         string raw = prop.stringValue;
         if (string.IsNullOrWhiteSpace(raw) || raw.IndexOf('{') < 0) return;
 
+        var owner = (AbilityData)target;
+        raw = AbilityDescTokens.Apply(raw, (AbilityData)target, vars, rank, max);
+        if (raw.IndexOf('{') < 0) { GUILayout.Label(raw, _preview); return; }
+
         int e = fx?.Length ?? 0;
         int v = vars?.Length ?? 0;
 
@@ -750,6 +763,41 @@ public class AbilityDataEditor : Editor
             for (int k = 0; k < vals.arraySize; k++) vals.GetArrayElementAtIndex(k).floatValue = 0f;
             EndStructural();
         }
+    }
+
+    /// <summary>Behaviour의 [ForSkill]/[ForPassive] LevelValue 중 이 항목에 묶인 것들을 레벨 칸으로</summary>
+    void DrawBehaviourParams(AbilityData data, bool skill, int index, int max)
+    {
+        var b = data.Behaviour;
+        if (b == null) return;
+
+        if (_bSO == null || _bSO.targetObject != b) _bSO = new SerializedObject(b);
+        _bSO.Update();
+
+        bool header = false;
+        foreach (var f in b.GetType().GetFields(LevelBinding.Flags))
+        {
+            if (!LevelBinding.TryGet(f, b, out bool isSkill, out int idx, out string label)) continue;
+            if (isSkill != skill || idx != index) continue;
+
+            var prop = _bSO.FindProperty(f.Name);
+            if (prop == null) continue;
+
+            if (!header)
+            {
+                Section($"Behaviour 수치 — {b.name}");
+                Hint("레벨별 값 · 이 Behaviour 에셋을 쓰는 모든 능력에 같이 적용됩니다.\n" +
+                     "설명에서 {b:필드이름} (현재 레벨) / {b:필드이름:all} (전 레벨)");
+                header = true;
+            }
+
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.Label("{b:" + f.Name + "}", _token);
+            DrawLevelValues(prop.FindPropertyRelative("Values"), max, LevelBinding.Nice(f, label));
+            EditorGUILayout.EndVertical();
+        }
+
+        if (_bSO.ApplyModifiedProperties()) Repaint();
     }
 
     // ── 효과 ──
@@ -902,6 +950,12 @@ public class AbilityDataEditor : Editor
                     break;
                 }
 
+            case EffectType.AddAlter:
+            case EffectType.RemoveAlter:
+                EditorGUILayout.PropertyField(e.FindPropertyRelative("Alter"), new GUIContent("변화"));
+                if (e.FindPropertyRelative("Alter").objectReferenceValue == null) Warn("변화 에셋을 넣으세요.");
+                break;
+
             default:
                 DrawLevelValues(vals, levels, ValueLabel(eff));
                 if (IsUnimplemented(eff))
@@ -947,7 +1001,10 @@ public class AbilityDataEditor : Editor
             $"조건 · 비용 · 확률   <color=#888>{summary}</color>", true, _richFoldout);
         if (!chance.isExpanded) return;
 
+
         EditorGUI.indentLevel++;
+        EditorGUILayout.PropertyField(e.FindPropertyRelative("RequireWeapon"),
+            new GUIContent("필요 무기", "이 무기를 들고 있을 때만 발동 (패시브 스탯 포함)"));
         EditorGUILayout.Slider(chance, 0f, 1f, new GUIContent("발동 확률", "1 = 항상"));
         EditorGUILayout.PropertyField(req, new GUIContent("필요 상태 ID", "이 상태일 때만 발동. 0 = 조건 없음"));
         EditorGUILayout.PropertyField(cost, new GUIContent("게이지 소모", "모든 조건 통과 후 마지막에 소모"));
@@ -1177,6 +1234,8 @@ public class AbilityDataEditor : Editor
         EffectType.Dash => "정면 수평 돌진",
         EffectType.Slow => "둔화 — 이동속도 감소",
         EffectType.ApplyStatus => "상태이상 부여 — 같은 종류는 높은 수치 우선",
+        EffectType.AddAlter => "변화 붙이기 — 파츠 + 스탯. 같은 그룹은 교체",
+        EffectType.RemoveAlter => "변화 떼기",
 
         _ => "<color=#E0A040>미구현</color>",
     };

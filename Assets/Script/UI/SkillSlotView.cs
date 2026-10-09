@@ -22,8 +22,15 @@ public class SkillSlotView : MonoBehaviour
     [SerializeField] private TMP_Text soulCostText;
     [SerializeField] private GameObject emptyRoot;     // 스킬 없음
 
+    [Tooltip("지속형 스킬 효과 중 켜짐 (쿨타임 대기)")]
+    [SerializeField] private GameObject activeMark;
+
     [Tooltip("봉인·기절 중일 때 켜짐 (자물쇠·X 표시 등)")]
     [SerializeField] private GameObject blockedMark;
+
+    [Header("빈 칸")]
+    [Tooltip("이 칸에 스킬이 없으면 칸 전체를 숨김 (끄면 빈 칸 표시)")]
+    [SerializeField] private bool hideWhenEmpty = true;
 
     [Header("연출")]
     [SerializeField] private RectTransform punchTarget;
@@ -61,11 +68,16 @@ public class SkillSlotView : MonoBehaviour
         {
             // 랜덤 칸은 스킬이 없어도 능력 자체를 패시브로 표시
             var rand = slot == SkillSlot.Random ? ar.GetRandomAbility() : null;
-            if (rand != null) { ShowPassive(rand.Icon); return; }
+            if (rand != null) { SetShown(true); ShowPassive(rand.Icon); return; }
 
+            if (hideWhenEmpty) { SetShown(false); return; }
+
+            SetShown(true);
             ShowEmpty();
             return;
         }
+
+        SetShown(true);
 
         if (emptyRoot != null) emptyRoot.SetActive(false);
 
@@ -78,9 +90,12 @@ public class SkillSlotView : MonoBehaviour
         if (keyText != null) keyText.gameObject.SetActive(true);
 
         // ── 쿨타임 ──
-        float ratio = ar.GetCooldownRatio(i);
+        bool held = ar.IsCooldownHeld(i);
+        float ratio = held ? 1f : ar.GetCooldownRatio(i);
         float remain = ar.GetCooldownRemain(i);
-        bool cooling = ratio > 0.001f;
+        bool cooling = held || ratio > 0.001f;
+
+        if (activeMark != null) activeMark.SetActive(held);
 
         if (cooldownFill != null) cooldownFill.fillAmount = ratio;
 
@@ -155,5 +170,13 @@ public class SkillSlotView : MonoBehaviour
         if (group != null) group.alpha = unusableAlpha;
 
         _wasReady = false;
+    }
+
+    /// <summary>칸 전체 켜고 끄기 — SkillBar가 Refresh를 대신 불러주므로 꺼져 있어도 다시 켜짐</summary>
+    void SetShown(bool on)
+    {
+        if (gameObject.activeSelf == on) return;
+        gameObject.SetActive(on);
+        if (on) Punch();      // 새로 생기면 튀는 연출
     }
 }

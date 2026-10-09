@@ -29,4 +29,5 @@ public static class SourceId
     public const int StateBase = 400000;   // + 상태 ID (100000 미만, 보통 능력 ID와 같게)
     public const int AbilityBase = 500000; // + 능력ID × 10 + n (n = 0~9). AbilityBehaviour.Src(n)으로 사용
     public const int StatusBase = 600000;  // + StatusType — 둔화·동상의 스탯 감소
+    public const int AlterBase = 700000;   // + 변화 칸 (0~7)
 }

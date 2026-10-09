@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0352c2f2a6452a5458f0c879dc1231ad, type: 3}
+  m_Name: "\uAC74\uB9C8\uC2A4\uD130_So"
+  m_EditorClassIdentifier: Assembly-CSharp::GunMasterAbility
+  MasteryPassive: 1
+  StarterGun: {fileID: 11400000, guid: 87726891156f7ac4ea3a685d4f060e36, type: 2}
+  AtkSpeedPct: 20
+  MoveSpeedPct: 10
+  CritChance: 0.2
+  RollSkill: 0
+  AimSkill: 1
+  UltSkill: 2
+  Roll:
+    Distance: 5
+    Duration: 0.3
+    Direction: 2
+    MaxPitch: 0
+    PassThroughPlayers: 1
+    StopOnContact: 1
+    IgnoreGravity: 0
+  EvadeTime: 1
+  AmmoRefill: 0.2
+  AimBonusPct: 50
+  ZoomFov: -25
+  AimSlowPct: 40
+  AimTimeout: 4
+  UltDuration: 12
+  UltAtkSpeedPct: 100
+  UltLifeSteal: 0.2
+  UltRicochets: 1
+  UltSpreadMul: 1.3
+  UltSpreadAdd: 1.5

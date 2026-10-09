@@ -41,6 +41,9 @@ public class PlayerEnchant : NetworkBehaviour
     [Networked] private int PendingSlotPlus1 { get; set; }      // 0 = 대기 없음
     [Networked] private int PendingWeaponId { get; set; }
 
+    /// <summary>스톤 소모 배율 (대장장이 궁극기 0.5). 최소 1개</summary>
+    public float StoneCostMul { get; set; } = 1f;
+
     private PlayerEquipment _equip;
     private PlayerStats _stats;
 
@@ -96,8 +99,11 @@ public class PlayerEnchant : NetworkBehaviour
         return Mathf.Clamp(max, 0, MaxEnchants);
     }
 
-    public int GetCost(EquipmentData w, int currentStage) =>
-        rules != null ? rules.GetCost(w.Grade, currentStage + 1) : w.GetEnchantCost(currentStage);
+    public int GetCost(EquipmentData w, int currentStage)
+    {
+        int baseCost = rules != null ? rules.GetCost(w.Grade, currentStage + 1) : w.GetEnchantCost(currentStage);
+        return Mathf.Max(1, Mathf.CeilToInt(baseCost * StoneCostMul));
+    }
 
     /// <summary>이 슬롯 무기에 붙은 특수 인챈트의 등급 (없으면 0)</summary>
     public int OwnedTier(int slot, int specialId)

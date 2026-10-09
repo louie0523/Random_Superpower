@@ -16,6 +16,10 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private FPSCamera fpsCamera;
     [SerializeField] private GameObject[] hideOnLocal; // 내 몸통 메시
 
+    [Header("넉백")]
+    [SerializeField] private float knockbackDecay = 18f;
+    private Vector3 _push;
+
     [Header("Debug")]
     public bool IsDummy = false;
 
@@ -141,6 +145,9 @@ public class PlayerMovement : NetworkBehaviour
         if (_ability != null && _ability.IsDashing)
             motion = dashNoGravity ? Vector3.zero : Vector3.up * _verticalVel;
 
+        motion += _push;
+        _push = Vector3.MoveTowards(_push, Vector3.zero, knockbackDecay * Runner.DeltaTime);
+
         _cc.Move(motion * Runner.DeltaTime);
 
         _anim?.SetMovement(_speed01, _cc.isGrounded, fpsCamera.Pitch);
@@ -180,5 +187,20 @@ public class PlayerMovement : NetworkBehaviour
         weaponAnim?.Tick(_smoothMoveDir, _speed01);
     }
 
+    /// <summary>밀쳐내기 (어디서 불러도 됨). y는 위로 띄우는 속도</summary>
+    public void AddKnockback(Vector3 velocity)
+    {
+        if (HasStateAuthority) ApplyKnockback(velocity);
+        else RPC_Knockback(velocity);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_Knockback(Vector3 velocity) => ApplyKnockback(velocity);
+
+    void ApplyKnockback(Vector3 v)
+    {
+        _push += new Vector3(v.x, 0f, v.z);
+        if (v.y > 0f) _verticalVel = Mathf.Max(_verticalVel, v.y);
+    }
 
 }

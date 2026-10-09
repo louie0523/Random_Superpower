@@ -83,6 +83,8 @@ public class PoseKey
 {
     [Range(0f, 1f)] public float Time;
     public ArmPose Pose = new();
-    [Tooltip("이 키로 향하는 보간 곡선")]
+    [Tooltip("이 키로 향하는 보간 곡선 (Linear 보간에서만)")]
     public AnimationCurve Ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [Tooltip("Smooth 보간 — 이 키에서 잠깐 멈춤 (치켜든 자세 등). 끄면 그대로 통과")]
+    public bool Hold;
 }

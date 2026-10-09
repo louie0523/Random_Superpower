@@ -76,6 +76,9 @@ public class PlayerHealth : NetworkBehaviour
     private int _colorId = -1;
     private Color _baseColor = Color.white;
 
+    /// <summary>피해를 받았을 때 (SA). 능력이 반응용으로 구독 — (정보, 최종 피해)</summary>
+    public event System.Action<DamageInfo, int> Damaged;
+
     public override void Spawned()
     {
         _stats = GetComponent<PlayerStats>();
@@ -143,6 +146,7 @@ public class PlayerHealth : NetworkBehaviour
         GetComponent<PlayerEquipment>()?.ResetForNewRound();
         GetComponent<PlayerEnchant>()?.ResetForNewRound();
         GetComponent<PlayerShop>()?.ResetForNewRound();
+        GetComponent<PlayerAlter>()?.ResetForNewRound();
         _ability?.ResetForNewRound();
 
         ResetForNewRound();
@@ -214,7 +218,7 @@ public class PlayerHealth : NetworkBehaviour
         if (IsDead) return;
 
         // 회피 — 상태이상 틱만 통과
-        if (_status != null && _status.IsEvading && !info.IsStatusTick)
+        if (_status != null && (_status.IsEvading || _status.Has(StatusType.Ghost)) && !info.IsStatusTick)
         {
             NotifyNumber(info, 0, DamageNumberKind.Miss);
             return;
@@ -223,8 +227,8 @@ public class PlayerHealth : NetworkBehaviour
         float maxHp = _stats.Get(StatType.MaxHP);
         float raw = info.Amount;
 
-        if (info.MaxHpPercent > 0f)
-            raw += maxHp * info.MaxHpPercent * 0.01f;
+        if (info.MissingHpPercent > 0f)
+            raw += Mathf.Max(0f, maxHp - HP) * info.MissingHpPercent * 0.01f;
 
         // 처형 — 맞기 직전 체력 기준
         if (info.ExecuteBelow > 0f && HP <= maxHp * info.ExecuteBelow)
@@ -238,6 +242,7 @@ public class PlayerHealth : NetworkBehaviour
         HP -= final;
 
         NotifyNumber(info, final, KindOf(info));
+        Damaged?.Invoke(info, final);
 
         if (info.FromPlayer && info.Attacker != PlayerRef.None)
         {

@@ -30,6 +30,7 @@ GameObject:
   - component: {fileID: 1140823715662527484}
   - component: {fileID: 2781225716965767357}
   - component: {fileID: 8855885309026736249}
+  - component: {fileID: 9194944487309080347}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -140,6 +141,7 @@ MonoBehaviour:
   - {fileID: 8318037346556842547}
   - {fileID: 959149403550185092}
   - {fileID: 2781225716965767357}
+  - {fileID: 9194944487309080347}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &927725796463626508
 MonoBehaviour:
@@ -224,6 +226,7 @@ MonoBehaviour:
   gravity: -20
   fpsCamera: {fileID: 7430700015858829311}
   hideOnLocal: []
+  knockbackDecay: 18
   IsDummy: 0
   weaponAnim: {fileID: 6649258101475754144}
 --- !u!114 &7430700015858829311
@@ -275,7 +278,7 @@ MonoBehaviour:
   weaponAnim: {fileID: 6649258101475754144}
   hitMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 72
   projectileMask:
     serializedVersion: 2
     m_Bits: 136
@@ -283,6 +286,7 @@ MonoBehaviour:
   drawGizmos: 1
   logHits: 0
   tracerPrefab: {fileID: 0}
+  logFireRate: 0
 --- !u!114 &2292308803494601025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +367,7 @@ MonoBehaviour:
   _HelmetId: 0
   _BootsId: 0
   _SlotAmmo: 
-  startWeaponId: 1002
+  startWeaponId: 1001
   fistWeaponId: 1000
   swapTime: 0.6
 --- !u!114 &-1179119024802948346
@@ -403,7 +407,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   weaponAnim: {fileID: 6649258101475754144}
-  forceMainId: 6001
+  forceMainId: 6004
   forceSubId: 0
   forceRandomId: 0
   logSkills: 0
@@ -413,9 +417,14 @@ MonoBehaviour:
   _MainAbilityId: 0
   _SubAbilityId: 0
   _RandomAbilityId: 0
+  _SavedKeys: 
+  _SavedValues: 
   _CooldownEnd: []
+  _HoldUntil: []
+  _HeldCooldown: []
   _Charges: []
   _MaxCharges: []
+  maxCooldownHold: 60
   _ActiveStateId: 0
   _EntryRanks: 
   _SkillPoints: 0
@@ -722,6 +731,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusVisuals
   status: {fileID: 2781225716965767357}
   entries: []
+--- !u!114 &9194944487309080347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0fc8953b50418547b2d78abc1311a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAlter
+  database: {fileID: 11400000, guid: 65fd34e31482c5144a3c4a1363b9c347, type: 2}
+  armRig: {fileID: 4156331145891824284}
+  _Alters: 
 --- !u!1 &4519324451150578074
 GameObject:
   m_ObjectHideFlags: 0

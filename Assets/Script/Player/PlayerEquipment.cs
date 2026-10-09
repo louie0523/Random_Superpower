@@ -15,6 +15,8 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int ActiveWeaponSlot { get; set; }
 
+    private int _startOverride;
+
     public int WeaponId
     {
         get
@@ -22,6 +24,23 @@ public class PlayerEquipment : NetworkBehaviour
             int id = WeaponIds[Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1)];
             return id != 0 ? id : fistWeaponId;
         }
+    }
+
+    /// <summary>기초 무기 — 능력이 바꿀 수 있음 (건마스터 = 글록)</summary>
+    public int StartWeaponId => _startOverride != 0 ? _startOverride : startWeaponId;
+
+    /// <summary>0이면 원래 기초 무기로. 지금 기초 무기를 들고 있으면 바로 교체</summary>
+    public void SetStartWeapon(int id)
+    {
+        if (!HasStateAuthority) return;
+
+        int prev = StartWeaponId;
+        _startOverride = id;
+        int now = StartWeaponId;
+        if (prev == now) return;
+
+        for (int i = 0; i < WeaponSlots; i++)
+            if (WeaponIds[i] == prev) { ReplaceWeaponAt(i, now); break; }
     }
 
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
@@ -72,7 +91,7 @@ public class PlayerEquipment : NetworkBehaviour
 
         if (HasStateAuthority)
         {
-            WeaponIds.Set(0, startWeaponId);
+            WeaponIds.Set(0, StartWeaponId);
             ArmorId = 0;
             HelmetId = 0;
             BootsId = 0;
@@ -330,7 +349,7 @@ public class PlayerEquipment : NetworkBehaviour
             SlotAmmo.Set(i, 0);
         }
 
-        WeaponIds.Set(0, startWeaponId);
+        WeaponIds.Set(0, StartWeaponId);
         ActiveWeaponSlot = 0;
         ArmorId = 0;
         HelmetId = 0;

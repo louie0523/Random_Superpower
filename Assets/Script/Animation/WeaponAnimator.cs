@@ -72,6 +72,12 @@ public class WeaponAnimator : MonoBehaviour
         _freezeTimer = 0f;
         _speed = Mathf.Max(0.1f, speed);
 
+        if (armRig != null)
+        {
+            if (step != null && step.WeaponOverride != null) armRig.BeginWeaponOverride(step.WeaponOverride);
+            else armRig.EndWeaponOverride();
+        }
+
         _step = step;
         _t = 0f;
     }
@@ -108,6 +114,7 @@ public class WeaponAnimator : MonoBehaviour
     }
     public void StopSwing()
     {
+        armRig?.EndWeaponOverride();
         _t = -1f;
         _step = null;
         if (armRig != null) armRig.ApplyPose(armRig.IdlePose);
@@ -124,12 +131,14 @@ public class WeaponAnimator : MonoBehaviour
     // ── 스윙 포즈 (손/무기) ──
 
     void HandleSwingPose()
-    {
+    {   
         float dt = Time.deltaTime;
 
         // ── 모션 없음: 블렌드 아웃 중이거나 Idle ──
         if (_t < 0f || _step == null)
         {
+            armRig.EndWeaponOverride();
+
             armRig.SetDrawAmount(_drawAmount, dt);
             var idle = armRig.GetEffectiveIdle();
 

@@ -61,6 +61,10 @@ public class ComboStep
     [Tooltip("전진 거리 (m)")]
     public float LungeDistance = 0f;
 
+    [Header("무기")]
+    [Tooltip("이 모션 동안만 이 무기 모델로 바꿔 쥠 (판정·스탯은 실제 무기 그대로). 비우면 들고 있는 무기")]
+    public EquipmentData WeaponOverride;
+
     [Header("Hand")]
     [Tooltip("이 모션 동안 손 표시 방식")]
     public HandVisibility HandMode = HandVisibility.Auto;

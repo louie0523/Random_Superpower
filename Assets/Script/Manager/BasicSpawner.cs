@@ -11,6 +11,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _runner;
 
     [SerializeField] private float dummySpawnDistance = 5f;
+    [SerializeField] private AlterData debugAlter;
 
     [Header("Debug Keys")]
     [SerializeField] private KeyCode StoneGet = KeyCode.Keypad3;
@@ -21,6 +22,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private KeyCode healKey = KeyCode.F9;
     [SerializeField] private KeyCode soulGainKey = KeyCode.F1;
     [SerializeField] private KeyCode soulLoseKey = KeyCode.F2;
+    [SerializeField] private KeyCode AddAlter = KeyCode.Keypad4;
+    [SerializeField] private KeyCode RemoveAlter = KeyCode.Keypad5;
     [SerializeField] private int soulCheatAmount = 50;
     NetworkObject GetLocal() => _runner.GetPlayerObject(_runner.LocalPlayer);
 
@@ -83,6 +86,17 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKeyDown(KeyCode.F11)) StatusSelf(StatusType.Poison, 5f, 4f);
         if (Input.GetKeyDown(KeyCode.F12)) StatusSelf(StatusType.Stun, 2f, 2f);
         if (Input.GetKeyDown(StoneGet)) StoneGive(100);
+        if (Input.GetKeyDown(KeyCode.Alpha9)) GetLocal()?.GetComponent<PlayerAlter>()?.Add(debugAlter);
+        if (Input.GetKeyDown(KeyCode.Alpha8)) GetLocal()?.GetComponent<PlayerAlter>()?.Remove(debugAlter, true);
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            var st = GetLocal()?.GetComponent<PlayerStats>();
+            if (st != null)
+            {
+                Debug.Log(st.Dump(StatType.AttackSpeed));
+                Debug.Log(st.Dump(StatType.MoveSpeed));
+            }
+        }
     }
 
     void StoneGive(int num)

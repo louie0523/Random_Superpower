@@ -12,3 +12,84 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c75325ce85557d4ca72b726f1c03559, type: 3}
   m_Name: "\uB300\uC7A5\uC7A5\uC774_So"
   m_EditorClassIdentifier: Assembly-CSharp::BlacksmithAbility
+  SmashSkill: 0
+  FurnaceSkill: 1
+  UltSkill: 2
+  SmashCoef:
+    Values:
+    - 150
+  SmashFlat:
+    Values:
+    - 0
+  SmashRange:
+    Values:
+    - 3
+  SmashAngle:
+    Values:
+    - 100
+  SmashMaxTargets:
+    Values:
+    - 4
+  SmashStun:
+    Values:
+    - 0.25
+  ArmorBreakPct:
+    Values:
+    - 30
+  ArmorBreakTime:
+    Values:
+    - 5
+  SmashHeight: 1.6
+  SmashFx: {fileID: 0}
+  FurnaceCoef:
+    Values:
+    - 120
+    - 135
+    - 150
+    - 165
+    - 180
+  FurnaceFlat:
+    Values:
+    - 35
+    - 50
+    - 65
+    - 80
+    - 95
+  FurnaceRadius:
+    Values:
+    - 7
+    - 7
+    - 7
+    - 7
+    - 7
+  FurnaceMaxMul:
+    Values:
+    - 3
+  BurnChance:
+    Values:
+    - 0.3
+  BurnPct:
+    Values:
+    - 3
+  BurnTime:
+    Values:
+    - 3
+  FullPowerHp: 0.2
+  FurnaceFx: {fileID: 0}
+  UltDuration:
+    Values:
+    - 20
+  ReflectBurnPct:
+    Values:
+    - 2
+  ReflectBurnTime:
+    Values:
+    - 10
+  ItemBoost:
+    Values:
+    - 1.25
+  StoneCostMul:
+    Values:
+    - 0.5
+  HpStep: 0.15
+  UltAlter: {fileID: 0}
