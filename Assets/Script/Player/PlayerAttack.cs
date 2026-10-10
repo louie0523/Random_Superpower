@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -55,6 +55,11 @@ public class PlayerAttack : NetworkBehaviour
     public float SpreadAdd { get; set; }
     /// <summary>히트스캔이 벽에 튕기는 횟수</summary>
     public int Ricochets { get; set; }
+
+    // ── 근접 판정 보정 — 능력이 설정 (SA) ──
+    /// <summary>근접 판정 사거리 배율 (죽음의 기사 +50% → 1.5). 공격 시작 시점 값으로 고정되고, 이펙트 크기도 따라감</summary>
+    public float HitRangeMul { get; set; } = 1f;
+    private float _atkRangeMul = 1f;    // 이번 공격의 사거리 배율 (시작 시점 고정)
 
     // 다음 한 발 강화 (정밀사격 등)
     private float _armedBonusPct;
@@ -751,8 +756,9 @@ public class PlayerAttack : NetworkBehaviour
         _overrideSource = -1;
         _hitThisAttack.Clear();
 
-        // 공속은 시작 시점 값으로 고정 (휘두르는 도중 버프가 바뀌어도 모션이 안 튐)
+        // 공속·사거리 배율은 시작 시점 값으로 고정 (휘두르는 도중 버프가 바뀌어도 모션·판정이 안 튐)
         _atkSpd = WeaponAtkSpd(weapon);
+        _atkRangeMul = Mathf.Max(0.1f, HitRangeMul);
 
         if (_ability != null && _ability.TryOverrideAttack(out _override, out _overrideSource))
         {
@@ -778,7 +784,15 @@ public class PlayerAttack : NetworkBehaviour
             fpsCamera.FovKick(_current.CameraKickFov);
 
         // 대체 공격이면 콤보 번호 대신 Behaviour 번호로 (대시 여부와 무관)
-        RPC_PlaySwing(_overrideSource >= 0 ? -1 : _comboIndex - 1, _overrideSource, _atkSpd);
+        RPC_PlaySwing(_overrideSource >= 0 ? -1 : _comboIndex - 1, _overrideSource, _atkSpd, _atkRangeMul);
+    }
+
+    /// <summary>이 타의 실제 판정 값 — 무기·타별 설정 + 능력 사거리 배율. 판정·기즈모·이펙트가 모두 이걸 씀</summary>
+    void ResolveHit(ComboStep step, EquipmentData weapon, out WeaponHitMode mode, out float range,
+                    out float angle, out float height, out float minRange)
+    {
+        step.ResolveHitShape(weapon, out mode, out range, out angle, out height, out minRange);
+        range *= _atkRangeMul;
     }
 
     /// <summary>무기 타격 후 공통 처리 — OnHit 트리거, 특수 인챈트, 흡혈</summary>
@@ -817,8 +831,8 @@ public class PlayerAttack : NetworkBehaviour
         var weapon = _equip.GetWeapon();
         if (weapon == null || cameraRoot == null) return;
 
-        step.ResolveHitShape(weapon, out var mode, out float range,
-                             out float angle, out float height, out float minRange);
+        ResolveHit(step, weapon, out var mode, out float range,
+                   out float angle, out float height, out float minRange);
 
         Vector3 origin = transform.position;          // 캐릭터 중심
         Vector3 forward = cameraRoot.forward;         // 조준 방향
@@ -915,7 +929,7 @@ public class PlayerAttack : NetworkBehaviour
     // ══════════════════ 연출 동기화 ══════════════════
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    void RPC_PlaySwing(int comboIndex, int overrideSource, float speed)
+    void RPC_PlaySwing(int comboIndex, int overrideSource, float speed, float rangeMul)
     {
         ComboStep step;
 
@@ -932,7 +946,10 @@ public class PlayerAttack : NetworkBehaviour
         if (step == null) return;
 
         weaponAnim?.Play(step, speed);
-        _events?.Play(step, HasStateAuthority, speed);
+
+        // 판정 범위를 같이 넘김 — Vfx 이벤트가 사거리(버프 포함)·각도에 맞춰 크기를 정함
+        var weapon2 = _equip != null ? _equip.GetWeapon() : null;
+        _events?.Play(step, HasStateAuthority, speed, MotionHitFit.From(step, weapon2, rangeMul));
     }
 
     void SweepDashHit(ComboStep step)
@@ -940,8 +957,8 @@ public class PlayerAttack : NetworkBehaviour
         var weapon = _equip.GetWeapon();
         if (weapon == null) return;
 
-        step.ResolveHitShape(weapon, out var mode, out float range,
-                             out float angle, out float height, out float minRange);
+        ResolveHit(step, weapon, out var mode, out float range,
+                   out float angle, out float height, out float minRange);
 
         Vector3 origin = transform.position;
         Vector3 flatFwd = new Vector3(cameraRoot.forward.x, 0f, cameraRoot.forward.z).normalized;
@@ -987,8 +1004,8 @@ public class PlayerAttack : NetworkBehaviour
         var step = _current ?? weapon.GetStep(0);
         if (step == null) return;
 
-        step.ResolveHitShape(weapon, out var mode, out float range,
-                             out float angle, out float height, out float minRange);
+        ResolveHit(step, weapon, out var mode, out float range,
+                   out float angle, out float height, out float minRange);
 
         Vector3 o = transform.position;
         Vector3 f = new Vector3(cameraRoot.forward.x, 0f, cameraRoot.forward.z).normalized;

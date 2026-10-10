@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>순서가 저장값 — 중간 삽입 금지, 뒤에만 추가</summary>
 public enum MotionEventType
@@ -16,6 +16,7 @@ public enum MotionEventType
     FovKick,        // 시야각 순간 변화 (본인만)
     LightFlash,     // 순간 조명
     GroundEffect,   // 발밑 지면에 프리팹 (충격파·자국)
+    Vfx,            // VFX Studio 이펙트 (풀링, 판정 범위에 맞추기)
 }
 
 /// <summary>순서가 저장값 — 뒤에만 추가</summary>
@@ -61,6 +62,14 @@ public class MotionEvent
     public float Scale = 1f;
     [Tooltip("0이면 프리팹이 스스로 정리")]
     public float Lifetime = 2f;
+
+    [Header("VFX")]
+    [Tooltip("VFX Studio로 만든 이펙트. 붙을 곳·위치·회전·크기는 위 Effect 칸을 같이 씀")]
+    public ToonVfx.VfxEffect Vfx;
+    [Tooltip("켜면 호의 반지름·각도를 이 타격의 실제 판정 범위에 맞춤 (사거리 버프도 반영)")]
+    public bool FitToHit = true;
+    [Tooltip("비우면 이펙트 기본 색")]
+    public ToonVfx.VfxPalette VfxPalette;
 
     [Header("Shake")]
     public float ShakeAmount = 0.3f;

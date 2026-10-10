@@ -447,6 +447,9 @@ MonoBehaviour:
   fpsCamera: {fileID: 7430700015858829311}
   audioSource: {fileID: 433004572054489072}
   weaponAudio: {fileID: 1140823715662527484}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &6143414690035071440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -923,7 +926,7 @@ MonoBehaviour:
   ForceShowLeftHand: 0
   RightHandTarget: {fileID: 0}
   LeftHandTarget: {fileID: 0}
-  Body: {fileID: 0}
+  Body: {fileID: 2650691376182830499}
   Head: {fileID: 0}
 --- !u!114 &6649258101475754144
 MonoBehaviour:

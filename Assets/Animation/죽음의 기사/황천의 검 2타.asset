@@ -17,8 +17,8 @@ MonoBehaviour:
   Step:
     Name: "1\uD0C0"
     Duration: 0.7
-    HitStart: 0.55714285
-    HitEnd: 0.67281103
+    HitStart: 0.50211865
+    HitEnd: 0.58898306
     CancelPoint: 0.9047619
     ComboResetTime: 0.8
     OverrideHitShape: 0
@@ -440,9 +440,35 @@ MonoBehaviour:
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
-    Events: []
+    Events:
+    - Time: 0.3601695
+      Type: 1
+      Clip: {fileID: 0}
+      Volume: 0.8
+      Pitch: 1
+      Clips: []
+      PitchJitter: 0.08
+      Prefab: {fileID: 5929101633155800353, guid: 8712c31d75800c743a05be332fccf37a, type: 3}
+      Space: 5
+      PositionOffset: {x: 0, y: 0.5, z: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      Scale: 1.5
+      Lifetime: 2
+      Vfx: {fileID: 0}
+      FitToHit: 1
+      VfxPalette: {fileID: 0}
+      ShakeAmount: 0.3
+      FlashColor: {r: 1, g: 1, b: 1, a: 0.35}
+      FlashDuration: 0.12
+      LightIntensity: 4
+      LightRange: 6
+      FovAmount: -4
+      Key: 
+      ShowFirstPerson: 1
+      ShowThirdPerson: 1
   CameraRoll: 0
   PreviewWeaponData: {fileID: 0}

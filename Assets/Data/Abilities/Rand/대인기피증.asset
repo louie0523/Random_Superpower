@@ -17,6 +17,7 @@ MonoBehaviour:
   Kind: 2
   Tier: 0
   Tags: 
+  ExclusiveShopItems: []
   Icon: {fileID: 0}
   Flavor: "\uB204\uAD70\uAC00\uC640 3\uCD08 \uC774\uC0C1 5m\uC774\uB0B4\uC5D0 \uC788\uC744\uC2DC
     \uC5C4\uCCAD\uB09C \uC790\uD3ED\uC744 \uD569\uB2C8\uB2E4."
@@ -24,7 +25,7 @@ MonoBehaviour:
   Skills: []
   Behaviour: {fileID: 11400000, guid: fc340aa28267ae54fa55911a3ecffadc, type: 2}
   MaxConcurrent: 0
-  ExcludeFromRoll: 0
+  ExcludeFromRoll: 1
   RollWeight: 1
   EvolveToId: 0
   EvolveKillCount: 0

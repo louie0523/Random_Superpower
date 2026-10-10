@@ -1,0 +1,183 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &49654006626491397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2580514044767631877}
+  - component: {fileID: 266858187201700828}
+  m_Layer: 0
+  m_Name: Status_DeepWound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2580514044767631877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49654006626491397}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4335860638455662365}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &266858187201700828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49654006626491397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5cc959f2ba48934aaffebc76e3ec446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Vfx.Runtime::ToonVfx.VfxEffect
+  PlayMode: 2
+  FrameRate: 24
+  PlayOnEnable: 1
+  AutoStopAfter: 0
+  Palette: {fileID: 11400000, guid: 84b6ffc6be5083b449a5bbdd152450ca, type: 2}
+  Size: 1
+  Speed: 1
+  Intensity: 1
+  Wobble: 1
+  Thickness: 1
+  Linger: 1
+  DesignRange: 0
+  DesignAngle: 0
+  OwnerScale: 1
+  HideForOwner: 1
+  OwnerOffset: {x: 0, y: 0, z: 0}
+  OwnerRotation: {x: 0, y: 0, z: 0}
+  OwnerFacing: 0
+--- !u!1 &2306897117126061923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4335860638455662365}
+  - component: {fileID: 284967439096373130}
+  m_Layer: 0
+  m_Name: Sparkles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4335860638455662365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2306897117126061923}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2580514044767631877}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &284967439096373130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2306897117126061923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650e2626964203b4caa85a817729afd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Vfx.Runtime::ToonVfx.VfxLayer
+  Shape: 3
+  Arc:
+    Radius: 1.3
+    Angle: 150
+    Width: 0.45
+    HeadBias: 0.7
+    Sharpness: 1
+    TipLength: 0.15
+    Reverse: 0
+    FaceCamera: 1
+    Tilt: 0
+    VerticalThickness: 0
+    Lift: 0
+    Segments: 48
+  Card:
+    Size: {x: 1, y: 1}
+    Facing: 1
+  Ring:
+    Radius: 1
+    Width: 0.25
+    Facing: 0
+    Segments: 64
+  Burst:
+    Count: 6
+    Seed: 1
+    Shape: 0
+    ConeAngle: 45
+    StartRadius: 0.28
+    Speed: 0.1
+    SpeedRandom: 0.5
+    Drag: 0
+    Gravity: 4
+    Facing: 0
+    SizeRange: {x: 0.08, y: 0.13}
+    Stretch: 0
+    RandomRotation: 0
+    LifeRandom: 0.4
+    Continuous: 1
+  Pillar:
+    Radius: 0.6
+    TopRadius: 0.4
+    Height: 2
+    Segments: 32
+  Mask: {fileID: 0}
+  AutoMask: 0
+  BuiltinMask: 15
+  Profile: {fileID: 11400000, guid: d859405871440bc4fbc8e256a711c7e7, type: 2}
+  PaletteOverride: {fileID: 0}
+  Style: 0
+  Softness: 0.12
+  CoreGlow: 1.5
+  FlameEdge: 0
+  FlameScale: 6
+  FlameSpeed: 3
+  StartTime: 0
+  Blocks:
+    Appear: 1
+    AppearTime: 0.15
+    AppearStrength: 1
+    Hold: 0
+    HoldTime: 0.35
+    HoldStrength: 0.5
+    Vanish: 3
+    VanishTime: 0.15
+    VanishStrength: 0.8
+  UseFrameStep: 1
+  CoreThreshold: 0.8
+  MidThreshold: 0.35
+  OutlineWidth: 0.1
+  Wobble: 0
+  WobbleScale: 3
+  WobbleSpeed: 1.5
+  Brightness: 1
+  UVScroll: {x: 0, y: 0}
