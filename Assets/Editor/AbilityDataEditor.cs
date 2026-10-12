@@ -33,7 +33,7 @@ public class AbilityDataEditor : Editor
     readonly StringBuilder _sb = new();
     bool _issuesDirty = true;
 
-    static GUIStyle _preview, _hint, _token, _section, _entryTitle, _richFoldout, _lv, _lvUnused, _ok;
+    static GUIStyle _preview, _hint, _token, _section, _entryTitle, _richFoldout, _lv, _lvUnused, _ok, _descArea;
     static readonly Regex VarToken = new(@"\{v(\d+)", RegexOptions.Compiled);
 
     SerializedObject _bSO;
@@ -637,10 +637,28 @@ public class AbilityDataEditor : Editor
         Hint(_sb.ToString());
     }
 
+    /// <summary>설명 입력 칸 — 글 길이만큼 늘어남 (최소 minLines줄, 스크롤 없음)</summary>
+    void DrawDescField(SerializedProperty prop, string label, int minLines = 4)
+    {
+        EditorGUILayout.LabelField(new GUIContent(label, prop.tooltip), EditorStyles.boldLabel);
+
+        string text = prop.stringValue ?? "";
+        // 끝에 빈 줄 하나를 더해서 높이를 잼 → 타이핑 중 칸이 덜컥거리지 않음
+        var measure = new GUIContent(text + "\n ");
+        float minH = _descArea.lineHeight * minLines + _descArea.padding.vertical;
+        Rect r = GUILayoutUtility.GetRect(measure, _descArea, GUILayout.MinHeight(minH), GUILayout.ExpandWidth(true));
+
+        EditorGUI.BeginProperty(r, GUIContent.none, prop);
+        EditorGUI.BeginChangeCheck();
+        string nv = EditorGUI.TextArea(r, text, _descArea);
+        if (EditorGUI.EndChangeCheck()) prop.stringValue = nv;
+        EditorGUI.EndProperty();
+    }
+
     void DrawTextWithPreview(SerializedProperty prop, string label,
                              AbilityData.EffectDef[] fx, AbilityData.RankVar[] vars, int rank, int max)
     {
-        EditorGUILayout.PropertyField(prop, new GUIContent(label));
+        DrawDescField(prop, label);
 
         string raw = prop.stringValue;
         if (string.IsNullOrWhiteSpace(raw) || raw.IndexOf('{') < 0) return;
@@ -787,17 +805,70 @@ public class AbilityDataEditor : Editor
             {
                 Section($"Behaviour 수치 — {b.name}");
                 Hint("레벨별 값 · 이 Behaviour 에셋을 쓰는 모든 능력에 같이 적용됩니다.\n" +
-                     "설명에서 {b:필드이름} (현재 레벨) / {b:필드이름:all} (전 레벨)");
+                     "설명에서 {b:필드} (현재 레벨) · {b:필드:all} (전 레벨) · {b:필드*100} (곱해서 0.9 → 90)");
                 header = true;
             }
 
+            var values = prop.FindPropertyRelative("Values");
+
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            GUILayout.Label("{b:" + f.Name + "}", _token);
-            DrawLevelValues(prop.FindPropertyRelative("Values"), max, LevelBinding.Nice(f, label));
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.Label("{b:" + f.Name + "}", _token);
+                GUILayout.FlexibleSpace();
+
+                // 설명용 토큰 복사
+                if (GUILayout.Button(new GUIContent("복사 ▾", "설명에 붙여넣을 토큰을 클립보드로"), EditorStyles.miniButton, GUILayout.Width(52)))
+                    ShowTokenMenu(f.Name, values);
+
+                // 단일 ↔ 레벨별
+                if (values.arraySize > 1)
+                {
+                    if (GUILayout.Button(new GUIContent("하나로", "Lv1 값 하나만 남김 → 모든 레벨 같은 값"), EditorStyles.miniButton, GUILayout.Width(48)))
+                        values.arraySize = 1;
+                }
+                else if (max > 1)
+                {
+                    if (GUILayout.Button(new GUIContent("레벨별로", "최대 레벨만큼 칸을 늘림 (지금 값 복사)"), EditorStyles.miniButton, GUILayout.Width(58)))
+                        values.arraySize = max;
+                }
+            }
+            DrawLevelValues(values, max, LevelBinding.Nice(f, label));
             EditorGUILayout.EndVertical();
         }
 
         if (_bSO.ApplyModifiedProperties()) Repaint();
+    }
+
+    /// <summary>토큰 복사 메뉴 — 값이 0~1 비율이면 ×100 버전을 위에</summary>
+    void ShowTokenMenu(string field, SerializedProperty values)
+    {
+        bool ratio = true;
+        for (int i = 0; i < values.arraySize; i++)
+        {
+            float v = values.GetArrayElementAtIndex(i).floatValue;
+            if (v < 0f || v > 1f) { ratio = false; break; }
+        }
+
+        var menu = new GenericMenu();
+        void Add(string text, string token) =>
+            menu.AddItem(new GUIContent($"{text}    {token}"), false, () =>
+            {
+                EditorGUIUtility.systemCopyBuffer = token;
+                EditorWindow.focusedWindow?.ShowNotification(new GUIContent($"복사됨: {token}"), 1.2);
+            });
+
+        if (ratio)
+        {
+            Add("×100 (0.9 → 90)", $"{{b:{field}*100}}");
+            Add("×100 전 레벨", $"{{b:{field}*100:all}}");
+            menu.AddSeparator("");
+        }
+        Add("현재 레벨", $"{{b:{field}}}");
+        Add("전 레벨", $"{{b:{field}:all}}");
+        menu.AddSeparator("");
+        Add("피해 계수로 (공격력 × 이 값 %)", $"{{dmg:{field}}}");
+        menu.ShowAsContext();
     }
 
     // ── 효과 ──
@@ -1339,5 +1410,11 @@ public class AbilityDataEditor : Editor
         _lvUnused.normal.textColor = new Color(1f, 0.6f, 0.2f);
         _ok = new GUIStyle(EditorStyles.miniLabel);
         _ok.normal.textColor = new Color(0.4f, 0.8f, 0.4f);
+        _descArea = new GUIStyle(EditorStyles.textArea)
+        {
+            wordWrap = true,
+            fontSize = 12,
+            padding = new RectOffset(6, 6, 5, 5),
+        };
     }
 }

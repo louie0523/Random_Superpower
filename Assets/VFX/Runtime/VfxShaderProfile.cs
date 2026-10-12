@@ -64,6 +64,10 @@ namespace ToonVfx
         public static readonly int FlameEdge = Shader.PropertyToID("_FlameEdge");
         public static readonly int FlameScale = Shader.PropertyToID("_FlameScale");
         public static readonly int FlameSpeed = Shader.PropertyToID("_FlameSpeed");
+        public static readonly int StreakCount = Shader.PropertyToID("_StreakCount");
+        public static readonly int StreakAmount = Shader.PropertyToID("_StreakAmount");
+        public static readonly int StreakSpeed = Shader.PropertyToID("_StreakSpeed");
+        public static readonly int Twist = Shader.PropertyToID("_Twist");
         public static readonly int Wobble = Shader.PropertyToID("_Wobble");
         public static readonly int WobbleScale = Shader.PropertyToID("_WobbleScale");
         public static readonly int WobbleSpeed = Shader.PropertyToID("_WobbleSpeed");

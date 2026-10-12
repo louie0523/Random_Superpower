@@ -11,7 +11,10 @@ namespace ToonVfx
         [InspectorName("링 (충격파)")] Ring,
         [InspectorName("뿌리기 (조각들)")] Burst,
         [InspectorName("기둥 (오라)")] Pillar,
-        // 예정: Streak, Mesh
+        [InspectorName("속도선")] Streak,
+        [InspectorName("잔상 줄 (지나온 경로)")] Trail,
+        [InspectorName("원뿔 (돌진 바람)")] Cone,
+        // 예정: Mesh
     }
 
     public enum VfxPlayMode
@@ -75,6 +78,7 @@ namespace ToonVfx
         ArrowDown,      // 아래 화살표
         Star5,          // 오각별
         Droplet,        // 물방울·핏방울 (뾰족한 쪽이 위)
+        TrailFade,      // 잔상 줄 — 폭 가운데가 밝고, 머리(위) 쪽이 밝고 꼬리(아래)로 흐려짐
     }
 
     public enum VfxBurstShape
@@ -89,6 +93,14 @@ namespace ToonVfx
     {
         [InspectorName("카메라를 봄")] Billboard,
         [InspectorName("날아가는 방향으로 늘어남 (가시)")] Velocity,
+    }
+
+    /// <summary>VFX Studio 미리보기에서 이펙트를 놓는 기준점 (게임 재생 위치와는 무관)</summary>
+    public enum VfxPreviewAnchor
+    {
+        [InspectorName("몸 (가슴 높이)")] Chest,
+        [InspectorName("발밑")] Feet,
+        [InspectorName("앞 (타격 지점)")] Front,
     }
 
     public enum VfxOwnerFacing

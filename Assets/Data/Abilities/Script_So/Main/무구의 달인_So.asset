@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e3af11addae0e94b86d40d7e7800f37, type: 3}
+  m_Name: "\uBB34\uAD6C\uC758 \uB2EC\uC778_So"
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponMasterAbility
+  StoragePassive: 0
+  MasterPassive: 1
+  CollectorPassive: 2
+  CommandSkill: 0
+  HasteSkill: 1
+  DancerSkill: 2
+  SlotCount:
+    Values:
+    - 6
+    - 7
+    - 8
+  StoneGain:
+    Values:
+    - 1.5
+  OrbitInterval:
+    Values:
+    - 2.2
+    - 1.8
+    - 1.4
+  OrbitCoef:
+    Values:
+    - 35
+    - 35
+    - 35
+  WeaponAtkPct:
+    Values:
+    - 20
+    - 28
+    - 36
+  OrbitRange:
+    Values:
+    - 14
+    - 16
+    - 18
+  EnchantChanceMul: 0.5
+  EnchantPowerMul: 0.5
+  FlySpeed: 28
+  ProjectileMask:
+    serializedVersion: 2
+    m_Bits: 136
+  WallMask:
+    serializedVersion: 2
+    m_Bits: 128
+  CommandCoef:
+    Values:
+    - 60
+    - 70
+    - 80
+    - 90
+    - 100
+  CommandRange:
+    Values:
+    - 14
+    - 15
+    - 16
+    - 17
+    - 16
+  CommandWidth:
+    Values:
+    - 1.4
+  CommandSpeed:
+    Values:
+    - 30
+  HasteDuration:
+    Values:
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+  HasteIntervalPct:
+    Values:
+    - 25
+    - 30
+    - 35
+    - 40
+    - 45
+  HasteCommandPct:
+    Values:
+    - 50
+  DancerDuration:
+    Values:
+    - 3
+    - 3
+    - 3
+  DancerInterval:
+    Values:
+    - 0.35
+  DancerCoef:
+    Values:
+    - 30
+  DancerRange:
+    Values:
+    - 30
+  DancerEnchantMul: 0.67
+  CloneSpeed: 35
+  OrbitHitFx: {fileID: 0}

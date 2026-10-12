@@ -28,6 +28,7 @@ public class PlayerAlter : NetworkBehaviour
     // 탈것 높이 — 피격 판정(CharacterController)을 늘려서 올라탄 몸까지 덮음
     private CharacterController _cc;
     private FPSCamera _cam;
+    private ThirdPersonView _tpv;
     private float _ccHeight, _ccCenterY;
     private float _lift;
 
@@ -44,6 +45,9 @@ public class PlayerAlter : NetworkBehaviour
         _cam = GetComponentInChildren<FPSCamera>(true);
         if (armRig == null) armRig = GetComponentInChildren<FPArmRig>(true);
 
+        _tpv = GetComponent<ThirdPersonView>();
+        if (_tpv != null) _tpv.Changed += OnViewChanged;
+
         if (_cc != null)
         {
             _ccHeight = _cc.height;
@@ -56,6 +60,7 @@ public class PlayerAlter : NetworkBehaviour
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
+        if (_tpv != null) _tpv.Changed -= OnViewChanged;
         ClearVisuals();
         ApplyLift(0f);
     }
@@ -193,6 +198,9 @@ public class PlayerAlter : NetworkBehaviour
 
     void OnAltersChanged() => Rebuild();
 
+    /// <summary>3인칭이 되면 본인에게 숨기던 파츠(말 등)도 보이게 다시 만듦</summary>
+    void OnViewChanged(bool thirdPerson) => Rebuild();
+
     public override void Render()
     {
         // 무기를 바꾸면 무기 파츠를 새 무기로 옮김
@@ -288,7 +296,7 @@ public class PlayerAlter : NetworkBehaviour
     /// <summary>본인 화면에서 시야를 가리는 파츠는 숨김 (그림자만 남길 수 있음)</summary>
     void ConfigureSelfView(GameObject go, AlterData a)
     {
-        bool self = HasInputAuthority;
+        bool self = HasInputAuthority && (_tpv == null || !_tpv.IsThirdPerson);   // 3인칭이면 남들처럼 보임
         foreach (var r in go.GetComponentsInChildren<Renderer>(true))
         {
             if (self && !a.ShowForSelf)

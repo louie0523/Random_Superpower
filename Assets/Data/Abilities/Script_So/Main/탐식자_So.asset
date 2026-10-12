@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b0fcf4b0767d849b3e92325b73709d, type: 3}
+  m_Name: "\uD0D0\uC2DD\uC790_So"
+  m_EditorClassIdentifier: Assembly-CSharp::DevourerAbility
+  EatPassive: 0
+  DevourSkill: 0
+  SpitSkill: 1
+  EatSkill: 2
+  UltSkill: 3
+  AbsorbRatio:
+    Values:
+    - 0.1
+    - 0.2
+    - 0.3
+  AbsorbEnchants:
+    Values:
+    - 0.5
+    - 0.7
+    - 0.9
+  GradeAbsorbMul:
+  - 1
+  - 0.9
+  - 0.85
+  - 0.8
+  GradeDigestTime:
+  - 15
+  - 25
+  - 40
+  - 60
+  DigestMul:
+    Values:
+    - 1
+    - 0.8
+    - 0.6
+  DigestChargeSlot: 0
+  Specials: []
+  DevourCoef:
+    Values:
+    - 90
+    - 110
+    - 130
+    - 150
+    - 170
+  DevourFlat:
+    Values:
+    - 20
+    - 30
+    - 40
+    - 50
+    - 60
+  DevourRange:
+    Values:
+    - 3.2
+  DevourAngle:
+    Values:
+    - 120
+  DevourMaxTargets:
+    Values:
+    - 3
+  DevourHealPct:
+    Values:
+    - 25
+    - 35
+    - 45
+    - 55
+    - 65
+  DevourKillSoul:
+    Values:
+    - 10
+  DevourHeight: 1.8
+  KillCreditWindow: 1
+  SpitCoef:
+    Values:
+    - 120
+    - 130
+    - 140
+    - 150
+    - 160
+  SpitFlat:
+    Values:
+    - 30
+    - 40
+    - 50
+    - 60
+    - 70
+  SpitRange:
+    Values:
+    - 7
+  SpitAngle:
+    Values:
+    - 50
+  InheritKillAtkPct:
+    Values:
+    - 30
+    - 35
+    - 40
+    - 45
+    - 50
+  InheritWeaponAtkPct:
+    Values:
+    - 60
+    - 70
+    - 80
+    - 90
+    - 100
+  SpitWindow:
+    Values:
+    - 30
+    - 35
+    - 40
+    - 45
+    - 50
+  SpitHeight: 2
+  AbilityBonuses: []
+  UltDuration:
+    Values:
+    - 10
+    - 10
+    - 10
+  UltKillExtend:
+    Values:
+    - 3
+  MonsterCoef:
+    Values:
+    - 60
+    - 70
+    - 80
+  MonsterFlat:
+    Values:
+    - 10
+    - 40
+    - 70
+  MonsterRadius:
+    Values:
+    - 8
+    - 11
+    - 14
+  MonsterTargetCd:
+    Values:
+    - 3
+  MonsterLowHp:
+    Values:
+    - 0.3
+  MonsterLowHpBonus:
+    Values:
+    - 30
+    - 40
+    - 50
+  MonsterAlter: {fileID: 0}
+  BiteFx: {fileID: 0}
+  SpitFx: {fileID: 0}
+  MonsterBiteFx: {fileID: 0}
+  EatFx: {fileID: 0}
+  BlastFx: {fileID: 0}

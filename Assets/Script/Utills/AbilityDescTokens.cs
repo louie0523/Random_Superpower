@@ -10,6 +10,7 @@ using UnityEngine;
 ///   {b:필드}                  Behaviour 수치 (현재 레벨)
 ///   {b:필드:all}              전 레벨 — 400 / 425 / 450 (현재 굵게)
 ///   {b:필드:pct}              ×100 해서 표시 (0.5 → 50)
+///   {b:필드*100}              곱해서 표시 (0.9 → 90) — {b:필드*100:all} 처럼 뒤에 서식도 됨. 나누기는 /N
 ///   {b:필드:all|pct|0.#}      섞어 쓰기 ( | 로 구분, 숫자 서식도 가능)
 ///
 ///   {dmg:계수}                공격력 × 계수% → 카드 "<b>230</b>" · 상세 창 "<b>230</b> (공격력 150%)"
@@ -34,7 +35,8 @@ public static class AbilityDescTokens
 
     static readonly Regex XToken = new(@"(\r?\n)?\{x:(\w+)\}", RegexOptions.Compiled);
     static readonly Regex DmgToken = new(@"\{dmg:([\w.+\s]+?)(?::(\w+))?\}", RegexOptions.Compiled);
-    static readonly Regex BToken = new(@"\{b:(\w+)(?::([^}]*))?\}", RegexOptions.Compiled);
+    // {b:필드} · {b:필드*100} · {b:필드/10:all} — 이름 뒤 *N /N 으로 곱하기·나누기
+    static readonly Regex BToken = new(@"\{b:(\w+)\s*(?:([*/])\s*([\d.]+))?(?::([^}]*))?\}", RegexOptions.Compiled);
 
     static string AtkLabel => LocUtil.GetOr("ui.ability.atk", "공격력");
 
@@ -49,7 +51,8 @@ public static class AbilityDescTokens
         int levels = Mathf.Max(1, maxLevel);
 
         // 1) {x:} — 먼저 넣어야 그 안의 {b:} {dmg:}도 처리됨
-        if (text.Contains("{x:"))
+        // 넣은 글 안에 또 {x:}가 있을 수 있어서 몇 번 반복 (예: 등급 글 안의 {x:chargedist})
+        for (int pass = 0; pass < 3 && text.Contains("{x:"); pass++)
             text = XToken.Replace(text, m =>
             {
                 string key = m.Groups[2].Value;
@@ -68,7 +71,17 @@ public static class AbilityDescTokens
             {
                 string name = m.Groups[1].Value;
                 if (!TryValues(name, b, vars, out var v)) return Missing("b:" + name);
-                return Levels(v, rank, levels, m.Groups[2].Success ? m.Groups[2].Value : null);
+
+                if (m.Groups[2].Success &&
+                    float.TryParse(m.Groups[3].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float k))
+                {
+                    float mul = m.Groups[2].Value == "*" ? k : (Mathf.Approximately(k, 0f) ? 1f : 1f / k);
+                    var scaled = new float[v.Length];
+                    for (int i = 0; i < v.Length; i++) scaled[i] = v[i] * mul;
+                    v = scaled;
+                }
+
+                return Levels(v, rank, levels, m.Groups[4].Success ? m.Groups[4].Value : null);
             });
 
         return text;
@@ -212,7 +225,7 @@ public static class AbilityDescTokens
 public class DescLine
 {
     public string Key = "slash";
-    [TextArea(1, 4)] public string Text;
+    [TextArea(2, 12)] public string Text;
 
     public DescLine() { }
     public DescLine(string key, string text) { Key = key; Text = text; }

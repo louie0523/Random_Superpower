@@ -62,6 +62,38 @@ namespace ToonVfx
         public int Hash() => HashCode.Combine(Radius, TopRadius, Height, Segments);
     }
 
+    /// <summary>원뿔 — 돌진할 때 몸 앞을 감싸는 바람. 뾰족한 앞(+Z)에서 넓은 뒤로</summary>
+    [Serializable]
+    public class VfxConeSettings
+    {
+        [Tooltip("뾰족한 앞 끝 위치 (m, 이펙트 기준 앞 = +Z)")]
+        public float Front = 1.3f;
+        [Tooltip("넓은 뒤 끝 위치 (m)")]
+        public float Back = -1.3f;
+        [Tooltip("앞 끝 반지름 — 0이면 완전히 뾰족")]
+        [Min(0f)] public float TipRadius = 0.04f;
+        [Tooltip("뒤 끝 반지름")]
+        [Min(0.01f)] public float BaseRadius = 1.1f;
+        [Tooltip("앞머리 둥글기 — 0 = 곧은 원뿔, 1 = 총알처럼 둥근 앞머리")]
+        [Range(0f, 1f)] public float Roundness = 0.6f;
+
+        [Header("빛줄기")]
+        [Tooltip("둘레를 따라 흐르는 빛줄기 개수")]
+        [Range(1, 48)] public int StreakCount = 14;
+        [Tooltip("빛줄기로 갈라지는 정도 — 0 = 매끈한 막, 1 = 가는 줄만 남음")]
+        [Range(0f, 1f)] public float StreakAmount = 0.8f;
+        [Tooltip("빛줄기가 앞에서 뒤로 흐르는 속도")]
+        public float StreakSpeed = 3f;
+        [Tooltip("소용돌이 — 뒤로 갈수록 둘레를 따라 비틀리는 정도 (바퀴 수, −면 반대 방향)")]
+        public float Twist = 0.2f;
+
+        [Range(8, 64)] public int Segments = 32;
+        [Range(2, 16)] public int Rings = 8;
+
+        // 빛줄기 값은 셰이더가 처리 — 메시는 모양만
+        public int Hash() => HashCode.Combine(Front, Back, TipRadius, BaseRadius, Roundness, Segments, Rings);
+    }
+
     [Serializable]
     public class VfxCardSettings
     {
@@ -213,6 +245,39 @@ namespace ToonVfx
                 int b = i * 2;
                 T.Add(b); T.Add(b + 1); T.Add(b + 2);
                 T.Add(b + 1); T.Add(b + 3); T.Add(b + 2);
+            }
+            End(mesh, 0f);
+        }
+
+        /// <summary>
+        /// 앞(+Z)이 뾰족한 원뿔 껍질 (뒤쪽 열림). U = 둘레 (0 → 1), V = 앞 끝(0) → 뒤 끝(1).
+        /// 둥글기만큼 앞머리가 빨리 넓어져 총알 모양
+        /// </summary>
+        public static void Cone(Mesh mesh, VfxConeSettings c, float widthMul)
+        {
+            Begin();
+            int seg = Mathf.Clamp(c.Segments, 6, 128);
+            int rings = Mathf.Clamp(c.Rings, 1, 32);
+            float shape = Mathf.Lerp(1f, 0.35f, Mathf.Clamp01(c.Roundness));
+
+            for (int j = 0; j <= rings; j++)
+            {
+                float v = (float)j / rings;
+                float r = Mathf.Lerp(c.TipRadius, c.BaseRadius, Mathf.Pow(v, shape)) * widthMul;
+                float z = Mathf.Lerp(c.Front, c.Back, v);
+
+                for (int i = 0; i <= seg; i++)
+                {
+                    float u = (float)i / seg;
+                    float th = u * Mathf.PI * 2f;
+                    Add(new Vector3(Mathf.Sin(th) * r, Mathf.Cos(th) * r, z), new Vector2(u, v));
+
+                    if (i == seg || j == rings) continue;
+                    int a = j * (seg + 1) + i;
+                    int b = a + seg + 1;
+                    T.Add(a); T.Add(b); T.Add(a + 1);
+                    T.Add(a + 1); T.Add(b); T.Add(b + 1);
+                }
             }
             End(mesh, 0f);
         }

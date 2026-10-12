@@ -7,7 +7,16 @@ public class PlayerEquipment : NetworkBehaviour
     [SerializeField] private FPArmRig armRig;
     [SerializeField] private NetworkObject pickupPrefab;
 
-    public const int WeaponSlots = 3;
+    /// <summary>무기 칸 최대치 (네트워크 용량). 실제로 쓰는 칸 수는 UsableSlots</summary>
+    public const int WeaponSlots = 8;
+    /// <summary>기본 무기 칸 수 — 무구의 달인 등 능력이 SetSlotCount로 늘림</summary>
+    public const int DefaultSlotCount = 3;
+
+    [Networked, OnChangedRender(nameof(OnEquipChanged))]
+    public int SlotCount { get; set; }
+
+    /// <summary>지금 쓸 수 있는 무기 칸 수</summary>
+    public int UsableSlots => Mathf.Clamp(SlotCount > 0 ? SlotCount : DefaultSlotCount, 1, WeaponSlots);
 
     [Networked, Capacity(WeaponSlots), OnChangedRender(nameof(OnEquipChanged))]
     public NetworkArray<int> WeaponIds { get; }
@@ -91,6 +100,7 @@ public class PlayerEquipment : NetworkBehaviour
 
         if (HasStateAuthority)
         {
+            if (SlotCount <= 0) SlotCount = DefaultSlotCount;
             WeaponIds.Set(0, StartWeaponId);
             ArmorId = 0;
             HelmetId = 0;
@@ -215,7 +225,7 @@ public class PlayerEquipment : NetworkBehaviour
 
     public bool HasEmptyWeaponSlot()
     {
-        for (int i = 0; i < WeaponSlots; i++)
+        for (int i = 0; i < UsableSlots; i++)
             if (WeaponIds[i] == 0) return true;
         return false;
     }
@@ -228,7 +238,7 @@ public class PlayerEquipment : NetworkBehaviour
         var data = database?.Get(id);
         if (data == null || data.Slot != EquipSlot.Weapon) return false;
 
-        for (int i = 0; i < WeaponSlots; i++)
+        for (int i = 0; i < UsableSlots; i++)
         {
             if (WeaponIds[i] != 0) continue;
 
@@ -298,6 +308,46 @@ public class PlayerEquipment : NetworkBehaviour
 
     public void DropActiveWeapon() => DropWeaponAt(ActiveWeaponSlot);
 
+    /// <summary>슬롯의 무기를 꺼내서 없앰 (탐식자). 인챈트 목록을 돌려줌. 다른 무기가 있으면 그쪽으로 바꿔 듦</summary>
+    public bool TakeWeaponAt(int slot, out int id, out int[] enchants)
+    {
+        id = 0;
+        enchants = null;
+        if (!HasStateAuthority || slot < 0 || slot >= WeaponSlots) return false;
+
+        id = WeaponIds[slot];
+        if (id == 0) return false;
+
+        enchants = _enchant != null ? _enchant.ExportSlot(slot) : null;
+
+        WeaponIds.Set(slot, 0);
+        SlotAmmo.Set(slot, 0);
+        _enchant?.ClearSlot(slot);
+
+        if (slot == ActiveWeaponSlot)
+            for (int i = 0; i < UsableSlots; i++)
+                if (WeaponIds[i] != 0) { ActiveWeaponSlot = i; break; }
+
+        ApplyAll();
+        _enchant?.ApplyAll();
+        return true;
+    }
+
+    /// <summary>무기 칸 수 변경 (무구의 달인). 줄어들면 넘치는 칸의 무기는 바닥에</summary>
+    public void SetSlotCount(int n)
+    {
+        if (!HasStateAuthority) return;
+        n = Mathf.Clamp(n, 1, WeaponSlots);
+        if (n == UsableSlots) return;
+
+        for (int i = n; i < WeaponSlots; i++)
+            if (WeaponIds[i] != 0) DropWeaponAt(i);
+
+        SlotCount = n;
+        if (ActiveWeaponSlot >= n) { ActiveWeaponSlot = 0; _enchant?.ApplyAll(); }
+        ApplyAll();
+    }
+
     public void SwapWithPickup(int id)
     {
         if (!HasStateAuthority) return;
@@ -320,7 +370,7 @@ public class PlayerEquipment : NetworkBehaviour
     public void SwitchWeapon(int slot)
     {
         if (!HasStateAuthority) return;
-        if (slot < 0 || slot >= WeaponSlots) return;
+        if (slot < 0 || slot >= UsableSlots) return;
         if (slot == ActiveWeaponSlot) return;
         if (IsSwapping) return;
         if (WeaponIds[slot] == 0) return;      // 빈 슬롯은 무시
@@ -330,10 +380,16 @@ public class PlayerEquipment : NetworkBehaviour
         _enchant?.ApplyAll();
     }
 
+    /// <summary>다음·이전 무기 — 빈 칸은 건너뜀</summary>
     public void CycleWeapon(int dir)
     {
         if (!HasStateAuthority) return;
-        SwitchWeapon((ActiveWeaponSlot + dir + WeaponSlots) % WeaponSlots);
+        int n = UsableSlots;
+        for (int step = 1; step < n; step++)
+        {
+            int s = ((ActiveWeaponSlot + dir * step) % n + n) % n;
+            if (WeaponIds[s] != 0) { SwitchWeapon(s); return; }
+        }
     }
 
     // ══════════════════ 라운드 ══════════════════
@@ -349,6 +405,7 @@ public class PlayerEquipment : NetworkBehaviour
             SlotAmmo.Set(i, 0);
         }
 
+        SlotCount = DefaultSlotCount;
         WeaponIds.Set(0, StartWeaponId);
         ActiveWeaponSlot = 0;
         ArmorId = 0;

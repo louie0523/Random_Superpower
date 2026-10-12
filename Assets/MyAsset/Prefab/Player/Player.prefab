@@ -31,6 +31,7 @@ GameObject:
   - component: {fileID: 2781225716965767357}
   - component: {fileID: 8855885309026736249}
   - component: {fileID: 9194944487309080347}
+  - component: {fileID: -3204457062266687954}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -281,7 +282,7 @@ MonoBehaviour:
     m_Bits: 72
   projectileMask:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 648
   weaponAudio: {fileID: 0}
   drawGizmos: 1
   logHits: 0
@@ -361,6 +362,7 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: fab1b4881b0d24544923c3252d281a4a, type: 2}
   armRig: {fileID: 4156331145891824284}
   pickupPrefab: {fileID: 2764452217985399308, guid: 739c7ce734b87f144ae12706be957dc7, type: 3}
+  _SlotCount: 0
   _WeaponIds: 
   _ActiveWeaponSlot: 0
   _ArmorId: 0
@@ -389,6 +391,7 @@ MonoBehaviour:
   skill3UseRightMouse: 1
   skill3Alt: 306
   randomSkill: 102
+  randomSkill2: 118
 --- !u!114 &-6314287215948934650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,6 +420,9 @@ MonoBehaviour:
   _MainAbilityId: 0
   _SubAbilityId: 0
   _RandomAbilityId: 0
+  _RandomAbilityId2: 0
+  _DualRandom:
+    RawValue: 0
   _SavedKeys: 
   _SavedValues: 
   _CooldownEnd: []
@@ -749,6 +755,33 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: 65fd34e31482c5144a3c4a1363b9c347, type: 2}
   armRig: {fileID: 4156331145891824284}
   _Alters: 
+--- !u!114 &-3204457062266687954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f2b5ecbc82ce494983b3e0578f7dab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThirdPersonView
+  fpCamera: {fileID: 5916109898083830527}
+  pivot: {fileID: 6648097054573201572}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 129
+  probeRadius: 0.25
+  wallPadding: 0.12
+  extendSpeed: 5
+  heightFollow: 10
+  shakeScale: 0.8
+  extraVisibleLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  showInThirdPerson: []
+  hideInThirdPerson: []
 --- !u!1 &4519324451150578074
 GameObject:
   m_ObjectHideFlags: 0

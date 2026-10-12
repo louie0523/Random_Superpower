@@ -48,6 +48,7 @@ MonoBehaviour:
   PlayMode: 0
   FrameRate: 60
   PlayOnEnable: 1
+  AutoStopAfter: 0
   Palette: {fileID: 11400000, guid: 64d1e1b9e5d049a4cad8894dd3594209, type: 2}
   Size: 1
   Speed: 1
@@ -62,6 +63,7 @@ MonoBehaviour:
   OwnerOffset: {x: 0, y: 0, z: 0}
   OwnerRotation: {x: 0, y: 0, z: 0}
   OwnerFacing: 0
+  PreviewAnchor: 0
 --- !u!1 &6421318008696100375
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,8 +125,54 @@ MonoBehaviour:
   Card:
     Size: {x: 1, y: 1}
     Facing: 1
+  Ring:
+    Radius: 1
+    Width: 0.25
+    Facing: 0
+    Segments: 64
+  Burst:
+    Count: 12
+    Seed: 1
+    Shape: 0
+    ConeAngle: 45
+    StartRadius: 0
+    Speed: 4
+    SpeedRandom: 0.5
+    Drag: 4
+    Gravity: 0
+    Facing: 0
+    SizeRange: {x: 0.15, y: 0.35}
+    Stretch: 0
+    RandomRotation: 1
+    LifeRandom: 0.3
+    Continuous: 0
+  Pillar:
+    Radius: 0.6
+    TopRadius: 0.4
+    Height: 2
+    Segments: 32
+  Streak:
+    Count: 14
+    Seed: 1
+    InnerRadius: 0.5
+    OuterRadius: 1.3
+    ArcAngle: 360
+    ArcCenter: 0
+    Front: 2
+    Back: -2.5
+    LengthRange: {x: 0.8, y: 1.6}
+    Width: 0.035
+    Speed: 14
+  Trail:
+    Time: 0.25
+    Width: 0.3
+    MinDistance: 0.05
+    PreviewLength: 2
   Mask: {fileID: 2800000, guid: f30632dceeffccb4b9b77af2514ba88a, type: 3}
+  AutoMask: 1
+  BuiltinMask: 1
   Profile: {fileID: 11400000, guid: d859405871440bc4fbc8e256a711c7e7, type: 2}
+  PaletteOverride: {fileID: 0}
   Style: 0
   Softness: 0.273
   CoreGlow: 1.102

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 화면 번쩍임 (본인 화면 전용). 처음 쓸 때 맨 위 캔버스를 스스로 만듦 — 씬에 따로 둘 것 없음.
 /// ScreenFlash.Play(색, 시간)
+/// 모션 이벤트(ScreenFlash 타입)는 MotionEventPlayer.OnScreenFlash로 들어옴 — 게임 시작 시 자동 연결
 /// </summary>
 public class ScreenFlash : MonoBehaviour
 {
@@ -12,6 +13,14 @@ public class ScreenFlash : MonoBehaviour
     private Image _img;
     private Color _color;
     private float _dur, _t;
+
+    /// <summary>게임 시작 시 MotionEventPlayer의 화면 번쩍임 신호를 여기로 연결 (씬에 둘 것 없음)</summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Hook()
+    {
+        MotionEventPlayer.OnScreenFlash -= Play;
+        MotionEventPlayer.OnScreenFlash += Play;
+    }
 
     public static void Play(Color color, float duration)
     {

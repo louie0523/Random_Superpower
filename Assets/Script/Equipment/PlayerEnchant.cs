@@ -44,6 +44,10 @@ public class PlayerEnchant : NetworkBehaviour
     /// <summary>스톤 소모 배율 (대장장이 궁극기 0.5). 최소 1개</summary>
     public float StoneCostMul { get; set; } = 1f;
 
+    /// <summary>스톤 획득 배율 (무구의 달인 수집가 1.5). 소수점은 모아 뒀다가 1개가 되면 줌</summary>
+    public float StoneGainMul { get; set; } = 1f;
+    private float _stoneFrac;
+
     private PlayerEquipment _equip;
     private PlayerStats _stats;
 
@@ -338,6 +342,12 @@ public class PlayerEnchant : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_AddStones(int amount)
     {
+        if (amount > 0 && !Mathf.Approximately(StoneGainMul, 1f))
+        {
+            float v = amount * StoneGainMul + _stoneFrac;
+            amount = Mathf.FloorToInt(v);
+            _stoneFrac = v - amount;
+        }
         Stones = Mathf.Max(0, Stones + amount);
     }
 
@@ -475,6 +485,94 @@ public class PlayerEnchant : NetworkBehaviour
         }
     }
 
+
+    // ══════════════════ 다른 슬롯 무기의 특수 효과 (무구의 달인) ══════════════════
+
+    static readonly Dictionary<int, int> _slotEffective = new();
+
+    /// <summary>지정 슬롯 무기의 특수 인챈트를 종류별 최고 등급으로 모음</summary>
+    bool CollectSlot(int slot)
+    {
+        _slotEffective.Clear();
+        if (_equip == null || database == null || slot < 0 || slot >= PlayerEquipment.WeaponSlots) return false;
+
+        int wid = _equip.GetWeaponIdAt(slot);
+        if (wid == 0 || EnchantedWeaponIds[slot] != wid) return false;
+
+        for (int i = 0; i < MaxEnchants; i++)
+        {
+            int code = GetEnchantId(slot, i);
+            if (code == 0) break;
+            if (!EnchantCode.IsSpecial(code)) continue;
+
+            int id = EnchantCode.SpecialId(code);
+            int tier = EnchantCode.Tier(code);
+            if (!_slotEffective.TryGetValue(id, out int cur) || tier > cur) _slotEffective[id] = tier;
+        }
+        return _slotEffective.Count > 0;
+    }
+
+    /// <summary>떠다니는 무기의 타격 전 — 관통·처형. 확률 × chanceMul</summary>
+    public void ModifySlotHit(int slot, ref DamageInfo info, float chanceMul)
+    {
+        if (!HasStateAuthority || !CollectSlot(slot)) return;
+
+        foreach (var kv in _slotEffective)
+        {
+            var tier = database.GetSpecial(kv.Key)?.GetTier(kv.Value);
+            if (tier?.Effects == null) continue;
+
+            foreach (var e in tier.Effects)
+            {
+                if (e == null || Random.value > e.GetChance() * chanceMul) continue;
+
+                if (e.Kind == SpecialEffectKind.DefensePen)
+                    info.DefensePen = Mathf.Clamp01(info.DefensePen + e.Value * 0.01f);
+                else if (e.Kind == SpecialEffectKind.Execute)
+                {
+                    info.ExecuteBelow = Mathf.Max(info.ExecuteBelow, e.Value * 0.01f);
+                    info.ExecuteBonus = Mathf.Max(info.ExecuteBonus, e.Value2 * 0.01f);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 떠다니는 무기의 타격 후 — 상태이상·최대 체력 피해만 (흡혈 계열 제외).
+    /// 확률 × chanceMul, 수치·지속 × powerMul (무구의 달인 0.5 / 무희 0.67)
+    /// </summary>
+    public void OnSlotHit(int slot, PlayerHealth target, float chanceMul, float powerMul)
+    {
+        if (!HasStateAuthority || target == null || !CollectSlot(slot)) return;
+
+        var attacker = Object.InputAuthority;
+        foreach (var kv in _slotEffective)
+        {
+            var tier = database.GetSpecial(kv.Key)?.GetTier(kv.Value);
+            if (tier?.Effects == null) continue;
+
+            foreach (var e in tier.Effects)
+            {
+                if (e == null || Random.value > e.GetChance() * chanceMul) continue;
+
+                switch (e.Kind)
+                {
+                    case SpecialEffectKind.ApplyStatus:
+                        if (target.TryGetComponent<PlayerStatus>(out var st))
+                            st.Apply(e.Status, e.Value * powerMul, e.Duration * powerMul, attacker, e.GetMaxStacks());
+                        break;
+
+                    case SpecialEffectKind.MaxHpDamage:
+                        var info = DamageInfo.FromPlayerHit(0, attacker, transform.position);
+                        info.MaxHpPercent = e.Value * powerMul;
+                        info.IgnoreDefense = e.IgnoreDefense;
+                        info.IsDot = true;
+                        target.RPC_TakeDamage(info);
+                        break;
+                }
+            }
+        }
+    }
 
     // ══════════════════ 처치 수 ══════════════════
 
@@ -625,6 +723,8 @@ public class PlayerEnchant : NetworkBehaviour
         LastRollTick = 0;
         IsGunsmith = false;
         UnlimitedStage = false;
+        StoneGainMul = 1f;
+        _stoneFrac = 0f;
     }
 
     /// <summary>대장장이 지정 소울 비용. 지금 단계에 지정할 수 없는 값이면 -1</summary>

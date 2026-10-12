@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056f7cb4fbcc3e746818f2f620f7ba46, type: 3}
+  m_Name: "\uC250\uB3C4\uC6B0 \uC6CC\uCEE4_So"
+  m_EditorClassIdentifier: Assembly-CSharp::ShadowWalkerAbility
+  ShadowPassive: 0
+  WeaponSkill: 0
+  MoveSkill: 1
+  HandSkill: 2
+  UltSkill: 3
+  ShadowCopiesMe: 1
+  ShadowMaterial: {fileID: 2100000, guid: b07b72c248d65ab4d90ba58bf5d4e870, type: 2}
+  ShadowPrefab: {fileID: 0}
+  DarkChargeSlot: 0
+  DarkChargeTime:
+    Values:
+    - 8
+    - 7
+    - 6
+  BlindTime:
+    Values:
+    - 1
+    - 1.25
+    - 1.5
+  WeaponDuration:
+    Values:
+    - 8
+    - 8.5
+    - 9
+    - 9.5
+    - 10
+  EchoPct:
+    Values:
+    - 40
+    - 50
+    - 60
+    - 70
+    - 80
+  EchoDelay:
+    Values:
+    - 0.25
+  EchoSlowPct:
+    Values:
+    - 10
+  EchoSlowTime:
+    Values:
+    - 1
+  WeaponAlter: {fileID: 0}
+  MoveRange:
+    Values:
+    - 12
+    - 12
+    - 14
+    - 14
+    - 17
+  BlinkMask:
+    serializedVersion: 2
+    m_Bits: 640
+  HandPlaceRange:
+    Values:
+    - 15
+  HandRadius:
+    Values:
+    - 5
+  HandCoef:
+    Values:
+    - 70
+    - 80
+    - 90
+    - 100
+    - 110
+  HandFlat:
+    Values:
+    - 50
+    - 60
+    - 70
+    - 80
+    - 90
+  HandRoot:
+    Values:
+    - 1
+    - 1.15
+    - 1.3
+    - 1.45
+    - 1.6
+  HandImmune:
+    Values:
+    - 3
+  HandMax:
+    Values:
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+  HandRearm: 1.5
+  HandLifetime: 45
+  HandPrefab: {fileID: 0}
+  HandGrabFx: {fileID: 0}
+  ZoneRadius:
+    Values:
+    - 12
+    - 14
+    - 16
+  ZoneDuration:
+    Values:
+    - 8
+  ZoneMoveSpeedPct:
+    Values:
+    - 30
+    - 40
+    - 50
+  ZoneMoveCooldown:
+    Values:
+    - 1
+    - 0.5
+    - 0.1
+  ZoneDomePrefab: {fileID: 0}
+  EnemyMarkerPrefab: {fileID: 0}
+  EchoFx: {fileID: 0}
+  BlinkFx: {fileID: 0}
+  BlindHitFx: {fileID: 0}

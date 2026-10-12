@@ -71,6 +71,9 @@ public class PlayerAttack : NetworkBehaviour
     /// <summary>총을 쏠 때마다 (SA). 능력이 반응용으로 구독</summary>
     public event System.Action<EquipmentData> GunFired;
 
+    /// <summary>무기로 맞힐 때마다 (SA) — (대상, 피해, 인챈트 적용 여부). 능력이 반응용으로 구독</summary>
+    public event System.Action<PlayerHealth, float, bool> WeaponHit;
+
     /// <summary>다음 총알 한 발 — 추가 피해 %, 반드시 치명타. timeout 초 안에 안 쏘면 사라짐</summary>
     public void ArmNextShot(float bonusPct, bool forceCrit, float timeout)
     {
@@ -801,6 +804,7 @@ public class PlayerAttack : NetworkBehaviour
         if (target.TryGetComponent<PlayerStatus>(out var ts) && ts.IsEvading) return;
 
         _ability?.FireTrigger(TriggerType.OnHit, targetObj);
+        WeaponHit?.Invoke(target, outgoing, weaponEnchants);
 
         int heal = Mathf.RoundToInt(outgoing * _stats.Get(StatType.LifeSteal));
 

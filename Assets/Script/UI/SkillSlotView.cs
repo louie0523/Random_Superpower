@@ -67,7 +67,8 @@ public class SkillSlotView : MonoBehaviour
         if (skill == null)
         {
             // 랜덤 칸은 스킬이 없어도 능력 자체를 패시브로 표시
-            var rand = slot == SkillSlot.Random ? ar.GetRandomAbility() : null;
+            var rand = slot == SkillSlot.Random ? ar.GetRandomAbility()
+                     : slot == SkillSlot.Random2 ? ar.GetRandomAbility2() : null;
             if (rand != null) { SetShown(true); ShowPassive(rand.Icon); return; }
 
             if (hideWhenEmpty) { SetShown(false); return; }
@@ -111,7 +112,7 @@ public class SkillSlotView : MonoBehaviour
         bool weaponOk = ar.CanUseWeapon(i);
         bool soulOk = skill.SoulCost <= 0 || (hp != null && hp.Soul >= skill.SoulCost);
         bool blocked = ar.IsSealed || ar.IsStunned;
-        bool usable = !cooling && weaponOk && soulOk && !blocked && !ar.IsCasting;
+        bool usable = !cooling && weaponOk && soulOk && !blocked && !ar.IsCasting && ar.SkillAllowed(i);
 
         if (blockedMark != null) blockedMark.SetActive(blocked);
 
@@ -127,7 +128,8 @@ public class SkillSlotView : MonoBehaviour
             }
         }
 
-        if (readyGlow != null) readyGlow.SetActive(usable);
+        bool recast = cooling && ar.CanRecast(i);
+        if (readyGlow != null) readyGlow.SetActive(usable || recast);
         if (group != null) group.alpha = (usable || cooling) ? 1f : unusableAlpha;
 
         // 쿨이 막 끝났을 때만 튐

@@ -66,7 +66,8 @@ public class InventoryPanel : UIPanel
         foreach (var s in _weaponSlots) Destroy(s.gameObject);
         _weaponSlots.Clear();
 
-        for (int i = 0; i < PlayerEquipment.WeaponSlots; i++)
+        int count = _equip != null ? _equip.UsableSlots : PlayerEquipment.DefaultSlotCount;
+        for (int i = 0; i < count; i++)
         {
             var view = Instantiate(weaponSlotPrefab, weaponSlotParent);
             int slot = i;
@@ -83,6 +84,7 @@ public class InventoryPanel : UIPanel
     public void CancelUpgradeChoice() => HideUpgradeChoice();
     protected override void OnOpened()
     {
+        if (_equip != null && _weaponSlots.Count != _equip.UsableSlots) BuildWeaponSlots();
         HideUpgradeChoice();
         _sig = ComputeSig();
         Refresh();
@@ -93,6 +95,15 @@ public class InventoryPanel : UIPanel
     void Update()
     {
         if (!IsOpen || _equip == null) return;
+
+        // 무기 칸 수가 바뀌면 (무구의 달인) 칸을 다시 만듦
+        if (_weaponSlots.Count != _equip.UsableSlots)
+        {
+            BuildWeaponSlots();
+            _sig = ComputeSig();
+            Refresh();
+            return;
+        }
 
         int sig = ComputeSig();
         if (sig == _sig) return;
@@ -107,7 +118,7 @@ public class InventoryPanel : UIPanel
     {
         unchecked
         {
-            int h = _equip.ActiveWeaponSlot;
+            int h = _equip.ActiveWeaponSlot * 17 + _equip.UsableSlots;
             for (int i = 0; i < PlayerEquipment.WeaponSlots; i++)
                 h = h * 31 + _equip.GetWeaponIdAt(i) * 7 + _equip.GetAmmoAt(i);
 

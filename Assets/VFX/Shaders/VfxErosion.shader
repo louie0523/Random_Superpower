@@ -35,12 +35,18 @@ Shader "Toon/VfxErosion"
         _SweepTail ("Sweep Tail", Range(0, 1)) = 0
 
         [Header(Shape)]
-        [Enum(Card, 0, Arc, 1, Pillar, 2)] _ShapeMode ("Shape Mode", Float) = 0
+        [Enum(Card, 0, Arc, 1, Pillar, 2, Cone, 3)] _ShapeMode ("Shape Mode", Float) = 0
         _HeadBias ("Arc Head Bias", Range(0.05, 0.95)) = 0.7
         _Sharpness ("Arc Sharpness", Range(0.2, 3)) = 1
         _TipLength ("Arc Moving Tip Length", Range(0.01, 0.5)) = 0.15
         [Toggle] _FaceCamera ("Arc Face Camera", Float) = 1
         [Toggle] _PerParticle ("Per-Particle Anim (Vertex Color)", Float) = 0
+
+        [Header(Cone Streaks)]
+        _StreakCount ("Streak Count", Float) = 14
+        _StreakAmount ("Streak Amount", Range(0, 1)) = 0
+        _StreakSpeed ("Streak Speed", Float) = 3
+        _Twist ("Twist", Float) = 0
 
         [Header(Flame Edge)]
         _FlameEdge ("Flame Edge", Range(0, 1)) = 0
@@ -115,6 +121,10 @@ Shader "Toon/VfxErosion"
                 float _TipLength;
                 float _FaceCamera;
                 float _PerParticle;
+                float _StreakCount;
+                float _StreakAmount;
+                float _StreakSpeed;
+                float _Twist;
                 float _FlameEdge;
                 float _FlameScale;
                 float _FlameSpeed;
@@ -299,6 +309,18 @@ Shader "Toon/VfxErosion"
 
                 float m = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, muv).r;
                 m = saturate(m - (rag - 0.5) * _Wobble * 0.25);
+
+                // ── 원뿔 빛줄기: 둘레를 가는 줄로 나누고 앞 → 뒤로 흘려보냄 (소용돌이만큼 비틀림) ──
+                if (_ShapeMode > 2.5 && _StreakAmount > 0.001)
+                {
+                    float sn = max(1.0, round(_StreakCount));
+                    float cu = frac(uv.x + uv.y * _Twist);
+                    float2 sp = float2(cu * sn, uv.y * 1.2 - _VfxTime * _StreakSpeed);
+                    float nz = WrapNoise(sp, sn) * 0.65 + WrapNoise(float2(sp.x * 2.0, sp.y * 1.4 + 3.7), sn * 2.0) * 0.35;
+                    float ridge = 1.0 - abs(nz * 2.0 - 1.0);         // 노이즈 등고선 → 가는 줄
+                    float st = smoothstep(0.7, 0.95, ridge);
+                    m *= lerp(1.0, st, _StreakAmount);
+                }
 
                 // ── 불꽃: 꼬리 방향으로 흐르는 노이즈로 찢음 → 혀처럼 날름거림 ──
                 //    양쪽 가장자리는 강하게, 몸통 안쪽은 약하게 (전체가 타오르되 형태는 유지)

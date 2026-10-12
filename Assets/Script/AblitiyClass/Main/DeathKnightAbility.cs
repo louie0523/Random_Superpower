@@ -67,18 +67,23 @@ public class DeathKnightAbility : AbilityBehaviour
         new AlterStat { Stat = StatType.MoveSpeed, Type = ModType.Flat, Value = move },
     };
 
-    [Header("설명 — {x:name} {x:tier} {x:nametag} {x:stats} {x:키}")]
-    public DKTierInfo[] Tiers =
+    [Header("설명 — {x:name} {x:tier} {x:nametag} {x:stats} {x:chargedist} {x:키}")]
+    public DKTierInfo[] Tiers = DefaultTiers();
+
+    const string BaseChargeText =
+        "<b>돌진</b> — 탑승 중 다시 누르면 이동속도에 비례해 약 {x:chargedist}m 돌진, 처음 부딪힌 적에게 {dmg:ChargeCoef} 피해를 주고 멈춤";
+
+    static DKTierInfo[] DefaultTiers() => new DKTierInfo[]
     {
         new() { Tier = DKTier.Peasant, Label = "농민", Color = new Color(0.72f, 0.72f, 0.72f), Texts = new[]
         {
             new DescLine("slash", "<b>농작</b> — 가한 피해의 {b:FarmHealPct}%를 회복"),
-            new DescLine("mount", "<b>미숙한 승마</b> — 이동속도 증가 -{b:UnskilledPenalty}"),
+            new DescLine("mount", "<b>미숙한 승마</b> — 이동속도 증가 -{b:UnskilledPenalty}\n" + BaseChargeText),
         }},
         new() { Tier = DKTier.Mercenary, Label = "용병", Color = new Color(0.5f, 0.7f, 1f), Texts = new[]
         {
             new DescLine("slash", "<b>농작</b> — 가한 피해의 {b:FarmHealPct}%를 회복\n<b>전투감각</b> — 잠시 뒤 {b:SecondMul:pct}% 위력으로 한 번 더 벰"),
-            new DescLine("mount", "<b>미숙한 승마</b> — 이동속도 증가 -{b:UnskilledPenalty}"),
+            new DescLine("mount", "<b>미숙한 승마</b> — 이동속도 증가 -{b:UnskilledPenalty}\n" + BaseChargeText),
         }},
         new() { Tier = DKTier.Named, Label = "네임드", Color = new Color(1f, 0.79f, 0.29f), Texts = new[]
         {
@@ -91,23 +96,38 @@ public class DeathKnightAbility : AbilityBehaviour
         DKNamed.Arthur => new[]
         {
             new DescLine("slash", "<b>성검</b> — 피해의 {b:ArthurTrueRatio:pct}%가 방어력을 무시"),
-            new DescLine("mount", "<b>돌진</b> — 앞으로 {b:ChargeDistance}m 돌진, 지나간 적에게 {dmg:ChargeCoef} 피해 + 밀쳐내고 {b:ArthurStun}초 기절"),
+            new DescLine("mount", "<b>성기사의 돌진</b> — 탑승 중 다시 누르면 속도 +{b:ArthurChargeSpeedPct}%로 약 {x:chargedist}m 돌진, 적을 꿰뚫고 지나가며 {dmg:ChargeCoef} 피해 + 밀쳐내고 {b:ArthurStun}초 기절"),
             new DescLine("ult", "<b>빛의 폭발</b> — 폭발 범위에 {dmg:ArthurBlastCoef} 추가 피해"),
         },
         DKNamed.Roland => new[]
         {
             new DescLine("slash", "<b>뒤랑달</b> — 위력 +{b:RolandBonusPct}%, 대상이 잃은 체력의 {b:RolandMissingPct}% 추가 피해"),
-            new DescLine("mount", "<b>도약</b> — 뛰어올라 주위 {b:RolandPushRadius}m의 적을 밀쳐내고 잃은 체력의 {b:RolandHealMissingPct}% 회복"),
+            new DescLine("mount", "<b>도약</b> — 탑승 중 다시 누르면 뛰어올라 주위 {b:RolandPushRadius}m의 적을 밀쳐내고 잃은 체력의 {b:RolandHealMissingPct}% 회복"),
             new DescLine("ult", "<b>일격 강화</b> — 전방 피해가 공격력의 {b:RolandFinisherCoef}%로 증가, {b:RolandStun}초 기절"),
         },
         DKNamed.Bernhard => new[]
         {
             new DescLine("slash", "<b>학살자</b> — 위력 +{b:BernhardBonusPct}%, {b:BernhardWoundTime}초간 깊은 상처 {b:BernhardWoundPct}%"),
-            new DescLine("mount", "<b>망령 돌진</b> — 고스트 상태로 {b:ChargeDistance}m 돌진, 지나간 적에게 {dmg:ChargeCoef} 피해"),
+            new DescLine("mount", "<b>망령 돌진</b> — 탑승 중 다시 누르면 고스트 상태로 약 {x:chargedist}m 돌진, 적을 통과하며 {dmg:ChargeCoef} 피해 (위력 +{b:BernhardChargePct}%)"),
             new DescLine("ult", "<b>죽음의 불길</b> — 폭발에 맞은 적이 {b:DeathFlameTime}초간 매초 최대 체력의 {b:DeathFlamePct}% 화상"),
         },
         _ => null,
     };
+
+    [ContextMenu("설명 기본값으로 덮어쓰기 (등급·네임드 전부)")]
+    void ResetAllTexts()
+    {
+#if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(this, "설명 기본값");
+#endif
+        Tiers = DefaultTiers();
+        if (Names != null)
+            foreach (var n in Names)
+                if (n != null) n.Texts = NamedTexts(n.Named);
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+#endif
+    }
 
     [ContextMenu("네임드 설명 기본값 채우기 (빈 것만)")]
     void FillNamedTexts()
@@ -161,13 +181,23 @@ public class DeathKnightAbility : AbilityBehaviour
 
     [Header("승마")]
     public AlterData MountAlter;
+    [Tooltip("탑승 중 3인칭 카메라 (본인 화면)")]
+    public bool MountThirdPerson = true;
+    public ThirdPersonSettings MountCamera = new()
+    {
+        Offset = new Vector3(0.3f, 0.6f, -4.2f),
+        PivotHeight = 0.2f,
+        PitchOffset = 6f,
+        Fov = 6f,
+    };
     [ForSkill(nameof(MountSkill), "지속 (초)")] public LevelValue MountDuration = 15f;
     [ForSkill(nameof(MountSkill), "이속 증가 (실수치)")] public LevelValue MountSpeed = 5f;
     [ForSkill(nameof(MountSkill), "미숙한 승마 — 이속 감소")] public LevelValue UnskilledPenalty = 1f;
     [ForSkill(nameof(MountSkill), "받는 피해 감소 (%)")] public LevelValue MountDamageReduce = 30f;
     [ForSkill(nameof(MountSkill), "황천의 검 사거리 배율")] public LevelValue MountRangeMul = 1.5f;
 
-    [Header("승마 — 네임드 고유 (탈 때 한 번)")]
+    [Header("승마 — 돌진 (탑승 중 스킬 키를 다시 누르면)")]
+    [Tooltip("방향·중력 등 기본값. 거리·시간·통과 여부는 아래 수치와 이름에 따라 덮어씀")]
     public DashParams ChargeDash = new()
     {
         Distance = 8f,
@@ -176,9 +206,22 @@ public class DeathKnightAbility : AbilityBehaviour
         PassThroughPlayers = true,
         StopOnContact = false,
     };
-    [ForSkill(nameof(MountSkill), "돌진 거리 (m)")] public LevelValue ChargeDistance = 8f;
+    [Tooltip("돌진·도약 모션 (탑승 모션과 별개). 판정 프레임에 돌진 시작. 비우면 누르는 즉시")]
+    public AbilityMotionData ChargeMotion;
+    [Tooltip("롤란드 도약 모션. 판정 프레임에 뛰어오름. 비우면 ChargeMotion 사용")]
+    public AbilityMotionData LeapMotion;
+    [ForSkill(nameof(MountSkill), "돌진 횟수 (탑승당)")] public LevelValue ChargeUses = 1f;
+    [ForSkill(nameof(MountSkill), "돌진 속도 (이동속도 ×)")] public LevelValue ChargeSpeedMul = 1.5f;
+    [ForSkill(nameof(MountSkill), "돌진 시간 (초)")] public LevelValue ChargeDuration = 0.35f;
+    [ForSkill(nameof(MountSkill), "최대 돌진 거리 (m, 0 = 제한 없음)")] public LevelValue ChargeDistance = 0f;
+    [Tooltip("돌진 시작 시 시야 확 넓히기 (속도감). 본인 화면만")]
+    public float ChargeFovKick = 14f;
+    [Tooltip("돌진 수치를 콘솔에 출력 (속도 확인용)")]
+    public bool LogCharge;
     [ForSkill(nameof(MountSkill), "돌진 피해 계수 (공격력 %)")] public LevelValue ChargeCoef = 150f;
     [ForSkill(nameof(MountSkill), "돌진 폭 (m)")] public LevelValue ChargeWidth = 1.3f;
+    [ForSkill(nameof(MountSkill), "아서 — 돌진 속도 증가 (%)")] public LevelValue ArthurChargeSpeedPct = 30f;
+    [ForSkill(nameof(MountSkill), "베른하르트 — 돌진 위력 증가 (%)")] public LevelValue BernhardChargePct = 50f;
     [ForSkill(nameof(MountSkill), "아서 — 밀치기 세기")] public LevelValue ArthurPush = 10f;
     [ForSkill(nameof(MountSkill), "아서 — 기절 (초)")] public LevelValue ArthurStun = 1f;
     [ForSkill(nameof(MountSkill), "롤란드 — 도약 세기")] public LevelValue RolandLeap = 9f;
@@ -218,15 +261,23 @@ public class DeathKnightAbility : AbilityBehaviour
     private PlayerStatus _status;
     private PlayerAlter _alter;
     private PlayerMovement _move;
+    private ThirdPersonView _tpv;
 
     private DKName _name;
     private float _ghostCd;
     private float _mountTimer;
+    private int _chargeLeft;
     private AlterData _mountedAlter;
     private float _secondTimer = -1f;
     private float _secondCoef, _secondFlat;
     private float _flat;
     private Vector3 _secondDir;
+
+    private float _chargeTimer;
+    private Vector3 _chargePrev, _chargeStart, _chargeFwd;
+    private bool _chargePush, _chargeStopOnHit;
+    private float _chargeDmgMul = 1f;
+    [System.NonSerialized] private readonly HashSet<PlayerHealth> _chargeHit = new();
 
     [System.NonSerialized] private readonly Collider[] _hits = new Collider[32];
     [System.NonSerialized] private readonly HashSet<PlayerHealth> _seen = new();
@@ -237,7 +288,8 @@ public class DeathKnightAbility : AbilityBehaviour
     bool Skilled => _name != null && _name.Tier == DKTier.Named;
     bool HasFarm => _name != null;                                             // 모든 등급
     bool HasSecond => _name != null && _name.Tier != DKTier.Peasant;          // 용병 이상
-    DKNamed Named => _name != null ? _name.Named : DKNamed.None;
+    // 원격에선 OnEquip 때 저장값이 아직 안 왔을 수 있어서 늦게라도 이름을 찾음
+    DKNamed Named => (_name ??= ResolveName()) != null ? _name.Named : DKNamed.None;
 
     // ══════════════════ 생명주기 ══════════════════
 
@@ -247,6 +299,7 @@ public class DeathKnightAbility : AbilityBehaviour
         _status = Ctx.GetComponent<PlayerStatus>();
         _alter = Ctx.GetComponent<PlayerAlter>();
         _move = Ctx.GetComponent<PlayerMovement>();
+        _tpv = Ctx.GetComponent<ThirdPersonView>();
 
         _name = ResolveName();
         ApplyNameStats();
@@ -326,6 +379,9 @@ public class DeathKnightAbility : AbilityBehaviour
             _secondTimer -= dt;
             if (_secondTimer < 0f && !dead) SecondSlash();
         }
+
+        if (dead) _chargeTimer = 0f;
+        else TickCharge(dt);
     }
 
     // ══════════════════ 설명 ({x:키}) ══════════════════
@@ -358,6 +414,9 @@ public class DeathKnightAbility : AbilityBehaviour
             case "tier": return Colored(tierLabel, tier);
             case "nametag": return $"{Colored(name, tier)} <color=#8A8A8A>({tierLabel})</color>";
             case "stats": return StatLine(_name.Stats);
+            case "chargedist":
+                float sm = Named == DKNamed.Arthur ? 1f + ArthurChargeSpeedPct.At(rank) * 0.01f : 1f;
+                return ChargeDistanceNow(sm).ToString("0.#");
         }
 
         string a = DescLine.Find(tier?.Texts, key);
@@ -398,6 +457,8 @@ public class DeathKnightAbility : AbilityBehaviour
             if (Named == DKNamed.Roland) return 1f + RolandBonusPct.At(rank) * 0.01f;
             if (Named == DKNamed.Bernhard) return 1f + BernhardBonusPct.At(rank) * 0.01f;
         }
+        if (coefField == nameof(ChargeCoef) && Named == DKNamed.Bernhard)
+            return 1f + BernhardChargePct.At(rank) * 0.01f;
         if (coefField == nameof(FinisherCoef) && Named == DKNamed.Roland)
         {
             float b = FinisherCoef.At(rank);
@@ -434,11 +495,18 @@ public class DeathKnightAbility : AbilityBehaviour
 
     const int ChainSecond = 1;
 
-    public override AbilityMotionData GetChainMotion(int tag) => tag == ChainSecond ? SecondMotion : null;
+    public override AbilityMotionData GetChainMotion(int tag) => tag switch
+    {
+        ChainSecond => SecondMotion,
+        ChainCharge => Named == DKNamed.Roland && LeapMotion != null ? LeapMotion : ChargeMotion,
+        _ => null,
+    };
 
     public override void OnChainHit(int tag)
     {
-        if (tag == ChainSecond && _health != null && !_health.IsDead) SecondSlash();
+        if (_health != null && _health.IsDead) return;
+        if (tag == ChainSecond) SecondSlash();
+        else if (tag == ChainCharge) DoCharge();
     }
 
     // ── 황천의 검 ──
@@ -531,60 +599,163 @@ public class DeathKnightAbility : AbilityBehaviour
         _mountedAlter = _name?.MountOverride != null ? _name.MountOverride : MountAlter;
         _alter?.Add(_mountedAlter);
 
+        if (MountThirdPerson && Ctx.HasInputAuthority && _tpv != null) _tpv.Enter(this, MountCamera);
+
         float speed = Lv(MountSpeed) - (Skilled ? 0f : Lv(UnskilledPenalty));
         var stats = Ctx.Stats;
         stats?.AddModifier(new StatModifier(StatType.MoveSpeed, ModType.Flat, speed, Src(SrcMount)));
         stats?.AddModifier(new StatModifier(StatType.DamageTaken, ModType.Percent, -Lv(MountDamageReduce), Src(SrcMount)));
 
+        // 돌진(롤란드는 도약)은 탑승 중 스킬 키를 다시 눌러야 발동 (OnSkillRecast)
+        _chargeLeft = Mathf.Max(0, Mathf.RoundToInt(Lv(ChargeUses)));
+    }
+
+    // ── 탑승 중 다시 누르기 → 돌진 ──
+
+    const int ChainCharge = 2;
+
+    public override bool CanRecast(AbilityData.SkillDef skill) =>
+        System.Array.IndexOf(Data.Skills, skill) == MountSkill && Mounted && _chargeLeft > 0;
+
+    public override bool OnSkillRecast(int slot, AbilityData.SkillDef skill)
+    {
+        if (!CanRecast(skill)) return false;
+        _chargeLeft--;
+        ChainMotion(ChainCharge);      // 돌진 모션 → 판정 프레임에 OnChainHit(ChainCharge). 모션 없으면 바로
+        return true;
+    }
+
+    /// <summary>
+    /// 농민·용병 — 기본 돌진: 처음 부딪힌 적에게 피해 주고 멈춤
+    /// 아서 — 꿰뚫는 돌진 (밀쳐내기·기절) + 속도 증가 · 베른하르트 — 고스트로 통과 + 위력 증가 · 롤란드 — 도약
+    /// </summary>
+    void DoCharge()
+    {
+        if (!Mounted) return;
         switch (Named)
         {
-            case DKNamed.Arthur: Charge(push: true, ghost: false); break;
-            case DKNamed.Bernhard: Charge(push: false, ghost: true); break;
-            case DKNamed.Roland: Leap(); break;
+            case DKNamed.Arthur:
+                Charge(pass: true, push: true, ghost: false, speedMul: 1f + Lv(ArthurChargeSpeedPct) * 0.01f, dmgMul: 1f);
+                break;
+            case DKNamed.Bernhard:
+                Charge(pass: true, push: false, ghost: true, speedMul: 1f, dmgMul: 1f + Lv(BernhardChargePct) * 0.01f);
+                break;
+            case DKNamed.Roland:
+                Leap();
+                break;
+            default:
+                Charge(pass: false, push: false, ghost: false, speedMul: 1f, dmgMul: 1f);
+                break;
         }
+    }
+
+    /// <summary>지금 이동속도 기준 돌진 거리 (설명 {x:chargedist}에도 씀)</summary>
+    float ChargeDistanceNow(float speedMul)
+    {
+        float move = Ctx != null && Ctx.Stats != null ? Ctx.Stats.Get(StatType.MoveSpeed) : 12f;
+        float dist = move * Lv(ChargeSpeedMul) * speedMul * Mathf.Max(0.05f, Lv(ChargeDuration));
+        float max = Lv(ChargeDistance);
+        return max > 0f ? Mathf.Min(dist, max) : dist;
     }
 
     void Dismount()
     {
         bool was = _mountTimer > 0f || _mountedAlter != null;
         _mountTimer = 0f;
+        _chargeLeft = 0;
         Ctx.Stats?.RemoveBySource(Src(SrcMount));
         if (was && _mountedAlter != null) _alter?.Remove(_mountedAlter);
         _mountedAlter = null;
+        if (_tpv != null) _tpv.Exit(this);
         if (was) ReleaseCooldown(MountSkill);     // '효과 끝나고 쿨타임'이면 지금부터 쿨
     }
 
-    /// <summary>아서·베른하르트 — 전방 돌진, 지나가는 길의 적에게 피해</summary>
-    void Charge(bool push, bool ghost)
+    /// <summary>전방 돌진 — 속도는 이동속도 비례 (시간 고정, 빠를수록 멀리)</summary>
+    void Charge(bool pass, bool push, bool ghost, float speedMul, float dmgMul)
     {
         Vector3 start = Ctx.transform.position;
         Vector3 fwd = Forward();
         var self = Ctx.Object.InputAuthority;
 
         var dash = ChargeDash;
-        dash.Distance = Lv(ChargeDistance);
+        dash.Duration = Mathf.Max(0.05f, Lv(ChargeDuration));
+        dash.Distance = ChargeDistanceNow(speedMul);
+        dash.PassThroughPlayers = pass;
+        dash.StopOnContact = !pass;            // 기본 돌진은 부딪히면 멈춤
         if (ghost) _status?.Apply(StatusType.Ghost, 1f, dash.Duration + 0.15f, self);
         Ctx.DoDash(dash);
 
-        foreach (var h in Path(start, fwd, dash.Distance, Lv(ChargeWidth)))
+        if (Ctx.HasInputAuthority)
         {
-            var info = MakeHit(Lv(ChargeCoef) * 0.01f, DamageSource.Skill, out _);
-            info.CanCauseFall = push;
-            h.RPC_TakeDamage(info);
-
-            if (!push) continue;
-
-            if (h.TryGetComponent<PlayerMovement>(out var mv))
-            {
-                Vector3 side = Vector3.Cross(Vector3.up, fwd);
-                float s = Vector3.Dot(h.transform.position - start, side) >= 0f ? 1f : -1f;
-                mv.AddKnockback((fwd + side * s * 0.6f).normalized * Lv(ArthurPush) + Vector3.up * 3f);
-            }
-            if (h.TryGetComponent<PlayerStatus>(out var st))
-                st.Apply(StatusType.Stun, 1f, Lv(ArthurStun), self);
+            var cam = Ctx.GetComponentInChildren<FPSCamera>(true);
+            if (cam != null) cam.FovKick(ChargeFovKick);
         }
 
+        if (LogCharge)
+        {
+            float move = Ctx.Stats != null ? Ctx.Stats.Get(StatType.MoveSpeed) : 0f;
+            Debug.Log($"[DK 돌진] 이동속도 {move:0.#} → 돌진 {dash.Distance / dash.Duration:0.#} m/s " +
+                      $"(×{Lv(ChargeSpeedMul) * speedMul:0.##}), 거리 {dash.Distance:0.#}m / {dash.Duration:0.##}초, " +
+                      $"최대거리 {Lv(ChargeDistance):0.#}, 부딪히면 멈춤 {dash.StopOnContact}");
+        }
+
+        // 실제로 지나가는 동안 판정 — 매 틱 지난 구간만 검사, 한 대상은 한 번
+        _chargeTimer = dash.Duration + 0.05f;
+        _chargePrev = start;
+        _chargeStart = start;
+        _chargeFwd = fwd;
+        _chargePush = push;
+        _chargeStopOnHit = !pass;
+        _chargeDmgMul = dmgMul;
+        _chargeHit.Clear();
+        TickCharge(0f);
+
         Broadcast(EvCharge, start);
+    }
+
+    void TickCharge(float dt)
+    {
+        if (_chargeTimer <= 0f) return;
+        _chargeTimer -= dt;
+
+        Vector3 cur = Ctx.transform.position;
+        Vector3 seg = cur - _chargePrev;
+        float len = seg.magnitude;
+        Vector3 dir = len > 0.001f ? seg / len : _chargeFwd;
+
+        // 몸 앞쪽까지 조금 더 봐서 정면으로 부딪힌 적도 맞게
+        foreach (var h in Path(_chargePrev, dir, len + Lv(ChargeWidth) * 0.5f, Lv(ChargeWidth)))
+            if (_chargeHit.Add(h))
+            {
+                ChargeHit(h);
+                if (_chargeStopOnHit)                                   // 처음 부딪힌 한 명만 — 그 자리에서 멈춤
+                {
+                    _chargeTimer = 0f;
+                    Ctx.StopDash();
+                    break;
+                }
+            }
+
+        _chargePrev = cur;
+    }
+
+    void ChargeHit(PlayerHealth h)
+    {
+        var self = Ctx.Object.InputAuthority;
+        var info = MakeHit(Lv(ChargeCoef) * 0.01f * _chargeDmgMul, DamageSource.Skill, out _);
+        info.CanCauseFall = _chargePush;
+        h.RPC_TakeDamage(info);
+
+        if (!_chargePush) return;
+
+        if (h.TryGetComponent<PlayerMovement>(out var mv))
+        {
+            Vector3 side = Vector3.Cross(Vector3.up, _chargeFwd);
+            float sgn = Vector3.Dot(h.transform.position - _chargeStart, side) >= 0f ? 1f : -1f;
+            mv.AddKnockback((_chargeFwd + side * sgn * 0.6f).normalized * Lv(ArthurPush) + Vector3.up * 3f);
+        }
+        if (h.TryGetComponent<PlayerStatus>(out var st))
+            st.Apply(StatusType.Stun, 1f, Lv(ArthurStun), self);
     }
 
     /// <summary>롤란드 — 위로 도약, 주위 밀쳐내기, 잃은 체력 회복</summary>

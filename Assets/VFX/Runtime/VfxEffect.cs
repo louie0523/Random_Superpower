@@ -51,6 +51,16 @@ namespace ToonVfx
         [Tooltip("본인 화면에서만 호의 '카메라 향함'을 바꿈")]
         public VfxOwnerFacing OwnerFacing = VfxOwnerFacing.Keep;
 
+        [Header("미리보기 (에디터)")]
+        [Tooltip("VFX Studio에서 열 때 더미 캐릭터의 어디에 놓을지. 게임 재생 위치와는 무관")]
+        public VfxPreviewAnchor PreviewAnchor = VfxPreviewAnchor.Chest;
+
+        /// <summary>
+        /// 에디터 스크럽용 — 켜면 '시작 → 반복 → 끝'도 등장 → 유지 → 사라짐을 한 번 순서대로 보여줌 (반복 안 함).
+        /// 타임라인의 블록 배치와 화면이 일치하게
+        /// </summary>
+        [NonSerialized] public bool LinearPreview;
+
         /// <summary>재생이 끝났거나 Stop 됐을 때 (반복 모드는 끝나지 않으므로 Stop에서만)</summary>
         public event Action<VfxEffect> Finished;
 
@@ -193,6 +203,9 @@ namespace ToonVfx
                 if (design > 0.01f) _angleMul = o.FitAngle / design;
             }
 
+            foreach (var l in _layers)
+                if (l != null) l.ResetRuntime();
+
             _time = 0f;
             _stopTime = -1f;
             _playing = true;
@@ -312,7 +325,7 @@ namespace ToonVfx
                 AngleMul = _angleMul,
                 FaceCameraOverride = _faceOverride,
                 StopTime = _stopTime,
-                Endless = PlayMode != VfxPlayMode.Once,
+                Endless = PlayMode != VfxPlayMode.Once && !LinearPreview,
                 Palette = pal,
                 Camera = cam,
             };
@@ -325,7 +338,7 @@ namespace ToonVfx
                 float raw = l.UseFrameStep ? stepped : t;
                 ctx.Time = raw;         // 셰이더 노이즈 — 반복 구간이 돌아도 끊기지 않게 실제 시간
                 ctx.RawTime = raw;      // 회전·맥동 등 유지 효과 시계
-                l.Evaluate(PlayMode == VfxPlayMode.StartLoopEnd ? MapLoop(l, raw) : raw, ctx);
+                l.Evaluate(PlayMode == VfxPlayMode.StartLoopEnd && !LinearPreview ? MapLoop(l, raw) : raw, ctx);
             }
 
             ctx.Time = stepped;

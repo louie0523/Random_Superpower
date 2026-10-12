@@ -1,0 +1,188 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
+  m_Name: "\uC870\uCEE4"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  Id: 6008
+  DisplayName: "\uC870\uCEE4"
+  Kind: 0
+  Tier: 0
+  Tags: 
+  ExclusiveShopItems: []
+  Icon: {fileID: 0}
+  Flavor: "\uB2F9\uC2E0\uC740 \uAC8C\uC784\uC758 \uC870\uCEE4\uC785\uB2C8\uB2E4.\n\uC5B8\uC81C\uB098
+    \uD070 \uBCC0\uC218\uB97C \uCC3D\uCD9C\uD558\uBA70, \uC608\uCE21\uD560 \uC218
+    \uC5C6\uB294 \uB2A5\uB825\uC744 \uAC00\uC9C0\uACE0 \uC788\uC2B5\uB2C8\uB2E4.\n"
+  Passives:
+  - Name: "\uC870\uCEE4"
+    Icon: {fileID: 0}
+    Description: "\uB79C\uB364 \uB2A5\uB825\uC744 \uD56D\uC0C1 2\uAC1C \uC18C\uC9C0\uD569\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    MaxLevel: 1
+    Vars: []
+    Effects: []
+  - Name: "\uD658\uB77D"
+    Icon: {fileID: 0}
+    Description: "\uC18C\uC6B8 \uD68D\uB4DD\uB7C9\uC774 {b:SoulGain:all}\uBC30\uAC00
+      \uB429\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    MaxLevel: 1
+    Vars: []
+    Effects: []
+  Skills:
+  - Name: "\uC870\uCEE4 \uBF51\uAE30"
+    Icon: {fileID: 0}
+    Description: "\uB4A4\uB85C \uC21C\uAC04\uC774\uB3D9\uD558\uBA70, \uC790\uC2E0\uC774
+      \uC6D0\uB798 \uC788\uB358 \uC704\uCE58\uC5D0 \uC870\uCEE4 \uCE74\uB4DC\uB97C
+      \uB0A8\uAE41\uB2C8\uB2E4. \uCE74\uB4DC\uB294 \uB204\uAD70\uAC00 \uBC1F\uC744\uC2DC
+      \uC7A0\uC2DC\uB4A4 \uD3ED\uBC1C\uD558\uC5EC {dmg:BlastCoef+BlastFlat}\uD53C\uD574\uB97C
+      \uC785\uD788\uACE0, 2\uCD08\uAC04 \uB454\uD654 {b:BlastSlowPct:all}%\uB97C
+      \uB0A8\uAE41\uB2C8\uB2E4."
+    DetailedInfo: "\uCE74\uB4DC\uB294 \uD55C\uBC88\uC5D0 \uCD5C\uB300 {b:CardMax:all}\uC7A5
+      \uAE4C\uC9C0 \uC874\uC7AC\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    Tip: 
+    DevNote: 
+    Slot: 0
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel:
+    - 17
+    - 15
+    - 13
+    - 11
+    - 9
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  - Name: "\uC6D0\uCE74\uB4DC!"
+    Icon: {fileID: 0}
+    Description: "\uC8FC\uC704 {b:OneCardRadius:all}m \uB0B4 \uC801\uC5D0\uAC8C\uBAA8\uB4E0
+      \uC801\uB4E4\uC5D0\uAC8C \uAD81\uADF9\uAE30 \uBC0F \uB79C\uB364 \uB2A5\uB825\uC744
+      \uC81C\uC678\uD55C \uC77C\uBC18 \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC744
+      {b:OneCardSeconds:all}\uCD08 \uCD94\uAC00\uC2DC\uD0B5\uB2C8\uB2E4."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 1
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel:
+    - 15
+    - 13
+    - 11
+    - 9
+    - 7
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  - Name: "\uB300\uD0C0\uCE74\uB4DC"
+    Icon: {fileID: 0}
+    Description: "\uD604\uC7AC \uCFE8\uD0C0\uC784\uC774 \uC788\uB294 \uB79C\uB364\uB2A5\uB825\uC911
+      \uD558\uB098\uB97C \uB300\uD0C0 \uCE74\uB4DC \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC73C\uB85C
+      \uBC14\uAFB8\uACE0, \uB300\uC2E0 \uD574\uB2F9 \uB79C\uB364 \uB2A5\uB825\uC758
+      \uCFE8\uD0C0\uC784\uC744 \uCD08\uAE30\uD654 \uC2DC\uD0B5\uB2C8\uB2E4.\r\n"
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 2
+    MaxLevel: 1
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  - Name: "\uAE5C\uC9DD\uC120\uBB3C"
+    Icon: {fileID: 0}
+    Description: "\uC790\uC2E0\uC758 \uB79C\uB364 \uB2A5\uB825\uACFC \uC544\uC774\uD15C\uC744
+      \uC18C\uC9C0\uD55C \uB611\uAC19\uC740 \uBD84\uC2E0\uC744 {b:CloneDuration:all}\uCD08\uAC04
+      \uC804\uBC29\uC73C\uB85C \uC18C\uD658\uD569\uB2C8\uB2E4. \n\uBD84\uC2E0\uC740
+      \uAE30\uBCF8\uC801\uC73C\uB85C \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801\uC744
+      \uB530\uB77C\uAC11\uB2C8\uB2E4. \n\uBD84\uC2E0\uC774 \uC0AC\uB9DD\uD558\uAC70\uB098
+      \uAD81\uADF9\uAE30\uD0A4\uB97C \uB2E4\uC2DC \uB204\uB974\uBA74 \uD3ED\uBC1C\uD558\uC5EC
+      \uC8FC\uC704 \uC801\uB4E4\uC5D0\uAC8C  {b:CloneBlastMul*100:all}%\uC758 \uC870\uCEE4
+      \uBF51\uAE30 \uD3ED\uBC1C\uC744 \uAC00\uD569\uB2C8\uB2E4.\n\uBD84\uC2E0\uC740
+      10m\uB0B4 \uC801\uC744 \uD604\uC7AC \uAC00\uC9C4 \uBB34\uAE30\uB85C \uACF5\uACA9\uD569\uB2C8\uB2E4."
+    DetailedInfo: "\uBD84\uC2E0\uC740 \uBB34\uAE30\uB85C \uAC00\uD558\uB294 \uD53C\uD574\uAC00
+      50% \uAC10\uC18C\uD569\uB2C8\uB2E4."
+    Tip: 
+    DevNote: 
+    Slot: 3
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel:
+    - 18
+    - 16
+    - 14
+    - 12
+    - 10
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 1
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  Behaviour: {fileID: 11400000, guid: 6dce98b76668b224090ca262226fddb6, type: 2}
+  MaxConcurrent: 0
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
+  Charges: []

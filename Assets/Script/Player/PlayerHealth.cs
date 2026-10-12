@@ -49,6 +49,8 @@ public class PlayerHealth : NetworkBehaviour
     [Networked] private TickTimer RespawnTimer { get; set; }
     [Networked] private Vector3 LastHitFrom { get; set; }
 
+    private HitVfx _hitVfx;
+
     struct DamageRecord
     {
         public PlayerRef Player;
@@ -76,6 +78,20 @@ public class PlayerHealth : NetworkBehaviour
     private int _colorId = -1;
     private Color _baseColor = Color.white;
 
+    /// <summary>소울 획득 배율 (조커 환락 1.25) — 처치·어시스트·획득 효과 모두. SA 전용</summary>
+    public float SoulGainMul { get; set; } = 1f;
+    private float _soulFrac;
+
+    /// <summary>획득량에 배율 적용 — 소수점은 모아 뒀다가 1이 되면 줌</summary>
+    int ScaledSoul(int amount)
+    {
+        if (amount <= 0 || Mathf.Approximately(SoulGainMul, 1f)) return amount;
+        float v = amount * SoulGainMul + _soulFrac;
+        int n = Mathf.FloorToInt(v);
+        _soulFrac = v - n;
+        return n;
+    }
+
     /// <summary>피해를 받았을 때 (SA). 능력이 반응용으로 구독 — (정보, 최종 피해)</summary>
     public event System.Action<DamageInfo, int> Damaged;
 
@@ -86,6 +102,7 @@ public class PlayerHealth : NetworkBehaviour
         _ability = GetComponent<AbilityRuntime>();
         _status = GetComponent<PlayerStatus>();
         _renderer = GetComponentInChildren<Renderer>();
+        _hitVfx = GetComponent<HitVfx>();
         SetupColorProperty();
 
         if (HasStateAuthority)
@@ -133,6 +150,13 @@ public class PlayerHealth : NetworkBehaviour
         Debug.LogWarning($"[PlayerHealth] {mat.shader.name}에서 색 프로퍼티를 못 찾았습니다. 피격 플래시 비활성.", this);
     }
 
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_HitFx(Vector3 from, NetworkBool crit)
+    {
+        if (_hitVfx != null) _hitVfx.Play(from, crit);
+    }
+
     // ══════════════════ 라운드 ══════════════════
 
     /// <summary>RoundManager가 호출. 각자 자기 권한으로 처음 상태로</summary>
@@ -161,6 +185,7 @@ public class PlayerHealth : NetworkBehaviour
         Assists = 0;
         Deaths = 0;
         CombatTimer = default;
+        _soulFrac = 0f;
         _recentDamage.Clear();
 
         HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
@@ -243,6 +268,8 @@ public class PlayerHealth : NetworkBehaviour
 
         NotifyNumber(info, final, KindOf(info));
         Damaged?.Invoke(info, final);
+
+        if (!info.IsStatusTick && !info.IsDot) RPC_HitFx(info.SourcePos, info.IsCrit);
 
         if (info.FromPlayer && info.Attacker != PlayerRef.None)
         {
@@ -429,7 +456,7 @@ public class PlayerHealth : NetworkBehaviour
     public void RPC_AddKill(int soul)
     {
         Kills++;
-        Soul += soul;
+        Soul += ScaledSoul(soul);
 
         _ability?.FireTrigger(TriggerType.OnKill, null);
         _ability?.OnPlayerKill();
@@ -443,7 +470,7 @@ public class PlayerHealth : NetworkBehaviour
     public void RPC_AddAssist(int soul)
     {
         Assists++;
-        Soul += soul;
+        Soul += ScaledSoul(soul);
     }
 
     // ══════════════════ 회복 · 소울 ══════════════════
@@ -476,7 +503,7 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_GainSoul(int amount) => Soul = Mathf.Max(0, Soul + amount);
+    public void RPC_GainSoul(int amount) => Soul = Mathf.Max(0, Soul + (amount > 0 ? ScaledSoul(amount) : amount));
 
     public void SpendSoul(int amount)
     {

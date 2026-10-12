@@ -1,0 +1,509 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1037636956930745085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4400406213771477104}
+  - component: {fileID: 3059249429424199644}
+  m_Layer: 0
+  m_Name: "\uC18D\uB3C4\uC120 1"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4400406213771477104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037636956930745085}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1.451}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5825856204779524083}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3059249429424199644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037636956930745085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650e2626964203b4caa85a817729afd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Vfx.Runtime::ToonVfx.VfxLayer
+  Shape: 5
+  Arc:
+    Radius: 1.3
+    Angle: 150
+    Width: 0.45
+    HeadBias: 0.7
+    Sharpness: 1
+    TipLength: 0.15
+    Reverse: 0
+    FaceCamera: 1
+    Tilt: 0
+    VerticalThickness: 0
+    Lift: 0
+    Segments: 48
+  Card:
+    Size: {x: 1, y: 1}
+    Facing: 1
+  Ring:
+    Radius: 1
+    Width: 0.25
+    Facing: 0
+    Segments: 64
+  Burst:
+    Count: 12
+    Seed: 1
+    Shape: 0
+    ConeAngle: 45
+    StartRadius: 0
+    Speed: 4
+    SpeedRandom: 0.5
+    Drag: 4
+    Gravity: 0
+    Facing: 0
+    SizeRange: {x: 0.15, y: 0.35}
+    Stretch: 0
+    RandomRotation: 1
+    LifeRandom: 0.3
+    Continuous: 0
+  Pillar:
+    Radius: 0.6
+    TopRadius: 0.4
+    Height: 2
+    Segments: 32
+  Streak:
+    Count: 14
+    Seed: 1
+    InnerRadius: 0.5
+    OuterRadius: 0.8969693
+    ArcAngle: 360
+    ArcCenter: 0
+    Front: 2
+    Back: -2.5
+    LengthRange: {x: 0.8, y: 1.6}
+    Width: 0.035
+    Speed: 14
+  Trail:
+    Time: 0.25
+    Width: 0.3
+    MinDistance: 0.05
+    PreviewLength: 2
+  Cone:
+    Front: 1.3
+    Back: -1.3
+    TipRadius: 0.04
+    BaseRadius: 1.1
+    Roundness: 0.6
+    StreakCount: 14
+    StreakAmount: 0.8
+    StreakSpeed: 3
+    Twist: 0.2
+    Segments: 32
+    Rings: 8
+  Mask: {fileID: 0}
+  AutoMask: 1
+  BuiltinMask: 1
+  Profile: {fileID: 11400000, guid: d859405871440bc4fbc8e256a711c7e7, type: 2}
+  PaletteOverride: {fileID: 0}
+  Style: 0
+  Softness: 0.2
+  CoreGlow: 0.8
+  FlameEdge: 0
+  FlameScale: 6
+  FlameSpeed: 3
+  StartTime: 0
+  Blocks:
+    Appear: 4
+    AppearTime: 0.08
+    AppearStrength: 1
+    Hold: 0
+    HoldTime: 0.3
+    HoldStrength: 0.5
+    Vanish: 0
+    VanishTime: 0.15
+    VanishStrength: 0.8
+  UseFrameStep: 1
+  CoreThreshold: 0.65
+  MidThreshold: 0.35
+  OutlineWidth: 0.06
+  Wobble: 0
+  WobbleScale: 3
+  WobbleSpeed: 1.5
+  Brightness: 1.5
+  UVScroll: {x: 0, y: 0}
+--- !u!1 &6391536026873641480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5825856204779524083}
+  - component: {fileID: 4391913903387992448}
+  m_Layer: 0
+  m_Name: "\uC2B9\uB9C8_\uB3CC\uC9C4_\uBCA0\uB978\uD558\uB974\uD2B8"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5825856204779524083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391536026873641480}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4400406213771477104}
+  - {fileID: 4902821511237953242}
+  - {fileID: 3903461544722075779}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4391913903387992448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391536026873641480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5cc959f2ba48934aaffebc76e3ec446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Vfx.Runtime::ToonVfx.VfxEffect
+  PlayMode: 0
+  FrameRate: 30
+  PlayOnEnable: 1
+  AutoStopAfter: 0
+  Palette: {fileID: 11400000, guid: 64d1e1b9e5d049a4cad8894dd3594209, type: 2}
+  Size: 1
+  Speed: 1
+  Intensity: 1
+  Wobble: 1
+  Thickness: 1
+  Linger: 1
+  DesignRange: 0
+  DesignAngle: 0
+  OwnerScale: 1
+  HideForOwner: 0
+  OwnerOffset: {x: 0, y: 0, z: 0}
+  OwnerRotation: {x: 0, y: 0, z: 0}
+  OwnerFacing: 0
+  PreviewAnchor: 0
+--- !u!1 &6462537701476760469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3903461544722075779}
+  - component: {fileID: 5357761101755225688}
+  m_Layer: 0
+  m_Name: "\uC6D0\uBFD4 1"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3903461544722075779
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6462537701476760469}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.625}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5825856204779524083}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5357761101755225688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6462537701476760469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650e2626964203b4caa85a817729afd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Vfx.Runtime::ToonVfx.VfxLayer
+  Shape: 7
+  Arc:
+    Radius: 1.3
+    Angle: 150
+    Width: 0.45
+    HeadBias: 0.7
+    Sharpness: 1
+    TipLength: 0.15
+    Reverse: 0
+    FaceCamera: 1
+    Tilt: 0
+    VerticalThickness: 0
+    Lift: 0
+    Segments: 48
+  Card:
+    Size: {x: 1, y: 1}
+    Facing: 1
+  Ring:
+    Radius: 1
+    Width: 0.25
+    Facing: 0
+    Segments: 64
+  Burst:
+    Count: 12
+    Seed: 1
+    Shape: 0
+    ConeAngle: 45
+    StartRadius: 0
+    Speed: 4
+    SpeedRandom: 0.5
+    Drag: 4
+    Gravity: 0
+    Facing: 0
+    SizeRange: {x: 0.15, y: 0.35}
+    Stretch: 0
+    RandomRotation: 1
+    LifeRandom: 0.3
+    Continuous: 0
+  Pillar:
+    Radius: 0.6
+    TopRadius: 0.4
+    Height: 2
+    Segments: 32
+  Streak:
+    Count: 14
+    Seed: 1
+    InnerRadius: 0.5
+    OuterRadius: 1.3
+    ArcAngle: 360
+    ArcCenter: 0
+    Front: 2
+    Back: -2.5
+    LengthRange: {x: 0.8, y: 1.6}
+    Width: 0.035
+    Speed: 14
+  Trail:
+    Time: 0.25
+    Width: 0.3
+    MinDistance: 0.05
+    PreviewLength: 2
+  Cone:
+    Front: 1.55
+    Back: -1.0823756
+    TipRadius: 0.04
+    BaseRadius: 1.0594063
+    Roundness: 0.436
+    StreakCount: 14
+    StreakAmount: 0.8
+    StreakSpeed: 3
+    Twist: 0.2
+    Segments: 32
+    Rings: 8
+  Mask: {fileID: 0}
+  AutoMask: 1
+  BuiltinMask: 1
+  Profile: {fileID: 11400000, guid: 67b930ac646110a4d9ab36e51413ef6b, type: 2}
+  PaletteOverride: {fileID: 0}
+  Style: 1
+  Softness: 0.2
+  CoreGlow: 0.8
+  FlameEdge: 0
+  FlameScale: 6
+  FlameSpeed: 3
+  StartTime: 0
+  Blocks:
+    Appear: 1
+    AppearTime: 0.06
+    AppearStrength: 1
+    Hold: 0
+    HoldTime: 0.25
+    HoldStrength: 0.5
+    Vanish: 0
+    VanishTime: 0.15
+    VanishStrength: 0.8
+  UseFrameStep: 1
+  CoreThreshold: 0.65
+  MidThreshold: 0.35
+  OutlineWidth: 0.06
+  Wobble: 0.05
+  WobbleScale: 3
+  WobbleSpeed: 1.5
+  Brightness: 1.5
+  UVScroll: {x: 0, y: 0}
+--- !u!1 &8544231747492560355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4902821511237953242}
+  - component: {fileID: 4731983215443762138}
+  m_Layer: 0
+  m_Name: "\uC794\uC0C1 \uC904 1"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4902821511237953242
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8544231747492560355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.46}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5825856204779524083}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4731983215443762138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8544231747492560355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650e2626964203b4caa85a817729afd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Vfx.Runtime::ToonVfx.VfxLayer
+  Shape: 6
+  Arc:
+    Radius: 1.3
+    Angle: 150
+    Width: 0.45
+    HeadBias: 0.7
+    Sharpness: 1
+    TipLength: 0.15
+    Reverse: 0
+    FaceCamera: 1
+    Tilt: 0
+    VerticalThickness: 0
+    Lift: 0
+    Segments: 48
+  Card:
+    Size: {x: 1, y: 1}
+    Facing: 1
+  Ring:
+    Radius: 1
+    Width: 0.25
+    Facing: 0
+    Segments: 64
+  Burst:
+    Count: 12
+    Seed: 1
+    Shape: 0
+    ConeAngle: 45
+    StartRadius: 0
+    Speed: 4
+    SpeedRandom: 0.5
+    Drag: 4
+    Gravity: 0
+    Facing: 0
+    SizeRange: {x: 0.15, y: 0.35}
+    Stretch: 0
+    RandomRotation: 1
+    LifeRandom: 0.3
+    Continuous: 0
+  Pillar:
+    Radius: 0.6
+    TopRadius: 0.4
+    Height: 2
+    Segments: 32
+  Streak:
+    Count: 14
+    Seed: 1
+    InnerRadius: 0.5
+    OuterRadius: 1.3
+    ArcAngle: 360
+    ArcCenter: 0
+    Front: 2
+    Back: -2.5
+    LengthRange: {x: 0.8, y: 1.6}
+    Width: 0.035
+    Speed: 14
+  Trail:
+    Time: 0.25
+    Width: 0.27
+    MinDistance: 0.05
+    PreviewLength: 2.4309773
+  Cone:
+    Front: 1.3
+    Back: -1.3
+    TipRadius: 0.04
+    BaseRadius: 1.1
+    Roundness: 0.6
+    StreakCount: 14
+    StreakAmount: 0.8
+    StreakSpeed: 3
+    Twist: 0.2
+    Segments: 32
+    Rings: 8
+  Mask: {fileID: 0}
+  AutoMask: 1
+  BuiltinMask: 1
+  Profile: {fileID: 11400000, guid: d859405871440bc4fbc8e256a711c7e7, type: 2}
+  PaletteOverride: {fileID: 0}
+  Style: 0
+  Softness: 0.2
+  CoreGlow: 0.8
+  FlameEdge: 0.383
+  FlameScale: 4.09
+  FlameSpeed: 5.56
+  StartTime: 0
+  Blocks:
+    Appear: 4
+    AppearTime: 0.05
+    AppearStrength: 1
+    Hold: 0
+    HoldTime: 0.3
+    HoldStrength: 0.5
+    Vanish: 0
+    VanishTime: 0.2
+    VanishStrength: 0.8
+  UseFrameStep: 1
+  CoreThreshold: 0.65
+  MidThreshold: 0.35
+  OutlineWidth: 0.079
+  Wobble: 1
+  WobbleScale: 3
+  WobbleSpeed: 1.5
+  Brightness: 1.5
+  UVScroll: {x: 0, y: 0}

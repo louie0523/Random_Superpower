@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -26,7 +27,7 @@ namespace ToonVfx
     /// 모양 레이어 하나. 이 오브젝트의 트랜스폼 = 그린 위치(작업자가 편집),
     /// 실제 렌더링은 숨은 자식 __VfxVisual이 하고 동작 블록이 그 자식만 움직임 → 편집값이 오염되지 않음.
     /// </summary>
-    [ExecuteAlways, DisallowMultipleComponent, AddComponentMenu("VFX/VFX Layer")]
+    [ExecuteAlways, DisallowMultipleComponent, SelectionBase, AddComponentMenu("VFX/VFX Layer")]
     public class VfxLayer : MonoBehaviour
     {
         const string VisualName = "__VfxVisual";
@@ -38,6 +39,9 @@ namespace ToonVfx
         public VfxRingSettings Ring = new();
         public VfxBurstSettings Burst = new();
         public VfxPillarSettings Pillar = new();
+        public VfxStreakSettings Streak = new();
+        public VfxTrailSettings Trail = new();
+        public VfxConeSettings Cone = new();
 
         [Header("마스크 · 셰이더 · 색")]
         [Tooltip("흑백 모양 텍스처 (직접 그린 것·AI). 비우면 아래 기본 마스크")]
@@ -112,6 +116,9 @@ namespace ToonVfx
             VfxShape.Arc => VfxBuiltinMask.SlashStrip,
             VfxShape.Ring => VfxBuiltinMask.Band,
             VfxShape.Pillar => VfxBuiltinMask.PillarFade,
+            VfxShape.Cone => VfxBuiltinMask.PillarFade,     // 앞 끝이 밝고 뒤로 흐려짐
+            VfxShape.Streak => VfxBuiltinMask.Spike,
+            VfxShape.Trail => VfxBuiltinMask.TrailFade,
             VfxShape.Burst => Burst.Facing == VfxBurstFacing.Velocity ? VfxBuiltinMask.Spike : VfxBuiltinMask.Radial,
             _ => VfxBuiltinMask.Radial,
         };
@@ -193,6 +200,7 @@ namespace ToonVfx
                 VfxShape.Arc => System.HashCode.Combine(Shape, Arc.Hash(), thickness, rMul, aMul),
                 VfxShape.Ring => System.HashCode.Combine(Shape, Ring.Hash(), thickness),
                 VfxShape.Pillar => System.HashCode.Combine(Shape, Pillar.Hash(), thickness),
+                VfxShape.Cone => System.HashCode.Combine(Shape, Cone.Hash(), thickness),
                 _ => System.HashCode.Combine(Shape, Card.Hash(), thickness),
             };
             if (hash == _meshHash) return;
@@ -203,8 +211,28 @@ namespace ToonVfx
                 case VfxShape.Arc: VfxMeshBuilder.Arc(_mesh, Arc, thickness, rMul, aMul); break;
                 case VfxShape.Ring: VfxMeshBuilder.Ring(_mesh, Ring, thickness); break;
                 case VfxShape.Pillar: VfxMeshBuilder.Pillar(_mesh, Pillar, thickness); break;
+                case VfxShape.Cone: VfxMeshBuilder.Cone(_mesh, Cone, thickness); break;
                 default: VfxMeshBuilder.Card(_mesh, new Vector2(Card.Size.x, Card.Size.y * thickness)); break;
             }
+        }
+
+        // ── 잔상 줄 경로 기록 (월드 위치, 기록 시각) ──
+        readonly List<(Vector3 pos, float time)> _trail = new();
+
+        /// <summary>재생을 새로 시작할 때 — 잔상 줄 경로 등 지난 재생의 기록을 지움</summary>
+        public void ResetRuntime() => _trail.Clear();
+
+        void RecordTrail(float now)
+        {
+            if (!Application.isPlaying) return;
+
+            // 오래된 점 버림 (경계 하나는 남겨 꼬리가 끊기지 않게)
+            while (_trail.Count > 1 && now - _trail[1].time > Trail.Time) _trail.RemoveAt(0);
+
+            var pos = transform.position;
+            if (_trail.Count == 0 || (pos - _trail[^1].pos).sqrMagnitude >= Trail.MinDistance * Trail.MinDistance)
+                _trail.Add((pos, now));
+            if (_trail.Count > 128) _trail.RemoveAt(0);
         }
 
         public void Hide()
@@ -219,6 +247,7 @@ namespace ToonVfx
 
             float lt = t - StartTime;
             bool burst = Shape == VfxShape.Burst;
+            bool procedural = burst || Shape == VfxShape.Streak || Shape == VfxShape.Trail;   // 매 프레임 메시를 새로 만듦
 
             // 뿌리기는 조각마다 따로 계산 — 레이어 전체 상태는 셰이더 공통 값(구멍 방향 등)에만 씀
             float clock = ctx.RawTime - StartTime;      // 유지 효과(회전·맥동)는 반복 구간과 무관하게 계속 흐름
@@ -239,20 +268,33 @@ namespace ToonVfx
             if (_mr.sharedMaterial != mat) _mr.sharedMaterial = mat;
 
             // ── 트랜스폼 (숨은 자식만) ──
-            if (burst)
+            if (procedural)
             {
                 // 조각 위치·크기를 메시에 직접 넣으므로 자식은 레이어와 겹쳐 둠
                 _visual.localPosition = Vector3.zero;
                 _visual.localRotation = Quaternion.identity;
                 _visual.localScale = Vector3.one;
-                // 계속 뿜기가 멈추는 시각 (레이어 기준) — 이후로는 새 조각이 안 나오고 남은 것만 사라짐
-                float stopLt = float.PositiveInfinity;
-                if (Burst.Continuous)
+
+                if (burst)
                 {
-                    if (ctx.StopTime >= 0f) stopLt = ctx.StopTime - StartTime;
-                    else if (!ctx.Endless) stopLt = BurstCycle(ctx.Linger);
+                    // 계속 뿜기가 멈추는 시각 (레이어 기준) — 이후로는 새 조각이 안 나오고 남은 것만 사라짐
+                    float stopLt = float.PositiveInfinity;
+                    if (Burst.Continuous)
+                    {
+                        if (ctx.StopTime >= 0f) stopLt = ctx.StopTime - StartTime;
+                        else if (!ctx.Endless) stopLt = BurstCycle(ctx.Linger);
+                    }
+                    VfxBurstBuilder.Build(_mesh, Burst, Blocks, lt, stopLt, ctx, _visual);
                 }
-                VfxBurstBuilder.Build(_mesh, Burst, Blocks, lt, stopLt, ctx, _visual);
+                else if (Shape == VfxShape.Streak)
+                {
+                    VfxLineBuilder.Streak(_mesh, Streak, s, clock, ctx, _visual);
+                }
+                else
+                {
+                    RecordTrail(ctx.RawTime);
+                    VfxLineBuilder.Trail(_mesh, Trail, _trail, ctx.RawTime, !Application.isPlaying, s, ctx, _visual);
+                }
                 _meshHash = int.MinValue;
             }
             else
@@ -272,7 +314,7 @@ namespace ToonVfx
                         : camRot * Quaternion.AngleAxis(s.Spin, Vector3.forward);
                 }
                 else
-                    _visual.localRotation = Quaternion.AngleAxis(s.Spin, Shape == VfxShape.Card ? Vector3.forward : Vector3.up);
+                    _visual.localRotation = Quaternion.AngleAxis(s.Spin, Shape == VfxShape.Card || Shape == VfxShape.Cone ? Vector3.forward : Vector3.up);
             }
 
             // ── 셰이더 값 ──
@@ -293,11 +335,11 @@ namespace ToonVfx
             _mpb.SetFloat(VfxShaderIds.Flash, s.Flash);
             _mpb.SetFloat(VfxShaderIds.Brightness, Brightness * s.BrightnessMul * ctx.BrightnessMul);
             _mpb.SetFloat(VfxShaderIds.Alpha, s.Alpha);
-            _mpb.SetFloat(VfxShaderIds.Thin, burst ? 1f : Mathf.Clamp01(s.Thin));
-            _mpb.SetFloat(VfxShaderIds.Sweep, burst ? 1f : Mathf.Clamp01(s.Sweep));
-            _mpb.SetFloat(VfxShaderIds.SweepTail, burst ? 0f : Mathf.Clamp01(s.SweepTail));
-            _mpb.SetFloat(VfxShaderIds.ShapeMode, Shape == VfxShape.Arc ? 1f : Shape == VfxShape.Pillar ? 2f : 0f);
-            _mpb.SetFloat(VfxShaderIds.PerParticle, burst ? 1f : 0f);
+            _mpb.SetFloat(VfxShaderIds.Thin, procedural ? 1f : Mathf.Clamp01(s.Thin));
+            _mpb.SetFloat(VfxShaderIds.Sweep, procedural ? 1f : Mathf.Clamp01(s.Sweep));
+            _mpb.SetFloat(VfxShaderIds.SweepTail, procedural ? 0f : Mathf.Clamp01(s.SweepTail));
+            _mpb.SetFloat(VfxShaderIds.ShapeMode, Shape switch { VfxShape.Arc => 1f, VfxShape.Pillar => 2f, VfxShape.Cone => 3f, _ => 0f });
+            _mpb.SetFloat(VfxShaderIds.PerParticle, procedural ? 1f : 0f);
             _mpb.SetFloat(VfxShaderIds.HeadBias, Arc.HeadBias);
             _mpb.SetFloat(VfxShaderIds.Sharpness, Arc.Sharpness);
             _mpb.SetFloat(VfxShaderIds.TipLength, Arc.TipLength);
@@ -309,6 +351,10 @@ namespace ToonVfx
             _mpb.SetFloat(VfxShaderIds.FlameEdge, FlameEdge);
             _mpb.SetFloat(VfxShaderIds.FlameScale, FlameScale);
             _mpb.SetFloat(VfxShaderIds.FlameSpeed, FlameSpeed);
+            _mpb.SetFloat(VfxShaderIds.StreakCount, Cone.StreakCount);
+            _mpb.SetFloat(VfxShaderIds.StreakAmount, Shape == VfxShape.Cone ? Cone.StreakAmount : 0f);
+            _mpb.SetFloat(VfxShaderIds.StreakSpeed, Cone.StreakSpeed);
+            _mpb.SetFloat(VfxShaderIds.Twist, Cone.Twist);
             _mpb.SetFloat(VfxShaderIds.Wobble, Mathf.Clamp01(Wobble * s.WobbleMul * ctx.WobbleMul));
             _mpb.SetFloat(VfxShaderIds.WobbleScale, WobbleScale);
             _mpb.SetFloat(VfxShaderIds.WobbleSpeed, WobbleSpeed);

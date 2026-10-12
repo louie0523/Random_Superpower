@@ -11,23 +11,31 @@ public class PlayerSkillInput : MonoBehaviour
     [SerializeField] private bool skill3UseRightMouse = true;
     [SerializeField] private KeyCode skill3Alt = KeyCode.LeftControl;
     [SerializeField] private KeyCode randomSkill = KeyCode.F;
+    [Tooltip("두 번째 랜덤 능력 (조커)")]
+    [SerializeField] private KeyCode randomSkill2 = KeyCode.V;
+
+    void Awake()
+    {
+        // 프리팹에 예전 길이(5)로 저장돼 있어도 칸 수를 맞춤
+        if (Pressed == null || Pressed.Length != SkillSlotExt.Count) Pressed = new bool[SkillSlotExt.Count];
+    }
 
     void Update()
     {
         if (UIManager.InputBlocked) return;
 
-        if (Input.GetKeyDown(skill1)) Pressed[0] = true;
-        if (Input.GetKeyDown(skill2)) Pressed[1] = true;
+        if (Input.GetKeyDown(skill1)) Pressed[(int)SkillSlot.Skill1] = true;
+        if (Input.GetKeyDown(skill2)) Pressed[(int)SkillSlot.Skill2] = true;
 
         if (skill3UseRightMouse)
         {
-            if (Input.GetMouseButtonDown(1)) Pressed[2] = true;
+            if (Input.GetMouseButtonDown(1)) Pressed[(int)SkillSlot.Skill3] = true;
         }
-        else if (Input.GetKeyDown(skill3Alt)) Pressed[2] = true;
+        else if (Input.GetKeyDown(skill3Alt)) Pressed[(int)SkillSlot.Skill3] = true;
 
-        if (Input.GetKeyDown(ultimate)) Pressed[3] = true;
-
-        if (Input.GetKeyDown(randomSkill)) Pressed[4] = true;
+        if (Input.GetKeyDown(ultimate)) Pressed[(int)SkillSlot.Ultimate] = true;
+        if (Input.GetKeyDown(randomSkill)) Pressed[(int)SkillSlot.Random] = true;
+        if (Input.GetKeyDown(randomSkill2)) Pressed[(int)SkillSlot.Random2] = true;
     }
 
     /// <summary>FixedUpdateNetwork에서 소비</summary>

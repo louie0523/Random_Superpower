@@ -100,7 +100,7 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
 
-        bool blocked = UIManager.InputBlocked || (_status != null && _status.IsStunned);
+        bool blocked = UIManager.InputBlocked || (_status != null && _status.IsStunned) || _status.Has(StatusType.Root);
         float h = blocked ? 0f : Input.GetAxisRaw("Horizontal");
         float v = blocked ? 0f : Input.GetAxisRaw("Vertical");
 
@@ -172,9 +172,8 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (Input.GetKeyDown(KeyCode.G)) _equip?.DropActiveWeapon();
 
-            if (Input.GetKeyDown(KeyCode.Alpha1)) _equip?.SwitchWeapon(0);
-            if (Input.GetKeyDown(KeyCode.Alpha2)) _equip?.SwitchWeapon(1);
-            if (Input.GetKeyDown(KeyCode.Alpha3)) _equip?.SwitchWeapon(2);
+            for (int k = 0; k < PlayerEquipment.WeaponSlots; k++)
+                if (Input.GetKeyDown(KeyCode.Alpha1 + k)) _equip?.SwitchWeapon(k);
 
             float wheel = Input.GetAxisRaw("Mouse ScrollWheel");
             if (wheel > 0.01f) _equip?.CycleWeapon(1);

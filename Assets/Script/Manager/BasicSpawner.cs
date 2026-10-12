@@ -88,15 +88,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKeyDown(StoneGet)) StoneGive(100);
         if (Input.GetKeyDown(KeyCode.Alpha9)) GetLocal()?.GetComponent<PlayerAlter>()?.Add(debugAlter);
         if (Input.GetKeyDown(KeyCode.Alpha8)) GetLocal()?.GetComponent<PlayerAlter>()?.Remove(debugAlter, true);
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            var st = GetLocal()?.GetComponent<PlayerStats>();
-            if (st != null)
-            {
-                Debug.Log(st.Dump(StatType.AttackSpeed));
-                Debug.Log(st.Dump(StatType.MoveSpeed));
-            }
-        }
+
     }
 
     void StoneGive(int num)
@@ -139,8 +131,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (!local.TryGetComponent<PlayerHealth>(out var h)) return;
         if (h.IsDead) return;
 
-        h.RPC_TakeDamage(DamageInfo.FromEnvironment(99999, local.transform.position));
-        Debug.Log("[Debug] 자해 사망");
+        h.RPC_TakeDamage(DamageInfo.FromEnvironment(100, local.transform.position));
+        Debug.Log("[Debug] 자해");
     }
 
     void FullHeal()

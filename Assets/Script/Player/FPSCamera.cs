@@ -114,7 +114,8 @@ public class FPSCamera : MonoBehaviour
 
     // ---------------- 시점 ----------------
 
-
+    /// <summary>3인칭 카메라용 — 피격 반동·흔들림만 (헤드밥·롤 제외)</summary>
+    public Vector3 ShakeEuler => new(_punch.y + _shakeOffset.y * 2f, _punch.x + _shakeOffset.x * 2f, _shakeOffset.x * 3f);
 
     void HandleLook()
     {

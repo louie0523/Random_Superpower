@@ -94,7 +94,7 @@ public class AbilityData : ScriptableObject
         [System.NonSerialized] public AbilityData Owner;
         public string Name;
         public Sprite Icon;
-        [TextArea(2, 4), Tooltip(TextHelp)] public string Description;
+        [TextArea(2, 12), Tooltip(TextHelp)] public string Description;
         [TextArea(2, 5), Tooltip(TextHelp)] public string DetailedInfo;
         [TextArea(1, 3)] public string Tip;
         [TextArea(1, 2)] public string DevNote;

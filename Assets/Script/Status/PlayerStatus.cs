@@ -15,6 +15,8 @@ public enum StatusType
     Evade,      // 회피 - 받는 공격을 모두 회피
     ArmorBreak, // 방어력 감소 — 방어력 N% 감소
     Ghost,      // 고스트 — 모든 공격 MISS + 사람 통과
+    Blind,      // 암전 — 화면이 까매짐 (본인 화면만)
+    Root,       // 속박 — 이동·점프 불가 (공격·시점 회전은 가능)
 }
 
 /// <summary>
@@ -70,7 +72,8 @@ public class PlayerStatus : NetworkBehaviour
     // ══════════════════ 조회 (모든 클라이언트) ══════════════════
 
     static bool IsFlag(StatusType t) =>
-    t == StatusType.Seal || t == StatusType.Stun || t == StatusType.Evade || t == StatusType.Ghost;
+    t == StatusType.Seal || t == StatusType.Stun || t == StatusType.Evade || t == StatusType.Ghost
+    || t == StatusType.Blind || t == StatusType.Root;
 
     public bool Has(StatusType t) => Values[(int)t] > 0f;
     public float Get(StatusType t) => Values[(int)t];
@@ -80,6 +83,7 @@ public class PlayerStatus : NetworkBehaviour
 
     public bool IsStunned => Has(StatusType.Stun);
     public bool IsSealed => Has(StatusType.Seal);
+    public bool IsRooted => Has(StatusType.Root);
 
     public float HealMultiplier => 1f - Mathf.Clamp01(Get(StatusType.DeepWound) * 0.01f);
 
@@ -91,6 +95,9 @@ public class PlayerStatus : NetworkBehaviour
         _stats = GetComponent<PlayerStats>();
         _health = GetComponent<PlayerHealth>();
         for (int i = 0; i < Capacity; i++) _inst[i] = new List<Instance>();
+
+        if (TypeCount > Capacity)
+            Debug.LogError($"[PlayerStatus] StatusType이 {TypeCount}개인데 Capacity가 {Capacity}입니다 → Capacity를 늘리세요", this);
     }
 
     // ══════════════════ 부여 ══════════════════

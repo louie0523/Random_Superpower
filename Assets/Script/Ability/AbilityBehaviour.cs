@@ -7,6 +7,8 @@ public abstract class AbilityBehaviour : ScriptableObject
     [System.NonSerialized] protected AbilityRuntime Ctx;
     [System.NonSerialized] protected AbilityData Data;
 
+
+
     // ══════════════════ 설명 ══════════════════
 
     /// <summary>이 인스턴스가 속한 능력 데이터 (설명 토큰이 찾을 때 씀)</summary>
@@ -25,6 +27,15 @@ public abstract class AbilityBehaviour : ScriptableObject
         inst.Data = data;
         return inst;
     }
+
+    /// <summary>누르기 전 확인 — false면 스킬이 안 나가고 쿨타임·소울도 안 씀 (뱉어내기·무구 섭취 등)</summary>
+    public virtual bool CanUseSkill(AbilityData.SkillDef skill) => true;
+
+    /// <summary>쿨타임·지속 중에 스킬 키를 다시 눌렀을 때. true면 소모(쿨 그대로)</summary>
+    public virtual bool OnSkillRecast(int slot, AbilityData.SkillDef skill) => false;
+
+    /// <summary>지금 다시 누르기가 가능한지 (슬롯 UI 강조용)</summary>
+    public virtual bool CanRecast(AbilityData.SkillDef skill) => false;
 
     /// <summary>이 Behaviour가 속한 능력 ID (원격 이벤트 확인용)</summary>
     public int AbilityId => Data != null ? Data.Id : 0;

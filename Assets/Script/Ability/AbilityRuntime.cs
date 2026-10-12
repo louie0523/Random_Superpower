@@ -35,16 +35,29 @@ public class AbilityRuntime : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnAbilityChanged))]
     public int RandomAbilityId { get; set; }
 
+    /// <summary>두 번째 랜덤 능력 (조커). DualRandom일 때만 쓰임, V 키</summary>
+    [Networked, OnChangedRender(nameof(OnAbilityChanged))]
+    public int RandomAbilityId2 { get; set; }
+    [Networked, OnChangedRender(nameof(OnAbilityChanged))]
+    public NetworkBool DualRandom { get; set; }
+
+    /// <summary>진행 중인 대시를 지금 멈춤 (Behaviour용)</summary>
+    public void StopDash()
+    {
+        if (!HasStateAuthority) return;
+        _dashTimer = 0f;
+    }
+
     [Networked, Capacity(4)] public NetworkArray<int> SavedKeys { get; }
     [Networked, Capacity(4)] public NetworkArray<int> SavedValues { get; }
 
     [Networked] private int RandomAbilityKills { get; set; }
 
-    [Networked, Capacity(5)] public NetworkArray<float> CooldownEnd { get; }
+    [Networked, Capacity(SkillSlotExt.Count)] public NetworkArray<float> CooldownEnd { get; }
     /// <summary>쿨타임 대기 중이면 > 0 (안전장치 만료 시각)</summary>
-    [Networked, Capacity(5)] public NetworkArray<float> HoldUntil { get; }
+    [Networked, Capacity(SkillSlotExt.Count)] public NetworkArray<float> HoldUntil { get; }
     /// <summary>대기가 풀리면 걸 쿨타임 (사용 순간 계산해 둔 값 — 쿨감 그대로)</summary>
-    [Networked, Capacity(5)] public NetworkArray<float> HeldCooldown { get; }
+    [Networked, Capacity(SkillSlotExt.Count)] public NetworkArray<float> HeldCooldown { get; }
     [Networked, Capacity(5)] public NetworkArray<float> Charges { get; }
     [Networked, Capacity(5)] public NetworkArray<float> MaxCharges { get; }
 
@@ -123,7 +136,7 @@ public class AbilityRuntime : NetworkBehaviour
     private static readonly HashSet<AbilityData.EffectDef> _warnedUnimplemented = new();
 
     /// <summary>실제로 적용된 쿨타임 (레벨·쿨감 반영). UI 비율 계산용</summary>
-    [Networked, Capacity(5)] public NetworkArray<float> CooldownTotal { get; }
+    [Networked, Capacity(SkillSlotExt.Count)] public NetworkArray<float> CooldownTotal { get; }
 
     /// <summary>스킬 → 소속 항목의 레벨 인덱스</summary>
     private readonly Dictionary<AbilityData.SkillDef, int> _skillEntry = new();
@@ -182,6 +195,14 @@ public class AbilityRuntime : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
         if (slot >= 0 && slot < CooldownEnd.Length) CooldownEnd.Set(slot, 0f);
+    }
+
+    /// <summary>이 슬롯의 남은 쿨타임을 지금부터 seconds로 (SA)</summary>
+    public void SetCooldown(int slot, float seconds)
+    {
+        if (!HasStateAuthority || slot < 0 || slot >= CooldownEnd.Length) return;
+        CooldownEnd.Set(slot, Runner.SimulationTime + Mathf.Max(0f, seconds));
+        CooldownTotal.Set(slot, Mathf.Max(0.01f, seconds));
     }
 
     public T FindAbility<T>() where T : AbilityBehaviour
@@ -430,6 +451,9 @@ public class AbilityRuntime : NetworkBehaviour
 
         for (int i = 0; i < SavedKeys.Length; i++) { SavedKeys.Set(i, 0); SavedValues.Set(i, 0); }
 
+        DualRandom = false;         // 조커가 OnEquip에서 다시 켬
+        RandomAbilityId2 = 0;
+
         AssignAbilities();
         RebuildAbilities();     // ID가 같아도 OnEquip을 다시 부르게 강제
     }
@@ -456,6 +480,7 @@ public class AbilityRuntime : NetworkBehaviour
         var main = database.Get(MainAbilityId);
         var sub = database.Get(SubAbilityId);
         var rand = database.Get(RandomAbilityId);
+        var rand2 = DualRandom ? database.Get(RandomAbilityId2) : null;
 
         // 레벨 연결 (랜덤은 등록 안 함 → 항상 레벨 0)
         RegisterEntries(main, OwnerMain);
@@ -464,6 +489,7 @@ public class AbilityRuntime : NetworkBehaviour
         AddAbility(main);
         AddAbility(sub);
         AddAbility(rand);
+        AddAbility(rand2, true);
 
         RefreshPassiveStats();
     }
@@ -497,7 +523,8 @@ public class AbilityRuntime : NetworkBehaviour
             if (e != null) _effectEntry[e] = idx;
     }
 
-    void AddAbility(AbilityData a)
+    /// <param name="secondRandom">두 번째 랜덤 능력 — F 칸 스킬을 V 칸에 놓음</param>
+    void AddAbility(AbilityData a, bool secondRandom = false)
     {
         if (a == null) return;
         _active.Add(a);
@@ -506,6 +533,7 @@ public class AbilityRuntime : NetworkBehaviour
             foreach (var s in a.Skills)
             {
                 int idx = s.Slot.Index();
+                if (secondRandom && s.Slot == SkillSlot.Random) idx = SkillSlot.Random2.Index();
                 if (idx < 0 || idx >= _slots.Length) continue;
 
                 if (_slots[idx] == null) _slots[idx] = s;
@@ -532,6 +560,7 @@ public class AbilityRuntime : NetworkBehaviour
         ApplyPassiveStats(database.Get(MainAbilityId), SourceId.MainAbility);
         ApplyPassiveStats(database.Get(SubAbilityId), SourceId.SubAbility);
         ApplyPassiveStats(database.Get(RandomAbilityId), SourceId.RandomAbility);
+        if (DualRandom) ApplyPassiveStats(database.Get(RandomAbilityId2), SourceId.RandomAbility);
     }
 
     void ApplyPassiveStats(AbilityData a, int sourceId)
@@ -772,10 +801,19 @@ public class AbilityRuntime : NetworkBehaviour
 
         if (!MeetsWeaponRequirement(skill)) return false;
 
-        if (Runner.SimulationTime < CooldownEnd[slotIndex])
-        { if (logSkills) Debug.Log($"[Skill] {skill.Name} → 쿨타임"); return false; }
 
-        if (HoldUntil[slotIndex] > 0f) return false;     // 지속형 — 효과 중
+        if (HoldUntil[slotIndex] > 0f || Runner.SimulationTime < CooldownEnd[slotIndex])
+        {
+            for (int b = 0; b < _behaviours.Count; b++)
+                if (_behaviours[b].OnSkillRecast(slotIndex, skill)) return true;
+
+            if (logSkills) Debug.Log($"[Skill] {skill.Name} → 쿨타임");
+            return false;
+        }
+
+        // Behaviour가 지금 못 쓰게 막는가 (뱉어내기 준비 안 됨 · 소화 중 등)
+        for (int b = 0; b < _behaviours.Count; b++)
+            if (!_behaviours[b].CanUseSkill(skill)) return false;
 
         if (_health.Soul < skill.SoulCost)
         { if (logSkills) Debug.Log($"[Skill] {skill.Name} → 소울 부족"); return false; }
@@ -1029,10 +1067,57 @@ public class AbilityRuntime : NetworkBehaviour
     public bool IsCooldownHeld(int slot) =>
         slot >= 0 && slot < SkillSlotExt.Count && HoldUntil[slot] > 0f;
 
+    /// <summary>Behaviour가 지금 이 스킬을 허락하는가 (슬롯 UI용)</summary>
+    public bool SkillAllowed(int slot)
+    {
+        var skill = GetSlot(slot);
+        if (skill == null) return false;
+        for (int i = 0; i < _behaviours.Count; i++)
+            if (!_behaviours[i].CanUseSkill(skill)) return false;
+        return true;
+    }
+
+    public bool CanRecast(int slot)
+    {
+        var skill = GetSlot(slot);
+        if (skill == null) return false;
+        for (int i = 0; i < _behaviours.Count; i++)
+            if (_behaviours[i].CanRecast(skill)) return true;
+        return false;
+    }
+
     public void ReleaseCooldown(AbilityData.SkillDef skill)
     {
         if (!HasStateAuthority || skill == null) return;
-        ReleaseCooldownSlot(skill.Slot.Index());
+        ReleaseCooldownSlot(SlotOf(skill));
+    }
+
+    /// <summary>이 스킬이 실제로 놓인 칸 (두 번째 랜덤 능력은 V 칸). 없으면 -1</summary>
+    public int SlotOf(AbilityData.SkillDef skill)
+    {
+        if (skill == null) return -1;
+        for (int i = 0; i < _slots.Length; i++)
+            if (_slots[i] == skill) return i;
+        return skill.Slot.Index();
+    }
+
+    /// <summary>원카드 — 일반 스킬(궁극기·랜덤 제외)의 쿨타임을 seconds만큼 늘림 (맞는 쪽 SA)</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddSkillCooldown(float seconds)
+    {
+        if (seconds <= 0f) return;
+        float now = Runner.SimulationTime;
+
+        for (int i = 0; i < SkillSlotExt.Count; i++)
+        {
+            var slot = (SkillSlot)i;
+            if (slot == SkillSlot.Ultimate || slot.IsRandom()) continue;
+            if (_slots[i] == null || HoldUntil[i] > 0f) continue;      // 지속 중인 스킬은 건드리지 않음
+
+            float end = Mathf.Max(CooldownEnd[i], now) + seconds;
+            CooldownEnd.Set(i, end);
+            CooldownTotal.Set(i, Mathf.Max(CooldownTotal[i], end - now));
+        }
     }
 
     void ReleaseCooldownSlot(int slot)
@@ -1070,13 +1155,62 @@ public class AbilityRuntime : NetworkBehaviour
             if (obj == null) continue;
             if (obj == Object) continue;   // 자기 자신 제외
             if (obj.TryGetComponent<AbilityRuntime>(out var ar))
+            {
                 inUse.Add(ar.RandomAbilityId);
+                if (ar.DualRandom) inUse.Add(ar.RandomAbilityId2);
+            }
         }
 
         var next = database.RollRandom(RandomAbilityId, inUse);
         if (next != null) RandomAbilityId = next.Id;
         RandomAbilityKills = 0;
+
+        if (DualRandom) RollSecondRandom(inUse);
     }
+
+    /// <summary>두 번째 랜덤 능력 — 첫 번째와 다른 것으로</summary>
+    void RollSecondRandom(List<int> inUse)
+    {
+        if (!HasStateAuthority || database == null) return;
+
+        var used = inUse != null ? new List<int>(inUse) : new List<int>();
+        used.Add(RandomAbilityId);
+
+        for (int tries = 0; tries < 12; tries++)
+        {
+            var next = database.RollRandom(RandomAbilityId2, used);
+            if (next == null) break;
+            if (next.Id == RandomAbilityId) continue;
+            RandomAbilityId2 = next.Id;
+            return;
+        }
+    }
+
+    /// <summary>조커 — 랜덤 능력 2개. 켜면 두 번째를 바로 뽑음</summary>
+    public void SetDualRandom(bool on)
+    {
+        if (!HasStateAuthority || DualRandom == on) return;
+        DualRandom = on;
+
+        if (on)
+        {
+            var inUse = new List<int>();
+            foreach (var p in Runner.ActivePlayers)
+            {
+                var obj = Runner.GetPlayerObject(p);
+                if (obj == null || obj == Object) continue;
+                if (obj.TryGetComponent<AbilityRuntime>(out var ar))
+                {
+                    inUse.Add(ar.RandomAbilityId);
+                    if (ar.DualRandom) inUse.Add(ar.RandomAbilityId2);
+                }
+            }
+            RollSecondRandom(inUse);
+        }
+        else RandomAbilityId2 = 0;
+    }
+
+    public AbilityData GetRandomAbility2() => DualRandom ? database?.Get(RandomAbilityId2) : null;
 
     public AbilityData GetRandomAbility() => database?.Get(RandomAbilityId);
     public AbilityData GetMainAbility() => database?.Get(MainAbilityId);

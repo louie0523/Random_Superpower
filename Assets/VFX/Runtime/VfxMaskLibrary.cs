@@ -273,6 +273,12 @@ namespace ToonVfx
                     return Inside(d, 0.13f);
                 }
 
+                case VfxBuiltinMask.TrailFade:
+                {
+                    float across = 1f - Mathf.Abs(u * 2f - 1f);
+                    return Mathf.Pow(across, 0.6f) * Mathf.Lerp(0.25f, 1f, Mathf.Pow(v, 0.7f));
+                }
+
                 case VfxBuiltinMask.Ring:
                 {
                     float d = Vector2.Distance(new Vector2(u, v), new Vector2(0.5f, 0.5f)) * 2f;
