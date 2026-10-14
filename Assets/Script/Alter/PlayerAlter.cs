@@ -20,6 +20,9 @@ public class PlayerAlter : NetworkBehaviour
 
     private readonly List<GameObject> _spawned = new();
     private readonly List<Renderer> _renderers = new();
+    private readonly List<RigAnimator> _rigAnims = new();     // 파츠의 애니메이션 (말 걷기 등)
+    private Vector3 _lastPos;
+    private float _moveSpeed;
     private PlayerStats _stats;
     private PlayerHealth _health;
     private Transform _weaponParent;
@@ -203,6 +206,8 @@ public class PlayerAlter : NetworkBehaviour
 
     public override void Render()
     {
+        TickPartAnims();
+
         // 무기를 바꾸면 무기 파츠를 새 무기로 옮김
         Transform tip = armRig != null ? armRig.WeaponTip : null;
         if (tip != _weaponParent && HasWeaponAlter()) Rebuild();
@@ -210,6 +215,48 @@ public class PlayerAlter : NetworkBehaviour
         // 사망·부활 시 보이기 다시 계산 (PlayerHealth가 렌더러를 끄고 켜는 것과 맞춤)
         bool dead = _health != null && _health.IsDead;
         if (dead != _wasDead) ApplyVisibility();
+    }
+
+    // ══════════════════ 파츠 애니메이션 (모든 클라이언트) ══════════════════
+
+    /// <summary>움직이면 파츠의 RigAnimator를 Walk로 — 이동 속도에 맞춰 재생 속도도</summary>
+    void TickPartAnims()
+    {
+        float dt = Time.deltaTime;
+        Vector3 p = transform.position;
+        Vector3 d = p - _lastPos;
+        d.y = 0f;
+        _lastPos = p;
+        if (dt <= 0f) return;
+
+        float speed = d.magnitude / dt;
+        if (speed > 60f) speed = 0f;                                 // 순간이동 · 리스폰
+        _moveSpeed = Mathf.Lerp(_moveSpeed, speed, 1f - Mathf.Exp(-10f * dt));
+
+        if (_rigAnims.Count == 0) return;
+        bool moving = _moveSpeed > 0.6f;
+        for (int i = 0; i < _rigAnims.Count; i++)
+        {
+            var ra = _rigAnims[i];
+            if (ra == null) continue;
+            ra.Moving = moving;
+            ra.MoveSpeed = _moveSpeed;
+        }
+    }
+
+    /// <summary>붙어 있는 파츠들에 상태 재생 (예: 죽음의 기사 돌진 때 말 "Charge"). 그 상태가 없는 파츠는 무시</summary>
+    public void PlayPartState(string state, float hold = -1f)
+    {
+        foreach (var ra in _rigAnims)
+            if (ra != null) ra.Play(state, hold);
+    }
+
+    /// <summary>특정 변화의 파츠에만</summary>
+    public void PlayPartState(AlterData alter, string state, float hold = -1f)
+    {
+        if (alter == null) return;
+        foreach (var ra in _rigAnims)
+            if (ra != null && ra.name.StartsWith($"Alter_{alter.name}")) ra.Play(state, hold);
     }
 
     bool HasWeaponAlter()
@@ -262,6 +309,9 @@ public class PlayerAlter : NetworkBehaviour
 
             _spawned.Add(go);
             ConfigureSelfView(go, a);
+
+            var ra = go.GetComponent<RigAnimator>();
+            if (ra != null) _rigAnims.Add(ra);
         }
 
         ApplyVisibility();
@@ -321,5 +371,6 @@ public class PlayerAlter : NetworkBehaviour
             if (go != null) Destroy(go);
         _spawned.Clear();
         _renderers.Clear();
+        _rigAnims.Clear();
     }
 }

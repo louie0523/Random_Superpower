@@ -60,10 +60,6 @@ public class WeaponSetupWindow : EditorWindow
     private bool _forceProjectile;
     private float _autoBodyStrength = 0.3f;
 
-    // ── VFX 이벤트 미리보기 (타임라인 재생 중) ──
-    private readonly Dictionary<MotionEvent, (ToonVfx.VfxEffect prefab, ToonVfx.VfxEffect inst)> _vfxPreview = new();
-    private ComboStep _vfxStep;
-
     private static readonly string[] FingerNames = { "엄지", "검지", "중지", "약지" };
     private static readonly float[] JointWeights = { 1f, 0.95f, 0.85f };
 
@@ -93,7 +89,6 @@ public class WeaponSetupWindow : EditorWindow
         { MotionEventType.FovKick,      ("○", "시야각",       new Color(0.80f, 0.60f, 1.00f)) },
         { MotionEventType.LightFlash,   ("☆", "순간 조명",    new Color(1.00f, 0.95f, 0.50f)) },
         { MotionEventType.Custom,       ("◆", "커스텀",       new Color(0.75f, 0.75f, 0.75f)) },
-        { MotionEventType.Vfx,          ("✸", "VFX",          new Color(0.85f, 0.50f, 1.00f)) },
     };
 
     static (string icon, string label, Color color) Meta(MotionEventType t) =>
@@ -129,7 +124,6 @@ public class WeaponSetupWindow : EditorWindow
 
         HandRigEditor.EditTarget = null;
         HandRigEditor.OnPoseChanged = null;
-        ClearVfxPreview();
 
         if (_rig != null)
         {
@@ -299,7 +293,6 @@ public class WeaponSetupWindow : EditorWindow
         ClearSelection();
         _playT = 0f;
         _playing = false;
-        ClearVfxPreview();
 
         if (_weapon == null && (_tab == Tab.Weapon || _tab == Tab.Ranged)) _tab = Tab.Motion;
 
@@ -1571,7 +1564,6 @@ public class WeaponSetupWindow : EditorWindow
         var ev = new MotionEvent { Time = t, Type = type };
         if (type == MotionEventType.Effect || type == MotionEventType.LightFlash) ev.Space = EventSpace.AttachToWeapon;
         if (type == MotionEventType.GroundEffect) ev.PositionOffset = new Vector3(0f, 0f, 1f);
-        if (type == MotionEventType.Vfx) { ev.Space = EventSpace.AttachToBody; ev.Lifetime = 0f; }
 
         Modify("Add Event", () =>
         {
@@ -1910,7 +1902,6 @@ public class WeaponSetupWindow : EditorWindow
 
         EditorGUILayout.Space(2);
         DrawEventFields(ev);
-        if (GUI.changed) RefreshPreview();      // 위치·크기·이펙트를 바꾸면 씬 미리보기에 바로 반영
 
         EditorGUILayout.Space(2);
         if (LocalOnly(ev.Type))
@@ -1950,13 +1941,7 @@ public class WeaponSetupWindow : EditorWindow
                 ev.Lifetime = EditorGUILayout.FloatField("수명 (초, 0 = 프리팹이 정리)", ev.Lifetime);
                 break;
 
-            case MotionEventType.Vfx:
-                DrawVfxFields(ev);
-                break;
-
             case MotionEventType.GroundEffect:
-                ev.Vfx = (ToonVfx.VfxEffect)EditorGUILayout.ObjectField(new GUIContent("VFX (선택)",
-                    "넣으면 아래 프리팹 대신 VFX Studio 이펙트를 바닥에 재생"), ev.Vfx, typeof(ToonVfx.VfxEffect), false);
                 ev.Prefab = (GameObject)EditorGUILayout.ObjectField("프리팹", ev.Prefab, typeof(GameObject), false);
                 ev.PositionOffset = EditorGUILayout.Vector3Field("발밑 기준 위치", ev.PositionOffset);
                 ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
@@ -2358,6 +2343,9 @@ public class WeaponSetupWindow : EditorWindow
                     if (GUILayout.Button("에셋 선택")) Selection.activeObject = _target;
                     if (GUILayout.Button("FPArmRig 선택")) Selection.activeGameObject = _rig.gameObject;
                 }
+                if (GUILayout.Button(new GUIContent("변화 배치 · 생성물 애니메이션 (Rig Animator)",
+                        "말 같은 변화 파츠를 이 리그에 붙여 마우스로 배치 · 탈것/그림자 손 본 정리 · IK · 애니메이션")))
+                    RigAnimatorWindow.Open();
 
                 EditorGUILayout.Space(4);
                 _showHitbox = EditorGUILayout.Toggle("판정 범위 표시", _showHitbox);
@@ -2611,9 +2599,6 @@ public class WeaponSetupWindow : EditorWindow
         else
             _rig.ApplyPose(_rig.GetEffectiveIdle());
 
-        if (step != null && _tab == Tab.Motion) SyncVfxPreview(step, _playT / Mathf.Max(0.01f, step.TotalTime));
-        else ClearVfxPreview();
-
         SceneView.RepaintAll();
     }
 
@@ -2857,10 +2842,7 @@ public class WeaponSetupWindow : EditorWindow
             else if (!_loop) { StopPlay(); return; }
         }
 
-        float p = _playT / Mathf.Max(0.01f, step.TotalTime);
-        _rig.ApplySwing(step.Motion, p, step.HandMode);
-        SyncVfxPreview(step, p);
-
+        _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
         SceneView.RepaintAll();
         Repaint();
     }
@@ -2869,158 +2851,9 @@ public class WeaponSetupWindow : EditorWindow
     {
         _playing = false;
         _playAll = false;
-        ClearVfxPreview();
         _rig.ApplyPose(_rig.GetEffectiveIdle());
         SceneView.RepaintAll();
         Repaint();
-    }
-
-    // ══════════════════════ VFX 이벤트 ══════════════════════
-
-    Transform EventBasis(EventSpace space) => space switch
-    {
-        EventSpace.AttachToWeapon => _rig.WeaponTip,
-        EventSpace.AttachToMuzzle => _rig.Muzzle,
-        EventSpace.AttachToBody => _rig.Body,
-        EventSpace.AttachToHead => _rig.Head,
-        EventSpace.AttachToRightHand => _rig.RightHand,
-        EventSpace.AttachToLeftHand => _rig.LeftHand,
-        EventSpace.AttachToCamera => GetEyeTransform(),
-        _ => _rig.Body != null ? _rig.Body : GetEyeTransform(),
-    };
-
-    void DrawVfxFields(MotionEvent ev)
-    {
-        ev.Vfx = (ToonVfx.VfxEffect)EditorGUILayout.ObjectField("이펙트", ev.Vfx, typeof(ToonVfx.VfxEffect), false);
-        ev.Space = (EventSpace)EditorGUILayout.EnumPopup("붙을 곳", ev.Space);
-        ev.PositionOffset = EditorGUILayout.Vector3Field("위치", ev.PositionOffset);
-        ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
-        ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
-        ev.VfxPalette = (ToonVfx.VfxPalette)EditorGUILayout.ObjectField(new GUIContent("색 교체", "비우면 이펙트 기본 색"),
-            ev.VfxPalette, typeof(ToonVfx.VfxPalette), false);
-
-        ev.FitToHit = EditorGUILayout.Toggle(new GUIContent("판정 범위에 맞추기",
-            "호의 반지름·각도를 이 타격의 실제 판정 범위에 맞춤. 게임에서는 사거리 버프(HitRangeMul)도 반영"), ev.FitToHit);
-
-        var step = CurrentStep;
-        var w = ResolvePreviewWeapon();
-        if (ev.FitToHit && ev.Vfx != null && step != null && w != null)
-        {
-            var fit = MotionHitFit.From(step, w, 1f);
-            Hint($"이펙트 기준 {ev.Vfx.ResolvedDesignRange:0.##}m · {ev.Vfx.ResolvedDesignAngle:0}°  →  " +
-                 $"이 타 판정 {fit.Range:0.##}m · {(fit.Angle > 0f ? $"{fit.Angle:0}°" : "구체 (각도 유지)")}");
-        }
-        Hint("타임라인을 드래그하거나 재생(Space)하면 씬에 같이 보입니다. 미리보기는 본인 화면 기준(1인칭 크기 배율 적용).");
-    }
-
-    /// <summary>이벤트에 연결된 VFX — VFX 타입, 지면 이펙트의 VFX 칸, 이펙트 타입에 VFX 프리팹을 넣은 경우까지</summary>
-    static ToonVfx.VfxEffect PreviewVfxOf(MotionEvent e)
-    {
-        if (e == null) return null;
-        switch (e.Type)
-        {
-            case MotionEventType.Vfx:
-                return e.Vfx;
-            case MotionEventType.GroundEffect:
-                if (e.Vfx != null) return e.Vfx;
-                return e.Prefab != null ? e.Prefab.GetComponent<ToonVfx.VfxEffect>() : null;
-            case MotionEventType.Effect:
-                return e.Prefab != null ? e.Prefab.GetComponent<ToonVfx.VfxEffect>() : null;
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// 타임라인 위치에 맞춰 VFX를 보여줌 — 드래그(스크럽)·재생 모두.
-    /// 이벤트 시점부터 지난 시간(모션 기준 초)으로 이펙트 시각을 정하므로 언제 멈춰도 그 순간 모습이 보임
-    /// </summary>
-    void SyncVfxPreview(ComboStep step, float p)
-    {
-        if (_rig == null) return;
-        if (!ReferenceEquals(step, _vfxStep)) { ClearVfxPreview(); _vfxStep = step; }
-
-        ToonVfx.VfxEffect.CameraOverride = SceneView.lastActiveSceneView != null ? SceneView.lastActiveSceneView.camera : null;
-
-        var w = ResolvePreviewWeapon();
-        var alive = new HashSet<MotionEvent>();
-
-        if (step.Events != null)
-            foreach (var e in step.Events)
-            {
-                var prefab = PreviewVfxOf(e);
-                if (prefab == null) continue;
-
-                float local = (p - e.Time) * step.TotalTime;       // 이벤트 후 지난 시간 (게임에서도 모션과 같은 속도로 재생됨)
-                if (local < 0f) continue;
-
-                Transform basis = EventBasis(e.Space);
-                if (basis == null) continue;
-
-                // 프리팹을 바꿨으면 새로 만듦
-                if (_vfxPreview.TryGetValue(e, out var entry) && (entry.inst == null || entry.prefab != prefab))
-                {
-                    if (entry.inst != null) DestroyImmediate(entry.inst.gameObject);
-                    _vfxPreview.Remove(e);
-                    entry = default;
-                }
-
-                var fx = entry.inst;
-                if (fx == null)
-                {
-                    fx = Instantiate(prefab);
-                    fx.gameObject.hideFlags = HideFlags.DontSave;
-                    fx.name = "[미리보기] " + prefab.name;
-                    _vfxPreview[e] = (prefab, fx);
-                }
-                alive.Add(e);
-
-                // 위치는 매번 다시 — 인스펙터에서 바꾼 위치·회전·크기가 바로 보이게
-                fx.transform.SetParent(e.Space != EventSpace.World ? basis : null, false);
-                fx.transform.SetPositionAndRotation(basis.TransformPoint(e.PositionOffset),
-                                                    basis.rotation * Quaternion.Euler(e.RotationOffset));
-                Vector3 ls = prefab.transform.localScale * (e.Scale > 0f ? e.Scale : 1f) * prefab.OwnerScale;
-                if (fx.transform.parent != null)
-                {
-                    var ps = fx.transform.parent.lossyScale;
-                    ls = new Vector3(ls.x / Mathf.Max(ps.x, 1e-4f), ls.y / Mathf.Max(ps.y, 1e-4f), ls.z / Mathf.Max(ps.z, 1e-4f));
-                }
-                fx.transform.localScale = ls;
-
-                bool fitOn = e.Type == MotionEventType.Vfx ? e.FitToHit : (e.Vfx != null && e.FitToHit);
-                var fit = fitOn && w != null ? MotionHitFit.From(step, w, 1f) : default;
-
-                fx.Play(new ToonVfx.VfxPlayOptions
-                {
-                    Palette = e.VfxPalette,
-                    FitRange = fit.Range,
-                    FitAngle = fit.Angle,
-                    IsOwner = true,
-                });
-                fx.Pause();
-                fx.SetTime(local);
-            }
-
-        // 지워졌거나 아직 시점 전인 이벤트의 이펙트 정리
-        if (_vfxPreview.Count > alive.Count)
-        {
-            var dead = new List<MotionEvent>();
-            foreach (var kv in _vfxPreview)
-                if (!alive.Contains(kv.Key)) dead.Add(kv.Key);
-            foreach (var k in dead)
-            {
-                var inst = _vfxPreview[k].inst;
-                if (inst != null) DestroyImmediate(inst.gameObject);
-                _vfxPreview.Remove(k);
-            }
-        }
-    }
-
-    void ClearVfxPreview()
-    {
-        foreach (var kv in _vfxPreview)
-            if (kv.Value.inst != null) DestroyImmediate(kv.Value.inst.gameObject);
-        _vfxPreview.Clear();
-        _vfxStep = null;
     }
 
     // ══════════════════════ 씬 시각화 ══════════════════════
@@ -3063,9 +2896,19 @@ public class WeaponSetupWindow : EditorWindow
 
         var ev = step.Events[_selIndex];
         if (ev == null) return;
-        if (ev.Type != MotionEventType.Effect && ev.Type != MotionEventType.LightFlash && ev.Type != MotionEventType.Vfx) return;
+        if (ev.Type != MotionEventType.Effect && ev.Type != MotionEventType.LightFlash) return;
 
-        Transform basis = EventBasis(ev.Space);
+        Transform basis = ev.Space switch
+        {
+            EventSpace.AttachToWeapon => _rig.WeaponTip,
+            EventSpace.AttachToMuzzle => _rig.Muzzle,
+            EventSpace.AttachToBody => _rig.Body,
+            EventSpace.AttachToHead => _rig.Head,
+            EventSpace.AttachToRightHand => _rig.RightHand,
+            EventSpace.AttachToLeftHand => _rig.LeftHand,
+            EventSpace.AttachToCamera => GetEyeTransform(),
+            _ => _rig.Body != null ? _rig.Body : GetEyeTransform(),
+        };
         if (basis == null) return;
 
         Vector3 pos = basis.TransformPoint(ev.PositionOffset);

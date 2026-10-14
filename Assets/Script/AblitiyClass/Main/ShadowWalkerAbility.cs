@@ -64,7 +64,10 @@ public class ShadowWalkerAbility : AbilityBehaviour
     public float HandRearm = 1.5f;
     [Tooltip("손이 사라지는 시간 (초)")]
     public float HandLifetime = 45f;
+    [Tooltip("그림자 손 모델. RigAnimator를 붙이면 Idle · Appear(놓을 때) · Grab(붙잡을 때) 상태를 재생")]
     public GameObject HandPrefab;
+    [Tooltip("붙잡을 때 손이 뻗는 높이 (대상 발밑 기준, m)")]
+    public float GrabAimHeight = 0.9f;
     public GameObject HandGrabFx;
 
     [Header("궁극기 — 완전한 암흑")]
@@ -434,6 +437,8 @@ public class ShadowWalkerAbility : AbilityBehaviour
                     foreach (var c in go.GetComponentsInChildren<Collider>(true)) c.enabled = false;
                     Destroy(go, HandLifetime);
                     _handViews.Add((go, Time.time + HandLifetime));
+                    var ra = go.GetComponentInChildren<RigAnimator>();
+                    if (ra != null) ra.Play("Appear");          // 솟아오르는 상태가 있으면 (없으면 Idle)
                 }
                 int max = Mathf.Max(1, Mathf.RoundToInt(Lv(HandMax)));
                 while (_handViews.Count > max)
@@ -443,13 +448,38 @@ public class ShadowWalkerAbility : AbilityBehaviour
                 }
                 break;
 
-            case EvGrab: Ctx.PlayEffectLocal(HandGrabFx, pos); break;
+            case EvGrab:
+                Ctx.PlayEffectLocal(HandGrabFx, pos);
+                GrabAnim(pos);
+                break;
 
             case EvZone:
                 ShadowZoneView.Create(pos, Lv(ZoneRadius), Lv(ZoneDuration), Ctx.transform, Ctx.HasInputAuthority,
                                       ZoneDomePrefab, EnemyMarkerPrefab, Ctx.HitMask);
                 break;
         }
+    }
+
+    /// <summary>붙잡은 손 — 대상과 가장 가까운 손이 그쪽을 보고 "Grab" 재생, 뻗는 IK가 대상으로</summary>
+    void GrabAnim(Vector3 targetPos)
+    {
+        GameObject best = null;
+        float bestD = float.MaxValue;
+        float reach = Lv(HandRadius) + 1.5f;
+        foreach (var (go, _) in _handViews)
+        {
+            if (go == null) continue;
+            float d = (go.transform.position - targetPos).sqrMagnitude;
+            if (d < bestD && d <= reach * reach) { bestD = d; best = go; }
+        }
+        if (best == null) return;
+
+        var ra = best.GetComponentInChildren<RigAnimator>();
+        if (ra == null) return;
+
+        float hold = Mathf.Max(0.3f, Lv(HandRoot));
+        ra.Play("Grab", hold);
+        ra.AimAt(targetPos + Vector3.up * GrabAimHeight, hold);
     }
 
     // ══════════════════ 설명 ══════════════════

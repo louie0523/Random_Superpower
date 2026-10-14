@@ -907,5 +907,13 @@ public class DeathKnightAbility : AbilityBehaviour
             _ => null,
         };
         Ctx.PlayEffectLocal(fx, pos);
+
+        // 탈것 애니메이션 — 붙어 있는 말(파츠)의 RigAnimator에 그 상태가 있으면 재생 (안 타고 있으면 말이 없으니 무시됨)
+        if (_alter != null)
+        {
+            if (key == EvCharge) _alter.PlayPartState("Charge", Lv(ChargeDuration));
+            else if (key == EvLeap) _alter.PlayPartState("Leap");
+            else if (key == EvSlash || key == EvSlash2) _alter.PlayPartState("Attack");
+        }
     }
 }

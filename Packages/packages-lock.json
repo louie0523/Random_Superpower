@@ -17,9 +17,9 @@
       "hash": "1068f3de2bc9f1e4a905150abd59f31e6dead679"
     },
     "com.tripo3d.unitybridge": {
-      "version": "file:D:/Tripo3d_Unity_Bridge-latest/Tripo3d_Unity_Bridge",
+      "version": "file:Tripo3d_Unity_Bridge",
       "depth": 0,
-      "source": "local",
+      "source": "embedded",
       "dependencies": {
         "com.unity.modules.jsonserialize": "1.0.0"
       }
