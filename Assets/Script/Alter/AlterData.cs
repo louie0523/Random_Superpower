@@ -46,7 +46,8 @@ public class AlterData : ScriptableObject
     public Vector3 Scale = Vector3.one;
 
     [Header("탈것")]
-    [Tooltip("올라타는 높이 (m). 0이 아니면 몸·카메라·피격 판정이 이만큼 올라감 — 말 등.\n" +
+    [Tooltip("올라타는 높이 (m). 0이 아니면 플레이어 몸·머리·카메라·피격 판정이 이만큼 올라감 — 말 등.\n" +
+             "말 파츠 자체는 Attach = Root(발밑)에 붙여야 땅에 남음 (Body에 붙이면 같이 올라감).\n" +
              "여러 개면 가장 큰 값")]
     [Min(0f)] public float Lift = 0f;
 

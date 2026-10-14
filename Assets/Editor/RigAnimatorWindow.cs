@@ -529,46 +529,46 @@ public class RigAnimatorWindow : EditorWindow
         switch (_tool)
         {
             case BoneTool.Rotate:
-            {
-                EditorGUI.BeginChangeCheck();
-                var r = Handles.RotationHandle(b.rotation, h);
-                if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(b, "본 회전");
-                    b.rotation = r;
-                    OnPoseEdited();
-                }
-                break;
-            }
-            case BoneTool.Move:
-            {
-                EditorGUI.BeginChangeCheck();
-                var p = Handles.PositionHandle(h, Tools.pivotRotation == PivotRotation.Local ? b.rotation : Quaternion.identity);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RecordObject(b, "본 이동");
-                    b.position = p;
-                    OnPoseEdited();
-                }
-                break;
-            }
-            case BoneTool.Aim:
-            {
-                Handles.color = CBoneSel;
-                EditorGUI.BeginChangeCheck();
-                var nt = Handles.FreeMoveHandle(t, size * 0.1f, Vector3.zero, Handles.SphereHandleCap);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Vector3 from = t - h, to = nt - h;
-                    if (from.sqrMagnitude > 1e-8f && to.sqrMagnitude > 1e-8f)
+                    EditorGUI.BeginChangeCheck();
+                    var r = Handles.RotationHandle(b.rotation, h);
+                    if (EditorGUI.EndChangeCheck())
                     {
-                        Undo.RecordObject(b, "본 끝 끌기");
-                        b.rotation = Quaternion.FromToRotation(from, to) * b.rotation;
+                        Undo.RecordObject(b, "본 회전");
+                        b.rotation = r;
                         OnPoseEdited();
                     }
+                    break;
                 }
-                break;
-            }
+            case BoneTool.Move:
+                {
+                    EditorGUI.BeginChangeCheck();
+                    var p = Handles.PositionHandle(h, Tools.pivotRotation == PivotRotation.Local ? b.rotation : Quaternion.identity);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Undo.RecordObject(b, "본 이동");
+                        b.position = p;
+                        OnPoseEdited();
+                    }
+                    break;
+                }
+            case BoneTool.Aim:
+                {
+                    Handles.color = CBoneSel;
+                    EditorGUI.BeginChangeCheck();
+                    var nt = Handles.FreeMoveHandle(t, size * 0.1f, Vector3.zero, Handles.SphereHandleCap);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Vector3 from = t - h, to = nt - h;
+                        if (from.sqrMagnitude > 1e-8f && to.sqrMagnitude > 1e-8f)
+                        {
+                            Undo.RecordObject(b, "본 끝 끌기");
+                            b.rotation = Quaternion.FromToRotation(from, to) * b.rotation;
+                            OnPoseEdited();
+                        }
+                    }
+                    break;
+                }
         }
 
         Handles.Label(h + Vector3.up * size * 0.15f, " " + b.name, _sceneLabel);
@@ -1172,17 +1172,17 @@ public class RigAnimatorWindow : EditorWindow
         switch (e.type)
         {
             case EventType.MouseDown when e.button == 0 && r.Contains(e.mousePosition):
-            {
-                int hit = -1;
-                for (int i = 0; i < s.Keys.Count; i++)
-                    if (Mathf.Abs(X(s.Keys[i].Time) - e.mousePosition.x) < 7f && e.mousePosition.y > r.y + 16) { hit = i; break; }
+                {
+                    int hit = -1;
+                    for (int i = 0; i < s.Keys.Count; i++)
+                        if (Mathf.Abs(X(s.Keys[i].Time) - e.mousePosition.x) < 7f && e.mousePosition.y > r.y + 16) { hit = i; break; }
 
-                if (hit >= 0) { SelectKey(hit); _dragKey = true; }
-                else if (e.clickCount == 2) { _playing = false; SetTime(Snap(T(e.mousePosition.x))); AddOrSetKey(); }
-                else { _playing = false; _scrub = true; SetTime(T(e.mousePosition.x)); }
-                e.Use();
-                break;
-            }
+                    if (hit >= 0) { SelectKey(hit); _dragKey = true; }
+                    else if (e.clickCount == 2) { _playing = false; SetTime(Snap(T(e.mousePosition.x))); AddOrSetKey(); }
+                    else { _playing = false; _scrub = true; SetTime(T(e.mousePosition.x)); }
+                    e.Use();
+                    break;
+                }
             case EventType.MouseDrag when _dragKey && _keyIdx >= 0 && _keyIdx < s.Keys.Count:
                 Undo.RecordObject(_data, "키 옮기기");
                 s.Keys[_keyIdx].Time = Snap(T(e.mousePosition.x));
@@ -1585,6 +1585,15 @@ public class RigAnimatorWindow : EditorWindow
                 SceneView.RepaintAll();
             }
 
+            // 탄 높이가 있는데 몸에 붙어 있으면 말까지 같이 올라감
+            if (_alter.Lift > 0f && (_alter.Attach == AlterAttach.Body || _alter.Attach == AlterAttach.Head))
+            {
+                EditorGUILayout.HelpBox("탄 높이(Lift)는 플레이어 몸 · 머리 · 카메라를 올립니다.\n" +
+                                        "이 파츠는 몸에 붙어 있어서 같이 올라갑니다. 말처럼 땅에 서 있어야 하는 건 '발밑(Root)'에 붙여야 합니다.",
+                                        MessageType.Warning);
+                if (GUILayout.Button("발밑(Root)으로 옮기기 — 지금 땅 위 자리 그대로", GUILayout.Height(24))) MoveAlterToRoot();
+            }
+
             int pt = GUILayout.Toolbar((int)_partTool, PartToolNames);
             if (pt != (int)_partTool) { _partTool = (PartTool)pt; SceneView.RepaintAll(); }
 
@@ -1649,6 +1658,38 @@ public class RigAnimatorWindow : EditorWindow
             }
         }
     }
+
+    /// <summary>몸에 붙은 파츠를 발밑(플레이어 루트)으로 — 몸을 내린 상태(탄 높이 0)의 자리를 그대로 유지</summary>
+    void MoveAlterToRoot()
+    {
+        EnsurePart();
+        if (_part == null || _rig == null) return;
+
+        float lift = _alter.Lift;
+        ApplyLiftPreview(0f);                                   // 몸을 내려서 '땅 기준' 자리를 읽음
+
+        var t = _part.transform;
+        Vector3 wp = t.position;
+        Quaternion wr = t.rotation;
+        Vector3 ws = t.lossyScale;
+        Transform top = _rig.Body != null ? _rig.Body.root : _rig.transform.root;
+        Vector3 ts = top.lossyScale;
+
+        Undo.RecordObject(_alter, "발밑으로 옮기기");
+        _alter.Attach = AlterAttach.Root;
+        _alter.Position = top.InverseTransformPoint(wp);
+        _alter.Rotation = (Quaternion.Inverse(top.rotation) * wr).eulerAngles;
+        _alter.Scale = new Vector3(ws.x / Nz(ts.x), ws.y / Nz(ts.y), ws.z / Nz(ts.z));
+        _alter.Lift = lift;
+        EditorUtility.SetDirty(_alter);
+
+        ClearPart();
+        EnsurePart();
+        ApplyLiftPreview(lift);
+        ShowNotification(new GUIContent("발밑(Root)으로 옮김 — 이제 몸만 올라갑니다"));
+    }
+
+    static float Nz(float v) => Mathf.Abs(v) < 0.0001f ? 1f : v;
 
     static string[] PartStates(RigAnimator ra) =>
         ra != null && ra.Data != null ? ra.Data.States.Where(s => s != null).Select(s => s.Name).ToArray() : new string[0];

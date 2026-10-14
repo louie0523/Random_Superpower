@@ -20,7 +20,8 @@ public class PlayerAlter : NetworkBehaviour
 
     private readonly List<GameObject> _spawned = new();
     private readonly List<Renderer> _renderers = new();
-    private readonly List<RigAnimator> _rigAnims = new();     // 파츠의 애니메이션 (말 걷기 등)
+    private readonly List<RigAnimator> _rigAnims = new();
+    private static readonly HashSet<int> _warnedLift = new();     // 파츠의 애니메이션 (말 걷기 등)
     private Vector3 _lastPos;
     private float _moveSpeed;
     private PlayerStats _stats;
@@ -296,6 +297,10 @@ public class PlayerAlter : NetworkBehaviour
 
             Transform parent = Resolve(a);
             if (parent == null) continue;
+
+            if (a.Lift > 0f && (a.Attach == AlterAttach.Body || a.Attach == AlterAttach.Head) && _warnedLift.Add(a.Id))
+                Debug.LogWarning($"[PlayerAlter] {a.name}: 탄 높이(Lift)가 있는데 몸/머리에 붙어 있어 같이 올라갑니다. " +
+                                 "말처럼 땅에 있어야 하면 Attach를 Root로 (Rig Animator → 변화 배치의 '발밑으로 옮기기')", a);
 
             var go = Instantiate(a.Prefab, parent);
             go.name = $"Alter_{a.name}{(k > 0 ? $"_{k + 1}" : "")}";
