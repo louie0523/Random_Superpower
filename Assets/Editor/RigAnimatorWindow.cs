@@ -1754,15 +1754,39 @@ public class RigAnimatorWindow : EditorWindow
     }
 
     float _shownLift = 0f;
+    readonly Dictionary<Transform, Vector3> _liftOrig = new();
 
-    /// <summary>탄 높이만큼 몸 · 머리를 올려서 보여줌 (게임과 같은 방식)</summary>
+    Transform AlterTop() => _rig == null ? null : (_rig.Body != null ? _rig.Body.root : _rig.transform.root);
+
+    /// <summary>탄 높이만큼 카메라 · 팔 · 몸을 올려서 보여줌 — 게임(PlayerAlter)과 같은 대상</summary>
     void ApplyLiftPreview(float lift)
     {
         if (_rig == null || Mathf.Approximately(_shownLift, lift)) return;
         _shownLift = lift;
-        _rig.BodyLift = lift;
-        _rig.ApplyPose(_rig.IdlePose);
+
+        foreach (var kv in _liftOrig) if (kv.Key != null) kv.Key.localPosition = kv.Value;
+        _liftOrig.Clear();
+
+        if (lift > 0f)
+        {
+            var top = AlterTop();
+            foreach (var t in PlayerAlter.AutoLiftTargets(top, _rig))
+                if (t != null) _liftOrig[t] = t.localPosition;
+            ReapplyLift();
+        }
         SceneView.RepaintAll();
+    }
+
+    /// <summary>다른 미리보기(Motion Setup)가 몸을 되돌려도 다시 올림</summary>
+    void ReapplyLift()
+    {
+        foreach (var kv in _liftOrig)
+        {
+            var t = kv.Key;
+            if (t == null) continue;
+            Vector3 up = t.parent != null ? t.parent.InverseTransformVector(Vector3.up * _shownLift) : Vector3.up * _shownLift;
+            t.localPosition = kv.Value + up;
+        }
     }
 
     void ClearPart()
@@ -1782,7 +1806,7 @@ public class RigAnimatorWindow : EditorWindow
         HideTools();
 
         var t = _part.transform;
-        if (Event.current.type == EventType.Layout) SyncPart();
+        if (Event.current.type == EventType.Layout) { SyncPart(); ReapplyLift(); }
 
         EditorGUI.BeginChangeCheck();
         switch (_partTool)
@@ -1808,7 +1832,7 @@ public class RigAnimatorWindow : EditorWindow
         }
 
         // 탄 높이 — 발밑에서 위로 끄는 초록 화살표
-        Transform top = _rig.Body != null ? _rig.Body.root : _rig.transform.root;
+        Transform top = AlterTop();
         Vector3 basePos = top.position;
         Vector3 lp = basePos + Vector3.up * _alter.Lift;
         float size = HandleUtility.GetHandleSize(lp);

@@ -20,9 +20,9 @@ MonoBehaviour:
   Attach: 5
   BoneName: 
   Position: {x: 0, y: -1, z: 0}
-  Rotation: {x: 0, y: 0, z: 0}
+  Rotation: {x: 0, y: -90, z: 0}
   Scale: {x: 1, y: 1, z: 1}
-  Lift: 2
+  Lift: 1
   ShowForSelf: 1
   SelfShadow: 1
   MaxStack: 1

@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 /// 변화(파츠) — 네트워크 배열에 ID를 들고, 모든 클라이언트가 같은 파츠를 붙임.
 /// 스탯은 SA(소유자)에서만. 어디서 불러도 됨 — SA가 아니면 RPC로 보냄.
 /// </summary>
+[DefaultExecutionOrder(9000)]    // 카메라·팔·몸이 자리를 잡은 뒤 탄 높이를 더함 (3인칭 카메라(10000)보다는 먼저)
 public class PlayerAlter : NetworkBehaviour
 {
     public const int MaxAlters = 8;
@@ -14,6 +15,13 @@ public class PlayerAlter : NetworkBehaviour
     [SerializeField] private AlterDatabase database;
     [Tooltip("비우면 자식에서 찾음")]
     [SerializeField] private FPArmRig armRig;
+
+    [Header("탄 높이 (말 등)")]
+    [Tooltip("탔을 때 위로 올릴 것들. 비우면 자동 — CameraRoot(카메라 · 팔 · 무기) + FPArmRig의 Body · Head.\n" +
+             "3인칭 몸 모델이 따로 있으면 그것도 넣기. 말 같은 파츠는 Attach = Root로 두면 안 올라감")]
+    [SerializeField] private Transform[] liftTargets;
+    [Tooltip("올라타고 내리는 빠르기 (m/초). 0이면 즉시")]
+    [SerializeField] private float liftSpeed = 6f;
 
     [Networked, Capacity(MaxAlters), OnChangedRender(nameof(OnAltersChanged))]
     public NetworkArray<int> Alters { get; }
@@ -34,7 +42,11 @@ public class PlayerAlter : NetworkBehaviour
     private FPSCamera _cam;
     private ThirdPersonView _tpv;
     private float _ccHeight, _ccCenterY;
-    private float _lift;
+    private float _lift;            // 목표 높이
+    private float _liftShown;       // 지금 보이는 높이 (부드럽게 따라감)
+    private Transform[] _liftResolved;
+    private Vector3[] _liftBase, _liftLastSet;
+    private bool _liftLogged;
 
     public AlterDatabase Database => database;
 
@@ -67,6 +79,11 @@ public class PlayerAlter : NetworkBehaviour
         if (_tpv != null) _tpv.Changed -= OnViewChanged;
         ClearVisuals();
         ApplyLift(0f);
+        _liftShown = 0f;
+        if (_liftResolved != null)
+            for (int i = 0; i < _liftResolved.Length; i++)
+                if (_liftResolved[i] != null) _liftResolved[i].localPosition = _liftBase[i];
+        _liftResolved = null;
     }
 
     /// <summary>모든 클라이언트 — 몸·카메라를 올리고 피격 판정을 위로 늘림 (발 위치는 그대로)</summary>
@@ -85,8 +102,88 @@ public class PlayerAlter : NetworkBehaviour
             _cc.center = c;
         }
 
-        if (armRig != null) armRig.BodyLift = lift;
-        if (HasInputAuthority && _cam != null) _cam.SetHeightOffset(lift);
+        // 몸 · 카메라는 LateUpdate에서 올림 (모든 클라이언트 같은 방식)
+        if (armRig != null) armRig.BodyLift = 0f;
+    }
+
+    // ══════════════════ 탄 높이 — 보이는 것 올리기 (모든 클라이언트) ══════════════════
+
+    /// <summary>올릴 대상 자동 — CameraRoot + 몸 · 머리 (서로 겹치면 위쪽 것만)</summary>
+    public static List<Transform> AutoLiftTargets(Transform root, FPArmRig rig, Transform[] manual = null)
+    {
+        var list = new List<Transform>();
+        void Add(Transform t)
+        {
+            if (t == null || t == root) return;
+            foreach (var x in list) if (t.IsChildOf(x)) return;
+            list.RemoveAll(x => x.IsChildOf(t));
+            list.Add(t);
+        }
+
+        if (manual != null && manual.Length > 0)
+        {
+            foreach (var t in manual) Add(t);
+            return list;
+        }
+
+        Transform camRoot = FindDeep(root, "CameraRoot");
+        if (camRoot == null && rig != null)
+        {
+            // 팔 리그를 품고 있는, 루트 바로 아래 오브젝트
+            var t = rig.transform;
+            while (t.parent != null && t.parent != root) t = t.parent;
+            if (t.parent == root) camRoot = t;
+        }
+        Add(camRoot);
+        if (rig != null) { Add(rig.Body); Add(rig.Head); }
+        return list;
+    }
+
+    void LateUpdate()
+    {
+        float dt = Time.deltaTime;
+        _liftShown = liftSpeed > 0f ? Mathf.MoveTowards(_liftShown, _lift, liftSpeed * dt) : _lift;
+        if (_liftShown <= 0f && _liftResolved == null) return;
+
+        if (_liftResolved == null)
+        {
+            _liftResolved = AutoLiftTargets(transform, armRig, liftTargets).ToArray();
+            _liftBase = new Vector3[_liftResolved.Length];
+            _liftLastSet = new Vector3[_liftResolved.Length];
+            for (int i = 0; i < _liftResolved.Length; i++)
+                _liftBase[i] = _liftLastSet[i] = _liftResolved[i] != null ? _liftResolved[i].localPosition : Vector3.zero;
+
+            if (!_liftLogged && Application.isEditor && HasInputAuthority)
+            {
+                _liftLogged = true;
+                var names = new List<string>();
+                foreach (var t in _liftResolved) if (t != null) names.Add(t.name);
+                Debug.Log($"[PlayerAlter] 탄 높이 {_lift:0.##}m — 올리는 것: {(names.Count > 0 ? string.Join(", ", names) : "없음! liftTargets를 지정하세요")}", this);
+            }
+        }
+
+        for (int i = 0; i < _liftResolved.Length; i++)
+        {
+            var t = _liftResolved[i];
+            if (t == null) continue;
+
+            // 다른 코드가 이번 프레임에 위치를 새로 썼으면 그게 기준 (몸 모션 · 카메라 등), 아니면 지난 기준 유지
+            Vector3 cur = t.localPosition;
+            if ((cur - _liftLastSet[i]).sqrMagnitude > 1e-10f) _liftBase[i] = cur;
+
+            Vector3 up = t.parent != null ? t.parent.InverseTransformVector(Vector3.up * _liftShown) : Vector3.up * _liftShown;
+            Vector3 set = _liftBase[i] + up;
+            t.localPosition = set;
+            _liftLastSet[i] = set;
+        }
+
+        // 다 내려왔으면 원래 자리로 두고 정리
+        if (_liftShown <= 0f && _lift <= 0f)
+        {
+            for (int i = 0; i < _liftResolved.Length; i++)
+                if (_liftResolved[i] != null) _liftResolved[i].localPosition = _liftBase[i];
+            _liftResolved = null;
+        }
     }
 
     // ══════════════════ 조회 ══════════════════
