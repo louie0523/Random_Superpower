@@ -369,7 +369,7 @@ MonoBehaviour:
   _HelmetId: 0
   _BootsId: 0
   _SlotAmmo: 
-  startWeaponId: 1001
+  startWeaponId: 1999
   fistWeaponId: 1000
   swapTime: 0.6
 --- !u!114 &-1179119024802948346
@@ -1130,7 +1130,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 479
+    m_Bits: 991
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
