@@ -16,11 +16,7 @@ MonoBehaviour:
   DisplayName: "\uC8FD\uC74C\uC758 \uAE30\uC0AC\uC758 \uB9D0"
   Icon: {fileID: 0}
   Description: 
-<<<<<<< Updated upstream
   Prefab: {fileID: 7191314985000517668, guid: 35ccc23729f7f784fb1f08f1406837c7, type: 3}
-=======
-  Prefab: {fileID: 6887747637128370275, guid: aff5c38c6acba1541bbf6c4e6d62a162, type: 3}
->>>>>>> Stashed changes
   Attach: 5
   BoneName: 
   Position: {x: 0, y: -1, z: 0}
