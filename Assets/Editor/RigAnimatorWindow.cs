@@ -430,6 +430,7 @@ public class RigAnimatorWindow : EditorWindow
 
         if (_sel != null && !_pickParent) DrawBoneTool();
         if (_data != null && (_tab == Tab.IK || _tab == Tab.Anim)) DrawIKTargets();
+        if (_tab == Tab.Anim && e.type == EventType.Repaint) DrawForwardArrow();
 
         if (_pickParent && _sel != null)
             Handles.Label(_sel.position, $"  새 부모가 될 본을 클릭 (Esc 취소)\n  옮길 본: {_sel.name}", _sceneLabel);
@@ -529,46 +530,46 @@ public class RigAnimatorWindow : EditorWindow
         switch (_tool)
         {
             case BoneTool.Rotate:
+            {
+                EditorGUI.BeginChangeCheck();
+                var r = Handles.RotationHandle(b.rotation, h);
+                if (EditorGUI.EndChangeCheck())
                 {
-                    EditorGUI.BeginChangeCheck();
-                    var r = Handles.RotationHandle(b.rotation, h);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        Undo.RecordObject(b, "본 회전");
-                        b.rotation = r;
-                        OnPoseEdited();
-                    }
-                    break;
+                    Undo.RecordObject(b, "본 회전");
+                    b.rotation = r;
+                    OnPoseEdited();
                 }
+                break;
+            }
             case BoneTool.Move:
+            {
+                EditorGUI.BeginChangeCheck();
+                var p = Handles.PositionHandle(h, Tools.pivotRotation == PivotRotation.Local ? b.rotation : Quaternion.identity);
+                if (EditorGUI.EndChangeCheck())
                 {
-                    EditorGUI.BeginChangeCheck();
-                    var p = Handles.PositionHandle(h, Tools.pivotRotation == PivotRotation.Local ? b.rotation : Quaternion.identity);
-                    if (EditorGUI.EndChangeCheck())
+                    Undo.RecordObject(b, "본 이동");
+                    b.position = p;
+                    OnPoseEdited();
+                }
+                break;
+            }
+            case BoneTool.Aim:
+            {
+                Handles.color = CBoneSel;
+                EditorGUI.BeginChangeCheck();
+                var nt = Handles.FreeMoveHandle(t, size * 0.1f, Vector3.zero, Handles.SphereHandleCap);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Vector3 from = t - h, to = nt - h;
+                    if (from.sqrMagnitude > 1e-8f && to.sqrMagnitude > 1e-8f)
                     {
-                        Undo.RecordObject(b, "본 이동");
-                        b.position = p;
+                        Undo.RecordObject(b, "본 끝 끌기");
+                        b.rotation = Quaternion.FromToRotation(from, to) * b.rotation;
                         OnPoseEdited();
                     }
-                    break;
                 }
-            case BoneTool.Aim:
-                {
-                    Handles.color = CBoneSel;
-                    EditorGUI.BeginChangeCheck();
-                    var nt = Handles.FreeMoveHandle(t, size * 0.1f, Vector3.zero, Handles.SphereHandleCap);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        Vector3 from = t - h, to = nt - h;
-                        if (from.sqrMagnitude > 1e-8f && to.sqrMagnitude > 1e-8f)
-                        {
-                            Undo.RecordObject(b, "본 끝 끌기");
-                            b.rotation = Quaternion.FromToRotation(from, to) * b.rotation;
-                            OnPoseEdited();
-                        }
-                    }
-                    break;
-                }
+                break;
+            }
         }
 
         Handles.Label(h + Vector3.up * size * 0.15f, " " + b.name, _sceneLabel);
@@ -1126,6 +1127,8 @@ public class RigAnimatorWindow : EditorWindow
             if (GUILayout.Button("AnimationClip으로 내보내기", EditorStyles.miniButtonRight)) ExportClip(st);
         }
 
+        DrawAutoSection();
+
         Hint("씬: 본 클릭 → W 이동 · E 회전 · R 끝 끌기 / 주황 상자 = IK / K = 키 저장 / Esc = 선택 해제\n" +
              "타임라인: 빈 곳 클릭 = 시간 이동 · 더블클릭 = 키 추가 · 키 끌기 = 시간 옮기기");
     }
@@ -1172,17 +1175,17 @@ public class RigAnimatorWindow : EditorWindow
         switch (e.type)
         {
             case EventType.MouseDown when e.button == 0 && r.Contains(e.mousePosition):
-                {
-                    int hit = -1;
-                    for (int i = 0; i < s.Keys.Count; i++)
-                        if (Mathf.Abs(X(s.Keys[i].Time) - e.mousePosition.x) < 7f && e.mousePosition.y > r.y + 16) { hit = i; break; }
+            {
+                int hit = -1;
+                for (int i = 0; i < s.Keys.Count; i++)
+                    if (Mathf.Abs(X(s.Keys[i].Time) - e.mousePosition.x) < 7f && e.mousePosition.y > r.y + 16) { hit = i; break; }
 
-                    if (hit >= 0) { SelectKey(hit); _dragKey = true; }
-                    else if (e.clickCount == 2) { _playing = false; SetTime(Snap(T(e.mousePosition.x))); AddOrSetKey(); }
-                    else { _playing = false; _scrub = true; SetTime(T(e.mousePosition.x)); }
-                    e.Use();
-                    break;
-                }
+                if (hit >= 0) { SelectKey(hit); _dragKey = true; }
+                else if (e.clickCount == 2) { _playing = false; SetTime(Snap(T(e.mousePosition.x))); AddOrSetKey(); }
+                else { _playing = false; _scrub = true; SetTime(T(e.mousePosition.x)); }
+                e.Use();
+                break;
+            }
             case EventType.MouseDrag when _dragKey && _keyIdx >= 0 && _keyIdx < s.Keys.Count:
                 Undo.RecordObject(_data, "키 옮기기");
                 s.Keys[_keyIdx].Time = Snap(T(e.mousePosition.x));
@@ -1413,6 +1416,428 @@ public class RigAnimatorWindow : EditorWindow
         AssetDatabase.SaveAssets();
         EditorGUIUtility.PingObject(clip);
         ShowNotification(new GUIContent($"본 {written}개 내보냄"));
+    }
+
+    // ══════════════════ 자동 만들기 — 다리 걸음 · 클립 가져오기 ══════════════════
+
+    enum Gait { Walk, Trot, Canter, Gallop, Biped }
+    static readonly string[] GaitNames = { "걷기 (4박)", "속보 (대각선 둘씩)", "구보 (3박)", "질주 (돌진용)", "두 다리" };
+    static readonly string[] AxisNames = { "+Z (파랑)", "-Z", "+X (빨강)", "-X" };
+
+    private bool _autoFold;
+    private Gait _gait = Gait.Walk;
+    private string _gaitState = "Walk";
+    private int _fwdAxis;
+    private float _gaitLen = 1f;
+    private float _stride = 0.6f;
+    private float _stepH = 0.15f;
+    private float _bob = 0.04f;
+    private float _pitch = 2f;
+    private float _hoofCurl = 30f;
+    private int _gaitKeys = 12;
+    private readonly HashSet<string> _gaitLegs = new();
+    private bool _gaitLegsInit;
+    private AnimationClip _importClip;
+    private string _importName = "";
+    private float _importStep = 0.1f;
+
+    class Leg
+    {
+        public RigIKChain Chain;
+        public Transform[] Bones;
+        public Vector3 RestTip;          // 모델 루트 기준
+        public Quaternion RestTipRot;    // 모델 루트 기준
+        public bool Front, Left;
+        public float Phase;
+    }
+
+    Vector3 FwdAxisLocal => _fwdAxis switch { 1 => Vector3.back, 2 => Vector3.right, 3 => Vector3.left, _ => Vector3.forward };
+
+    void DrawAutoSection()
+    {
+        EditorGUILayout.Space(6);
+        _autoFold = EditorGUILayout.BeginFoldoutHeaderGroup(_autoFold, "자동 만들기 — 다리 걸음 · AnimationClip 가져오기");
+        if (_autoFold)
+        {
+            DrawGaitBox();
+            DrawImportBox();
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+    }
+
+    void DrawGaitBox()
+    {
+        using var _ = new EditorGUILayout.VerticalScope(EditorStyles.helpBox);
+        EditorGUILayout.LabelField("다리 걸음 자동 생성", EditorStyles.boldLabel);
+        Hint("다리 IK를 고르면 걸음 한 바퀴를 키로 만들어 줍니다. 만든 뒤 키를 골라 손으로 다듬으면 됩니다.\n" +
+             "먼저 'IK' 탭에서 다리 IK가 있어야 합니다 (자동 IK, 본 개수 4).");
+
+        if (_data.Chains.Count == 0)
+        {
+            EditorGUILayout.HelpBox("IK가 없습니다 — 'IK' 탭에서 다리 IK를 먼저 만드세요.", MessageType.Warning);
+            return;
+        }
+
+        EditorGUI.BeginChangeCheck();
+        var g = (Gait)EditorGUILayout.Popup("걸음", (int)_gait, GaitNames);
+        if (EditorGUI.EndChangeCheck()) ApplyGaitPreset(g);
+
+        _gaitState = EditorGUILayout.TextField("만들 상태 이름", _gaitState);
+        _fwdAxis = EditorGUILayout.Popup("모델 앞 방향 (씬 하늘색 화살표)", _fwdAxis, AxisNames);
+
+        // 다리 고르기 — 처음엔 땅에 가까운 끝을 가진 IK를 자동으로
+        if (!_gaitLegsInit) AutoPickLegs();
+        var legs = BuildLegs(false);
+        EditorGUILayout.LabelField("다리 IK", EditorStyles.miniBoldLabel);
+        foreach (var ch in _data.Chains)
+        {
+            if (ch == null) continue;
+            var leg = legs.Find(l => l.Chain == ch);
+            string where = leg != null ? $"  ({(leg.Front ? "앞" : "뒤")} · {(leg.Left ? "왼" : "오른")})" : "";
+            bool on = _gaitLegs.Contains(ch.Name);
+            bool nv = EditorGUILayout.ToggleLeft(ch.Name + where, on);
+            if (nv != on) { if (nv) _gaitLegs.Add(ch.Name); else _gaitLegs.Remove(ch.Name); }
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("땅에 닿은 것 자동 선택", EditorStyles.miniButton)) AutoPickLegs();
+            GUILayout.FlexibleSpace();
+        }
+
+        _gaitLen = Mathf.Max(0.2f, EditorGUILayout.FloatField(new GUIContent("한 바퀴 시간 (초)", "네 다리가 한 번씩 다 딛는 시간"), _gaitLen));
+        _stride = EditorGUILayout.Slider(new GUIContent("보폭 (m)", "발이 앞뒤로 움직이는 거리"), _stride, 0.05f, 3f);
+        _stepH = EditorGUILayout.Slider("발 드는 높이 (m)", _stepH, 0f, 1f);
+        _bob = EditorGUILayout.Slider(new GUIContent("몸 출렁임 (m)", "몸통이 위아래로"), _bob, 0f, 0.5f);
+        _pitch = EditorGUILayout.Slider(new GUIContent("몸 앞뒤 기울기 (도)", "질주할 때 크게"), _pitch, 0f, 20f);
+        _hoofCurl = EditorGUILayout.Slider(new GUIContent("발굽 꺾기 (도)", "발을 들 때 끝 본을 꺾음. 반대로 꺾이면 음수로"), _hoofCurl, -90f, 90f);
+        _gaitKeys = EditorGUILayout.IntSlider(new GUIContent("키 개수", "많을수록 정확, 적을수록 손보기 쉬움"), _gaitKeys, 4, 24);
+
+        legs = BuildLegs(true);
+        using (new EditorGUI.DisabledScope(legs.Count == 0 || string.IsNullOrWhiteSpace(_gaitState)))
+            if (GUILayout.Button($"'{_gaitState}' 만들기 (다리 {legs.Count}개)", GUILayout.Height(28))) GenerateGait(legs);
+    }
+
+    void ApplyGaitPreset(Gait g)
+    {
+        _gait = g;
+        switch (g)
+        {
+            case Gait.Walk: _gaitState = "Walk"; _gaitLen = 1.0f; _stepH = 0.15f; _bob = 0.03f; _pitch = 1.5f; break;
+            case Gait.Trot: _gaitState = "Walk"; _gaitLen = 0.7f; _stepH = 0.2f; _bob = 0.05f; _pitch = 2f; break;
+            case Gait.Canter: _gaitState = "Walk"; _gaitLen = 0.65f; _stepH = 0.25f; _bob = 0.08f; _pitch = 5f; break;
+            case Gait.Gallop: _gaitState = "Charge"; _gaitLen = 0.5f; _stepH = 0.3f; _bob = 0.1f; _pitch = 8f; break;
+            case Gait.Biped: _gaitState = "Walk"; _gaitLen = 0.8f; _stepH = 0.12f; _bob = 0.03f; _pitch = 1f; break;
+        }
+    }
+
+    void AutoPickLegs()
+    {
+        _gaitLegsInit = true;
+        _gaitLegs.Clear();
+        float minY = float.MaxValue, maxY = float.MinValue;
+        var tips = new List<(RigIKChain ch, float y)>();
+        foreach (var ch in _data.Chains)
+        {
+            var tr = ChainTransforms(ch);
+            if (tr == null) continue;
+            float y = tr[tr.Length - 1].position.y;
+            tips.Add((ch, y));
+            minY = Mathf.Min(minY, y);
+            maxY = Mathf.Max(maxY, y);
+        }
+        float h = Mathf.Max(0.05f, (maxY - minY));
+        foreach (var (ch, y) in tips)
+            if (y - minY <= h * 0.15f + 0.02f) _gaitLegs.Add(ch.Name);
+    }
+
+    /// <summary>고른 다리 — 기본 자세 기준 위치 · 앞뒤 · 좌우 · 걸음 순서</summary>
+    List<Leg> BuildLegs(bool withPhase)
+    {
+        var legs = new List<Leg>();
+        if (_model == null || _data == null) return legs;
+        var root = _model.transform;
+
+        // 기본 자세 기준으로 재야 해서 잠깐 적용했다 되돌림
+        var keep = new RigPose();
+        Capture(keep);
+        ApplyPose(_data.Rest);
+
+        foreach (var ch in _data.Chains)
+        {
+            if (ch == null || !_gaitLegs.Contains(ch.Name)) continue;
+            var tr = ChainTransforms(ch);
+            if (tr == null) continue;
+            var tip = tr[tr.Length - 1];
+            legs.Add(new Leg
+            {
+                Chain = ch,
+                Bones = tr,
+                RestTip = root.InverseTransformPoint(tip.position),
+                RestTipRot = Quaternion.Inverse(root.rotation) * tip.rotation,
+            });
+        }
+        ApplyPose(keep);
+
+        if (legs.Count == 0) return legs;
+
+        Vector3 f = FwdAxisLocal;
+        Vector3 r = Vector3.Cross(Vector3.up, f);
+        float meanF = 0f, meanR = 0f;
+        foreach (var l in legs) { meanF += Vector3.Dot(l.RestTip, f); meanR += Vector3.Dot(l.RestTip, r); }
+        meanF /= legs.Count;
+        meanR /= legs.Count;
+        foreach (var l in legs)
+        {
+            l.Front = Vector3.Dot(l.RestTip, f) > meanF;
+            l.Left = Vector3.Dot(l.RestTip, r) < meanR;
+        }
+
+        if (withPhase)
+        {
+            bool biped = _gait == Gait.Biped || legs.Count <= 2;
+            foreach (var l in legs) l.Phase = biped ? (l.Left ? 0f : 0.5f) : PhaseFor(l.Front, l.Left);
+        }
+        return legs;
+    }
+
+    float PhaseFor(bool front, bool left) => _gait switch
+    {
+        // 걷기: 왼뒤 → 왼앞 → 오른뒤 → 오른앞
+        Gait.Walk => (front, left) switch { (false, true) => 0f, (true, true) => 0.25f, (false, false) => 0.5f, _ => 0.75f },
+        // 속보: 대각선 둘씩
+        Gait.Trot => (front, left) switch { (true, true) => 0f, (false, false) => 0f, _ => 0.5f },
+        // 구보: 오른뒤 → (왼뒤 + 오른앞) → 왼앞
+        Gait.Canter => (front, left) switch { (false, false) => 0f, (false, true) => 0.3f, (true, false) => 0.3f, _ => 0.6f },
+        // 질주: 뒤 둘 → 앞 둘
+        _ => (front, left) switch { (false, false) => 0f, (false, true) => 0.1f, (true, false) => 0.45f, _ => 0.55f },
+    };
+
+    float StanceFor() => _gait switch
+    {
+        Gait.Walk => 0.7f, Gait.Trot => 0.5f, Gait.Canter => 0.45f, Gait.Gallop => 0.35f, _ => 0.6f,
+    };
+
+    static Transform CommonAncestor(IEnumerable<Transform> ts)
+    {
+        Transform lca = null;
+        foreach (var t in ts)
+        {
+            if (t == null) continue;
+            if (lca == null) { lca = t.parent; continue; }
+            var set = new HashSet<Transform>();
+            for (var a = lca; a != null; a = a.parent) set.Add(a);
+            var b = t.parent;
+            while (b != null && !set.Contains(b)) b = b.parent;
+            lca = b;
+        }
+        return lca;
+    }
+
+    void GenerateGait(List<Leg> legs)
+    {
+        string name = _gaitState.Trim();
+        var existing = _data.Find(name);
+        if (existing != null && !EditorUtility.DisplayDialog("상태 덮어쓰기", $"'{name}' 상태의 키를 새로 만든 걸음으로 바꿀까요?", "바꾸기", "취소"))
+            return;
+
+        Undo.RecordObject(_data, "걸음 자동 생성");
+        var root = _model.transform;
+        Vector3 fwdW = root.TransformDirection(FwdAxisLocal).normalized;
+        Vector3 rightW = Vector3.Cross(Vector3.up, fwdW).normalized;
+
+        // 몸통 = 다리들이 갈라져 나오는 본 (출렁임 · 기울기)
+        Transform body = CommonAncestor(legs.Select(l => l.Bones[0]));
+        if (body != null && (body == root || !body.IsChildOf(root))) body = null;
+
+        float stance = StanceFor();
+        int beats = _gait == Gait.Canter || _gait == Gait.Gallop ? 1 : 2;
+        var state = existing ?? new RigState { Name = name };
+        state.Length = _gaitLen;
+        state.Loop = true;
+        state.Keys.Clear();
+
+        for (int k = 0; k < _gaitKeys; k++)
+        {
+            float t01 = (float)k / _gaitKeys;
+            ApplyPose(_data.Rest);
+
+            if (body != null)
+            {
+                float y = -_bob * 0.5f * (1f - Mathf.Cos(2f * Mathf.PI * beats * t01));
+                float pitch = _pitch * Mathf.Sin(2f * Mathf.PI * beats * t01) * (beats == 1 ? 1f : 0.5f);
+                body.position += Vector3.up * y;
+                body.rotation = Quaternion.AngleAxis(pitch, rightW) * body.rotation;
+            }
+
+            foreach (var l in legs)
+            {
+                float p = Mathf.Repeat(t01 + l.Phase, 1f);
+                float dz, dy, curl;
+                if (p < stance)
+                {
+                    float u = p / stance;                       // 디딤 — 발이 땅에서 뒤로 밀림
+                    dz = _stride * (0.5f - u);
+                    dy = 0f;
+                    curl = 0f;
+                }
+                else
+                {
+                    float u = (p - stance) / (1f - stance);     // 듦 — 들어서 앞으로
+                    float e = u * u * (3f - 2f * u);
+                    dz = _stride * (-0.5f + e);
+                    dy = _stepH * Mathf.Sin(Mathf.PI * u);
+                    curl = _hoofCurl * Mathf.Sin(Mathf.PI * u);
+                }
+
+                Vector3 target = root.TransformPoint(l.RestTip) + fwdW * dz + Vector3.up * dy;
+                RigIK.Solve(l.Bones, target, 16);
+
+                var tip = l.Bones[l.Bones.Length - 1];
+                tip.rotation = Quaternion.AngleAxis(-curl, rightW) * (root.rotation * l.RestTipRot);
+            }
+
+            var key = new RigKey { Time = t01 * _gaitLen, Ease = RigEase.Smooth };
+            Capture(key.Pose);
+            state.Keys.Add(key);
+        }
+
+        if (existing == null) _data.States.Add(state);
+        if (string.IsNullOrEmpty(_data.MoveState) || _data.Find(_data.MoveState) == null)
+            if (name == "Walk") _data.MoveState = name;
+
+        EditorUtility.SetDirty(_data);
+        SelectState(_data.States.IndexOf(state));
+        _playing = true;
+        ShowNotification(new GUIContent($"'{name}' 키 {_gaitKeys}개 만듦 — 재생 중"));
+    }
+
+    // ── AnimationClip 가져오기 ──
+
+    void DrawImportBox()
+    {
+        using var _ = new EditorGUILayout.VerticalScope(EditorStyles.helpBox);
+        EditorGUILayout.LabelField("AnimationClip 가져오기", EditorStyles.boldLabel);
+        Hint("블렌더 · 다른 툴에서 만든 Generic 클립을 키로 바꿔 넣습니다. 본은 이름으로 맞춥니다 (tripo:: 같은 접두사는 무시).\n" +
+             "본 부모를 바꾼 뒤라면 그 본은 자세가 틀어질 수 있습니다 — 가져온 뒤 손보거나, 부모 바꾸기 전에 가져오세요.");
+
+        EditorGUI.BeginChangeCheck();
+        _importClip = (AnimationClip)EditorGUILayout.ObjectField("클립", _importClip, typeof(AnimationClip), false);
+        if (EditorGUI.EndChangeCheck() && _importClip != null) _importName = _importClip.name;
+        _importName = EditorGUILayout.TextField("상태 이름", _importName);
+        _importStep = EditorGUILayout.Slider(new GUIContent("키 간격 (초)", "작을수록 원본에 가깝게, 클수록 손보기 쉬움"), _importStep, 0.03f, 0.5f);
+
+        using (new EditorGUI.DisabledScope(_importClip == null || string.IsNullOrWhiteSpace(_importName)))
+            if (GUILayout.Button("가져오기")) ImportClip(_importClip, _importName.Trim(), _importStep);
+    }
+
+    static string Bare(string n)
+    {
+        int i = n.LastIndexOf("::", System.StringComparison.Ordinal);
+        return (i >= 0 ? n.Substring(i + 2) : n).ToLowerInvariant();
+    }
+
+    int FindDataBone(string clipBoneName)
+    {
+        int i = _data.Bones.IndexOf(clipBoneName);
+        if (i >= 0) return i;
+        string b = Bare(clipBoneName);
+        for (int k = 0; k < _data.Bones.Count; k++)
+            if (Bare(_data.Bones[k]) == b) return k;
+        return -1;
+    }
+
+    void ImportClip(AnimationClip clip, string name, float step)
+    {
+        if (clip.humanMotion)
+        {
+            EditorUtility.DisplayDialog("가져오기", "Humanoid 클립은 가져올 수 없습니다. 모델 Import 설정을 Generic으로 바꿔서 뽑은 클립을 쓰세요.", "확인");
+            return;
+        }
+
+        // 본별 커브 모으기
+        var curves = new Dictionary<int, Dictionary<string, AnimationCurve>>();
+        foreach (var b in AnimationUtility.GetCurveBindings(clip))
+        {
+            if (b.type != typeof(Transform)) continue;
+            string last = b.path;
+            int slash = last.LastIndexOf('/');
+            if (slash >= 0) last = last.Substring(slash + 1);
+            if (string.IsNullOrEmpty(last)) continue;
+            int bi = FindDataBone(last);
+            if (bi < 0) continue;
+            if (!curves.TryGetValue(bi, out var d)) curves[bi] = d = new Dictionary<string, AnimationCurve>();
+            d[b.propertyName] = AnimationUtility.GetEditorCurve(clip, b);
+        }
+
+        if (curves.Count == 0)
+        {
+            EditorUtility.DisplayDialog("가져오기", "클립의 본 이름이 이 모델과 하나도 맞지 않습니다.", "확인");
+            return;
+        }
+
+        var existing = _data.Find(name);
+        if (existing != null && !EditorUtility.DisplayDialog("상태 덮어쓰기", $"'{name}' 상태를 클립으로 바꿀까요?", "바꾸기", "취소")) return;
+
+        Undo.RecordObject(_data, "클립 가져오기");
+        float len = Mathf.Max(0.05f, clip.length);
+        bool loop = AnimationUtility.GetAnimationClipSettings(clip).loopTime;
+        int n = Mathf.Max(1, Mathf.RoundToInt(len / Mathf.Max(0.01f, step)));
+
+        var state = existing ?? new RigState { Name = name };
+        state.Length = len;
+        state.Loop = loop;
+        state.Keys.Clear();
+
+        int count = loop ? n : n + 1;           // 반복이면 끝 = 처음이라 빼고
+        for (int k = 0; k < count; k++)
+        {
+            float t = len * k / n;
+            var pose = _data.Rest.Clone();
+            pose.Resize(_data.Bones.Count, _data.Rest);
+            foreach (var kv in curves)
+            {
+                int bi = kv.Key;
+                var c = kv.Value;
+                Quaternion restR = pose.Rot[bi];
+                Vector3 restP = pose.Pos[bi];
+
+                if (c.ContainsKey("m_LocalRotation.x") || c.ContainsKey("m_LocalRotation.w"))
+                {
+                    var q = new Quaternion(Ev(c, "m_LocalRotation.x", t, restR.x), Ev(c, "m_LocalRotation.y", t, restR.y),
+                                           Ev(c, "m_LocalRotation.z", t, restR.z), Ev(c, "m_LocalRotation.w", t, restR.w));
+                    float m = Mathf.Sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+                    pose.Rot[bi] = m > 1e-6f ? new Quaternion(q.x / m, q.y / m, q.z / m, q.w / m) : restR;
+                }
+                else if (c.ContainsKey("localEulerAnglesRaw.x") || c.ContainsKey("localEulerAnglesRaw.y") || c.ContainsKey("localEulerAnglesRaw.z"))
+                {
+                    Vector3 e = restR.eulerAngles;
+                    pose.Rot[bi] = Quaternion.Euler(Ev(c, "localEulerAnglesRaw.x", t, e.x), Ev(c, "localEulerAnglesRaw.y", t, e.y), Ev(c, "localEulerAnglesRaw.z", t, e.z));
+                }
+
+                if (c.ContainsKey("m_LocalPosition.x") || c.ContainsKey("m_LocalPosition.y") || c.ContainsKey("m_LocalPosition.z"))
+                    pose.Pos[bi] = new Vector3(Ev(c, "m_LocalPosition.x", t, restP.x), Ev(c, "m_LocalPosition.y", t, restP.y), Ev(c, "m_LocalPosition.z", t, restP.z));
+            }
+            state.Keys.Add(new RigKey { Time = t, Ease = RigEase.Smooth, Pose = pose });
+        }
+
+        if (existing == null) _data.States.Add(state);
+        EditorUtility.SetDirty(_data);
+        SelectState(_data.States.IndexOf(state));
+        ShowNotification(new GUIContent($"본 {curves.Count}개 · 키 {state.Keys.Count}개 가져옴"));
+    }
+
+    static float Ev(Dictionary<string, AnimationCurve> c, string prop, float t, float fallback) =>
+        c.TryGetValue(prop, out var curve) && curve != null && curve.length > 0 ? curve.Evaluate(t) : fallback;
+
+    void DrawForwardArrow()
+    {
+        if (!_autoFold || _model == null) return;
+        var root = _model.transform;
+        Vector3 f = root.TransformDirection(FwdAxisLocal);
+        float s = HandleUtility.GetHandleSize(root.position) * 1.5f;
+        Handles.color = new Color(0.3f, 0.85f, 1f, 1f);
+        Handles.ArrowHandleCap(0, root.position + Vector3.up * 0.05f, Quaternion.LookRotation(f, Vector3.up), s, EventType.Repaint);
+        Handles.Label(root.position + f * s * 1.1f, " 앞", _sceneLabel);
     }
 
     // ══════════════════ 공통 ══════════════════
