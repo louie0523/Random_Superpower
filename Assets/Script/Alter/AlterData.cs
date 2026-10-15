@@ -51,6 +51,13 @@ public class AlterData : ScriptableObject
              "여러 개면 가장 큰 값")]
     [Min(0f)] public float Lift = 0f;
 
+    [Header("방향")]
+    [Tooltip("내 시선(마우스) 방향을 따라 돌지 않고, 움직이는 방향(WASD)을 바라봄 — 말 등.\n" +
+             "멈추면 마지막 방향 그대로. 회전(Rotation) 값은 모델 앞을 맞추는 보정으로 그대로 적용")]
+    public bool FaceMoveDirection = false;
+    [Tooltip("이동 방향으로 도는 빠르기")]
+    [Min(0.1f)] public float FaceTurnSpeed = 8f;
+
     [Header("보이기")]
     [Tooltip("본인 화면에서도 보임. 날개·뿔처럼 시야를 가리는 건 끄고, 손 파츠는 켜기")]
     public bool ShowForSelf = false;

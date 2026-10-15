@@ -33,6 +33,12 @@ public class RigAnimator : MonoBehaviour
 
     public string CurrentState => _cur != null ? _cur.Name : null;
 
+    [Header("확인용 (게임 중)")]
+    [Tooltip("지금 이동 속도 — Run으로 바뀌는 속도(RunThreshold)를 정할 때 참고")]
+    [SerializeField] private float currentSpeed;
+    [SerializeField] private string currentState;
+    private bool _running;
+
     private Transform[] _bones;
     private Transform[][] _chains;
     private readonly RigPose _pose = new();
@@ -132,9 +138,19 @@ public class RigAnimator : MonoBehaviour
         if (Data == null) return null;
         if (Moving)
         {
+            // 달리기 — 문턱을 넘으면 Run, 문턱의 85% 아래로 떨어지면 Walk (왔다갔다 깜빡임 방지)
+            var run = Data.Find(Data.RunState);
+            if (run != null)
+            {
+                float th = Mathf.Max(0.1f, Data.RunThreshold);
+                _running = _running ? MoveSpeed >= th * 0.85f : MoveSpeed >= th;
+                if (_running) return run;
+            }
             var m = Data.Find(Data.MoveState);
             if (m != null) return m;
+            if (run != null) return run;
         }
+        _running = false;
         return Data.Find(Data.IdleState);
     }
 
@@ -151,8 +167,15 @@ public class RigAnimator : MonoBehaviour
 
         // 진행
         float spd = _cur.Speed * SpeedMul;
-        if (_isBase && Moving && _cur.Name == Data.MoveState && Data.WalkRefSpeed > 0.01f)
-            spd *= Mathf.Clamp(MoveSpeed / Data.WalkRefSpeed, 0.4f, 3f);
+        if (_isBase && Moving)
+        {
+            if (_cur.Name == Data.RunState && Data.RunRefSpeed > 0.01f)
+                spd *= Mathf.Clamp(MoveSpeed / Data.RunRefSpeed, 0.5f, 2.5f);
+            else if (_cur.Name == Data.MoveState && Data.WalkRefSpeed > 0.01f)
+                spd *= Mathf.Clamp(MoveSpeed / Data.WalkRefSpeed, 0.4f, 3f);
+        }
+        currentSpeed = Moving ? MoveSpeed : 0f;
+        currentState = _cur.Name;
         _t += dt * spd;
 
         // 한 번짜리 · 유지 끝 → 기본으로

@@ -32,6 +32,12 @@ public class PlayerAlter : NetworkBehaviour
     private static readonly HashSet<int> _warnedLift = new();     // 파츠의 애니메이션 (말 걷기 등)
     private Vector3 _lastPos;
     private float _moveSpeed;
+    private Vector3 _moveDir;
+
+    // 이동 방향을 바라보는 파츠 (말 등)
+    private readonly List<(Transform t, AlterData a)> _facers = new();
+    private Quaternion _faceRot = Quaternion.identity;
+    private bool _faceInit;
     private PlayerStats _stats;
     private PlayerHealth _health;
     private Transform _weaponParent;
@@ -47,6 +53,9 @@ public class PlayerAlter : NetworkBehaviour
     private Transform[] _liftResolved;
     private Vector3[] _liftBase, _liftLastSet;
     private bool _liftLogged;
+    private bool _bodyViaRig;
+    private Vector3 _bodyRest, _headRest;
+    private bool _bodyForced;
 
     public AlterDatabase Database => database;
 
@@ -70,6 +79,14 @@ public class PlayerAlter : NetworkBehaviour
             _ccCenterY = _cc.center.y;
         }
 
+        // 몸 · 머리 기본 위치 (탔을 때 이 위치 + 탄 높이로 고정)
+        if (armRig != null)
+        {
+            if (armRig.Body != null) _bodyRest = armRig.Body.localPosition;
+            if (armRig.Head != null) _headRest = armRig.Head.localPosition;
+        }
+        RenderPipelineManager.beginContextRendering += OnBeforeRender;
+
         Rebuild();
         if (HasStateAuthority) ApplyStats();
     }
@@ -77,6 +94,7 @@ public class PlayerAlter : NetworkBehaviour
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         if (_tpv != null) _tpv.Changed -= OnViewChanged;
+        RenderPipelineManager.beginContextRendering -= OnBeforeRender;
         ClearVisuals();
         ApplyLift(0f);
         _liftShown = 0f;
@@ -102,14 +120,56 @@ public class PlayerAlter : NetworkBehaviour
             _cc.center = c;
         }
 
-        // 몸 · 카메라는 LateUpdate에서 올림 (모든 클라이언트 같은 방식)
-        if (armRig != null) armRig.BodyLift = 0f;
+        // 카메라는 LateUpdate에서, 몸 · 머리는 FPArmRig.BodyLift로 (모션이 몸을 움직여도 항상 올라간 채로)
     }
 
     // ══════════════════ 탄 높이 — 보이는 것 올리기 (모든 클라이언트) ══════════════════
 
     /// <summary>올릴 대상 자동 — CameraRoot + 몸 · 머리 (서로 겹치면 위쪽 것만)</summary>
-    public static List<Transform> AutoLiftTargets(Transform root, FPArmRig rig, Transform[] manual = null)
+    /// <summary>
+    /// 탄 동안 몸 · 머리 위치를 '기본 위치 + 탄 높이'로 고정 — 모션 · 스킬이 몸 위치를 바꿔도 무시 (회전은 그대로 적용).
+    /// 모든 LateUpdate가 끝나고 그리기 직전에 한 번 더 걸어서 어떤 코드가 늦게 써도 내려가지 않음
+    /// </summary>
+    void EnforceBodyLift()
+    {
+        if (armRig == null) return;
+        if (_liftShown <= 0f)
+        {
+            if (_bodyForced)
+            {
+                _bodyForced = false;
+                if (armRig.Body != null) armRig.Body.localPosition = _bodyRest;
+                if (armRig.Head != null && (armRig.Body == null || !armRig.Head.IsChildOf(armRig.Body))) armRig.Head.localPosition = _headRest;
+            }
+            return;
+        }
+        if (_liftResolved != null && !_bodyViaRig) return;      // 몸이 이미 카메라 쪽과 함께 올라가는 구조
+
+        _bodyForced = true;
+        var body = armRig.Body;
+        if (body != null) body.localPosition = _bodyRest + LocalUp(body, _liftShown);
+
+        var head = armRig.Head;
+        if (head != null && (body == null || !head.IsChildOf(body)))
+            head.localPosition = _headRest + LocalUp(head, _liftShown);
+    }
+
+    static Vector3 LocalUp(Transform t, float h) =>
+        t.parent != null ? t.parent.InverseTransformVector(Vector3.up * h) : Vector3.up * h;
+
+    void OnBeforeRender(ScriptableRenderContext ctx, System.Collections.Generic.List<Camera> cams)
+    {
+        if (this == null) { RenderPipelineManager.beginContextRendering -= OnBeforeRender; return; }
+        EnforceBodyLift();
+    }
+
+    static bool UnderAny(Transform t, Transform[] roots)
+    {
+        foreach (var r in roots) if (r != null && t.IsChildOf(r)) return true;
+        return false;
+    }
+
+    public static List<Transform> AutoLiftTargets(Transform root, FPArmRig rig, Transform[] manual = null, bool includeBody = true)
     {
         var list = new List<Transform>();
         void Add(Transform t)
@@ -135,19 +195,49 @@ public class PlayerAlter : NetworkBehaviour
             if (t.parent == root) camRoot = t;
         }
         Add(camRoot);
-        if (rig != null) { Add(rig.Body); Add(rig.Head); }
+        if (includeBody && rig != null) { Add(rig.Body); Add(rig.Head); }
         return list;
+    }
+
+    Vector3 FlatForward()
+    {
+        Vector3 f = transform.forward;
+        f.y = 0f;
+        return f.sqrMagnitude > 0.0001f ? f.normalized : Vector3.forward;
+    }
+
+    /// <summary>이동 방향을 바라보는 파츠 — 부모(플레이어)가 시선 따라 돌아도 월드 방향은 이동 방향</summary>
+    void TickFacers(float dt)
+    {
+        if (_facers.Count == 0) { _faceInit = false; return; }
+
+        float turn = 8f;
+        foreach (var (_, a) in _facers) if (a != null) turn = a.FaceTurnSpeed;
+
+        if (_moveSpeed > 0.6f && _moveDir.sqrMagnitude > 0.01f)
+            _faceRot = Quaternion.Slerp(_faceRot, Quaternion.LookRotation(_moveDir, Vector3.up), 1f - Mathf.Exp(-turn * dt));
+
+        foreach (var (t, a) in _facers)
+            if (t != null && a != null) t.rotation = _faceRot * Quaternion.Euler(a.Rotation);
     }
 
     void LateUpdate()
     {
         float dt = Time.deltaTime;
+        TickFacers(dt);
         _liftShown = liftSpeed > 0f ? Mathf.MoveTowards(_liftShown, _lift, liftSpeed * dt) : _lift;
+        if (armRig != null) armRig.BodyLift = 0f;      // 몸은 아래 EnforceBodyLift가 직접 고정
+        EnforceBodyLift();
         if (_liftShown <= 0f && _liftResolved == null) return;
 
         if (_liftResolved == null)
         {
-            _liftResolved = AutoLiftTargets(transform, armRig, liftTargets).ToArray();
+            // 몸 · 머리는 FPArmRig가 자세를 쓸 때마다 직접 올림(BodyLift) → 여기선 뺌.
+            // 모션 · 스킬이 몸 위치를 덮어써도 순간적으로 내려가지 않음
+            var list = AutoLiftTargets(transform, armRig, liftTargets, includeBody: false);
+            if (armRig != null) list.RemoveAll(t => t == armRig.Body || t == armRig.Head);
+            _liftResolved = list.ToArray();
+            _bodyViaRig = armRig != null && armRig.Body != null && !UnderAny(armRig.Body, _liftResolved);
             _liftBase = new Vector3[_liftResolved.Length];
             _liftLastSet = new Vector3[_liftResolved.Length];
             for (int i = 0; i < _liftResolved.Length; i++)
@@ -158,6 +248,7 @@ public class PlayerAlter : NetworkBehaviour
                 _liftLogged = true;
                 var names = new List<string>();
                 foreach (var t in _liftResolved) if (t != null) names.Add(t.name);
+                if (_bodyViaRig) names.Add(armRig.Body.name + " (탄 높이로 고정)");
                 Debug.Log($"[PlayerAlter] 탄 높이 {_lift:0.##}m — 올리는 것: {(names.Count > 0 ? string.Join(", ", names) : "없음! liftTargets를 지정하세요")}", this);
             }
         }
@@ -330,6 +421,7 @@ public class PlayerAlter : NetworkBehaviour
         float speed = d.magnitude / dt;
         if (speed > 60f) speed = 0f;                                 // 순간이동 · 리스폰
         _moveSpeed = Mathf.Lerp(_moveSpeed, speed, 1f - Mathf.Exp(-10f * dt));
+        if (speed > 0.6f) _moveDir = d / (speed * dt);
 
         if (_rigAnims.Count == 0) return;
         bool moving = _moveSpeed > 0.6f;
@@ -414,6 +506,12 @@ public class PlayerAlter : NetworkBehaviour
 
             var ra = go.GetComponent<RigAnimator>();
             if (ra != null) _rigAnims.Add(ra);
+
+            if (a.FaceMoveDirection)
+            {
+                if (!_faceInit) { _faceRot = Quaternion.LookRotation(FlatForward(), Vector3.up); _faceInit = true; }
+                _facers.Add((go.transform, a));
+            }
         }
 
         ApplyVisibility();
@@ -474,5 +572,6 @@ public class PlayerAlter : NetworkBehaviour
         _spawned.Clear();
         _renderers.Clear();
         _rigAnims.Clear();
+        _facers.Clear();
     }
 }

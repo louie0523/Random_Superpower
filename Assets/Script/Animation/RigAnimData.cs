@@ -59,6 +59,20 @@ public class RigKey
     [Tooltip("이 키에서 다음 키까지 잇는 방식")]
     public RigEase Ease = RigEase.Smooth;
     public RigPose Pose = new();
+    [Tooltip("이 키에서 빠진 본 (본 번호) — 그 본은 앞뒤 키 사이로 그냥 이어짐. 비어 있으면 모든 본이 키")]
+    public List<int> Free = new();
+
+    /// <summary>이 키가 그 본의 키인지 (빠진 본이 아닌지)</summary>
+    public bool Has(int bone) => Free == null || Free.Count == 0 || !Free.Contains(bone);
+
+    public void SetHas(int bone, bool on)
+    {
+        Free ??= new List<int>();
+        if (on) Free.Remove(bone);
+        else if (!Free.Contains(bone)) Free.Add(bone);
+    }
+
+    public RigKey Clone() => new() { Time = Time, Ease = Ease, Pose = Pose.Clone(), Free = Free != null ? new List<int>(Free) : new List<int>() };
 }
 
 /// <summary>상태 하나 = 애니메이션 하나 (Idle · Walk · Grab · Charge …)</summary>
@@ -75,6 +89,36 @@ public class RigState
     public List<RigKey> Keys = new();
 
     public void SortKeys() => Keys.Sort((a, b) => a.Time.CompareTo(b.Time));
+
+    // ── 본별 키 목록 (일부 본만 키인 경우) — 키가 바뀌면 자동으로 다시 만듦 ──
+    [NonSerialized] private int[][] _tracks;
+    [NonSerialized] private int _trackSig = int.MinValue;
+
+    /// <summary>그 본이 키로 들어간 키 번호들 (시간 순)</summary>
+    public int[] Track(int bone, int boneCount)
+    {
+        int sig = boneCount * 397 ^ Keys.Count;
+        for (int k = 0; k < Keys.Count; k++)
+        {
+            var f = Keys[k].Free;
+            sig = sig * 31 + (f != null ? f.Count : 0);
+            if (f != null) foreach (int x in f) sig = sig * 7 + x;
+        }
+
+        if (_tracks == null || _trackSig != sig || _tracks.Length != boneCount)
+        {
+            _trackSig = sig;
+            _tracks = new int[boneCount][];
+            var tmp = new List<int>();
+            for (int b = 0; b < boneCount; b++)
+            {
+                tmp.Clear();
+                for (int k = 0; k < Keys.Count; k++) if (Keys[k].Has(b)) tmp.Add(k);
+                _tracks[b] = tmp.ToArray();
+            }
+        }
+        return bone < _tracks.Length ? _tracks[bone] : System.Array.Empty<int>();
+    }
 }
 
 /// <summary>IK 묶음 — 루트 → 끝 순서의 본 이름</summary>
@@ -111,6 +155,13 @@ public class RigAnimData : ScriptableObject
     public string MoveState = "Walk";
     [Tooltip("이 속도(m/초)로 움직일 때 Walk가 1배속. 더 빠르면 빨리 재생")]
     public float WalkRefSpeed = 5f;
+
+    [Tooltip("빨리 움직일 때. 없으면 Walk")]
+    public string RunState = "Run";
+    [Tooltip("이 속도(m/초) 이상이면 Run (조금 느려져도 바로 Walk로 안 떨어지게 15% 여유)")]
+    public float RunThreshold = 8f;
+    [Tooltip("이 속도로 달릴 때 Run이 1배속")]
+    public float RunRefSpeed = 10f;
 
     public int BoneIndex(string name) => Bones.IndexOf(name);
 
@@ -157,11 +208,21 @@ public class RigAnimData : ScriptableObject
             return;
         }
 
-        var keys = s.Keys;
-        int n = keys.Count;
         float len = Mathf.Max(0.05f, s.Length);
+        for (int b = 0; b < nb; b++)
+        {
+            var tr = s.Track(b, nb);
+            SampleBone(s, tr, b, time, len, out into.Rot[b], out into.Pos[b]);
+        }
+    }
 
-        if (n == 1) { CopyKey(keys[0].Pose, into, nb); return; }
+    /// <summary>본 하나 — 그 본이 키로 들어간 키들 사이만 보고 이음</summary>
+    void SampleBone(RigState s, int[] tr, int b, float time, float len, out Quaternion rot, out Vector3 pos)
+    {
+        var keys = s.Keys;
+        int n = tr.Length;
+        if (n == 0) { rot = GetR(null, b); pos = GetP(null, b); return; }
+        if (n == 1) { rot = GetR(keys[tr[0]].Pose, b); pos = GetP(keys[tr[0]].Pose, b); return; }
 
         int i, j, ip, jn;
         float t0, t1, t = time;
@@ -171,13 +232,13 @@ public class RigAnimData : ScriptableObject
             t = Mathf.Repeat(t, len);
             i = n - 1;
             for (int k = 0; k < n - 1; k++)
-                if (t >= keys[k].Time && t < keys[k + 1].Time) { i = k; break; }
+                if (t >= keys[tr[k]].Time && t < keys[tr[k + 1]].Time) { i = k; break; }
 
             j = (i + 1) % n;
             ip = (i - 1 + n) % n;
             jn = (j + 1) % n;
-            t0 = keys[i].Time;
-            t1 = keys[j].Time;
+            t0 = keys[tr[i]].Time;
+            t1 = keys[tr[j]].Time;
             if (j == 0)                          // 끝 → 처음으로 넘어가는 구간
             {
                 t1 += len;
@@ -186,50 +247,46 @@ public class RigAnimData : ScriptableObject
         }
         else
         {
-            if (t <= keys[0].Time) { CopyKey(keys[0].Pose, into, nb); return; }
-            if (t >= keys[n - 1].Time) { CopyKey(keys[n - 1].Pose, into, nb); return; }
+            var first = keys[tr[0]];
+            var last = keys[tr[n - 1]];
+            if (t <= first.Time) { rot = GetR(first.Pose, b); pos = GetP(first.Pose, b); return; }
+            if (t >= last.Time) { rot = GetR(last.Pose, b); pos = GetP(last.Pose, b); return; }
             i = 0;
             for (int k = 0; k < n - 1; k++)
-                if (t >= keys[k].Time && t < keys[k + 1].Time) { i = k; break; }
+                if (t >= keys[tr[k]].Time && t < keys[tr[k + 1]].Time) { i = k; break; }
             j = i + 1;
             ip = Mathf.Max(0, i - 1);
             jn = Mathf.Min(n - 1, j + 1);
-            t0 = keys[i].Time;
-            t1 = keys[j].Time;
+            t0 = keys[tr[i]].Time;
+            t1 = keys[tr[j]].Time;
         }
 
         float span = t1 - t0;
         float w = span > 0.0001f ? Mathf.Clamp01((t - t0) / span) : 1f;
-        var ease = keys[i].Ease;
 
-        var A = keys[i].Pose;
-        var B = keys[j].Pose;
-        var P = keys[ip].Pose;
-        var N = keys[jn].Pose;
+        var A = keys[tr[i]].Pose;
+        var B = keys[tr[j]].Pose;
+        Quaternion qa = GetR(A, b), qb = GetR(B, b);
+        Vector3 pa = GetP(A, b), pb = GetP(B, b);
 
-        for (int b = 0; b < nb; b++)
+        switch (keys[tr[i]].Ease)
         {
-            Quaternion qa = GetR(A, b), qb = GetR(B, b);
-            Vector3 pa = GetP(A, b), pb = GetP(B, b);
-
-            switch (ease)
-            {
-                case RigEase.Hold:
-                    into.Rot[b] = qa; into.Pos[b] = pa;
-                    break;
-                case RigEase.Linear:
-                    into.Rot[b] = Quaternion.Slerp(qa, qb, w); into.Pos[b] = Vector3.Lerp(pa, pb, w);
-                    break;
-                case RigEase.EaseInOut:
-                    float e = w * w * (3f - 2f * w);
-                    into.Rot[b] = Quaternion.Slerp(qa, qb, e); into.Pos[b] = Vector3.Lerp(pa, pb, e);
-                    break;
-                default:    // Smooth — 앞뒤 키까지 보고 곡선으로
-                    Quaternion qp = GetR(P, b), qn = GetR(N, b);
-                    into.Rot[b] = RigMath.Squad(qp, qa, qb, qn, w);
-                    into.Pos[b] = RigMath.CatmullRom(GetP(P, b), pa, pb, GetP(N, b), w);
-                    break;
-            }
+            case RigEase.Hold:
+                rot = qa; pos = pa;
+                break;
+            case RigEase.Linear:
+                rot = Quaternion.Slerp(qa, qb, w); pos = Vector3.Lerp(pa, pb, w);
+                break;
+            case RigEase.EaseInOut:
+                float e = w * w * (3f - 2f * w);
+                rot = Quaternion.Slerp(qa, qb, e); pos = Vector3.Lerp(pa, pb, e);
+                break;
+            default:    // Smooth — 앞뒤 키까지 보고 곡선으로
+                var P = keys[tr[ip]].Pose;
+                var N = keys[tr[jn]].Pose;
+                rot = RigMath.Squad(GetR(P, b), qa, qb, GetR(N, b), w);
+                pos = RigMath.CatmullRom(GetP(P, b), pa, pb, GetP(N, b), w);
+                break;
         }
     }
 

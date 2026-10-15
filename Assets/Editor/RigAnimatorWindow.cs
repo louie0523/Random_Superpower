@@ -75,6 +75,8 @@ public class RigAnimatorWindow : EditorWindow
     private RigPose _clipboard;
     private bool _dragKey, _scrub;
     private readonly RigPose _tmp = new();
+    private bool _partialKey = true;
+    private bool _trackKids = true;
 
     // ── 변화 배치 ──
     [SerializeField] private FPArmRig _rig;
@@ -530,46 +532,46 @@ public class RigAnimatorWindow : EditorWindow
         switch (_tool)
         {
             case BoneTool.Rotate:
-            {
-                EditorGUI.BeginChangeCheck();
-                var r = Handles.RotationHandle(b.rotation, h);
-                if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(b, "본 회전");
-                    b.rotation = r;
-                    OnPoseEdited();
-                }
-                break;
-            }
-            case BoneTool.Move:
-            {
-                EditorGUI.BeginChangeCheck();
-                var p = Handles.PositionHandle(h, Tools.pivotRotation == PivotRotation.Local ? b.rotation : Quaternion.identity);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RecordObject(b, "본 이동");
-                    b.position = p;
-                    OnPoseEdited();
-                }
-                break;
-            }
-            case BoneTool.Aim:
-            {
-                Handles.color = CBoneSel;
-                EditorGUI.BeginChangeCheck();
-                var nt = Handles.FreeMoveHandle(t, size * 0.1f, Vector3.zero, Handles.SphereHandleCap);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Vector3 from = t - h, to = nt - h;
-                    if (from.sqrMagnitude > 1e-8f && to.sqrMagnitude > 1e-8f)
+                    EditorGUI.BeginChangeCheck();
+                    var r = Handles.RotationHandle(b.rotation, h);
+                    if (EditorGUI.EndChangeCheck())
                     {
-                        Undo.RecordObject(b, "본 끝 끌기");
-                        b.rotation = Quaternion.FromToRotation(from, to) * b.rotation;
+                        Undo.RecordObject(b, "본 회전");
+                        b.rotation = r;
                         OnPoseEdited();
                     }
+                    break;
                 }
-                break;
-            }
+            case BoneTool.Move:
+                {
+                    EditorGUI.BeginChangeCheck();
+                    var p = Handles.PositionHandle(h, Tools.pivotRotation == PivotRotation.Local ? b.rotation : Quaternion.identity);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Undo.RecordObject(b, "본 이동");
+                        b.position = p;
+                        OnPoseEdited();
+                    }
+                    break;
+                }
+            case BoneTool.Aim:
+                {
+                    Handles.color = CBoneSel;
+                    EditorGUI.BeginChangeCheck();
+                    var nt = Handles.FreeMoveHandle(t, size * 0.1f, Vector3.zero, Handles.SphereHandleCap);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Vector3 from = t - h, to = nt - h;
+                        if (from.sqrMagnitude > 1e-8f && to.sqrMagnitude > 1e-8f)
+                        {
+                            Undo.RecordObject(b, "본 끝 끌기");
+                            b.rotation = Quaternion.FromToRotation(from, to) * b.rotation;
+                            OnPoseEdited();
+                        }
+                    }
+                    break;
+                }
         }
 
         Handles.Label(h + Vector3.up * size * 0.15f, " " + b.name, _sceneLabel);
@@ -637,7 +639,7 @@ public class RigAnimatorWindow : EditorWindow
             if (s != null && _keyIdx >= 0 && _keyIdx < s.Keys.Count && Mathf.Abs(s.Keys[_keyIdx].Time - _time) < 0.001f)
             {
                 Undo.RecordObject(_data, "키 자동 저장");
-                Capture(s.Keys[_keyIdx].Pose);
+                StoreKey(s, s.Keys[_keyIdx], false, null);
                 EditorUtility.SetDirty(_data);
             }
         }
@@ -1004,6 +1006,7 @@ public class RigAnimatorWindow : EditorWindow
                 string label = s.Name;
                 if (s.Name == _data.IdleState) label += " ·기본";
                 else if (s.Name == _data.MoveState) label += " ·이동";
+                else if (s.Name == _data.RunState) label += " ·달리기";
                 bool on = GUILayout.Toggle(i == _stateIdx, label, EditorStyles.miniButton);
                 if (on && i != _stateIdx) SelectState(i);
             }
@@ -1034,6 +1037,7 @@ public class RigAnimatorWindow : EditorWindow
                 {
                     if (_data.IdleState == st.Name) _data.IdleState = name;
                     if (_data.MoveState == st.Name) _data.MoveState = name;
+                    if (_data.RunState == st.Name) _data.RunState = name;
                     st.Name = name;
                 }
                 st.Length = Mathf.Max(0.05f, len);
@@ -1047,6 +1051,7 @@ public class RigAnimatorWindow : EditorWindow
             {
                 if (GUILayout.Button("기본(가만히)으로 지정", EditorStyles.miniButtonLeft)) SetDataField(() => _data.IdleState = st.Name);
                 if (GUILayout.Button("이동으로 지정", EditorStyles.miniButtonMid)) SetDataField(() => _data.MoveState = st.Name);
+                if (GUILayout.Button("달리기로 지정", EditorStyles.miniButtonMid)) SetDataField(() => _data.RunState = st.Name);
                 if (GUILayout.Button("복제", EditorStyles.miniButtonMid)) DuplicateState(st);
                 if (GUILayout.Button("삭제", EditorStyles.miniButtonRight) &&
                     EditorUtility.DisplayDialog("상태 삭제", $"'{st.Name}'을 지울까요?", "삭제", "취소"))
@@ -1062,10 +1067,20 @@ public class RigAnimatorWindow : EditorWindow
             EditorGUI.BeginChangeCheck();
             float refSpd = EditorGUILayout.FloatField(new GUIContent("이동 기준 속도 (m/초)", "이 속도로 움직일 때 이동 애니메이션이 1배속"), _data.WalkRefSpeed);
             if (EditorGUI.EndChangeCheck()) SetDataField(() => _data.WalkRefSpeed = Mathf.Max(0.1f, refSpd));
+
+            if (_data.Find(_data.RunState) != null)
+            {
+                EditorGUI.BeginChangeCheck();
+                float th = EditorGUILayout.FloatField(new GUIContent("달리기 시작 속도 (m/초)", "이 속도 이상이면 달리기. 게임 중 RigAnimator 인스펙터의 '지금 속도'를 보고 정하면 편함"), _data.RunThreshold);
+                float rr = EditorGUILayout.FloatField(new GUIContent("달리기 기준 속도 (m/초)", "이 속도로 달릴 때 달리기 애니메이션이 1배속"), _data.RunRefSpeed);
+                if (EditorGUI.EndChangeCheck()) SetDataField(() => { _data.RunThreshold = Mathf.Max(0.1f, th); _data.RunRefSpeed = Mathf.Max(0.1f, rr); });
+            }
         }
 
         // 타임라인
         DrawTimeline(st);
+
+        DrawBoneTrack(st);
 
         // 재생 · 키
         using (new EditorGUILayout.HorizontalScope())
@@ -1074,6 +1089,7 @@ public class RigAnimatorWindow : EditorWindow
             if (GUILayout.Button("⏮", GUILayout.Width(28))) { _playing = false; SetTime(0f); }
             GUILayout.Label($"{_time:0.00} / {st.Length:0.00}초", GUILayout.Width(90));
             GUILayout.FlexibleSpace();
+            _partialKey = GUILayout.Toggle(_partialKey, new GUIContent("바뀐 본만", "새 키를 만들 때 움직인 본만 키로 (나머지는 앞뒤 키 사이로 계속 이어짐)"), "Button", GUILayout.Width(64));
             _autoKey = GUILayout.Toggle(_autoKey, new GUIContent("자동 키", "키를 선택한 상태에서 본을 움직이면 그 키에 바로 저장"), "Button", GUILayout.Width(60));
         }
 
@@ -1175,17 +1191,17 @@ public class RigAnimatorWindow : EditorWindow
         switch (e.type)
         {
             case EventType.MouseDown when e.button == 0 && r.Contains(e.mousePosition):
-            {
-                int hit = -1;
-                for (int i = 0; i < s.Keys.Count; i++)
-                    if (Mathf.Abs(X(s.Keys[i].Time) - e.mousePosition.x) < 7f && e.mousePosition.y > r.y + 16) { hit = i; break; }
+                {
+                    int hit = -1;
+                    for (int i = 0; i < s.Keys.Count; i++)
+                        if (Mathf.Abs(X(s.Keys[i].Time) - e.mousePosition.x) < 7f && e.mousePosition.y > r.y + 16) { hit = i; break; }
 
-                if (hit >= 0) { SelectKey(hit); _dragKey = true; }
-                else if (e.clickCount == 2) { _playing = false; SetTime(Snap(T(e.mousePosition.x))); AddOrSetKey(); }
-                else { _playing = false; _scrub = true; SetTime(T(e.mousePosition.x)); }
-                e.Use();
-                break;
-            }
+                    if (hit >= 0) { SelectKey(hit); _dragKey = true; }
+                    else if (e.clickCount == 2) { _playing = false; SetTime(Snap(T(e.mousePosition.x))); AddOrSetKey(); }
+                    else { _playing = false; _scrub = true; SetTime(T(e.mousePosition.x)); }
+                    e.Use();
+                    break;
+                }
             case EventType.MouseDrag when _dragKey && _keyIdx >= 0 && _keyIdx < s.Keys.Count:
                 Undo.RecordObject(_data, "키 옮기기");
                 s.Keys[_keyIdx].Time = Snap(T(e.mousePosition.x));
@@ -1232,8 +1248,7 @@ public class RigAnimatorWindow : EditorWindow
         _keyIdx = i;
         _time = s.Keys[i].Time;
         _playing = false;
-        ApplyPose(s.Keys[i].Pose);
-        ResetIKTargets();
+        ApplySample();          // 이 키에서 빠진 본은 앞뒤 키 사이 값으로 보임
         Repaint();
     }
 
@@ -1266,19 +1281,182 @@ public class RigAnimatorWindow : EditorWindow
         float t = Mathf.Clamp(_time, 0f, s.Length);
         int found = s.Keys.FindIndex(k => Mathf.Abs(k.Time - t) < 0.01f);
         RigKey key;
-        if (found >= 0) key = s.Keys[found];
+        if (found >= 0) StoreKey(s, key = s.Keys[found], false, null);
         else
         {
+            // 새 키 — 넣기 전 곡선 값과 비교해야 해서 먼저 재 둠
+            var before = new RigPose();
+            _data.Sample(s, t, before);
             key = new RigKey { Time = t };
+            StoreKey(s, key, true, before);
             s.Keys.Add(key);
             s.SortKeys();
         }
-        Capture(key.Pose);
         _keyIdx = s.Keys.IndexOf(key);
         _time = key.Time;
         EditorUtility.SetDirty(_data);
         ShowNotification(new GUIContent(found >= 0 ? "키 덮어씀" : "키 추가"), 0.6);
         Repaint();
+    }
+
+    /// <summary>
+    /// 지금 씬 자세를 키에 저장. 바뀐 본은 키로 넣고, 그대로인 본은 —
+    ///   기존 키: 원래 상태 유지 (빠져 있던 본은 계속 빠짐)
+    ///   새 키: '바뀐 본만 키'면 빼고, 아니면 모두 키
+    /// before = 저장 전 곡선 값 (새 키는 넣기 전에 재서 넘김)
+    /// </summary>
+    void StoreKey(RigState s, RigKey key, bool isNew, RigPose before)
+    {
+        int n = _data.Bones.Count;
+        if (before == null) { before = new RigPose(); _data.Sample(s, key.Time, before); }
+        var now = new RigPose();
+        Capture(now);
+        key.Pose.Resize(n, _data.Rest);
+        key.Free ??= new List<int>();
+
+        bool anyChanged = false;
+        var changed = new bool[n];
+        for (int b = 0; b < n && b < now.Count && b < before.Count; b++)
+        {
+            changed[b] = Quaternion.Angle(before.Rot[b], now.Rot[b]) > 0.05f || (before.Pos[b] - now.Pos[b]).sqrMagnitude > 1e-8f;
+            anyChanged |= changed[b];
+        }
+
+        for (int b = 0; b < n && b < now.Count; b++)
+        {
+            key.Pose.Rot[b] = now.Rot[b];
+            key.Pose.Pos[b] = now.Pos[b];
+
+            bool keyed = key.Has(b);
+            if (isNew) keyed = !_partialKey || !anyChanged || changed[b];     // 아무것도 안 바꿨으면 '지금 자세 고정' 키 = 전부
+            else if (changed[b]) keyed = true;
+            key.SetHas(b, keyed);
+        }
+    }
+
+    /// <summary>선택한 본 (+ 자식) 의 데이터 번호 — IK를 골랐으면 그 IK 본들</summary>
+    List<int> SelectedBoneIdx()
+    {
+        var list = new List<int>();
+        if (_data == null) return list;
+        void Add(Transform t) { if (t == null) return; int i = _data.BoneIndex(t.name); if (i >= 0 && !list.Contains(i)) list.Add(i); }
+
+        if (_sel != null)
+        {
+            Add(_sel);
+            if (_trackKids)
+                foreach (var b in _bones) if (b != null && b != _sel && b.IsChildOf(_sel)) Add(b);
+        }
+        else if (_selChain != null)
+        {
+            var tr = ChainTransforms(_selChain);
+            if (tr != null) foreach (var t in tr) Add(t);
+        }
+        return list;
+    }
+
+    /// <summary>선택 본의 키 줄 — ● 키 · ○ 빠짐 (클릭으로 바꾸기)</summary>
+    void DrawBoneTrack(RigState s)
+    {
+        var bones = SelectedBoneIdx();
+        using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+        {
+            if (bones.Count == 0)
+            {
+                EditorGUILayout.LabelField("본을 고르면 그 본만 따로 키를 정리할 수 있습니다 (꼬리 · 머리 등).", _hint);
+                return;
+            }
+
+            string who = _sel != null ? _sel.name : _selChain.Name;
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.LabelField($"본 키: {who}" + (bones.Count > 1 ? $" (+{bones.Count - 1})" : ""), EditorStyles.miniBoldLabel);
+                if (_sel != null) _trackKids = GUILayout.Toggle(_trackKids, "자식 본 포함", EditorStyles.miniButton, GUILayout.Width(80));
+            }
+
+            // 키 줄
+            Rect full = GUILayoutUtility.GetRect(10, 22, GUILayout.ExpandWidth(true));
+            Rect r = new(full.x + 10, full.y + 2, full.width - 20, full.height - 4);
+            EditorGUI.DrawRect(r, CBg);
+            float len = Mathf.Max(0.05f, s.Length);
+            float X(float t) => r.x + t / len * r.width;
+            int main = bones[0];
+
+            for (int i = 0; i < s.Keys.Count; i++)
+            {
+                bool has = s.Keys[i].Has(main);
+                var c = GUI.color;
+                GUI.color = has ? new Color(1f, 0.75f, 0.3f) : new Color(1f, 1f, 1f, 0.35f);
+                Rect kr = new(X(s.Keys[i].Time) - 7, r.y, 14, r.height);
+                GUI.Label(kr, has ? "●" : "○", _diamond);
+                GUI.color = c;
+
+                if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && kr.Contains(Event.current.mousePosition))
+                {
+                    Undo.RecordObject(_data, "본 키 넣기/빼기");
+                    foreach (int b in bones) s.Keys[i].SetHas(b, !has);
+                    EditorUtility.SetDirty(_data);
+                    ApplySample();
+                    Event.current.Use();
+                }
+            }
+            EditorGUI.DrawRect(new Rect(X(Mathf.Clamp(_time, 0f, len)) - 1, r.y, 2, r.height), Color.cyan);
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button(new GUIContent("첫 · 끝 키만 남기기", "중간 키에서 이 본을 빼서 처음 → 끝으로 쭉 이어지게. 그다음 원하는 키에서 본을 움직이면 그 키만 추가됨"), EditorStyles.miniButtonLeft))
+                    TrackKeep(s, bones, (i, n) => i == 0 || i == n - 1);
+                using (new EditorGUI.DisabledScope(_keyIdx < 0))
+                    if (GUILayout.Button(new GUIContent("+ 지금 키", "선택한 키에 이 본을 넣음"), EditorStyles.miniButtonMid))
+                        TrackSet(s, bones, _keyIdx, true);
+                using (new EditorGUI.DisabledScope(_keyIdx < 0))
+                    if (GUILayout.Button(new GUIContent("− 지금 키", "선택한 키에서 이 본을 뺌"), EditorStyles.miniButtonMid))
+                        TrackSet(s, bones, _keyIdx, false);
+                if (GUILayout.Button(new GUIContent("모든 키에 넣기", "다시 모든 키가 이 본을 갖게 (지금 보이는 값으로)"), EditorStyles.miniButtonRight))
+                    TrackKeep(s, bones, (i, n) => true);
+            }
+        }
+    }
+
+    void TrackSet(RigState s, List<int> bones, int keyIdx, bool on)
+    {
+        if (keyIdx < 0 || keyIdx >= s.Keys.Count) return;
+        Undo.RecordObject(_data, "본 키");
+        var k = s.Keys[keyIdx];
+        k.Pose.Resize(_data.Bones.Count, _data.Rest);
+        if (on)
+        {
+            // 넣을 땐 지금 곡선 값을 그 키에 써 넣음 (모양이 안 튐)
+            var cur = new RigPose();
+            _data.Sample(s, k.Time, cur);
+            foreach (int b in bones) { k.Pose.Rot[b] = cur.Rot[b]; k.Pose.Pos[b] = cur.Pos[b]; }
+        }
+        foreach (int b in bones) k.SetHas(b, on);
+        EditorUtility.SetDirty(_data);
+        ApplySample();
+    }
+
+    /// <summary>조건에 맞는 키에만 본을 남김 — 남기는 키는 지금 곡선 값으로 채워서 모양 유지</summary>
+    void TrackKeep(RigState s, List<int> bones, System.Func<int, int, bool> keep)
+    {
+        Undo.RecordObject(_data, "본 키 정리");
+        int n = s.Keys.Count;
+        var vals = new RigPose[n];
+        for (int i = 0; i < n; i++) { vals[i] = new RigPose(); _data.Sample(s, s.Keys[i].Time, vals[i]); }
+
+        for (int i = 0; i < n; i++)
+        {
+            bool on = keep(i, n);
+            s.Keys[i].Pose.Resize(_data.Bones.Count, _data.Rest);
+            foreach (int b in bones)
+            {
+                if (on) { s.Keys[i].Pose.Rot[b] = vals[i].Rot[b]; s.Keys[i].Pose.Pos[b] = vals[i].Pos[b]; }
+                s.Keys[i].SetHas(b, on);
+            }
+        }
+        EditorUtility.SetDirty(_data);
+        ApplySample();
+        ShowNotification(new GUIContent("본 키 정리됨"), 0.6);
     }
 
     void DeleteKey()
@@ -1298,7 +1476,8 @@ public class RigAnimatorWindow : EditorWindow
         Undo.RecordObject(_data, "첫 키 → 끝");
         var first = s.Keys[0];
         int last = s.Keys.FindIndex(k => Mathf.Abs(k.Time - s.Length) < 0.01f);
-        var copy = new RigKey { Time = s.Length, Ease = first.Ease, Pose = first.Pose.Clone() };
+        var copy = first.Clone();
+        copy.Time = s.Length;
         if (last >= 0 && last != 0) s.Keys[last] = copy; else s.Keys.Add(copy);
         s.SortKeys();
         EditorUtility.SetDirty(_data);
@@ -1356,7 +1535,7 @@ public class RigAnimatorWindow : EditorWindow
         int i = 2;
         while (_data.Find(n) != null) n = $"{src.Name}_복사{i++}";
         var s = new RigState { Name = n, Length = src.Length, Loop = src.Loop, Speed = src.Speed, BlendIn = src.BlendIn };
-        foreach (var k in src.Keys) s.Keys.Add(new RigKey { Time = k.Time, Ease = k.Ease, Pose = k.Pose.Clone() });
+        foreach (var k in src.Keys) s.Keys.Add(k.Clone());
         _data.States.Add(s);
         EditorUtility.SetDirty(_data);
         SelectState(_data.States.Count - 1);
@@ -1524,7 +1703,7 @@ public class RigAnimatorWindow : EditorWindow
         {
             case Gait.Walk: _gaitState = "Walk"; _gaitLen = 1.0f; _stepH = 0.15f; _bob = 0.03f; _pitch = 1.5f; break;
             case Gait.Trot: _gaitState = "Walk"; _gaitLen = 0.7f; _stepH = 0.2f; _bob = 0.05f; _pitch = 2f; break;
-            case Gait.Canter: _gaitState = "Walk"; _gaitLen = 0.65f; _stepH = 0.25f; _bob = 0.08f; _pitch = 5f; break;
+            case Gait.Canter: _gaitState = "Run"; _gaitLen = 0.65f; _stepH = 0.25f; _bob = 0.08f; _pitch = 5f; break;
             case Gait.Gallop: _gaitState = "Charge"; _gaitLen = 0.5f; _stepH = 0.3f; _bob = 0.1f; _pitch = 8f; break;
             case Gait.Biped: _gaitState = "Walk"; _gaitLen = 0.8f; _stepH = 0.12f; _bob = 0.03f; _pitch = 1f; break;
         }
@@ -1614,7 +1793,11 @@ public class RigAnimatorWindow : EditorWindow
 
     float StanceFor() => _gait switch
     {
-        Gait.Walk => 0.7f, Gait.Trot => 0.5f, Gait.Canter => 0.45f, Gait.Gallop => 0.35f, _ => 0.6f,
+        Gait.Walk => 0.7f,
+        Gait.Trot => 0.5f,
+        Gait.Canter => 0.45f,
+        Gait.Gallop => 0.35f,
+        _ => 0.6f,
     };
 
     static Transform CommonAncestor(IEnumerable<Transform> ts)
