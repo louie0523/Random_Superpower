@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerEnchant : NetworkBehaviour
 {
-    public const int MaxEnchants = 100;
+    public const int MaxEnchants = 100; 
     public const int MaxChoices = 3;
 
     [SerializeField] private EnchantDatabase database;

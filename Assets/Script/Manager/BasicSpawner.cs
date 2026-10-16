@@ -77,17 +77,17 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             _dummies.RemoveAt(last);
         }
 
-        if (Input.GetKeyDown(rerollAbilityKey)) RerollAbility();
-        if (Input.GetKeyDown(suicideKey)) Suicide();
-        if (Input.GetKeyDown(healKey)) FullHeal();
-        if (Input.GetKeyDown(soulGainKey)) GainSoul(soulCheatAmount); 
-        if (Input.GetKeyDown(soulLoseKey)) GainSoul(-soulCheatAmount / 2);
-        if (Input.GetKeyDown(KeyCode.F10)) StatusSelf(StatusType.Frost, 15f, 3f);
-        if (Input.GetKeyDown(KeyCode.F11)) StatusSelf(StatusType.Poison, 5f, 4f);
-        if (Input.GetKeyDown(KeyCode.F12)) StatusSelf(StatusType.Stun, 2f, 2f);
-        if (Input.GetKeyDown(StoneGet)) StoneGive(100);
-        if (Input.GetKeyDown(KeyCode.Alpha9)) GetLocal()?.GetComponent<PlayerAlter>()?.Add(debugAlter);
-        if (Input.GetKeyDown(KeyCode.Alpha8)) GetLocal()?.GetComponent<PlayerAlter>()?.Remove(debugAlter, true);
+        //if (Input.GetKeyDown(rerollAbilityKey)) RerollAbility();
+        //if (Input.GetKeyDown(suicideKey)) Suicide();
+        //if (Input.GetKeyDown(healKey)) FullHeal();
+        //if (Input.GetKeyDown(soulGainKey)) GainSoul(soulCheatAmount); 
+        //if (Input.GetKeyDown(soulLoseKey)) GainSoul(-soulCheatAmount / 2);
+        //if (Input.GetKeyDown(KeyCode.F10)) StatusSelf(StatusType.Frost, 15f, 3f);
+        //if (Input.GetKeyDown(KeyCode.F11)) StatusSelf(StatusType.Poison, 5f, 4f);
+        //if (Input.GetKeyDown(KeyCode.F12)) StatusSelf(StatusType.Stun, 2f, 2f);
+        //if (Input.GetKeyDown(StoneGet)) StoneGive(100);
+        //if (Input.GetKeyDown(KeyCode.Alpha9)) GetLocal()?.GetComponent<PlayerAlter>()?.Add(debugAlter);
+        //if (Input.GetKeyDown(KeyCode.Alpha8)) GetLocal()?.GetComponent<PlayerAlter>()?.Remove(debugAlter, true);
 
     }
 

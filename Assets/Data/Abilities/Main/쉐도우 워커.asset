@@ -53,7 +53,7 @@ MonoBehaviour:
     Slot: 0
     MaxLevel: 5
     Vars: []
-    RequiredWeapon: 1
+    RequiredWeapon: -1
     CooldownByLevel:
     - 6
     - 5

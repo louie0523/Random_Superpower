@@ -11,11 +11,19 @@ public enum ProjectilePreviewMode
 public class WeaponRig : MonoBehaviour
 {
     [Header("공통")]
-    [Tooltip("무기 끝. 트레일/이펙트 기준")]
+    [Tooltip("무기 끝. 트레일/이펙트 기준 · 던지거나 날릴 때 이쪽이 앞으로 감 (비우면 메쉬 모양에서 자동)")]
     public Transform Tip;
 
     [Tooltip("양손 무기일 때 왼손이 붙을 지점")]
     public Transform LeftGrip;
+
+    [Header("던지기 · 날리기 (무구의 달인 등)")]
+    [Tooltip("TipFirst = 날 끝부터 / Drill = 날 끝부터 + 진행 축으로 회전 / Tumble = 앞뒤로 빙글빙글")]
+    public ThrowStyle ThrowStyle = ThrowStyle.TipFirst;
+    [Tooltip("날 축 기준 비틀기 (°) — 0 = 넓은 면이 위(눕힌 칼), 90 = 날이 위아래(세운 칼)")]
+    public float ThrowRoll = 0f;
+    [Tooltip("Drill · Tumble 회전 속도 (°/초)")]
+    public float ThrowSpin = 900f;
 
     [Header("원거리")]
     [Tooltip("투사체가 나가는 위치")]

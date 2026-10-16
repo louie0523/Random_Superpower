@@ -289,7 +289,16 @@ public class DeathKnightAbility : AbilityBehaviour
     bool HasFarm => _name != null;                                             // 모든 등급
     bool HasSecond => _name != null && _name.Tier != DKTier.Peasant;          // 용병 이상
     // 원격에선 OnEquip 때 저장값이 아직 안 왔을 수 있어서 늦게라도 이름을 찾음
-    DKNamed Named => (_name ??= ResolveName()) != null ? _name.Named : DKNamed.None;
+    DKNamed Named => CurName() != null ? _name.Named : DKNamed.None;
+
+    /// <summary>이름 — 저장값(네트워크)이 바뀌었으면 다시 읽음 (치트로 바꾼 이름이 다른 화면에도 반영)</summary>
+    DKName CurName()
+    {
+        int saved = Ctx != null ? Ctx.GetSaved(Data.Id) : 0;
+        if (saved > 0 && Names != null && saved <= Names.Length && (_name == null || _name != Names[saved - 1]))
+            _name = Names[saved - 1];
+        return _name ??= ResolveName();
+    }
 
     // ══════════════════ 생명주기 ══════════════════
 
@@ -915,5 +924,105 @@ public class DeathKnightAbility : AbilityBehaviour
             else if (key == EvLeap) _alter.PlayPartState("Leap");
             else if (key == EvSlash || key == EvSlash2) _alter.PlayPartState("Attack");
         }
+    }
+
+    // ══════════════════ 치트 (/job) ══════════════════
+
+    public override string DevCommand(string[] a)
+    {
+        string sub = a.Length > 0 ? a[0].ToLowerInvariant() : "help";
+        switch (sub)
+        {
+            case "help":
+                return "죽음의 기사: /job name [이름·번호] · names · mount · dismount · charge · ghost";
+
+            case "names":
+                {
+                    var sb = new System.Text.StringBuilder("이름 목록:");
+                    for (int i = 0; i < Names.Length; i++)
+                        if (Names[i] != null)
+                            sb.Append($"\n  {i + 1}. {LocUtil.Resolve(Names[i].Name)} ({TierLabel(Names[i].Tier)})" + (Names[i] == _name ? "  ← 지금" : ""));
+                    return sb.ToString();
+                }
+
+            case "name":
+            case "이름":
+                {
+                    if (Names == null || Names.Length == 0) return "이름 목록이 비어 있음";
+                    int idx = -1;
+                    if (a.Length > 1)
+                    {
+                        if (int.TryParse(a[1], out int n)) idx = n - 1;
+                        else
+                            for (int i = 0; i < Names.Length; i++)
+                                if (Names[i] != null && LocUtil.Resolve(Names[i].Name).Contains(a[1])) { idx = i; break; }
+                        if (a.Length > 1 && idx < 0)
+                            foreach (DKTier t in System.Enum.GetValues(typeof(DKTier)))      // 등급으로: peasant · mercenary · named
+                                if (string.Equals(t.ToString(), a[1], System.StringComparison.OrdinalIgnoreCase) || TierLabel(t) == a[1])
+                                {
+                                    var pool = new List<int>();
+                                    for (int i = 0; i < Names.Length; i++) if (Names[i] != null && Names[i].Tier == t) pool.Add(i);
+                                    if (pool.Count > 0) idx = pool[Random.Range(0, pool.Count)];
+                                }
+                    }
+                    else
+                    {
+                        int cur = System.Array.IndexOf(Names, _name);
+                        do idx = Random.Range(0, Names.Length); while (Names.Length > 1 && idx == cur);
+                    }
+                    if (idx < 0 || idx >= Names.Length || Names[idx] == null) return $"이름 '{(a.Length > 1 ? a[1] : "")}' 없음 — /job names";
+
+                    bool wasMounted = Mounted;
+                    if (wasMounted) Dismount();          // 이름별 말이 다를 수 있음
+                    Ctx.SetSaved(Data.Id, idx + 1);
+                    _name = Names[idx];
+                    ApplyNameStats();
+                    return $"이름 → {LocUtil.Resolve(_name.Name)} ({TierLabel(_name.Tier)})" + (wasMounted ? " — 말에서 내림" : "");
+                }
+
+            case "mount":
+            case "승마":
+                if (Mounted) return "이미 타고 있음";
+                Mount();
+                return "승마";
+
+            case "dismount":
+                if (!Mounted) return "안 타고 있음";
+                Dismount();
+                return "내림";
+
+            case "charge":
+            case "돌진":
+                _chargeLeft = Mathf.Max(1, Mathf.RoundToInt(Lv(ChargeUses)));
+                return $"돌진 횟수 {_chargeLeft}";
+
+            case "ghost":
+                _ghostCd = 0f;
+                return "망자의 육신 쿨 초기화";
+        }
+        return null;
+    }
+
+    public override IEnumerable<(string value, string label)> DevComplete(string[] a, int index)
+    {
+        if (index == 0)
+            return new[] { ("name", "이름 바꾸기 (비우면 무작위)"), ("names", "이름 목록"), ("mount", "승마"), ("dismount", "내리기"), ("charge", "돌진 횟수 채우기"), ("ghost", "고스트 쿨 초기화") };
+        if (index == 1 && a.Length > 0 && (a[0] == "name" || a[0] == "이름") && Names != null)
+        {
+            var list = new List<(string, string)>
+            {
+                ("peasant", "농민 중 무작위"), ("mercenary", "용병 중 무작위"), ("named", "네임드 중 무작위"),
+            };
+            for (int i = 0; i < Names.Length; i++)
+                if (Names[i] != null) list.Add(((i + 1).ToString(), $"{LocUtil.Resolve(Names[i].Name)} ({TierLabel(Names[i].Tier)})"));
+            return list;
+        }
+        return null;
+    }
+
+    string TierLabel(DKTier t)
+    {
+        var info = TierInfo(t);
+        return info != null && !string.IsNullOrEmpty(info.Label) ? LocUtil.Resolve(info.Label) : t.ToString();
     }
 }

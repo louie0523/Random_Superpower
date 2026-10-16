@@ -84,7 +84,7 @@ MonoBehaviour:
     - 3
     - 3
     - 3
-  ClonePrefab: {fileID: 0}
+  ClonePrefab: {fileID: 2068535463202036617, guid: d394a4b6b61b84f4dae0268571fbb197, type: 3}
   CloneDuration:
     Values:
     - 15
@@ -96,7 +96,7 @@ MonoBehaviour:
     - 0.75
     - 1
   ExplodeOnTimeout: 0
-  CardPrefab: {fileID: 0}
+  CardPrefab: {fileID: 3228695547341902525, guid: 781c6336ec0e49e47821e857b024580a, type: 3}
   CardArmFx: {fileID: 0}
   BlastFx: {fileID: 0}
   BlinkFx: {fileID: 0}

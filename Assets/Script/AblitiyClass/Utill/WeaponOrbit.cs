@@ -20,8 +20,10 @@ public class WeaponOrbit : MonoBehaviour
     public float Bob = 0.1f;
     [Tooltip("떠다니는 무기 크기 배율")]
     public float ModelScale = 0.8f;
-    [Tooltip("떠다닐 때 무기 끝이 위를 보게 기울이는 각도")]
-    public float Tilt = -60f;
+    [Tooltip("떠다닐 때 날 끝은 위 — 바깥쪽으로 기울이는 각도 (°, 음수면 안쪽)")]
+    public float TipLean = 25f;
+    [Tooltip("날아갈 때 날 끝이 목표에 닿게 모델을 뒤로 당김 (끄면 손잡이 위치가 목표)")]
+    public bool TipLeads = true;
 
     class View
     {
@@ -33,6 +35,10 @@ public class WeaponOrbit : MonoBehaviour
         public bool ComeBack;
         public Vector3 Target;
         public float Speed;
+        public WeaponAxis.Info Axis;
+        public Vector3 Scale;
+        public float Lead;      // 0 = 손잡이 기준, 1 = 날 끝 기준 (날아갈 때)
+        public float SpinAngle;
     }
 
     private readonly View[] _views = new View[PlayerEquipment.WeaponSlots];
@@ -102,12 +108,13 @@ public class WeaponOrbit : MonoBehaviour
 
             Vector3 home = HomePos(k, n);
             var t = v.Go.transform;
+            float dt = Time.deltaTime;
 
             if (v.Flying)
             {
                 Vector3 goal = v.Returning ? home : v.Target;
                 Vector3 to = goal - v.Pos;
-                float step = v.Speed * Time.deltaTime;
+                float step = v.Speed * dt;
 
                 if (to.magnitude <= step)
                 {
@@ -118,18 +125,42 @@ public class WeaponOrbit : MonoBehaviour
                 else
                 {
                     v.Pos += to.normalized * step;
-                    t.rotation = Quaternion.LookRotation(to.normalized) * Quaternion.Euler(90f, 0f, 0f);   // 날아가는 쪽으로 칼끝
+                    // 날아가는 쪽으로 날 끝 (돌아올 때도 진행 방향으로). 넓은 면은 위
+                    v.SpinAngle += v.Axis.Spin * dt;
+                    if (v.Axis.Style == ThrowStyle.Tumble)
+                    {
+                        // 날을 세워 앞뒤로 빙글빙글
+                        Vector3 d = to.normalized;
+                        Vector3 up = Mathf.Abs(d.y) > 0.98f ? Vector3.forward : Vector3.up;
+                        t.rotation = Quaternion.LookRotation(d, up) * Quaternion.AngleAxis(v.SpinAngle, Vector3.right) * WeaponAxis.Normalize(v.Axis, 90f);
+                    }
+                    else
+                    {
+                        float extra = v.Axis.Style == ThrowStyle.Drill ? v.SpinAngle : 0f;
+                        var want = WeaponAxis.Aim(v.Axis, to.normalized, Vector3.up, extra);
+                        t.rotation = Quaternion.Slerp(t.rotation, want, 1f - Mathf.Exp(-25f * dt));
+                    }
                 }
             }
             else
             {
-                v.Pos = Vector3.Lerp(v.Pos, home, 1f - Mathf.Exp(-10f * Time.deltaTime));
+                v.Pos = Vector3.Lerp(v.Pos, home, 1f - Mathf.Exp(-10f * dt));
                 Vector3 outward = (home - transform.position); outward.y = 0f;
                 if (outward.sqrMagnitude > 0.001f)
-                    t.rotation = Quaternion.LookRotation(outward.normalized) * Quaternion.Euler(Tilt, 0f, 0f);
+                {
+                    outward.Normalize();
+                    // 날 끝은 위, 바깥으로 TipLean만큼 기울임. 넓은 면은 바깥을 봄
+                    Vector3 tip = Quaternion.AngleAxis(TipLean, Vector3.Cross(Vector3.up, outward)) * Vector3.up;
+                    var want = WeaponAxis.Aim(v.Axis, tip, outward);
+                    t.rotation = Quaternion.Slerp(t.rotation, want, 1f - Mathf.Exp(-12f * dt));
+                }
             }
 
-            t.position = v.Pos;
+            // 날아갈 때는 날 끝이 경로 위에 오게 — 모델 원점(손잡이)을 뒤로
+            v.Lead = Mathf.MoveTowards(v.Lead, TipLeads && v.Flying ? 1f : 0f, dt * 6f);
+            Vector3 anchor = v.Axis.Style == ThrowStyle.Tumble ? v.Axis.Center : v.Axis.TipPoint;      // 빙글빙글은 가운데 기준
+            Vector3 lead = v.Lead > 0.001f ? t.rotation * Vector3.Scale(v.Scale, anchor) * v.Lead : Vector3.zero;
+            t.position = v.Pos - lead;
         }
     }
 
@@ -163,12 +194,20 @@ public class WeaponOrbit : MonoBehaviour
 
             var go = Instantiate(data.ModelPrefab, transform);
             go.name = $"Orbit_{data.name}";
+            var ax = WeaponAxis.Get(data.ModelPrefab, go);
             go.transform.localScale = data.ScaleOverride * ModelScale;
             foreach (var c in go.GetComponentsInChildren<Collider>(true)) c.enabled = false;
             foreach (var rb in go.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
             go.SetActive(!_hidden);
 
-            _views[i] = new View { WeaponId = id, Go = go, Pos = transform.position + Vector3.up * Height };
+            _views[i] = new View
+            {
+                WeaponId = id,
+                Go = go,
+                Pos = transform.position + Vector3.up * Height,
+                Axis = ax,
+                Scale = go.transform.lossyScale
+            };
         }
     }
 

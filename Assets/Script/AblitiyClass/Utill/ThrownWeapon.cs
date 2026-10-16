@@ -12,8 +12,9 @@ public class ThrownWeapon : MonoBehaviour
     private LayerMask _hitMask, _stopMask;
     private Transform _ownerRoot;
     private Action<PlayerHealth, Vector3> _onHit;
-    private Transform _model;
+    private Transform _spinner;
     private float _spin;
+    private ThrowStyle _style;
 
     public static ThrownWeapon Launch(GameObject modelPrefab, Vector3 pos, Vector3 dir, float speed, float maxDist,
                                       float radius, LayerMask hitMask, LayerMask stopMask, Transform ownerRoot,
@@ -30,17 +31,27 @@ public class ThrownWeapon : MonoBehaviour
         tw._stopMask = stopMask;
         tw._ownerRoot = ownerRoot;
         tw._onHit = onHit;
-        tw._spin = UnityEngine.Random.Range(900f, 1300f);
 
         if (modelPrefab != null)
         {
-            var m = Instantiate(modelPrefab, go.transform);
-            m.transform.localPosition = Vector3.zero;
-            m.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            // go(진행 방향) → spinner(회전) → 모델(날 끝이 +Z, 넓은 면이 +Y 되게)
+            var spinner = new GameObject("Spin").transform;
+            spinner.SetParent(go.transform, false);
+            tw._spinner = spinner;
+
+            var m = Instantiate(modelPrefab, spinner);
+            var ax = WeaponAxis.Get(modelPrefab, m);
+            tw._style = ax.Style;
+            tw._spin = ax.Spin * UnityEngine.Random.Range(0.85f, 1.15f);
+
+            // Tumble은 날이 세로로 서서(Roll +90) 가운데를 축으로 앞뒤로 돎. 나머지는 날 끝이 판정 위치
+            var rot = WeaponAxis.Normalize(ax, ax.Style == ThrowStyle.Tumble ? 90f : 0f);
+            Vector3 anchor = ax.Style == ThrowStyle.Tumble ? ax.Center : ax.TipPoint;
             m.transform.localScale = scale;
+            m.transform.localRotation = rot;
+            m.transform.localPosition = -(rot * Vector3.Scale(scale, anchor));
             foreach (var c in m.GetComponentsInChildren<Collider>(true)) c.enabled = false;
             foreach (var rb in m.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
-            tw._model = m.transform;
         }
 
         Destroy(go, maxDist / tw._speed + 1f);
@@ -78,7 +89,11 @@ public class ThrownWeapon : MonoBehaviour
 
         transform.position = p + _dir * step;
         _left -= step;
-        if (_model != null) _model.Rotate(Vector3.right, _spin * Time.deltaTime, Space.Self);
+        if (_spinner != null)
+        {
+            if (_style == ThrowStyle.Tumble) _spinner.Rotate(Vector3.right, _spin * Time.deltaTime, Space.Self);
+            else if (_style == ThrowStyle.Drill) _spinner.Rotate(Vector3.forward, _spin * Time.deltaTime, Space.Self);
+        }
         if (_left <= 0f) Destroy(gameObject);
     }
 }

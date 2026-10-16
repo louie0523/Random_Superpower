@@ -53,6 +53,7 @@ public class RigAnimator : MonoBehaviour
     private float _aimUntil = -1f;
     private float _aimW;
     private bool _aimTurn;
+    private Quaternion _tilt = Quaternion.identity;
 
     void Awake() => Bind();
 
@@ -68,7 +69,32 @@ public class RigAnimator : MonoBehaviour
             if (!map.ContainsKey(t.name)) map[t.name] = t;
 
         _bones = new Transform[Data.Bones.Count];
-        for (int i = 0; i < _bones.Length; i++) map.TryGetValue(Data.Bones[i], out _bones[i]);
+        int missing = 0;
+        string firstMissing = null;
+        for (int i = 0; i < _bones.Length; i++)
+            if (!map.TryGetValue(Data.Bones[i], out _bones[i])) { missing++; firstMissing ??= Data.Bones[i]; }
+
+        if (missing > 0 && Application.isPlaying)
+            Debug.LogWarning($"[RigAnimator] {name}: 본 {missing}/{_bones.Length}개를 못 찾음 (예: '{firstMissing}'). " +
+                             "본 이름을 미리보기에서만 바꾸고 프리팹엔 저장 안 했는지 확인 — 프리팹 모드에서 '본 정리'를 다시", this);
+
+        // 계층이 애니메이션 만들 때와 다르면 (프리팹에 본 정리를 저장 안 함 등) 자세가 뒤집히거나 꼬임
+        if (Application.isPlaying && Data.BoneParents != null && Data.BoneParents.Count == _bones.Length)
+        {
+            int diff = 0;
+            string first = null;
+            for (int i = 0; i < _bones.Length; i++)
+            {
+                if (_bones[i] == null || string.IsNullOrEmpty(Data.BoneParents[i])) continue;
+                string pn = _bones[i].parent != null ? _bones[i].parent.name : "";
+                if (pn == Data.BoneParents[i]) continue;
+                diff++;
+                first ??= $"{_bones[i].name}: 프리팹 부모 '{pn}' · 애니메이션 만들 때 '{Data.BoneParents[i]}'";
+            }
+            if (diff > 0)
+                Debug.LogWarning($"[RigAnimator] {name}: 본 {diff}개의 부모가 애니메이션 만들 때와 다름 → 자세가 뒤집히거나 꼬임. ({first})\n" +
+                                 "본 정리(부모 바꾸기)를 씬 복사본에서만 하고 프리팹엔 저장 안 했는지 확인", this);
+        }
 
         _chains = new Transform[Data.Chains.Count][];
         for (int c = 0; c < _chains.Length; c++)
@@ -80,6 +106,10 @@ public class RigAnimator : MonoBehaviour
             for (int i = 0; i < arr.Length; i++) ok &= map.TryGetValue(ch.Bones[i], out arr[i]);
             _chains[c] = ok ? arr : null;
         }
+
+        // 프리팹 루트에 기울기(세우기 등)를 줬다면 목표 쪽으로 돌 때 그대로 유지
+        var e = transform.eulerAngles;
+        _tilt = Quaternion.Inverse(Quaternion.Euler(0f, e.y, 0f)) * transform.rotation;
 
         string start = string.IsNullOrEmpty(StartState) ? Data.IdleState : StartState;
         _cur = Data.Find(start) ?? Data.Find(Data.IdleState);
@@ -215,7 +245,7 @@ public class RigAnimator : MonoBehaviour
             Vector3 d = _aim - transform.position;
             d.y = 0f;
             if (d.sqrMagnitude > 0.0001f)
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(d.normalized, Vector3.up),
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(d.normalized, Vector3.up) * _tilt,
                                                       1f - Mathf.Exp(-TurnSpeed * dt));
         }
 
@@ -224,7 +254,7 @@ public class RigAnimator : MonoBehaviour
         {
             var def = Data.Chains[c];
             if (_chains[c] == null || def == null || !def.FollowRuntimeTarget) continue;
-            RigIK.SolveWeighted(_chains[c], _aim, ease * def.RuntimeWeight);
+            RigIK.SolveWeighted(_chains[c], _aim, ease * def.RuntimeWeight, 12, def.Stretch ? def.MaxStretch : 1f);
         }
     }
 

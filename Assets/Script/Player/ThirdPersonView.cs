@@ -95,7 +95,23 @@ public class ThirdPersonView : MonoBehaviour
         if (pivot == null && fpCamera != null) pivot = fpCamera.transform.parent;
     }
 
-    void OnDisable() => ForceFirstPerson();
+    private PlayerHealth _health;
+    private bool _snap;
+
+    void OnEnable()
+    {
+        _health = GetComponentInParent<PlayerHealth>();
+        if (_health != null) _health.Teleported += Snap;
+    }
+
+    /// <summary>순간이동 — 높이 따라가기 · 벽 거리 늘리기를 건너뛰고 바로 붙음</summary>
+    public void Snap() => _snap = true;
+
+    void OnDisable()
+    {
+        if (_health != null) _health.Teleported -= Snap;
+        ForceFirstPerson();
+    }
 
     void OnDestroy()
     {
@@ -138,6 +154,7 @@ public class ThirdPersonView : MonoBehaviour
         if (_w <= 0f)
         {
             if (_camOn) TurnOff();
+            _snap = false;
             return;
         }
 
@@ -146,7 +163,7 @@ public class ThirdPersonView : MonoBehaviour
         Quaternion fpRot = fpT.rotation;
 
         // 기준점 — 수평은 CameraRoot, 높이는 1인칭 카메라 높이를 부드럽게 (헤드밥 제거, 탈것 높이는 따라감)
-        _originY = _camOn ? Mathf.Lerp(_originY, fpPos.y, 1f - Mathf.Exp(-heightFollow * Time.deltaTime)) : fpPos.y;
+        _originY = _camOn && !_snap ? Mathf.Lerp(_originY, fpPos.y, 1f - Mathf.Exp(-heightFollow * Time.deltaTime)) : fpPos.y;
         Vector3 origin = new(pivot.position.x, _originY + s.PivotHeight, pivot.position.z);
 
         Quaternion look = pivot.rotation * Quaternion.Euler(s.PitchOffset, 0f, 0f);
@@ -158,10 +175,11 @@ public class ThirdPersonView : MonoBehaviour
 
         float allowed = Cast(origin, dir, full);
 
-        if (!_camOn)
+        if (!_camOn || _snap)
         {
-            TurnOn();
+            if (!_camOn) TurnOn();
             _dist = allowed;
+            _snap = false;
         }
         else
         {

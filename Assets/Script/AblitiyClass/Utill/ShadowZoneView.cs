@@ -4,13 +4,14 @@ using UnityEngine;
 /// <summary>
 /// 완전한 암흑 — 그림자 영역 연출 (모든 클라이언트가 각자 만듦).
 ///   밖: 검은 돔이 보여서 안이 안 보임 (돔은 바깥면만 그려져 안에선 안 보임)
-///   안 (쉐도우 워커 제외): 화면 가장자리부터 어두워져 시야가 좁아짐
+///   안 (쉐도우 워커 제외): 있는 동안 계속 암흑 시야 — 내 둘레 visionRadius(m)만 보임
 ///   쉐도우 워커 본인: 영역 안 적 머리 위에 위치 표시
 /// </summary>
 public class ShadowZoneView : MonoBehaviour
 {
     private Vector3 _center;
     private float _radius, _end, _start;
+    private float _visionRadius = 2f;
     private Transform _owner;
     private bool _ownerIsLocal;
     private GameObject _dome;
@@ -22,7 +23,8 @@ public class ShadowZoneView : MonoBehaviour
     const float FadeTime = 0.35f;
 
     public static ShadowZoneView Create(Vector3 center, float radius, float duration, Transform owner, bool ownerIsLocal,
-                                        GameObject domePrefab, GameObject markerPrefab, LayerMask playerMask)
+                                        GameObject domePrefab, GameObject markerPrefab, LayerMask playerMask,
+                                        float visionRadius = 2f)
     {
         var go = new GameObject("ShadowZone");
         var v = go.AddComponent<ShadowZoneView>();
@@ -34,6 +36,7 @@ public class ShadowZoneView : MonoBehaviour
         v._ownerIsLocal = ownerIsLocal;
         v._markerPrefab = markerPrefab;
         v._playerMask = playerMask;
+        v._visionRadius = Mathf.Max(PlayerStatus.MinBlindRadius, visionRadius);
         go.transform.position = center;
 
         if (domePrefab != null)
@@ -75,10 +78,10 @@ public class ShadowZoneView : MonoBehaviour
             return;
         }
 
-        // 다른 사람이 영역 안이면 시야 축소
+        // 다른 사람이 영역 안이면 있는 동안 계속 암흑 시야
         Vector3 p = local.transform.position;
         float d = Vector3.Distance(new Vector3(p.x, _center.y, p.z), _center);
-        if (d < _radius * s) ScreenDarkness.PushZone(s);
+        if (d < _radius * s) ScreenDarkness.PushVision(_visionRadius);
     }
 
     void UpdateMarkers()
@@ -97,6 +100,9 @@ public class ShadowZoneView : MonoBehaviour
         var gone = new List<PlayerHealth>();
         foreach (var kv in _markers) if (!inside.Contains(kv.Key)) gone.Add(kv.Key);
         foreach (var h in gone) { if (_markers[h] != null) Destroy(_markers[h]); _markers.Remove(h); }
+
+        // 영역 안 적 — 벽 너머로도 아웃라인 (PlayerOutline이 있으면)
+        foreach (var h in inside) PlayerOutline.RequestXRay(h.gameObject, 0.3f);
 
         if (_markerPrefab == null) return;
         foreach (var h in inside)

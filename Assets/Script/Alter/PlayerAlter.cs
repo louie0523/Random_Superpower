@@ -32,7 +32,7 @@ public class PlayerAlter : NetworkBehaviour
     private static readonly HashSet<int> _warnedLift = new();     // 파츠의 애니메이션 (말 걷기 등)
     private Vector3 _lastPos;
     private float _moveSpeed;
-    private Vector3 _moveDir;
+    private Vector3 _vel;               // 부드럽게 거른 이동 속도 (방향용)
 
     // 이동 방향을 바라보는 파츠 (말 등)
     private readonly List<(Transform t, AlterData a)> _facers = new();
@@ -214,8 +214,10 @@ public class PlayerAlter : NetworkBehaviour
         float turn = 8f;
         foreach (var (_, a) in _facers) if (a != null) turn = a.FaceTurnSpeed;
 
-        if (_moveSpeed > 0.6f && _moveDir.sqrMagnitude > 0.01f)
-            _faceRot = Quaternion.Slerp(_faceRot, Quaternion.LookRotation(_moveDir, Vector3.up), 1f - Mathf.Exp(-turn * dt));
+        // 확실히 움직일 때만 방향을 바꿈 (멈추는 중 · 살짝 밀리는 건 무시 → 멈추면 그 자리 그대로)
+        const float minSpeed = 1.5f;
+        if (_vel.sqrMagnitude > minSpeed * minSpeed)
+            _faceRot = Quaternion.Slerp(_faceRot, Quaternion.LookRotation(_vel.normalized, Vector3.up), 1f - Mathf.Exp(-turn * dt));
 
         foreach (var (t, a) in _facers)
             if (t != null && a != null) t.rotation = _faceRot * Quaternion.Euler(a.Rotation);
@@ -421,7 +423,9 @@ public class PlayerAlter : NetworkBehaviour
         float speed = d.magnitude / dt;
         if (speed > 60f) speed = 0f;                                 // 순간이동 · 리스폰
         _moveSpeed = Mathf.Lerp(_moveSpeed, speed, 1f - Mathf.Exp(-10f * dt));
-        if (speed > 0.6f) _moveDir = d / (speed * dt);
+        // 방향은 몇 프레임에 걸쳐 거른 속도로 — 멈출 때 한 프레임 뒤로 밀리는 보정(1cm 남짓)에 휙 돌지 않게
+        if (speed > 0f) _vel = Vector3.Lerp(_vel, d / dt, 1f - Mathf.Exp(-12f * dt));
+        else _vel = Vector3.Lerp(_vel, Vector3.zero, 1f - Mathf.Exp(-12f * dt));
 
         if (_rigAnims.Count == 0) return;
         bool moving = _moveSpeed > 0.6f;

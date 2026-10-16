@@ -544,6 +544,9 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     /// <summary>순간이동 — 다른 클라이언트에서 미끄러지듯 보간되지 않게</summary>
+    /// <summary>순간이동 직후 (이 화면) — 카메라 등이 부드럽게 따라가지 말고 바로 붙게</summary>
+    public event System.Action Teleported;
+
     public void Teleport(Vector3 pos, Quaternion rot)
     {
         if (_cc != null) _cc.enabled = false;
@@ -551,9 +554,17 @@ public class PlayerHealth : NetworkBehaviour
         transform.SetPositionAndRotation(pos, rot);
 
         var nt = GetComponent<NetworkTransform>();
-        if (nt != null) nt.Teleport(pos, rot);
+        if (nt != null)
+        {
+            nt.Teleport(pos, rot);
+            // 내 화면: 옛 위치 ↔ 새 위치 사이가 보간돼 1인칭 카메라가 튀지 않게 잠깐 보간 끔
+            if (HasStateAuthority) TeleportInterpolationFix.Apply(gameObject, nt, Runner);
+        }
 
         if (_cc != null) _cc.enabled = !IsDead;
+        Physics.SyncTransforms();           // 같은 틱에 이어지는 이동 · 판정이 옛 위치를 쓰지 않게
+
+        Teleported?.Invoke();
     }
 
     // ══════════════════ 연출 (모든 클라이언트) ══════════════════

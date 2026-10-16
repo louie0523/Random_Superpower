@@ -130,6 +130,10 @@ public class RigIKChain
     [Tooltip("게임 중 목표를 향해 뻗음 (RigAnimator.AimAt) — 그림자 손이 적을 붙잡을 때 등")]
     public bool FollowRuntimeTarget;
     [Range(0f, 1f)] public float RuntimeWeight = 1f;
+    [Tooltip("목표가 본 길이보다 멀면 본을 늘려서라도 닿음 (그림자 손의 고무팔)")]
+    public bool Stretch = true;
+    [Tooltip("최대 몇 배까지 늘어나는지")]
+    [Min(1f)] public float MaxStretch = 5f;
 
     public string Tip => Bones != null && Bones.Length > 0 ? Bones[Bones.Length - 1] : null;
 }
@@ -143,6 +147,8 @@ public class RigIKChain
 public class RigAnimData : ScriptableObject
 {
     public List<string> Bones = new();
+    [Tooltip("만들 때의 본 부모 이름 (Bones 순서) — 게임에서 프리팹 계층이 다르면 경고")]
+    public List<string> BoneParents = new();
     [Tooltip("기본 자세 — 키가 없는 본은 이 자세")]
     public RigPose Rest = new();
     public List<RigIKChain> Chains = new();

@@ -36,6 +36,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
     [Range(0, 3)] public int DarkChargeSlot = 0;
     [ForPassive(nameof(ShadowPassive), "암흑 충전 시간 (초, 비전투)")] public LevelValue DarkChargeTime = 4f;
     [ForPassive(nameof(ShadowPassive), "암전 시간 (초)")] public LevelValue BlindTime = 1f;
+    [ForPassive(nameof(ShadowPassive), "암전 시야 (m, 최소 1)")] public LevelValue BlindRadius = 2f;
     const float DarkMax = 100f;
 
     [Header("그림자 무기")]
@@ -60,6 +61,10 @@ public class ShadowWalkerAbility : AbilityBehaviour
     [ForSkill(nameof(HandSkill), "속박 (초)")] public LevelValue HandRoot = 1f;
     [ForSkill(nameof(HandSkill), "같은 적 면역 (초)")] public LevelValue HandImmune = 3f;
     [ForSkill(nameof(HandSkill), "최대 개수")] public LevelValue HandMax = 8f;
+    [Tooltip("한 번 붙잡으면 (속박이 끝난 뒤) 사라짐. 끄면 HandRearm 뒤 다시 뻗음")]
+    public bool HandOneShot = true;
+    [Tooltip("사라지는 시간 (초) — 손에 'Vanish' 상태가 있으면 그걸 재생, 없으면 작아지며 사라짐")]
+    public float HandVanishTime = 0.3f;
     [Tooltip("손 하나가 다시 뻗을 때까지 (초)")]
     public float HandRearm = 1.5f;
     [Tooltip("손이 사라지는 시간 (초)")]
@@ -75,6 +80,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
     [ForSkill(nameof(UltSkill), "지속 (초)")] public LevelValue ZoneDuration = 8f;
     [ForSkill(nameof(UltSkill), "영역 안 이속 증가 (%)")] public LevelValue ZoneMoveSpeedPct = 30f;
     [ForSkill(nameof(UltSkill), "영역 안 그림자 이동 쿨 (초)")] public LevelValue ZoneMoveCooldown = 1f;
+    [ForSkill(nameof(UltSkill), "영역 안 상대 시야 (m, 최소 1)")] public LevelValue ZoneVisionRadius = 2f;
     [Tooltip("검은 돔 (비우면 검은 구를 자동으로 만듦). 반지름 1 기준 크기로 만들 것")]
     public GameObject ZoneDomePrefab;
     [Tooltip("쉐도우 워커 화면에서 영역 안 적 머리 위에 뜨는 표시 (벽 너머로 보이게 만든 것)")]
@@ -150,7 +156,8 @@ public class ShadowWalkerAbility : AbilityBehaviour
                 if (rig != null)
                 {
                     _mimic = go.AddComponent<ShadowMimic>();
-                    _mimic.Init(Ctx.transform, rig, ShadowMaterial, Lv(EchoDelay));
+                    // 다른 사람 화면: 몸 전체 · 내 화면: 팔 · 손 · 무기만
+                    _mimic.Init(Ctx.transform, rig, ShadowMaterial, Lv(EchoDelay), armsOnly: Ctx.HasInputAuthority);
                 }
                 else Debug.LogWarning("[쉐도우 워커] FPArmRig를 못 찾아서 그림자가 모습을 따라 할 수 없음");
             }
@@ -227,7 +234,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
         // 암흑이 가득 차 있으면 소모하고 암전
         if (Ctx.SpendCharge(DarkChargeSlot, DarkMax) && target.TryGetComponent<PlayerStatus>(out var st))
         {
-            st.Apply(StatusType.Blind, 1f, Lv(BlindTime), Ctx.Object.InputAuthority);
+            st.Apply(StatusType.Blind, Mathf.Max(PlayerStatus.MinBlindRadius, Lv(BlindRadius)), Lv(BlindTime), Ctx.Object.InputAuthority);
             Broadcast(EvBlind, target.transform.position + Vector3.up * 1.6f);
         }
 
@@ -304,12 +311,13 @@ public class ShadowWalkerAbility : AbilityBehaviour
         Vector3 dir = cam.forward;
         float range = Lv(MoveRange);
 
-        Vector3 target = Physics.Raycast(eye, dir, out var hit, range, BlinkMask, QueryTriggerInteraction.Ignore)
+        var self = Ctx.transform.root;
+        Vector3 target = CastUtil.Raycast(eye, dir, range, BlinkMask, self, out var hit)
             ? hit.point - dir * 0.6f            // 벽 바로 앞
             : eye + dir * range;
 
         var cc = Ctx.GetComponent<CharacterController>();
-        Vector3 dest = SpawnPoint.GroundedPosition(target, cc);
+        Vector3 dest = SpawnPoint.GroundedPosition(target, cc, 10f, self);
 
         Broadcast(EvBlinkFrom, from);          // 그림자가 원래 자리에 남음
         _health.Teleport(dest, Ctx.transform.rotation);
@@ -352,8 +360,10 @@ public class ShadowWalkerAbility : AbilityBehaviour
         var self = Ctx.Object.InputAuthority;
         float radius = Lv(HandRadius);
 
+        Hand used = null;
         foreach (var hand in _hands)
         {
+            if (used != null) break;                // 한 틱에 하나씩 (목록을 지우며 돌지 않게)
             if (Now < hand.ReadyAt) continue;
 
             PlayerHealth best = null;
@@ -372,6 +382,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
             if (best == null) continue;
 
             hand.ReadyAt = Now + HandRearm;
+            if (HandOneShot) used = hand;           // 한 번 붙잡으면 사라짐
             _handImmune[best] = Now + Lv(HandImmune);
 
             var stats = Ctx.Stats;
@@ -386,6 +397,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
 
             Broadcast(EvGrab, best.transform.position);
         }
+        if (used != null) _hands.Remove(used);
     }
 
     // ── 완전한 암흑 ──
@@ -433,7 +445,8 @@ public class ShadowWalkerAbility : AbilityBehaviour
             case EvHandPlace:
                 if (HandPrefab != null)
                 {
-                    var go = Instantiate(HandPrefab, pos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+                    // 프리팹 루트의 기울기(세우기 등)는 유지하고 좌우 방향만 무작위
+                    var go = Instantiate(HandPrefab, pos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f) * HandPrefab.transform.rotation);
                     foreach (var c in go.GetComponentsInChildren<Collider>(true)) c.enabled = false;
                     Destroy(go, HandLifetime);
                     _handViews.Add((go, Time.time + HandLifetime));
@@ -455,7 +468,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
 
             case EvZone:
                 ShadowZoneView.Create(pos, Lv(ZoneRadius), Lv(ZoneDuration), Ctx.transform, Ctx.HasInputAuthority,
-                                      ZoneDomePrefab, EnemyMarkerPrefab, Ctx.HitMask);
+                                      ZoneDomePrefab, EnemyMarkerPrefab, Ctx.HitMask, Lv(ZoneVisionRadius));
                 break;
         }
     }
@@ -474,12 +487,46 @@ public class ShadowWalkerAbility : AbilityBehaviour
         }
         if (best == null) return;
 
-        var ra = best.GetComponentInChildren<RigAnimator>();
-        if (ra == null) return;
-
         float hold = Mathf.Max(0.3f, Lv(HandRoot));
-        ra.Play("Grab", hold);
-        ra.AimAt(targetPos + Vector3.up * GrabAimHeight, hold);
+        var ra = best.GetComponentInChildren<RigAnimator>();
+        if (ra != null)
+        {
+            ra.Play("Grab", hold);
+            ra.AimAt(targetPos + Vector3.up * GrabAimHeight, hold);
+        }
+
+        if (HandOneShot)
+        {
+            // 목록에서 빼서 다시 고르지 않게 → 속박이 끝나면 사라짐
+            for (int i = _handViews.Count - 1; i >= 0; i--)
+                if (_handViews[i].go == best) _handViews.RemoveAt(i);
+            Ctx.StartCoroutine(VanishAfter(best, ra, hold));
+        }
+    }
+
+    System.Collections.IEnumerator VanishAfter(GameObject go, RigAnimator ra, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (go == null) yield break;
+
+        float t = Mathf.Max(0.05f, HandVanishTime);
+        var vanish = ra != null && ra.Data != null ? ra.Data.Find("Vanish") : null;
+        if (vanish != null)
+        {
+            ra.Play("Vanish", vanish.Length / Mathf.Max(0.01f, vanish.Speed));
+            yield return new WaitForSeconds(vanish.Length / Mathf.Max(0.01f, vanish.Speed));
+        }
+        else
+        {
+            Vector3 s0 = go.transform.localScale;
+            for (float e = 0f; e < t && go != null; e += Time.deltaTime)
+            {
+                float k = 1f - e / t;
+                go.transform.localScale = s0 * (k * k);
+                yield return null;
+            }
+        }
+        if (go != null) Destroy(go);
     }
 
     // ══════════════════ 설명 ══════════════════
@@ -496,4 +543,34 @@ public class ShadowWalkerAbility : AbilityBehaviour
         }
         return null;
     }
+
+    // ══════════════════ 치트 (/job) ══════════════════
+
+    public override string DevCommand(string[] a)
+    {
+        string sub = a.Length > 0 ? a[0].ToLowerInvariant() : "help";
+        switch (sub)
+        {
+            case "help":
+                return "쉐도우 워커: /job dark (암흑 충전) · hands (놓인 손 지우기) · zone (완전한 암흑)";
+            case "dark":
+            case "암흑":
+                Ctx.SetMaxCharge(DarkChargeSlot, DarkMax);
+                Ctx.AddCharge(DarkChargeSlot, DarkMax);
+                return "암흑 충전됨";
+            case "hands":
+            case "손":
+                int n = _hands.Count;
+                _hands.Clear();
+                return $"그림자 손 {n}개 판정 지움 (모양은 시간이 지나면 사라짐)";
+            case "zone":
+            case "궁":
+                BeginZone();
+                return "완전한 암흑";
+        }
+        return null;
+    }
+
+    public override IEnumerable<(string value, string label)> DevComplete(string[] a, int index) =>
+        index == 0 ? new[] { ("dark", "암흑 충전"), ("hands", "놓인 손 지우기"), ("zone", "완전한 암흑") } : null;
 }

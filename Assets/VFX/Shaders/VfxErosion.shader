@@ -175,9 +175,12 @@ Shader "Toon/VfxErosion"
                         if (len > 0.0001)
                         {
                             side /= len;
-                            // 방향 고르기 — 원래 안쪽과 같은 편. 애매하면(1인칭 정면) 위쪽 → 안쪽 가장자리가 항상 위
+                            // 방향 고르기 — 원래 안쪽과 같은 편. 카메라가 호 평면 위에 거의 붙어 있으면(1인칭) 위쪽 → 안쪽 가장자리가 항상 위
+                            // 판단은 '호 평면에서 카메라까지의 높이(m)'로 함 — 호 전체에서 거의 같은 값이라 중간에 방향이 뒤집히지 않음
+                            // (예전엔 거리로 나눈 값이라 먼 양끝만 위쪽 기준으로 바뀌어 띠가 꼬이며 뭉개졌음 — 3인칭)
                             float d = dot(side, v.normalOS);
-                            float pick = abs(d) > 0.3 ? d : dot(side, float3(0, 1, 0));
+                            float h = dot(camOS - p, cross(v.normalOS, v.tangentOS.xyz));
+                            float pick = abs(h) > 0.25 ? d : dot(side, float3(0, 1, 0));
                             dir = pick < 0.0 ? -side : side;
                             centered = 1.0;
                         }

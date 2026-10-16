@@ -85,14 +85,14 @@ public class SpawnPoint : MonoBehaviour
     /// <summary>
     /// point 아래 바닥을 찾아, 캐릭터 발바닥이 바닥에 딱 닿는 루트 위치를 돌려줌.
     /// body가 없으면 바닥 위치 그대로 (피벗이 발에 있는 경우).
+    /// ignoreRoot: 이 오브젝트(보통 나 자신)의 콜라이더는 바닥으로 안 봄
     /// </summary>
-    public static Vector3 GroundedPosition(Vector3 point, CharacterController body, float probeDown = 10f)
+    public static Vector3 GroundedPosition(Vector3 point, CharacterController body, float probeDown = 10f, Transform ignoreRoot = null)
     {
         float footOffset = FootOffset(body);           // 루트에서 발바닥까지 (아래로, m)
         Vector3 from = point + Vector3.up * 1.5f;      // 지점이 바닥에 살짝 묻혀 있어도 찾도록
 
-        if (Physics.Raycast(from, Vector3.down, out var hit, probeDown + 1.5f,
-                            GroundMask, QueryTriggerInteraction.Ignore))
+        if (CastUtil.Raycast(from, Vector3.down, probeDown + 1.5f, GroundMask, ignoreRoot, out var hit))
         {
             float skin = body != null ? body.skinWidth : 0f;
             return hit.point + Vector3.up * (footOffset + skin + 0.02f);

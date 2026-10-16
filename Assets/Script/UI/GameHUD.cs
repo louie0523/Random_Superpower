@@ -59,7 +59,7 @@ public class GameHUD : MonoBehaviour
         }
 
         //DrawScoreboard(_runner);
-        DrawDebugKeys();
+        //DrawDebugKeys();
         //DrawRoundState();
         //DrawShop(local, local.GetComponent<PlayerShop>(), hp);
         //DrawInteract(local);

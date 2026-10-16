@@ -814,6 +814,32 @@ public class PlayerAttack : NetworkBehaviour
         if (heal > 0) _health.RPC_Heal(heal);
     }
 
+    /// <summary>
+    /// 대리 타격 (조커 분신 등) — 내 무기로 때린 것과 완전히 같은 처리:
+    /// 능력치 · 치명 · 인챈트(관통 · 처형 · 부여 효과) · 흡혈 · 능력 '맞혔을 때' 반응. SA에서만.
+    /// 나 자신 · 같은 팀(TeamUtil)은 절대 안 때림. 준 피해를 돌려줌
+    /// </summary>
+    public float ProxyWeaponHit(PlayerHealth target, float damageMul, ComboStep step, bool ranged, Vector3 from)
+    {
+        if (!HasStateAuthority || target == null || target.IsDead || _stats == null) return 0f;
+        if (target.transform.root == transform.root) return 0f;
+        if (TeamUtil.IsFriendly(Object.InputAuthority, target)) return 0f;
+
+        var src = ranged ? DamageSource.RangedWeapon : DamageSource.MeleeWeapon;
+        float mul = step != null ? step.DamageMultiplier : 1f;
+        float outgoing = DamageCalc.CalcOutgoing(_stats, _stats.Get(StatType.AttackPower) * mul * damageMul, src, true, out bool crit);
+
+        bool ench = step == null || !step.NoWeaponEnchants;
+        var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, from);
+        info.IsCrit = crit;
+        info.IsMelee = !ranged;
+        if (ench) _enchant?.ModifyWeaponHit(ref info);
+        target.RPC_TakeDamage(info);
+
+        AfterWeaponHit(target, target.gameObject, outgoing, ench);
+        return outgoing;
+    }
+
     void ResetCombo()
     {
         _attackTimer = -1f;

@@ -3,6 +3,8 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -60,15 +62,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
+
     /// <summary>패널이 열려 있어 게임 입력을 막아야 하는가</summary>
     public static bool InputBlocked
     {
         get
         {
             var ui = Instance;
-            return ui != null && ui.AnyPanelOpen;
+            return (ui != null && ui.AnyPanelOpen) || DevConsole.IsOpen;
         }
     }
+
 
     // ══════════════════ 생명주기 ══════════════════
 

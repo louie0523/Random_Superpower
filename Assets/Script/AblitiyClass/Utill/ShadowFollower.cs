@@ -1,9 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// 쉐도우 워커의 그림자 — 모든 클라이언트에서 각자 그림 (네트워크 오브젝트 아님).
+/// 쉐도우 워커의 그림자 — 모든 클라이언트에서 각자 그린다.
 /// 주인 뒤를 살짝 늦게 따라감. 위치 교체(그림자 이동) 때 Snap으로 그 자리에 놓임.
-/// 그림자 프리팹에 붙어 있지 않으면 자동으로 붙음.
 /// </summary>
 public class ShadowFollower : MonoBehaviour
 {

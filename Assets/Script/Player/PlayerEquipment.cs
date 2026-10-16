@@ -8,7 +8,7 @@ public class PlayerEquipment : NetworkBehaviour
     [SerializeField] private NetworkObject pickupPrefab;
 
     /// <summary>무기 칸 최대치 (네트워크 용량). 실제로 쓰는 칸 수는 UsableSlots</summary>
-    public const int WeaponSlots = 8;
+    public const int WeaponSlots = 7;
     /// <summary>기본 무기 칸 수 — 무구의 달인 등 능력이 SetSlotCount로 늘림</summary>
     public const int DefaultSlotCount = 3;
 

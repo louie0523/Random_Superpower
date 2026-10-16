@@ -15,7 +15,7 @@ public enum StatusType
     Evade,      // 회피 - 받는 공격을 모두 회피
     ArmorBreak, // 방어력 감소 — 방어력 N% 감소
     Ghost,      // 고스트 — 모든 공격 MISS + 사람 통과
-    Blind,      // 암전 — 화면이 까매짐 (본인 화면만)
+    Blind,      // 암전 — 값(m) 반경만 보이고 나머지는 어둠 (본인 화면만). 작은 값이 우선, 최소 1m
     Root,       // 속박 — 이동·점프 불가 (공격·시점 회전은 가능)
 }
 
@@ -73,7 +73,16 @@ public class PlayerStatus : NetworkBehaviour
 
     static bool IsFlag(StatusType t) =>
     t == StatusType.Seal || t == StatusType.Stun || t == StatusType.Evade || t == StatusType.Ghost
-    || t == StatusType.Blind || t == StatusType.Root;
+    || t == StatusType.Root;
+
+    /// <summary>값이 작을수록 강한 상태이상 — 암전(Blind) 값 = 보이는 반경(m)</summary>
+    static bool LowerIsStronger(StatusType t) => t == StatusType.Blind;
+
+    /// <summary>a가 b보다 같거나 강함</summary>
+    static bool AtLeast(StatusType t, float a, float b) => LowerIsStronger(t) ? a <= b : a >= b;
+
+    /// <summary>암전 최소 시야 (m)</summary>
+    public const float MinBlindRadius = 1f;
 
     public bool Has(StatusType t) => Values[(int)t] > 0f;
     public float Get(StatusType t) => Values[(int)t];
@@ -122,6 +131,7 @@ public class PlayerStatus : NetworkBehaviour
         if (duration <= 0f) return;
         if (t != StatusType.Evade && IsEvading && source != Object.InputAuthority) return;
         if (IsFlag(t)) value = 1f;
+        if (t == StatusType.Blind) value = Mathf.Max(MinBlindRadius, value);     // 값 = 보이는 반경 (m)
         if (value <= 0f) return;
 
         if (t == StatusType.Poison)
@@ -135,10 +145,10 @@ public class PlayerStatus : NetworkBehaviour
         var list = _inst[i];
 
         for (int k = 0; k < list.Count; k++)
-            if (list[k].Value >= value && list[k].End >= end) return;
+            if (AtLeast(t, list[k].Value, value) && list[k].End >= end) return;
 
         for (int k = list.Count - 1; k >= 0; k--)
-            if (list[k].Value <= value && list[k].End <= end) list.RemoveAt(k);
+            if (AtLeast(t, value, list[k].Value) && list[k].End <= end) list.RemoveAt(k);
 
         list.Add(new Instance { Value = value, End = end, Source = source });
         Refresh(t);
@@ -241,13 +251,15 @@ public class PlayerStatus : NetworkBehaviour
     void Refresh(StatusType t)
     {
         int i = (int)t;
-        float best = 0f, lastEnd = 0f;
+        bool low = LowerIsStronger(t);
+        float best = low ? float.MaxValue : 0f, lastEnd = 0f;
 
         foreach (var x in _inst[i])
         {
-            if (x.Value > best) best = x.Value;
+            if (low ? x.Value < best : x.Value > best) best = x.Value;
             if (x.End > lastEnd) lastEnd = x.End;
         }
+        if (low && best == float.MaxValue) best = 0f;       // 없음
 
         Values.Set(i, best);
         EndTimes.Set(i, lastEnd);

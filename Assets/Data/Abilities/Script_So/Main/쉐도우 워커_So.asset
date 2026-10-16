@@ -31,6 +31,9 @@ MonoBehaviour:
     - 1
     - 1.25
     - 1.5
+  BlindRadius:
+    Values:
+    - 2
   WeaponDuration:
     Values:
     - 8
@@ -102,9 +105,12 @@ MonoBehaviour:
     - 6
     - 7
     - 8
+  HandOneShot: 1
+  HandVanishTime: 0.3
   HandRearm: 1.5
   HandLifetime: 45
-  HandPrefab: {fileID: 0}
+  HandPrefab: {fileID: 8000799951828010482, guid: 49c6db73bfc54024592412d294d03d57, type: 3}
+  GrabAimHeight: 0
   HandGrabFx: {fileID: 0}
   ZoneRadius:
     Values:
@@ -124,7 +130,10 @@ MonoBehaviour:
     - 1
     - 0.5
     - 0.1
-  ZoneDomePrefab: {fileID: 0}
+  ZoneVisionRadius:
+    Values:
+    - 2
+  ZoneDomePrefab: {fileID: 1326508217493744576, guid: b86aa279072a8e04bb5add529f2b8629, type: 3}
   EnemyMarkerPrefab: {fileID: 0}
   EchoFx: {fileID: 0}
   BlinkFx: {fileID: 0}

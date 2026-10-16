@@ -736,4 +736,102 @@ public class DevourerAbility : AbilityBehaviour
         };
         Ctx.PlayEffectLocal(fx, pos);
     }
+
+    // ══════════════════ 치트 (/job) ══════════════════
+
+    public override string DevCommand(string[] a)
+    {
+        if (_s == null) LoadState();
+        string sub = a.Length > 0 ? a[0].ToLowerInvariant() : "help";
+        switch (sub)
+        {
+            case "help":
+                return "탐식자: /job digest [초] · special [번호·이름] · specials · spit [공격력] · ult · reset";
+
+            case "digest":
+            case "소화":
+                {
+                    float sec = a.Length > 1 && float.TryParse(a[1], System.Globalization.NumberStyles.Float,
+                                                               System.Globalization.CultureInfo.InvariantCulture, out float v) ? v : 0f;
+                    _s.DigestTotal = Mathf.Max(1f, sec);
+                    _s.DigestEnd = Now + sec;
+                    TickDigestGauge();
+                    return sec <= 0f ? "소화 끝 (바로 먹을 수 있음)" : $"소화 {sec:0.#}초";
+                }
+
+            case "specials":
+                {
+                    if (Specials == null || Specials.Length == 0) return "특수 패시브 목록이 비어 있음";
+                    var sb = new StringBuilder("특수 패시브:");
+                    for (int i = 0; i < Specials.Length; i++)
+                        if (Specials[i] != null)
+                            sb.Append($"\n  {i + 1}. {LocUtil.Resolve(Specials[i].Name)}" +
+                                      (Specials[i].Weapon != null ? $" ({Specials[i].Weapon.Id})" : "") +
+                                      (_s.Specials.Contains(i) ? "  ✔" : ""));
+                    return sb.ToString();
+                }
+
+            case "special":
+            case "특수":
+                {
+                    if (Specials == null || Specials.Length == 0) return "특수 패시브 목록이 비어 있음";
+                    int idx = -1;
+                    if (a.Length > 1)
+                    {
+                        if (int.TryParse(a[1], out int n)) idx = n - 1;
+                        else for (int i = 0; i < Specials.Length; i++)
+                                if (Specials[i] != null && LocUtil.Resolve(Specials[i].Name).Contains(a[1])) { idx = i; break; }
+                    }
+                    else
+                    {
+                        var left = new List<int>();
+                        for (int i = 0; i < Specials.Length; i++) if (Specials[i] != null && !_s.Specials.Contains(i)) left.Add(i);
+                        if (left.Count > 0) idx = left[Random.Range(0, left.Count)];
+                    }
+                    if (idx < 0 || idx >= Specials.Length || Specials[idx] == null) return "그 특수 패시브 없음 — /job specials";
+                    if (_s.Specials.Contains(idx)) return "이미 있음";
+
+                    float maxBefore = Ctx.Stats.Get(StatType.MaxHP);
+                    _s.Specials.Add(idx);
+                    if (Specials[idx].Alter != null) _alter?.Add(Specials[idx].Alter);
+                    ApplyStats();
+                    _health?.ApplyMaxHpGain(maxBefore);
+                    return $"특수 패시브: {LocUtil.Resolve(Specials[idx].Name)}";
+                }
+
+            case "spit":
+            case "뱉기":
+                {
+                    float atk = a.Length > 1 && float.TryParse(a[1], out float v) ? v : 50f;
+                    _s.Spit = new SpitSource { FromKill = false, Atk = atk, Expire = Now + Lv(SpitWindow), Label = "치트" };
+                    return $"뱉을 것 준비 (공격력 {atk:0})";
+                }
+
+            case "ult":
+            case "궁":
+                BeginUlt();
+                return "괴수화";
+
+            case "reset":
+            case "초기화":
+                Ctx.SetSaved(Data.Id, 0);        // 다음 틱에 새 라운드처럼 비움
+                return "먹은 것 · 흡수 능력치 · 특수 패시브 초기화";
+        }
+        return null;
+    }
+
+    public override IEnumerable<(string value, string label)> DevComplete(string[] a, int index)
+    {
+        if (index == 0)
+            return new[] { ("digest", "소화 남은 시간 (비우면 끝)"), ("special", "특수 패시브 받기"), ("specials", "특수 패시브 목록"),
+                           ("spit", "뱉을 것 준비"), ("ult", "괴수화"), ("reset", "먹은 것 초기화") };
+        if (index == 1 && a.Length > 0 && (a[0] == "special" || a[0] == "특수") && Specials != null)
+        {
+            var list = new List<(string, string)>();
+            for (int i = 0; i < Specials.Length; i++)
+                if (Specials[i] != null) list.Add(((i + 1).ToString(), LocUtil.Resolve(Specials[i].Name)));
+            return list;
+        }
+        return null;
+    }
 }

@@ -46,8 +46,12 @@ public class ShadowMimic : MonoBehaviour
 
     // ══════════════════ 설정 ══════════════════
 
-    public void Init(Transform owner, FPArmRig rig, Material mat, float delay)
+    [Tooltip("팔 · 손 · 무기만 복제 (몸 · 머리 제외) — 쉐도우 워커 본인 화면용 (내 그림자 몸이 시야를 가리지 않게)")]
+    public bool ArmsOnly;
+
+    public void Init(Transform owner, FPArmRig rig, Material mat, float delay, bool armsOnly = false)
     {
+        ArmsOnly = armsOnly;
         _owner = owner;
         _rig = rig;
         Material = mat;
@@ -87,8 +91,11 @@ public class ShadowMimic : MonoBehaviour
             list.Add(t);
         }
         Add(_rig.transform);
-        Add(_rig.Body);
-        Add(_rig.Head);
+        if (!ArmsOnly)
+        {
+            Add(_rig.Body);
+            Add(_rig.Head);
+        }
         return list;
     }
 

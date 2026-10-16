@@ -20,6 +20,15 @@ public abstract class AbilityBehaviour : ScriptableObject
     /// <summary>{dmg:계수필드} 표시에 곱할 배율 (이름·상태 보정 등)</summary>
     public virtual float DescDamageMul(string coefField, int rank) => 1f;
 
+    // ══════════════════ 치트 콘솔 (/job) ══════════════════
+
+    /// <summary>치트 콘솔 /job — 이 능력 전용 명령 (권한자에서 실행). 처리했으면 결과 글, 내 명령이 아니면 null.
+    /// args[0] == "help" 면 쓸 수 있는 명령 설명을 돌려줌</summary>
+    public virtual string DevCommand(string[] args) => null;
+
+    /// <summary>/job 자동완성 후보 — index = 지금 쓰는 인자 번호 (0 = 하위 명령)</summary>
+    public virtual IEnumerable<(string value, string label)> DevComplete(string[] args, int index) => null;
+
     public AbilityBehaviour CreateInstance(AbilityRuntime ctx, AbilityData data)
     {
         var inst = Instantiate(this);

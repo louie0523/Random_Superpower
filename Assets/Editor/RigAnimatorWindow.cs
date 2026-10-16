@@ -219,7 +219,7 @@ public class RigAnimatorWindow : EditorWindow
             if (_sceneEdit)
             {
                 int tool = GUILayout.Toolbar((int)_tool, BoneToolNames, EditorStyles.miniButton);
-                if (tool != (int)_tool) { _tool = (BoneTool)tool; SceneView.RepaintAll(); }
+                if (tool != (int)_tool) { _tool = (BoneTool)tool; SetUnityTool(_tool == BoneTool.Move ? Tool.Move : _tool == BoneTool.Rotate ? Tool.Rotate : Tool.Scale); SceneView.RepaintAll(); }
             }
 
             EditorGUILayout.LabelField(
@@ -332,6 +332,7 @@ public class RigAnimatorWindow : EditorWindow
         }
         if (_data.Rest.Count != _data.Bones.Count) { _data.Rest.Resize(_data.Bones.Count, null); changed = true; }
         if (changed) EditorUtility.SetDirty(_data);
+        RecordParents();
     }
 
     void Capture(RigPose p)
@@ -401,6 +402,7 @@ public class RigAnimatorWindow : EditorWindow
         if (_bones.Count == 0 || _bones[0] == null) CollectBones();
 
         var e = Event.current;
+        SyncUnityTool();
         HandleKeys(e);
 
         var prevZ = Handles.zTest;
@@ -646,6 +648,33 @@ public class RigAnimatorWindow : EditorWindow
         Repaint();
     }
 
+    // ── W · E · R ──
+    // 유니티 단축키 시스템이 W/E/R을 먼저 가져가서(도구 바꾸기) 씬 이벤트로는 안 들어옴.
+    // 그래서 유니티 도구가 바뀐 걸 보고 이 툴의 도구를 맞춤: W 이동 · E 회전 · R 끝 끌기(변화 배치에선 크기)
+    private Tool _lastUnityTool = Tool.None;
+
+    void SyncUnityTool()
+    {
+        var cur = Tools.current;
+        if (cur == _lastUnityTool) return;
+        _lastUnityTool = cur;
+        switch (cur)
+        {
+            case Tool.Move: _tool = BoneTool.Move; _partTool = PartTool.Move; break;
+            case Tool.Rotate: _tool = BoneTool.Rotate; _partTool = PartTool.Rotate; break;
+            case Tool.Scale: _tool = BoneTool.Aim; _partTool = PartTool.Scale; break;
+            default: return;
+        }
+        Repaint();
+        SceneView.RepaintAll();
+    }
+
+    void SetUnityTool(Tool t)
+    {
+        _lastUnityTool = t;
+        Tools.current = t;
+    }
+
     void HideTools()
     {
         if (_toolsHidden) return;
@@ -785,6 +814,7 @@ public class RigAnimatorWindow : EditorWindow
         }
 
         CollectBones();
+        RecordParents();
         Repaint();
     }
 
@@ -825,8 +855,26 @@ public class RigAnimatorWindow : EditorWindow
 
         Undo.SetTransformParent(bone, newParent, "본 부모 바꾸기");
         CollectBones();
+        RecordParents();
         Repaint();
         SceneView.RepaintAll();
+    }
+
+    /// <summary>지금 본 부모들을 데이터에 기록 — 게임에서 프리팹 계층이 다르면 RigAnimator가 경고</summary>
+    void RecordParents()
+    {
+        if (_data == null || _model == null) return;
+        var list = new List<string>();
+        foreach (var name in _data.Bones)
+        {
+            var t = Bone(name);
+            list.Add(t != null && t.parent != null ? t.parent.name : "");
+        }
+        _data.BoneParents ??= new List<string>();
+        if (list.SequenceEqual(_data.BoneParents)) return;
+        Undo.RecordObject(_data, "본 계층 기록");
+        _data.BoneParents = list;
+        EditorUtility.SetDirty(_data);
     }
 
     void ConvertKeysForReparent(Transform bone, Transform np)
@@ -923,12 +971,21 @@ public class RigAnimatorWindow : EditorWindow
                 bool follow = EditorGUILayout.ToggleLeft(
                     new GUIContent("게임 중 목표로 뻗기", "RigAnimator.AimAt — 그림자 손이 붙잡은 적 쪽으로 뻗을 때 등"), ch.FollowRuntimeTarget);
                 float w = ch.RuntimeWeight;
-                if (follow) w = EditorGUILayout.Slider("  뻗는 정도", w, 0f, 1f);
+                bool stretch = ch.Stretch;
+                float maxS = ch.MaxStretch;
+                if (follow)
+                {
+                    w = EditorGUILayout.Slider("  뻗는 정도", w, 0f, 1f);
+                    stretch = EditorGUILayout.ToggleLeft(new GUIContent("  닿을 때까지 늘어나기 (고무팔)", "목표가 본 길이보다 멀면 본을 늘려서라도 닿음"), stretch);
+                    if (stretch) maxS = EditorGUILayout.Slider("    최대 배율", maxS, 1f, 10f);
+                }
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(_data, "IK 설정");
                     ch.FollowRuntimeTarget = follow;
                     ch.RuntimeWeight = w;
+                    ch.Stretch = stretch;
+                    ch.MaxStretch = Mathf.Max(1f, maxS);
                     EditorUtility.SetDirty(_data);
                 }
             }
@@ -1415,7 +1472,44 @@ public class RigAnimatorWindow : EditorWindow
                 if (GUILayout.Button(new GUIContent("모든 키에 넣기", "다시 모든 키가 이 본을 갖게 (지금 보이는 값으로)"), EditorStyles.miniButtonRight))
                     TrackKeep(s, bones, (i, n) => true);
             }
+            if (GUILayout.Button(new GUIContent("이 본 방향 고치기 → 모든 상태 · 모든 키에",
+                    "본을 돌려(E) 바로 세운 뒤 누름 — 지금 돌린 만큼을 기본 자세와 모든 상태의 모든 키에 똑같이 더함.\n" +
+                    "예: 땅에 박힌 손이 거꾸로 서 있을 때 밑동 본을 180° 돌리고 이 버튼"), EditorStyles.miniButton))
+                RebaseBones(new List<int> { bones[0] });
         }
+    }
+
+    /// <summary>지금 씬에서 돌려둔 만큼(곡선 값 대비)을 기본 자세 + 모든 상태 · 모든 키에 더함</summary>
+    void RebaseBones(List<int> bones)
+    {
+        var st = CurState;
+        if (st == null || bones.Count == 0) return;
+        var now = new RigPose();
+        Capture(now);
+        var curve = new RigPose();
+        _data.Sample(st, _time, curve);
+
+        Undo.RecordObject(_data, "본 방향 고치기");
+        foreach (int b in bones)
+        {
+            if (b >= now.Count || b >= curve.Count) continue;
+            Quaternion dr = now.Rot[b] * Quaternion.Inverse(curve.Rot[b]);
+            Vector3 dp = now.Pos[b] - curve.Pos[b];
+            if (Quaternion.Angle(dr, Quaternion.identity) < 0.01f && dp.sqrMagnitude < 1e-10f) continue;
+
+            void Fix(RigPose p)
+            {
+                if (p == null || b >= p.Count) return;
+                p.Rot[b] = dr * p.Rot[b];
+                p.Pos[b] += dp;
+            }
+            Fix(_data.Rest);
+            foreach (var state in _data.States)
+                foreach (var k in state.Keys) Fix(k.Pose);
+        }
+        EditorUtility.SetDirty(_data);
+        ApplySample();
+        ShowNotification(new GUIContent("모든 상태에 반영"), 0.8);
     }
 
     void TrackSet(RigState s, List<int> bones, int keyIdx, bool on)
@@ -2075,6 +2169,8 @@ public class RigAnimatorWindow : EditorWindow
         d.States.Add(idle);
 
         AssetDatabase.CreateAsset(d, path);
+        _data = d;
+        RecordParents();
         AssetDatabase.SaveAssets();
         _data = d;
 
@@ -2203,7 +2299,7 @@ public class RigAnimatorWindow : EditorWindow
             }
 
             int pt = GUILayout.Toolbar((int)_partTool, PartToolNames);
-            if (pt != (int)_partTool) { _partTool = (PartTool)pt; SceneView.RepaintAll(); }
+            if (pt != (int)_partTool) { _partTool = (PartTool)pt; SetUnityTool(_partTool == PartTool.Move ? Tool.Move : _partTool == PartTool.Rotate ? Tool.Rotate : Tool.Scale); SceneView.RepaintAll(); }
 
             using (new EditorGUILayout.HorizontalScope())
             {
@@ -2412,6 +2508,7 @@ public class RigAnimatorWindow : EditorWindow
     {
         if (_part == null || _alter == null) { ShowTools(); return; }
         HideTools();
+        SyncUnityTool();
 
         var t = _part.transform;
         if (Event.current.type == EventType.Layout) { SyncPart(); ReapplyLift(); }

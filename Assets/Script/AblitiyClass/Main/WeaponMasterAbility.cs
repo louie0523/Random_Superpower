@@ -26,7 +26,7 @@ public class WeaponMasterAbility : AbilityBehaviour
     public int DancerSkill = 2;
 
     [Header("무구 저장 · 수집가")]
-    [ForPassive(nameof(StoragePassive), "무기 칸 수 (최대 8)")] public LevelValue SlotCount = new(6f, 7f, 8f);
+    [ForPassive(nameof(StoragePassive), "무기 칸 수 (최대 7)")] public LevelValue SlotCount = new(5f, 6f, 7f);
     [ForPassive(nameof(CollectorPassive), "스톤 획득 배율 (1.5 = +50%)")] public LevelValue StoneGain = 1.5f;
 
     [Header("무구의 달인 — 자동 공격")]
@@ -283,7 +283,7 @@ public class WeaponMasterAbility : AbilityBehaviour
                             var h = col.GetComponentInParent<PlayerHealth>();
                             if (h != null) HitWith(slot, h, coefPct, chanceMul, powerMul, drawMul * mul);
                         }
-                        : null);
+        : null);
     }
 
     // ══════════════════ 스킬 ══════════════════
@@ -352,8 +352,11 @@ public class WeaponMasterAbility : AbilityBehaviour
                 _pending.Add(new PendingHit
                 {
                     At = Now + (Vector3.Distance(from, origin) + Mathf.Max(0f, along)) / speed,
-                    Target = h, Slot = slot, Coef = Lv(CommandCoef),
-                    ChanceMul = EnchantChanceMul, PowerMul = EnchantPowerMul,
+                    Target = h,
+                    Slot = slot,
+                    Coef = Lv(CommandCoef),
+                    ChanceMul = EnchantChanceMul,
+                    PowerMul = EnchantPowerMul,
                 });
 
             Broadcast(EvCommand + slot, end);
@@ -455,4 +458,48 @@ public class WeaponMasterAbility : AbilityBehaviour
     }
 
     static float Sq(float v) => v * v;
+
+    // ══════════════════ 치트 (/job) ══════════════════
+
+    public override string DevCommand(string[] a)
+    {
+        string sub = a.Length > 0 ? a[0].ToLowerInvariant() : "help";
+        switch (sub)
+        {
+            case "help":
+                return "무구의 달인: /job slots [n] (무기 칸 수, 1~7) · fill (빈 칸을 무작위 무기로)";
+            case "slots":
+            case "칸":
+                {
+                    if (_equip == null) return "PlayerEquipment 없음";
+                    int n = a.Length > 1 && int.TryParse(a[1], out int v) ? v : PlayerEquipment.WeaponSlots;
+                    _equip.SetSlotCount(Mathf.Clamp(n, 1, PlayerEquipment.WeaponSlots));
+                    return $"무기 칸 {_equip.UsableSlots}";
+                }
+            case "fill":
+            case "채우기":
+                {
+                    if (_equip == null || _equip.Database == null || _equip.Database.All == null) return "장비 데이터 없음";
+                    var pool = new List<EquipmentData>();
+                    foreach (var w in _equip.Database.All)
+                        if (w != null && w.Slot == EquipSlot.Weapon && !w.IsUnarmed) pool.Add(w);
+                    if (pool.Count == 0) return "무기가 없음";
+                    int filled = 0;
+                    while (_equip.HasEmptyWeaponSlot() && filled < PlayerEquipment.WeaponSlots)
+                    {
+                        if (!_equip.PickUpWeapon(pool[Random.Range(0, pool.Count)].Id)) break;
+                        filled++;
+                    }
+                    return $"무기 {filled}개 채움";
+                }
+        }
+        return null;
+    }
+
+    public override IEnumerable<(string value, string label)> DevComplete(string[] a, int index)
+    {
+        if (index == 0) return new[] { ("slots", "무기 칸 수"), ("fill", "빈 칸 무작위 무기로") };
+        if (index == 1 && a.Length > 0 && a[0] == "slots") return new[] { ("5", ""), ("6", ""), ("7", "") };
+        return null;
+    }
 }

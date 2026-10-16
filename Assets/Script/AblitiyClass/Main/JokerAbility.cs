@@ -10,7 +10,7 @@ using UnityEngine;
 ///   스킬 1    원카드!       — 주위 모든 적의 일반 스킬(궁극기·랜덤 제외) 쿨타임 +3초
 ///   스킬 2    대타카드      — 쿨타임 중인 랜덤 능력 하나의 쿨을 초기화하고, 그 남은 쿨을 대타카드가 대신 짊어짐
 ///   궁극기    깜짝선물      — 앞에 분신 소환 (N초). 가장 가까운 적을 쫓아가 들고 있던 무기로 공격 (피해 50%).
-///                            궁극기 키를 다시 누르면 폭발 (조커 뽑기와 같은 폭발)
+///                            궁극기 키를 다시 누르거나, 시간이 다 되거나, 내가 죽으면 폭발 (조커 뽑기와 같은 폭발)
 /// {x:cards} 깔린 카드 수 · {x:clone} 분신 상태
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Joker")]
@@ -52,8 +52,6 @@ public class JokerAbility : AbilityBehaviour
     public NetworkObject ClonePrefab;
     [ForSkill(nameof(UltSkill), "분신 유지 (초)")] public LevelValue CloneDuration = 10f;
     [ForSkill(nameof(UltSkill), "분신 폭발 배율 (1 = 카드와 같음)")] public LevelValue CloneBlastMul = 1f;
-    [Tooltip("시간이 다 돼도 폭발")]
-    public bool ExplodeOnTimeout = false;
 
     [Header("연출")]
     public GameObject CardPrefab;
@@ -112,8 +110,9 @@ public class JokerAbility : AbilityBehaviour
 
         if (_cloneEnd > 0f)
         {
-            if (dead || !CloneAlive) DespawnClone(false);
-            else if (Now >= _cloneEnd) DespawnClone(ExplodeOnTimeout);
+            // 시간 끝 · 내가 죽음 → 궁극기 다시 누르기와 같은 폭발. 분신이 이미 없어졌으면 정리만
+            if (!CloneAlive) DespawnClone(false);
+            else if (dead || Now >= _cloneEnd) DespawnClone(true);
         }
     }
 
@@ -154,21 +153,21 @@ public class JokerAbility : AbilityBehaviour
         if (_health == null) return;
 
         Vector3 from = Ctx.transform.position;
-        Vector3 back = -Ctx.transform.forward;
-        back.y = 0f;
-        back = back.sqrMagnitude > 0.001f ? back.normalized : Vector3.back;
+        Vector3 back = -LookFlat();
+        var self = Ctx.transform.root;
 
+        // 내 몸 콜라이더(등 뒤 피격 판정 등)는 무시 — 예전엔 여기 막혀서 제자리였음
         float dist = Lv(BackDistance);
         Vector3 chest = from + Vector3.up * 1.2f;
-        if (Physics.SphereCast(chest, 0.3f, back, out var wall, dist, WallMask, QueryTriggerInteraction.Ignore))
+        if (CastUtil.SphereCast(chest, 0.3f, back, dist, WallMask, self, out var wall))
             dist = Mathf.Max(0f, wall.distance - 0.4f);
 
         var cc = Ctx.GetComponent<CharacterController>();
-        Vector3 dest = SpawnPoint.GroundedPosition(from + back * dist, cc);
+        Vector3 dest = SpawnPoint.GroundedPosition(from + back * dist, cc, 10f, self);
 
         // 카드 — 원래 자리 바닥
         Vector3 cardPos = from;
-        if (Physics.Raycast(from + Vector3.up, Vector3.down, out var g, 5f, WallMask, QueryTriggerInteraction.Ignore))
+        if (CastUtil.Raycast(from + Vector3.up, Vector3.down, 5f, WallMask, self, out var g))
             cardPos = g.point;
 
         _cards.Add(new Card { Pos = cardPos, Expire = Now + Lv(CardLifetime) });
@@ -246,6 +245,7 @@ public class JokerAbility : AbilityBehaviour
             if (_hits[i].transform.root == Ctx.transform.root) continue;
             var h = _hits[i].GetComponentInParent<PlayerHealth>();
             if (h == null || h.IsDead || !seen.Add(h)) continue;
+            if (TeamUtil.IsFriendly(self, h)) continue;            // 나 · 같은 팀
 
             float dmg = DamageCalc.CalcOutgoing(stats, (stats.Get(StatType.AttackPower) * Lv(BlastCoef) * 0.01f + Lv(BlastFlat)) * mul,
                                                 DamageSource.Skill, true, out bool crit);
@@ -309,6 +309,16 @@ public class JokerAbility : AbilityBehaviour
         Broadcast(EvSub, Ctx.transform.position + Vector3.up * 1.8f);
     }
 
+    /// <summary>보는 방향 (수평) — 카메라 기준, 없으면 몸 기준</summary>
+    Vector3 LookFlat()
+    {
+        var cam = Ctx.CameraRootTransform;
+        Vector3 f = cam != null ? cam.forward : Ctx.transform.forward;
+        f.y = 0f;
+        if (f.sqrMagnitude < 0.001f) { f = Ctx.transform.forward; f.y = 0f; }
+        return f.sqrMagnitude > 0.001f ? f.normalized : Vector3.forward;
+    }
+
     // ── 깜짝선물 ──
 
     void SpawnClone()
@@ -316,14 +326,16 @@ public class JokerAbility : AbilityBehaviour
         if (ClonePrefab == null) { Debug.LogWarning("[Joker] ClonePrefab이 비어 있습니다", this); return; }
         DespawnClone(false);
 
-        Vector3 fwd = Ctx.transform.forward;
-        fwd.y = 0f;
-        fwd = fwd.sqrMagnitude > 0.001f ? fwd.normalized : Vector3.forward;
+        Vector3 fwd = LookFlat();
+        var self = Ctx.transform.root;
 
         float d = 2f;
-        if (Physics.Raycast(Ctx.transform.position + Vector3.up, fwd, out var wall, d, WallMask, QueryTriggerInteraction.Ignore))
+        if (CastUtil.Raycast(Ctx.transform.position + Vector3.up, fwd, d, WallMask, self, out var wall))
             d = Mathf.Max(0f, wall.distance - 0.5f);
-        Vector3 pos = SpawnPoint.GroundedPosition(Ctx.transform.position + fwd * d, null);
+
+        // 분신 몸 크기만큼 올려서 — 피벗이 몸 가운데여도 발이 바닥에 (땅에 박히지 않게)
+        var cloneCc = ClonePrefab.GetComponent<CharacterController>();
+        Vector3 pos = SpawnPoint.GroundedPosition(Ctx.transform.position + fwd * d, cloneCc, 10f, self);
 
         var equip = Ctx.Equipment;
         int weaponId = equip != null ? equip.WeaponId : 0;
@@ -402,6 +414,48 @@ public class JokerAbility : AbilityBehaviour
             case "clone":
                 return CloneAlive ? $"분신 {Mathf.CeilToInt(_cloneEnd - Now)}초 — 궁극기 키로 폭발" : null;
         }
+        return null;
+    }
+
+    // ══════════════════ 치트 (/job) ══════════════════
+
+    public override string DevCommand(string[] a)
+    {
+        string sub = a.Length > 0 ? a[0].ToLowerInvariant() : "help";
+        switch (sub)
+        {
+            case "help":
+                return "조커: /job cards (깔린 카드 지우기) · clone (분신) · boom (분신 폭발) · dual on|off (랜덤 2개)";
+            case "cards":
+            case "카드":
+                {
+                    int n = _cards.Count;
+                    foreach (var c in _cards) Broadcast(EvCardGone, c.Pos);
+                    _cards.Clear();
+                    return $"카드 {n}장 지움";
+                }
+            case "clone":
+            case "분신":
+                if (CloneAlive) return "이미 분신이 있음";
+                SpawnClone();
+                return CloneAlive ? "분신 소환" : "분신 소환 실패 (ClonePrefab 확인)";
+            case "boom":
+            case "폭발":
+                if (!CloneAlive) return "분신 없음";
+                DespawnClone(true);
+                return "분신 폭발";
+            case "dual":
+                bool on = a.Length < 2 || a[1] != "off";
+                Ctx.SetDualRandom(on);
+                return on ? "랜덤 능력 2개" : "랜덤 능력 1개";
+        }
+        return null;
+    }
+
+    public override IEnumerable<(string value, string label)> DevComplete(string[] a, int index)
+    {
+        if (index == 0) return new[] { ("cards", "깔린 카드 지우기"), ("clone", "분신 소환"), ("boom", "분신 폭발"), ("dual", "랜덤 2개 켜기/끄기") };
+        if (index == 1 && a.Length > 0 && a[0] == "dual") return new[] { ("on", ""), ("off", "") };
         return null;
     }
 }

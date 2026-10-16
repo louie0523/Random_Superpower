@@ -30,6 +30,9 @@ GameObject:
   - component: {fileID: 8855885309026736249}
   - component: {fileID: 9194944487309080347}
   - component: {fileID: -3204457062266687954}
+  - component: {fileID: 391472185009295868}
+  - component: {fileID: 1219201698894720101}
+  - component: {fileID: 5579326428699254086}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -84,6 +87,8 @@ MonoBehaviour:
   - {fileID: 959149403550185092}
   - {fileID: 2781225716965767357}
   - {fileID: 9194944487309080347}
+  - {fileID: 391472185009295868}
+  - {fileID: 5579326428699254086}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &927725796463626508
 MonoBehaviour:
@@ -351,7 +356,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   weaponAnim: {fileID: 6649258101475754144}
-  forceMainId: 6004
+  forceMainId: 6001
   forceSubId: 0
   forceRandomId: 0
   logSkills: 0
@@ -695,6 +700,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAlter
   database: {fileID: 11400000, guid: 65fd34e31482c5144a3c4a1363b9c347, type: 2}
   armRig: {fileID: 4156331145891824284}
+  liftTargets: []
+  liftSpeed: 6
   _Alters: 
 --- !u!114 &-3204457062266687954
 MonoBehaviour:
@@ -723,6 +730,53 @@ MonoBehaviour:
     m_Bits: 0
   showInThirdPerson: []
   hideInThirdPerson: []
+--- !u!114 &391472185009295868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9aa47142b73ccf44a7e493af1bfe33b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCheats
+--- !u!114 &1219201698894720101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3161718ede196a248b8b42b8c6549f9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerOutline
+  maskShader: {fileID: 4800000, guid: 2076ccaf6d0fc9b42a4d78a0516ccee0, type: 3}
+  fillShader: {fileID: 4800000, guid: e2e2bc4498900a84cbbb7e5e3f2a9ac7, type: 3}
+  color: {r: 1, g: 0.28, b: 0.22, a: 1}
+  xrayColor: {r: 1, g: 0.15, b: 0.15, a: 0.9}
+  width: 2.5
+  xrayWidth: 3
+  outlineSelf: 0
+  excludeLayers:
+    serializedVersion: 2
+    m_Bits: 950
+--- !u!114 &5579326428699254086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b083d42f23f49664789814534d5703ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerVitals
+  _MaxHp: 0
 --- !u!1 &4519324451150578074
 GameObject:
   m_ObjectHideFlags: 0
