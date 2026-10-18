@@ -1,6 +1,6 @@
 using UnityEngine;
 
-/// <summary>½ºÅÈ ¼öÄ¡¸¦ ÇÃ·¹ÀÌ¾î¿ë ¹®ÀÚ¿­·Î. ´ÜÀ§ ±ÔÄ¢Àº PlayerStats.Recalculate ±âÁØ</summary>
+/// <summary>ìŠ¤íƒ¯ ìˆ˜ì¹˜ë¥¼ í”Œë ˆì´ì–´ìš© ë¬¸ìì—´ë¡œ. ë‹¨ìœ„ ê·œì¹™ì€ PlayerStats.Recalculate ê¸°ì¤€</summary>
 public static class StatText
 {
     public static bool IsMultiplier(StatType s) =>
@@ -12,14 +12,14 @@ public static class StatText
         s == StatType.CritChance || s == StatType.CritDamage ||
         s == StatType.CooldownReduction || s == StatType.LifeSteal;
 
-    /// <summary>+25 / +25% / -10% ÇüÅÂ</summary>
+    /// <summary>+25 / +25% / -10% í˜•íƒœ</summary>
     public static string Value(StatType stat, ModType type, float v)
     {
         string sign = v >= 0f ? "+" : "-";
         float a = Mathf.Abs(v);
 
-        if (type == ModType.Percent) return $"{sign}{a:0.#}%";              // 25 ¡æ +25%
-        if (IsMultiplier(stat) || IsRatio(stat)) return $"{sign}{a * 100f:0.#}%";  // 0.25 ¡æ +25%
-        return $"{sign}{a:0.##}";                                          // 25 ¡æ +25
+        if (type == ModType.Percent) return $"{sign}{a:0.#}%";              // 25 â†’ +25%
+        if (IsMultiplier(stat) || IsRatio(stat)) return $"{sign}{a * 100f:0.#}%";  // 0.25 â†’ +25%
+        return $"{sign}{a:0.##}";                                          // 25 â†’ +25
     }
 }

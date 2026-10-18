@@ -27,7 +27,7 @@ public class Tracer : MonoBehaviour
         if (_t < 0f) return;
         _t -= Time.deltaTime;
 
-        // ½ÃÀÛÁ¡Àº ÃÑ±¸¸¦ µû¶ó°¡°í, ³¡Á¡Àº °íÁ¤
+        // ì‹œìž‘ì ì€ ì´êµ¬ë¥¼ ë”°ë¼ê°€ê³ , ëì ì€ ê³ ì •
         if (_followStart != null)
             line.SetPosition(0, _followStart.position);
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-/// <summary>ÃÑ±¸ È­¿°. ½ºÇÁ¶óÀÌÆ®¸¦ ¼ø¼­´ë·Î Àç»ıÇÏ°í »ç¶óÁø´Ù.</summary>
+/// <summary>ì´êµ¬ í™”ì—¼. ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ìˆœì„œëŒ€ë¡œ ì¬ìƒí•˜ê³  ì‚¬ë¼ì§„ë‹¤.</summary>
 public class MuzzleFlash : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer target;
@@ -21,7 +21,7 @@ public class MuzzleFlash : MonoBehaviour
         SetVisible(false);
     }
 
-    /// <summary>¹ß»çÇÒ ¶§¸¶´Ù È£Ãâ. Àç»ı ÁßÀÌ¾îµµ Ã³À½ºÎÅÍ ´Ù½Ã ½ÃÀÛ</summary>
+    /// <summary>ë°œì‚¬í•  ë•Œë§ˆë‹¤ í˜¸ì¶œ. ì¬ìƒ ì¤‘ì´ì–´ë„ ì²˜ìŒë¶€í„° ë‹¤ì‹œ ì‹œì‘</summary>
     public void Play()
     {
         _t = 0f;

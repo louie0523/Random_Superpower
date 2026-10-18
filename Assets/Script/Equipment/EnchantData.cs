@@ -8,14 +8,14 @@ public class EnchantData : ScriptableObject
     public string DisplayName;
     [TextArea(1, 2)] public string Description;
 
-    [Tooltip("ÅøÆÁ¡¤ÀÌÆåÆ® »ö")]
+    [Tooltip("íˆ´íŒÂ·ì´í™íŠ¸ ìƒ‰")]
     public Color TierColor = Color.white;
 
-    [Header("È¿°ú")]
+    [Header("íš¨ê³¼")]
     public EquipmentData.StatEntry[] Stats;
 
-    [Header("ÃßÃ·")]
-    [Tooltip("Å¬¼ö·Ï ÀÚÁÖ ³ª¿È")]
+    [Header("ì¶”ì²¨")]
+    [Tooltip("í´ìˆ˜ë¡ ìì£¼ ë‚˜ì˜´")]
     public float RollWeight = 1f;
 
     public string BuildLine()
