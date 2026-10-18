@@ -10,6 +10,45 @@ public enum MotionInterp
     Smooth,
 }
 
+public enum ShakeHand
+{
+    Right,
+    Left,
+    Both,
+}
+
+/// <summary>떨림 구간 — 이 구간 동안 손이 바르르 떨림 (힘주는 느낌). 키 자세 위에 더해짐</summary>
+[Serializable]
+public class MotionShake
+{
+    [Tooltip("시작 (모션 전체 0~1)")]
+    [Range(0f, 1f)] public float Start = 0.4f;
+    [Tooltip("끝 (모션 전체 0~1)")]
+    [Range(0f, 1f)] public float End = 0.6f;
+
+    [Tooltip("떨리는 손")]
+    public ShakeHand Hands = ShakeHand.Right;
+    [Tooltip("양손일 때 따로 떨기 — 끄면 두 손이 같이 떨림 (한 무기를 같이 쥐고 있을 때 자연스러움)")]
+    public bool Independent = false;
+
+    [Tooltip("위치 떨림 (cm)")]
+    [Min(0f)] public float PosAmount = 1f;
+    [Tooltip("회전 떨림 (°)")]
+    [Min(0f)] public float RotAmount = 4f;
+    [Tooltip("화면(카메라)도 같이 떨림 (°) — 0이면 손만")]
+    [Min(0f)] public float CamAmount = 0f;
+    [Tooltip("초당 떨림 — 클수록 잘게 (15~30 추천)")]
+    [Min(0.1f)] public float Frequency = 22f;
+
+    [Tooltip("들어오고 빠지는 부드러움 (구간 길이 대비)")]
+    [Range(0f, 0.5f)] public float Fade = 0.2f;
+    [Tooltip("점점 세지기 — 0 = 일정, 1 = 처음엔 약하고 끝으로 갈수록 최대 (버티다 힘이 실리는 느낌)")]
+    [Range(0f, 1f)] public float Build = 0.3f;
+
+    [Tooltip("떨림 모양 (바꾸면 다른 무늬)")]
+    public int Seed = 0;
+}
+
 [Serializable]
 public class SwingMotion
 {
@@ -26,6 +65,13 @@ public class SwingMotion
     [Tooltip("Smooth 전용 — 곡선의 탄력. 0 = 키마다 멈춤(직선), 1 = 자연스럽게 통과, 1 초과 = 더 크게 휘어짐")]
     [Range(0f, 1.5f)] public float Smoothness = 1f;
 
+    [Tooltip("떨림 구간들 — 손이 잠깐 바르르 떨림 (힘주기)")]
+    public List<MotionShake> Shakes = new();
+
+    [HideInInspector]
+    [Tooltip("모션 길이 (초) — 떨림 속도(초당)를 맞추려고 편집 창이 넣어 둠")]
+    public float LengthHint = 1f;
+
     public bool IsValid => Keys != null && Keys.Count >= 2;
 
     /// <summary>t는 0~1</summary>
@@ -34,6 +80,11 @@ public class SwingMotion
         if (!IsValid) return idle?.Clone();
 
         t = Mathf.Clamp01(t);
+        return ApplyShakes(EvaluateKeys(t), t);
+    }
+
+    ArmPose EvaluateKeys(float t)
+    {
         if (t <= Keys[0].Time) return Keys[0].Pose.Clone();
         if (t >= Keys[^1].Time) return Keys[^1].Pose.Clone();
 
@@ -56,6 +107,76 @@ public class SwingMotion
     }
 
     public void SortKeys() => Keys.Sort((a, b) => a.Time.CompareTo(b.Time));
+
+    // ══════════════════ 떨림 ══════════════════
+
+    ArmPose ApplyShakes(ArmPose p, float t)
+    {
+        if (Shakes == null || Shakes.Count == 0 || p == null) return p;
+        float sec = t * Mathf.Max(0.05f, LengthHint);
+
+        for (int i = 0; i < Shakes.Count; i++)
+        {
+            var s = Shakes[i];
+            if (s == null) continue;
+            float a = Envelope(s, t);
+            if (a <= 0f) continue;
+
+            float time = sec * s.Frequency;
+            int seed = s.Seed * 97 + i * 31;
+
+            Vector3 pos = Noise3(time, seed) * (s.PosAmount * 0.01f * a);
+            Vector3 rot = Noise3(time, seed + 7) * (s.RotAmount * a);
+
+            if (s.Hands != ShakeHand.Left)
+            {
+                p.RightPos += pos;
+                p.RightRot += rot;
+            }
+            if (s.Hands != ShakeHand.Right)
+            {
+                if (s.Hands == ShakeHand.Both && s.Independent)
+                {
+                    p.LeftPos += Noise3(time, seed + 13) * (s.PosAmount * 0.01f * a);
+                    p.LeftRot += Noise3(time, seed + 19) * (s.RotAmount * a);
+                }
+                else
+                {
+                    p.LeftPos += pos;
+                    p.LeftRot += rot;
+                }
+            }
+
+            if (s.CamAmount > 0f) p.CamRot += Noise3(time * 0.8f, seed + 23) * (s.CamAmount * a);
+        }
+        return p;
+    }
+
+    /// <summary>구간 안 세기 0~1 — 페이드 인/아웃 + 점점 세지기</summary>
+    public static float Envelope(MotionShake s, float t)
+    {
+        float start = Mathf.Min(s.Start, s.End), end = Mathf.Max(s.Start, s.End);
+        if (t <= start || t >= end || end - start < 0.0001f) return 0f;
+
+        float u = (t - start) / (end - start);
+        float f = Mathf.Max(0.0001f, s.Fade);
+        float inA = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(u / f));
+        float outA = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((1f - u) / f));
+        float build = Mathf.Lerp(1f - s.Build, 1f, u);
+        return inA * outA * build;
+    }
+
+    /// <summary>-1 ~ 1 부드러운 잡음 (축마다 다름). 펄린 잡음은 실제로 ±0.5 근처만 나와서 넓혀 줌 → 설정한 세기가 거의 그대로 나옴</summary>
+    static Vector3 Noise3(float time, int seed)
+    {
+        float o = seed * 13.37f;
+        return new Vector3(
+            N(Mathf.PerlinNoise(time, o + 1.3f)),
+            N(Mathf.PerlinNoise(o + 5.1f, time)),
+            N(Mathf.PerlinNoise(time + o * 0.5f, o + 9.7f)));
+    }
+
+    static float N(float p) => Mathf.Clamp((p - 0.5f) * 3.2f, -1f, 1f);
 
     // ══════════════════ Smooth (시간 기준 Hermite 스플라인) ══════════════════
     //  - 위치: 키를 모두 지나는 곡선. 중간 키에서 속도가 이어짐

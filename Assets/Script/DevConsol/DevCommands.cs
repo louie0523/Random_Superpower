@@ -105,6 +105,31 @@ public static class DevCommands
         },
         new Cmd
         {
+            Name = "pick", Aliases = new[] { "클래스선택" },
+            Usage = "/pick [reroll on|off]", Help = "클래스 선택 화면 다시 띄우기 · 새로고침 켜고 끄기",
+            Run = (c, a) =>
+            {
+                var cp = c.Get<ClassPick>();
+                if (cp == null) return Err("ClassPick 없음 (플레이어 프리팹에 붙이기)");
+                if (a.Length >= 1 && (a[0] == "reroll" || a[0] == "새로고침"))
+                {
+                    bool on = a.Length < 2 || a[1] == "on" || a[1] == "켜기";
+                    cp.AllowReroll = on;
+                    if (cp.HasStateAuthority) cp.RerollsLeft = on ? cp.Rerolls : 0;
+                    return Ok($"새로고침 {(on ? "켬" : "끔")}");
+                }
+                var ar = c.Ability;
+                if (ar == null) return Err("AbilityRuntime 없음");
+                var db = Db.Abilities;
+                if (db == null) return Err("AbilityDatabase를 못 찾음");
+                ar.MainAbilityId = 0;
+                cp.Begin(db);
+                return Ok($"{c.Who} 클래스 선택 시작");
+            },
+            Complete = (a, i) => i == 0 ? new[] { ("reroll", "새로고침 켜기/끄기") } : i == 1 ? new[] { ("on", ""), ("off", "") } : null,
+        },
+        new Cmd
+        {
             Name = "job", Aliases = new[] { "기믹", "직업" },
             Usage = "/job 명령 [값]", Help = "직업별 기믹 (예: 죽음의 기사 /job name 아서) — /job help",
             Run = Job,

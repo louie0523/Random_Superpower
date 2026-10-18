@@ -756,7 +756,15 @@ public class WeaponSetupWindow : EditorWindow
 
         step.Motion ??= new SwingMotion();
         step.Motion.Keys ??= new List<PoseKey>();
+        step.Motion.Shakes ??= new List<MotionShake>();
         step.Events ??= new MotionEvent[0];
+
+        // 떨림 속도(초당)를 맞추려고 모션 길이를 모션에 적어 둠
+        if (!Mathf.Approximately(step.Motion.LengthHint, step.TotalTime))
+        {
+            step.Motion.LengthHint = step.TotalTime;
+            if (_target != null) EditorUtility.SetDirty(_target);
+        }
 
         HandleShortcuts(step);
 
@@ -801,6 +809,11 @@ public class WeaponSetupWindow : EditorWindow
         DrawTimeline(step);
         DrawAddBar(step);
         DrawPlayback(step);
+
+        // ── 떨림 ──
+        EditorGUILayout.Space(4);
+        if (Fold("떨림 구간 (힘주기)", step.Motion.Shakes.Count > 0))
+            using (Box()) DrawShakes(step);
 
         // ── 선택한 것 ──
         EditorGUILayout.Space(6);
@@ -1088,11 +1101,97 @@ public class WeaponSetupWindow : EditorWindow
 
     // ─────────── 타임라인 ───────────
 
+    // ══════════════════ 떨림 구간 ══════════════════
+
+    static readonly string[] ShakeHandNames = { "오른손", "왼손", "양손" };
+
+    void DrawShakes(ComboStep step)
+    {
+        var list = step.Motion.Shakes;
+        Hint("구간 동안 손이 바르르 떨림 — 버티거나 힘을 주는 느낌. 키 자세 위에 더해져서 키를 따로 안 찍어도 됨.\n" +
+             "타임라인 아래 '떨림' 줄에 세기가 그려짐 (주황 = 오른손 · 파랑 = 왼손 · 보라 = 양손)");
+
+        EditorGUI.BeginChangeCheck();       // 이 칸들만 — 위의 재생 버튼 클릭까지 잡으면 재생이 멈춤
+        int remove = -1;
+        for (int i = 0; i < list.Count; i++)
+        {
+            var s = list[i];
+            if (s == null) { remove = i; continue; }
+
+            using (Box())
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField($"떨림 {i + 1}", EditorStyles.boldLabel, GUILayout.Width(52));
+                    int h = GUILayout.Toolbar((int)s.Hands, ShakeHandNames, EditorStyles.miniButton);
+                    if (h != (int)s.Hands) s.Hands = (ShakeHand)h;
+                    if (GUILayout.Button(new GUIContent("▶", "이 구간 시작으로 이동"), EditorStyles.miniButton, GUILayout.Width(24)))
+                        Scrub(step, Mathf.Min(s.Start, s.End));
+                    if (GUILayout.Button("✕", EditorStyles.miniButton, GUILayout.Width(22))) remove = i;
+                }
+
+                // 구간
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    float a = s.Start, b = s.End;
+                    EditorGUILayout.LabelField("구간", GUILayout.Width(52));
+                    a = EditorGUILayout.FloatField(a, GUILayout.Width(42));
+                    EditorGUILayout.MinMaxSlider(ref a, ref b, 0f, 1f);
+                    b = EditorGUILayout.FloatField(b, GUILayout.Width(42));
+                    s.Start = Mathf.Clamp01(Mathf.Min(a, b));
+                    s.End = Mathf.Clamp01(Mathf.Max(a, b));
+                    if (GUILayout.Button(new GUIContent("지금", "구간 끝을 지금 재생 위치로"), EditorStyles.miniButton, GUILayout.Width(36)))
+                        s.End = Mathf.Max(s.Start + 0.01f, NowT(step));
+                }
+                Hint($"{s.Start * step.TotalTime:0.00}초 ~ {s.End * step.TotalTime:0.00}초");
+
+                s.PosAmount = EditorGUILayout.Slider(new GUIContent("위치 (cm)", "손이 흔들리는 거리 — 1인칭에선 1~2cm면 확실히 보임"), s.PosAmount, 0f, 6f);
+                s.RotAmount = EditorGUILayout.Slider(new GUIContent("회전 (°)", "손목이 흔들리는 각도 — 무기 끝이 크게 흔들려서 제일 티가 남"), s.RotAmount, 0f, 25f);
+                s.Frequency = EditorGUILayout.Slider(new GUIContent("빠르기 (초당)", "15~30 = 바르르, 5~10 = 휘청"), s.Frequency, 1f, 60f);
+                s.Fade = EditorGUILayout.Slider(new GUIContent("부드럽게", "들어오고 빠지는 길이 (구간 대비)"), s.Fade, 0f, 0.5f);
+                s.Build = EditorGUILayout.Slider(new GUIContent("점점 세게", "0 = 일정 · 1 = 끝으로 갈수록 세짐"), s.Build, 0f, 1f);
+                s.CamAmount = EditorGUILayout.Slider(new GUIContent("화면 (°)", "1인칭 화면도 같이 떨림 — 0이면 손만"), s.CamAmount, 0f, 3f);
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (s.Hands == ShakeHand.Both)
+                        s.Independent = EditorGUILayout.ToggleLeft(new GUIContent("두 손 따로", "끄면 두 손이 같이 떨림 (한 무기를 같이 쥘 때)"), s.Independent, GUILayout.Width(90));
+                    s.Seed = EditorGUILayout.IntField(new GUIContent("무늬", "숫자를 바꾸면 다른 떨림 모양"), s.Seed);
+                }
+            }
+        }
+
+        if (remove >= 0) Modify("Remove Shake", () => list.RemoveAt(remove));
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button(new GUIContent("+ 지금 위치에 떨림 추가", "재생 위치부터 모션 15% 길이")))
+            {
+                float now = NowT(step);
+                Modify("Add Shake", () => list.Add(new MotionShake
+                {
+                    Start = Mathf.Clamp01(now),
+                    End = Mathf.Clamp01(now + 0.15f),
+                }));
+            }
+            if (list.Count > 0 && GUILayout.Button(new GUIContent("미리보기", "처음부터 재생"), GUILayout.Width(70)))
+            {
+                _playAll = false;
+                _playT = 0f;
+                _playing = true;
+            }
+        }
+
+        // 값을 바꾸면 미리보기만 갱신 (재생 중이면 그대로 계속 재생 — 다음 프레임에 반영됨)
+        if (EditorGUI.EndChangeCheck() && !_playing) RefreshPreview();
+    }
+
     const float LabelW = 46f;
 
     void DrawTimeline(ComboStep step)
     {
-        Rect full = GUILayoutUtility.GetRect(0, 104, GUILayout.ExpandWidth(true));
+        bool hasShake = step.Motion.Shakes != null && step.Motion.Shakes.Count > 0;
+        Rect full = GUILayoutUtility.GetRect(0, hasShake ? 124 : 104, GUILayout.ExpandWidth(true));
         EditorGUI.DrawRect(full, CBg);
 
         Rect area = new(full.x + LabelW, full.y + 2, full.width - LabelW - 8, full.height - 4);
@@ -1100,6 +1199,7 @@ public class WeaponSetupWindow : EditorWindow
         Rect phase = new(area.x, ruler.yMax + 2, area.width, 24);
         Rect keys = new(area.x, phase.yMax + 6, area.width, 22);
         Rect evs = new(area.x, keys.yMax + 6, area.width, 22);
+        Rect shk = new(area.x, evs.yMax + 4, area.width, 14);
 
         float X(float t) => area.x + area.width * Mathf.Clamp01(t);
 
@@ -1154,6 +1254,32 @@ public class WeaponSetupWindow : EditorWindow
             var st = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter, fontSize = 10 };
             st.normal.textColor = Color.black;
             GUI.Label(r, m.icon, st);
+        }
+
+        // 떨림 구간 — 세기(높이)를 그대로 그림
+        if (hasShake)
+        {
+            GUI.Label(new Rect(full.x + 4, shk.y - 1, LabelW, 16), "떨림", lab);
+            EditorGUI.DrawRect(shk, CLane);
+            foreach (var sh in step.Motion.Shakes)
+            {
+                if (sh == null) continue;
+                Color c = sh.Hands switch
+                {
+                    ShakeHand.Right => new Color(1f, 0.6f, 0.25f, 0.9f),
+                    ShakeHand.Left => new Color(0.4f, 0.75f, 1f, 0.9f),
+                    _ => new Color(0.85f, 0.55f, 1f, 0.9f),
+                };
+                const int N = 40;
+                float a0 = Mathf.Min(sh.Start, sh.End), a1 = Mathf.Max(sh.Start, sh.End);
+                for (int k = 0; k < N; k++)
+                {
+                    float t = Mathf.Lerp(a0, a1, (k + 0.5f) / N);
+                    float h = SwingMotion.Envelope(sh, t) * shk.height;
+                    float x0 = X(Mathf.Lerp(a0, a1, k / (float)N)), x1 = X(Mathf.Lerp(a0, a1, (k + 1f) / N));
+                    EditorGUI.DrawRect(new Rect(x0, shk.yMax - h, Mathf.Max(1f, x1 - x0), h), c);
+                }
+            }
         }
 
         // 재생 위치
@@ -2873,9 +2999,16 @@ public class WeaponSetupWindow : EditorWindow
         float p = Mathf.Clamp01(_playT / total);
         bool inActive = _playT >= step.WindUp && _playT <= step.WindUp + step.ActiveWindow;
 
+        // 판정 기준 무기 — 미리보기 무기 → 이 모션의 무기 → 지금 손에 쥔 무기(모션 무기 포함) 순
         var hitSrc = ResolvePreviewWeapon();
+        if (hitSrc == null) hitSrc = _rig.CurrentWeapon;
 
-        if (_showHitbox && hitSrc != null) DrawHitArc(eye, step, hitSrc, inActive);
+        if (_showHitbox)
+        {
+            if (hitSrc != null) DrawHitArc(eye, step, hitSrc, inActive);
+            else Handles.Label(eye.position + eye.forward * 1.2f,
+                "판정 범위: 기준 무기가 없음 — 창 위쪽 '테스트 무기'에 무기를 넣으세요", EditorStyles.whiteMiniLabel);
+        }
         if (_showTrail) DrawTipTrail(inActive);
         DrawEventMarkers(step, p);
 

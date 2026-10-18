@@ -582,7 +582,9 @@ public class FPArmRig : MonoBehaviour
             case HandVisibility.Both: return true;
         }
 
-        // Auto — 무기 설정만 본다
+        // Auto — 모션 키의 '왼손 표시'가 켜져 있으면 무기 설정과 상관없이 보임 (모션 우선)
+        //        꺼져 있으면 무기 설정대로 (양손 · 왼손 무기 · 무기의 왼손 표시)
+        if (pose.UseLeftHand) return true;
         if (_weapon == null) return true;
 
         return _weapon.Grip == GripType.TwoHand

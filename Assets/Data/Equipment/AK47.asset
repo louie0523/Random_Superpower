@@ -48,7 +48,6 @@ MonoBehaviour:
   EnchantTable: {fileID: 11400000, guid: 5963e09dfc03a6a43a0f834db3b9a41e, type: 2}
   EnchantStoneCost: 1
   EnchantCostPerStage: 0
-  SpreadAngle: 1
   Upgrades: []
   ModelPrefab: {fileID: 6518945834294003907, guid: f2a71c2ee2f538447a3bde44c6b59859, type: 3}
   Grip: 0
@@ -201,6 +200,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.32
         Pose:
           RightPos: {x: 0.98, y: -0.52, z: 1.16}
@@ -278,6 +278,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.65
         Pose:
           RightPos: {x: 0.002, y: -0.969, z: 1.424}
@@ -355,6 +356,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 1
         Pose:
           RightPos: {x: 0.86, y: -0.8, z: 1.28}
@@ -432,11 +434,15 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       Amplitude: 1
+      Interp: 0
+      Smoothness: 1
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -537,6 +543,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.38
         Pose:
           RightPos: {x: 0.8, y: -0.3, z: 1.0999999}
@@ -614,6 +621,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.56
         Pose:
           RightPos: {x: 0.486, y: -1.058, z: 0.958}
@@ -691,6 +699,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 1
         Pose:
           RightPos: {x: 0.86, y: -0.8, z: 1.28}
@@ -768,11 +777,15 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       Amplitude: 1
+      Interp: 0
+      Smoothness: 1
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -790,6 +803,9 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       Scale: 1
       Lifetime: 2
+      Vfx: {fileID: 0}
+      FitToHit: 1
+      VfxPalette: {fileID: 0}
       ShakeAmount: 0.3
       FlashColor: {r: 1, g: 1, b: 1, a: 0.35}
       FlashDuration: 0.12
@@ -888,7 +904,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   FireMode: 0
   MaxAmmo: 999999
-  RoundsPerMinute: 800
+  RoundsPerMinute: 650
   FullAuto: 1
   RecoilVertical: 1.5
   RecoilHorizontal: 1.5
@@ -897,6 +913,8 @@ MonoBehaviour:
   HitscanRange: 150
   TracerPrefab: {fileID: 8388733948279739780, guid: 687d5a6b442f97542afbdbd7d2b868f6, type: 3}
   ProjectileSpeed: 60
+  SpreadAngle: 1
+  AttackSpeedScale: 1
   FireSound: {fileID: 8300000, guid: b39489cde38d7474790bde0158d66df8, type: 3}
   FireVolume: 1
   FirePitchVariance: 0.08

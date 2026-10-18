@@ -39,7 +39,8 @@ public class DKTierInfo
 ///   패시브 0  망령          — 능력을 받을 때 이름 하나가 정해짐 (라운드 동안 유지). 이름별 능력치
 ///   패시브 1  망자의 육신   — 체력 50% 이하가 되면 2초 고스트 (모든 공격 무시 + 통과). 쿨 30초
 ///   스킬 0    황천의 검     — 전방 베기. 농민: 피해 30% 회복 / 용병: + 잠시 뒤 50% 2타 / 네임드: 둘 다 + 고유
-///   스킬 1    승마          — 언데드 말. 이속 증가, 받는 피해 30% 감소, 황천의 검 사거리 +50%. 네임드는 탈 때 고유 돌진
+///   스킬 1    승마          — 언데드 말. 이속 증가, 받는 피해 30% 감소, 황천의 검 사거리 +50%.
+///                            탑승 중 다시 누르면 돌진 (모든 등급) — 아서: 닿은 적 기절 + 속도 증가 / 베른하르트: 통과 + 위력 증가 / 롤란드: 도약
 ///   궁극기    최후의 일격   — 전방 무기 피해 200% + 흑마법 폭발(강한 중독). 네임드 고유 강화
 /// 수치는 레벨별(LevelValue) — 능력 데이터의 각 스킬·패시브 탭에서도 같이 편집. 설명에서 {b:필드이름}
 /// </summary>
@@ -82,12 +83,12 @@ public class DeathKnightAbility : AbilityBehaviour
         }},
         new() { Tier = DKTier.Mercenary, Label = "용병", Color = new Color(0.5f, 0.7f, 1f), Texts = new[]
         {
-            new DescLine("slash", "<b>농작</b> — 가한 피해의 {b:FarmHealPct}%를 회복\n<b>전투감각</b> — 잠시 뒤 {b:SecondMul:pct}% 위력으로 한 번 더 벰"),
+            new DescLine("slash", "<b>농작</b> — 가한 피해의 {b:FarmHealPct}%를 회복\n<b>전투감각</b> — 잠시 뒤 {b:SecondMul:pct}% 위력으로 한 번 더 공격"),
             new DescLine("mount", "<b>미숙한 승마</b> — 이동속도 증가 -{b:UnskilledPenalty}\n" + BaseChargeText),
         }},
         new() { Tier = DKTier.Named, Label = "네임드", Color = new Color(1f, 0.79f, 0.29f), Texts = new[]
         {
-            new DescLine("slash", "<b>농작</b> — 가한 피해의 {b:FarmHealPct}%를 회복\n<b>전투감각</b> — 잠시 뒤 {b:SecondMul:pct}% 위력으로 한 번 더 벰"),
+            new DescLine("slash", "<b>농작</b> — 가한 피해의 {b:FarmHealPct}%를 회복\n<b>전투감각</b> — 잠시 뒤 {b:SecondMul:pct}% 위력으로 한 번 더 공격"),
         }},
     };
 
@@ -95,20 +96,20 @@ public class DeathKnightAbility : AbilityBehaviour
     {
         DKNamed.Arthur => new[]
         {
-            new DescLine("slash", "<b>성검</b> — 피해의 {b:ArthurTrueRatio:pct}%가 방어력을 무시"),
-            new DescLine("mount", "<b>성기사의 돌진</b> — 탑승 중 다시 누르면 속도 +{b:ArthurChargeSpeedPct}%로 약 {x:chargedist}m 돌진, 적을 꿰뚫고 지나가며 {dmg:ChargeCoef} 피해 + 밀쳐내고 {b:ArthurStun}초 기절"),
+            new DescLine("slash", "<b>뒤얽힌 성검</b> — 피해의 {b:ArthurTrueRatio:pct}%가 방어력을 무시"),
+            new DescLine("mount", "<b>진격</b> — 탑승 중 다시 누르면 속도 +{b:ArthurChargeSpeedPct}%로 약 {x:chargedist}m 돌진, 처음 부딪힌 적에게 {dmg:ChargeCoef} 피해 + {b:ArthurStun}초 기절"),
             new DescLine("ult", "<b>빛의 폭발</b> — 폭발 범위에 {dmg:ArthurBlastCoef} 추가 피해"),
         },
         DKNamed.Roland => new[]
         {
             new DescLine("slash", "<b>뒤랑달</b> — 위력 +{b:RolandBonusPct}%, 대상이 잃은 체력의 {b:RolandMissingPct}% 추가 피해"),
-            new DescLine("mount", "<b>도약</b> — 탑승 중 다시 누르면 뛰어올라 주위 {b:RolandPushRadius}m의 적을 밀쳐내고 잃은 체력의 {b:RolandHealMissingPct}% 회복"),
-            new DescLine("ult", "<b>일격 강화</b> — 전방 피해가 공격력의 {b:RolandFinisherCoef}%로 증가, {b:RolandStun}초 기절"),
+            new DescLine("mount", "<b>도약</b> — 탑승 중 다시 누르면 돌진 대신 뛰어올라 주위 {b:RolandPushRadius}m의 적을 밀쳐내고 잃은 체력의 {b:RolandHealMissingPct}% 회복"),
+            new DescLine("ult", "<b>심판</b> — 전방 피해가 공격력의 {b:RolandFinisherCoef}%로 증가, {b:RolandStun}초 기절"),
         },
         DKNamed.Bernhard => new[]
         {
-            new DescLine("slash", "<b>학살자</b> — 위력 +{b:BernhardBonusPct}%, {b:BernhardWoundTime}초간 깊은 상처 {b:BernhardWoundPct}%"),
-            new DescLine("mount", "<b>망령 돌진</b> — 탑승 중 다시 누르면 고스트 상태로 약 {x:chargedist}m 돌진, 적을 통과하며 {dmg:ChargeCoef} 피해 (위력 +{b:BernhardChargePct}%)"),
+            new DescLine("slash", "<b>처단자</b> — 위력 +{b:BernhardBonusPct}%, {b:BernhardWoundTime}초간 깊은 상처 {b:BernhardWoundPct}%"),
+            new DescLine("mount", "<b>망령 돌진</b> — 탑승 중 다시 누르면 고스트 상태로 돌진, 적을 통과하며 지나간 모든 적에게 {dmg:ChargeCoef} 피해 (위력 +{b:BernhardChargePct}%)"),
             new DescLine("ult", "<b>죽음의 불길</b> — 폭발에 맞은 적이 {b:DeathFlameTime}초간 매초 최대 체력의 {b:DeathFlamePct}% 화상"),
         },
         _ => null,
@@ -222,7 +223,7 @@ public class DeathKnightAbility : AbilityBehaviour
     [ForSkill(nameof(MountSkill), "돌진 폭 (m)")] public LevelValue ChargeWidth = 1.3f;
     [ForSkill(nameof(MountSkill), "아서 — 돌진 속도 증가 (%)")] public LevelValue ArthurChargeSpeedPct = 30f;
     [ForSkill(nameof(MountSkill), "베른하르트 — 돌진 위력 증가 (%)")] public LevelValue BernhardChargePct = 50f;
-    [ForSkill(nameof(MountSkill), "아서 — 밀치기 세기")] public LevelValue ArthurPush = 10f;
+    [ForSkill(nameof(MountSkill), "아서 — 밀치기 세기 (0 = 안 밀침)")] public LevelValue ArthurPush = 0f;
     [ForSkill(nameof(MountSkill), "아서 — 기절 (초)")] public LevelValue ArthurStun = 1f;
     [ForSkill(nameof(MountSkill), "롤란드 — 도약 세기")] public LevelValue RolandLeap = 9f;
     [ForSkill(nameof(MountSkill), "롤란드 — 밀쳐내기 반경 (m)")] public LevelValue RolandPushRadius = 4f;
@@ -275,7 +276,7 @@ public class DeathKnightAbility : AbilityBehaviour
 
     private float _chargeTimer;
     private Vector3 _chargePrev, _chargeStart, _chargeFwd;
-    private bool _chargePush, _chargeStopOnHit;
+    private bool _chargeStun, _chargeStopOnHit;
     private float _chargeDmgMul = 1f;
     [System.NonSerialized] private readonly HashSet<PlayerHealth> _chargeHit = new();
 
@@ -635,8 +636,10 @@ public class DeathKnightAbility : AbilityBehaviour
     }
 
     /// <summary>
-    /// 농민·용병 — 기본 돌진: 처음 부딪힌 적에게 피해 주고 멈춤
-    /// 아서 — 꿰뚫는 돌진 (밀쳐내기·기절) + 속도 증가 · 베른하르트 — 고스트로 통과 + 위력 증가 · 롤란드 — 도약
+    /// 모든 등급 — 기본 돌진: 처음 부딪힌 적에게 피해 주고 멈춤
+    /// 아서 — 기본 돌진 + 닿은 적 기절 + 속도 증가
+    /// 베른하르트 — 적을 통과하며 지나간 모두에게 피해 + 위력 증가
+    /// 롤란드 — 돌진 대신 도약 (주위 밀쳐내기 + 잃은 체력 회복)
     /// </summary>
     void DoCharge()
     {
@@ -644,16 +647,17 @@ public class DeathKnightAbility : AbilityBehaviour
         switch (Named)
         {
             case DKNamed.Arthur:
-                Charge(pass: true, push: true, ghost: false, speedMul: 1f + Lv(ArthurChargeSpeedPct) * 0.01f, dmgMul: 1f);
+                Charge(pass: false, stun: true, speedMul: 1f + Lv(ArthurChargeSpeedPct) * 0.01f, dmgMul: 1f);
                 break;
             case DKNamed.Bernhard:
-                Charge(pass: true, push: false, ghost: true, speedMul: 1f, dmgMul: 1f + Lv(BernhardChargePct) * 0.01f);
+                _status?.Apply(StatusType.Ghost, 1f, Mathf.Max(0.05f, Lv(ChargeDuration)) + 0.15f, Ctx.Object.InputAuthority);
+                Charge(pass: true, stun: false, speedMul: 1f, dmgMul: 1f + Lv(BernhardChargePct) * 0.01f);
                 break;
             case DKNamed.Roland:
                 Leap();
                 break;
             default:
-                Charge(pass: false, push: false, ghost: false, speedMul: 1f, dmgMul: 1f);
+                Charge(pass: false, stun: false, speedMul: 1f, dmgMul: 1f);
                 break;
         }
     }
@@ -680,7 +684,7 @@ public class DeathKnightAbility : AbilityBehaviour
     }
 
     /// <summary>전방 돌진 — 속도는 이동속도 비례 (시간 고정, 빠를수록 멀리)</summary>
-    void Charge(bool pass, bool push, bool ghost, float speedMul, float dmgMul)
+    void Charge(bool pass, bool stun, float speedMul, float dmgMul)
     {
         Vector3 start = Ctx.transform.position;
         Vector3 fwd = Forward();
@@ -690,8 +694,7 @@ public class DeathKnightAbility : AbilityBehaviour
         dash.Duration = Mathf.Max(0.05f, Lv(ChargeDuration));
         dash.Distance = ChargeDistanceNow(speedMul);
         dash.PassThroughPlayers = pass;
-        dash.StopOnContact = !pass;            // 기본 돌진은 부딪히면 멈춤
-        if (ghost) _status?.Apply(StatusType.Ghost, 1f, dash.Duration + 0.15f, self);
+        dash.StopOnContact = !pass;            // 기본 돌진은 부딪히면 멈춤 · 통과(베른하르트)는 몸을 뚫고 지나감
         Ctx.DoDash(dash);
 
         if (Ctx.HasInputAuthority)
@@ -713,7 +716,7 @@ public class DeathKnightAbility : AbilityBehaviour
         _chargePrev = start;
         _chargeStart = start;
         _chargeFwd = fwd;
-        _chargePush = push;
+        _chargeStun = stun;
         _chargeStopOnHit = !pass;
         _chargeDmgMul = dmgMul;
         _chargeHit.Clear();
@@ -752,19 +755,22 @@ public class DeathKnightAbility : AbilityBehaviour
     {
         var self = Ctx.Object.InputAuthority;
         var info = MakeHit(Lv(ChargeCoef) * 0.01f * _chargeDmgMul, DamageSource.Skill, out _);
-        info.CanCauseFall = _chargePush;
+        float push = _chargeStun ? Lv(ArthurPush) : 0f;
+        info.CanCauseFall = push > 0f;
         h.RPC_TakeDamage(info);
 
-        if (!_chargePush) return;
+        if (!_chargeStun) return;
 
-        if (h.TryGetComponent<PlayerMovement>(out var mv))
+        // 아서 — 닿은 적 기절 (밀치기는 세기를 0보다 크게 했을 때만)
+        if (h.TryGetComponent<PlayerStatus>(out var st))
+            st.Apply(StatusType.Stun, 1f, Lv(ArthurStun), self);
+
+        if (push > 0f && h.TryGetComponent<PlayerMovement>(out var mv))
         {
             Vector3 side = Vector3.Cross(Vector3.up, _chargeFwd);
             float sgn = Vector3.Dot(h.transform.position - _chargeStart, side) >= 0f ? 1f : -1f;
-            mv.AddKnockback((_chargeFwd + side * sgn * 0.6f).normalized * Lv(ArthurPush) + Vector3.up * 3f);
+            mv.AddKnockback((_chargeFwd + side * sgn * 0.6f).normalized * push + Vector3.up * 3f);
         }
-        if (h.TryGetComponent<PlayerStatus>(out var st))
-            st.Apply(StatusType.Stun, 1f, Lv(ArthurStun), self);
     }
 
     /// <summary>롤란드 — 위로 도약, 주위 밀쳐내기, 잃은 체력 회복</summary>

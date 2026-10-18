@@ -23,6 +23,19 @@ public class AbilityData : ScriptableObject
     [Tooltip("능력 자체의 플레이버 텍스트")]
     public string Flavor;
 
+    [Header("HUD 표시")]
+    [Tooltip("NO. N 번호 (0이면 Id)")]
+    public int Number = 0;
+    [TextArea(1, 2)]
+    [Tooltip("한 줄 요약 — 랜덤 능력 HUD · 클래스 카드. 비우면 플레이버. 시트 키 ability.{Id}.summary가 있으면 그게 우선")]
+    public string Summary;
+    [Tooltip("이름표 배경 · 카드 테두리 색")]
+    public Color UiAccent = new Color(0.82f, 0.16f, 0.18f, 1f);
+    [Tooltip("이름 글자 색")]
+    public Color UiNameColor = Color.white;
+    [Tooltip("NO. N 글자 색")]
+    public Color UiNumberColor = new Color(1f, 0.84f, 0.22f, 1f);
+
     [Header("Content")]
     public PassiveDef[] Passives;
     public SkillDef[] Skills;

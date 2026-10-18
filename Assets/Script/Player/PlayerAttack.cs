@@ -10,6 +10,9 @@ public class PlayerAttack : NetworkBehaviour
     [SerializeField] private WeaponAnimator weaponAnim;
     [SerializeField] private LayerMask hitMask;
     [SerializeField] private LayerMask projectileMask;
+    [Tooltip("도탄(히트스캔이 튕김)이 일어나는 표면 레이어 — 여기 없는 레이어(바닥 등)에 맞으면 그냥 멈춤.\n" +
+             "Projectile Mask 안에서만 의미 있음 (애초에 맞는 레이어여야 튕길 수 있음)")]
+    [SerializeField] private LayerMask ricochetMask = ~0;
     [SerializeField] private AudioSource weaponAudio;
 
     [Header("Debug")]
@@ -55,6 +58,11 @@ public class PlayerAttack : NetworkBehaviour
     public float SpreadAdd { get; set; }
     /// <summary>히트스캔이 벽에 튕기는 횟수</summary>
     public int Ricochets { get; set; }
+    /// <summary>튕긴 탄이 근처 적에게 꺾이는 거리 (m) — 0이면 그냥 거울 반사</summary>
+    public float RicochetSeekRange { get; set; } = 15f;
+    /// <summary>튕긴 방향 기준 이 각도(°, 전체 폭) 안의 적만 노림</summary>
+    public float RicochetSeekAngle { get; set; } = 90f;
+    private readonly Collider[] _seekHits = new Collider[32];
 
     // ── 근접 판정 보정 — 능력이 설정 (SA) ──
     /// <summary>근접 판정 사거리 배율 (죽음의 기사 +50% → 1.5). 공격 시작 시점 값으로 고정되고, 이펙트 크기도 따라감</summary>
@@ -443,8 +451,11 @@ public class PlayerAttack : NetworkBehaviour
 
     void OnHitscanHit(RaycastHit hit, EquipmentData weapon, float bonusMul = 1f, bool forceCrit = false)
     {
-        if (!hit.collider.TryGetComponent<PlayerHealth>(out var target)) return;
-        if (target.IsDead) return;
+        // 피격 콜라이더가 Body 등 자식에 있어도 찾음
+        var target = hit.collider.GetComponentInParent<PlayerHealth>();
+        if (target == null || target.IsDead) return;
+        if (target.transform.root == transform.root) return;                        // 튕겨서 나한테 와도 X
+        if (TeamUtil.IsFriendly(Object.InputAuthority, target)) return;
 
         float baseDmg = _stats.Get(StatType.AttackPower) * bonusMul;
         float outgoing = Outgoing(baseDmg, DamageSource.RangedWeapon, forceCrit, out bool crit);
@@ -472,25 +483,25 @@ public class PlayerAttack : NetworkBehaviour
         while (true)
         {
             Vector3 endPoint = from + dir * remaining;
-            bool hitSomething = Physics.Raycast(from, dir, out var hit, remaining,
-                                                projectileMask, QueryTriggerInteraction.Ignore)
-                                && hit.collider.gameObject != gameObject;
+            // 내 몸(루트 · 자식 피격 콜라이더 전부)은 무시 — 튕긴 탄이 나한테 막히거나 내 몸에서 또 튕기지 않게
+            bool hitSomething = CastUtil.Raycast(from, dir, remaining, projectileMask, transform.root, out var hit);
 
             bool hitPlayer = false;
             if (hitSomething)
             {
                 endPoint = hit.point;
-                hitPlayer = hit.collider.TryGetComponent<PlayerHealth>(out _);
+                hitPlayer = hit.collider.GetComponentInParent<PlayerHealth>() != null;     // 자식 피격 콜라이더도 사람으로
                 if (hitPlayer) OnHitscanHit(hit, weapon, bonusMul, forceCrit);
             }
 
             // 연출은 총구 → 착탄점, 도탄이면 이어서 튕긴 구간
-            SpawnTracer(weapon, tracerFrom, endPoint);
+            SpawnTracer(weapon, tracerFrom, endPoint, first);   // 도탄 구간은 총구에 안 붙임
             RPC_PlayHitscan(tracerFrom, endPoint, first);
             first = false;
 
             // 벽에 맞았고 도탄이 남았으면 반사해서 한 번 더
             if (!hitSomething || hitPlayer || bounces <= 0) break;
+            if ((ricochetMask.value & (1 << hit.collider.gameObject.layer)) == 0) break;   // 튕기지 않는 표면
 
             bounces--;
             remaining -= hit.distance;
@@ -499,14 +510,51 @@ public class PlayerAttack : NetworkBehaviour
             dir = Vector3.Reflect(dir, hit.normal);
             from = hit.point + hit.normal * 0.02f;
             tracerFrom = hit.point;
+
+            // 거울 반사로는 거의 안 맞음 → 튕긴 방향 앞쪽에 보이는 적이 있으면 그쪽으로 꺾임
+            if (RicochetSeekRange > 0f && SeekRicochet(from, dir, Mathf.Min(remaining, RicochetSeekRange), out var aim))
+                dir = aim;
         }
     }
 
-    void SpawnTracer(EquipmentData weapon, Vector3 from, Vector3 to)
+    /// <summary>튕긴 지점에서 노릴 적 — 반사 방향 기준 각도 안 · 거리 안 · 벽에 안 가린 적 중 가장 가까운 쪽 (각도 가중)</summary>
+    bool SeekRicochet(Vector3 from, Vector3 dir, float range, out Vector3 aim)
+    {
+        aim = dir;
+        float best = float.MaxValue;
+        bool found = false;
+        float half = RicochetSeekAngle * 0.5f;
+
+        int n = Physics.OverlapSphereNonAlloc(from, range, _seekHits, projectileMask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < n; i++)
+        {
+            var h = _seekHits[i].GetComponentInParent<PlayerHealth>();
+            if (h == null || h.IsDead || h.transform.root == transform.root) continue;
+            if (TeamUtil.IsFriendly(Object.InputAuthority, h)) continue;
+
+            Vector3 c = h.transform.position + Vector3.up * 1.1f;
+            Vector3 to = c - from;
+            float d = to.magnitude;
+            if (d < 0.1f || d > range) continue;
+            float ang = Vector3.Angle(dir, to);
+            if (ang > half) continue;
+
+            // 가려졌는지 — 첫 번째로 맞는 게 그 사람이어야
+            if (!CastUtil.Raycast(from, to, d + 0.5f, projectileMask, transform.root, out var los)) continue;
+            if (los.collider.GetComponentInParent<PlayerHealth>() != h) continue;
+
+            float score = d + ang * 0.1f;
+            if (score < best) { best = score; aim = to / d; found = true; }
+        }
+        return found;
+    }
+
+    /// <param name="fromMuzzle">true = 시작점을 총구에 붙임 (첫 구간). 도탄 구간은 false — 튕긴 지점에서 시작</param>
+    void SpawnTracer(EquipmentData weapon, Vector3 from, Vector3 to, bool fromMuzzle = true)
     {
         if (weapon == null || weapon.TracerPrefab == null) return;
 
-        var armRig = weaponAnim != null ? weaponAnim.ArmRig : null;
+        var armRig = weaponAnim != null && fromMuzzle ? weaponAnim.ArmRig : null;
         var muzzle = armRig != null ? armRig.Muzzle : null;
 
         var go = Instantiate(weapon.TracerPrefab);
@@ -519,7 +567,7 @@ public class PlayerAttack : NetworkBehaviour
         if (HasStateAuthority) return;   // 발사자는 이미 로컬로 만들었음
 
         var weapon = _equip != null ? _equip.GetWeapon() : null;
-        SpawnTracer(weapon, from, to);
+        SpawnTracer(weapon, from, to, fireFx);     // fireFx = 첫 구간 — 도탄 구간은 튕긴 지점에서
         if (fireFx) PlayFireFx(weapon);  // 도탄 구간은 총구 연출 없이 궤적만
     }
 

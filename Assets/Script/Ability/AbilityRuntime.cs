@@ -401,7 +401,15 @@ public class AbilityRuntime : NetworkBehaviour
     {
         if (!HasStateAuthority || database == null) return;
 
-        MainAbilityId = forceMainId != 0 ? forceMainId : (database.RollMain()?.Id ?? 0);
+        // 클래스 선택 — ClassPick이 있으면 카드에서 고름 (그동안 메인 능력 없음)
+        if (forceMainId == 0 && TryGetComponent<ClassPick>(out var pick) && pick.WantsPick)
+        {
+            MainAbilityId = 0;
+            pick.Begin(database);
+        }
+        else
+            MainAbilityId = forceMainId != 0 ? forceMainId : (database.RollMain()?.Id ?? 0);
+
         SubAbilityId = forceSubId != 0 ? forceSubId : (database.RollSub()?.Id ?? 0);
 
         if (forceRandomId != 0)

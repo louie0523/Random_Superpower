@@ -90,7 +90,7 @@ public class PlayerMovement : NetworkBehaviour
         transform.Rotate(Vector3.up * yaw);
         fpsCamera.OnBodyRotated(yaw);
 
-        if (_shop != null && _shop.IsShopping)
+        if ((_shop != null && _shop.IsShopping) || UIManager.InputBlocked)
         {
             _localMoveDir = Vector3.zero;
             _speed01 = 0f;

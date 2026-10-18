@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 2170944513226956342}
   - component: {fileID: -1179119024802948346}
   - component: {fileID: -6314287215948934650}
+  - component: {fileID: -4123256863036290710}
   - component: {fileID: 6879911572735546874}
   - component: {fileID: 6143414690035071440}
   - component: {fileID: 8318037346556842547}
@@ -82,6 +83,7 @@ MonoBehaviour:
   - {fileID: -4611531175301071505}
   - {fileID: 2170944513226956342}
   - {fileID: -6314287215948934650}
+  - {fileID: -4123256863036290710}
   - {fileID: 6143414690035071440}
   - {fileID: 8318037346556842547}
   - {fileID: 959149403550185092}
@@ -229,6 +231,9 @@ MonoBehaviour:
   projectileMask:
     serializedVersion: 2
     m_Bits: 648
+  ricochetMask:
+    serializedVersion: 2
+    m_Bits: 640
   weaponAudio: {fileID: 0}
   drawGizmos: 1
   logHits: 0
@@ -356,7 +361,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   weaponAnim: {fileID: 6649258101475754144}
-  forceMainId: 6001
+  forceMainId: 0
   forceSubId: 0
   forceRandomId: 0
   logSkills: 0
@@ -381,6 +386,27 @@ MonoBehaviour:
   _EntryRanks: 
   _SkillPoints: 0
   _CooldownTotal: []
+--- !u!114 &-4123256863036290710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787606545243124609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fe00f26dbc11814094b994cfb8626ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClassPick
+  PickEnabled: 1
+  ChoiceCount: 3
+  AllowReroll: 1
+  Rerolls: 999
+  PickTime: 20
+  _Picking:
+    RawValue: 0
+  _Choices: 
+  _RerollsLeft: 0
 --- !u!114 &6879911572735546874
 MonoBehaviour:
   m_ObjectHideFlags: 0

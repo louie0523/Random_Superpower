@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
         get
         {
             var ui = Instance;
-            return (ui != null && ui.AnyPanelOpen) || DevConsole.IsOpen;
+            return ui != null && ui.AnyPanelOpen || DevConsole.IsOpen || ClassPickPanel.IsShowing;
         }
     }
 

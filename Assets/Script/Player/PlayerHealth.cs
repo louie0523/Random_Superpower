@@ -252,6 +252,10 @@ public class PlayerHealth : NetworkBehaviour
         float maxHp = _stats.Get(StatType.MaxHP);
         float raw = info.Amount;
 
+        // 최대 체력 % 피해 — 화상 · 중독 틱, 인챈트 등. 이 줄이 빠져 있으면 틱이 전부 1 피해가 됨
+        if (info.MaxHpPercent > 0f)
+            raw += maxHp * info.MaxHpPercent * 0.01f;
+
         if (info.MissingHpPercent > 0f)
             raw += Mathf.Max(0f, maxHp - HP) * info.MissingHpPercent * 0.01f;
 

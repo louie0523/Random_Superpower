@@ -445,6 +445,8 @@ MonoBehaviour:
       Amplitude: 1
       Interp: 1
       Smoothness: 1.5
+      Shakes: []
+      LengthHint: 1
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
