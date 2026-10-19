@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[DefaultExecutionOrder(10000)]
 public class FPSCamera : MonoBehaviour
 {
     [Header("References")]
@@ -42,6 +43,8 @@ public class FPSCamera : MonoBehaviour
     private Vector3 _motionRot;
     private float _motionFov;
     private float _visualYaw;
+    private float _bodyYaw;         // 틱에서 받은 진짜 몸통 각도 (보간 전)
+    private bool _hasBodyYaw;
 
     // 내부 상태
     private float _pitch;
@@ -112,6 +115,21 @@ public class FPSCamera : MonoBehaviour
         _visualYaw -= degrees;
     }
 
+    /// <summary>PlayerMovement의 FixedUpdateNetwork가 부름 — 보간 안 된 진짜 몸통 각도</summary>
+    public void SetBodyYaw(float worldYaw)
+    {
+        _bodyYaw = worldYaw;
+        _hasBodyYaw = true;
+    }
+
+    void LateUpdate()
+    {
+        if (cameraRoot == null) return;
+        if (!_hasBodyYaw) { cameraRoot.localRotation = Quaternion.Euler(_pitch, 0f, 0f); return; }
+        // 좌우 = 진짜 몸통 각도 + 아직 틱에 안 넘어간 마우스 → 매 프레임 바로 반영 (몸 보간과 무관)
+        cameraRoot.rotation = Quaternion.Euler(_pitch, _bodyYaw + _yawAccum, 0f);
+    }
+
     // ---------------- 시점 ----------------
 
     /// <summary>3인칭 카메라용 — 피격 반동·흔들림만 (헤드밥·롤 제외)</summary>
@@ -137,7 +155,7 @@ public class FPSCamera : MonoBehaviour
         _visualYaw += mx;
 
         _pitch = Mathf.Clamp(_pitch - my, pitchMin, pitchMax);
-        cameraRoot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
+
     }
 
 

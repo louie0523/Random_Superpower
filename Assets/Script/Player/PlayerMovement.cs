@@ -89,6 +89,7 @@ public class PlayerMovement : NetworkBehaviour
         float yaw = fpsCamera.ConsumeYaw();
         transform.Rotate(Vector3.up * yaw);
         fpsCamera.OnBodyRotated(yaw);
+        fpsCamera.SetBodyYaw(transform.eulerAngles.y);
 
         if ((_shop != null && _shop.IsShopping) || UIManager.InputBlocked)
         {
