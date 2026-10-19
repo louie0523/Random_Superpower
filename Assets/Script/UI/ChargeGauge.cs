@@ -30,8 +30,6 @@ public class ChargeGauge : MonoBehaviour
         var main = _ar != null ? _ar.GetMainAbility() : null;
         bool has = main != null && main.Charges != null && chargeIndex < main.Charges.Length;
 
-        if (Time.frameCount % 120 == 0) DumpChain();
-
         if (root != null && root.activeSelf != has) root.SetActive(has);
         if (!has) return;
 

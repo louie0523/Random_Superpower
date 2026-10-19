@@ -6,7 +6,7 @@ using UnityEditor.Localization;
 
 public static class LocKeyFiller
 {
-    const string TableName = "Game";
+    const string TableName = LocUtil.TableName;
 
     [MenuItem("Tools/Localization/에셋에 키 채우기")]
     public static void Fill()

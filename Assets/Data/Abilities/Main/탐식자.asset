@@ -19,12 +19,15 @@ MonoBehaviour:
   Tags: 
   ExclusiveShopItems: []
   Icon: {fileID: 0}
-  Flavor: "\uB2F9\uC2E0\uC740 \uBC30\uAC00 \uACE0\uD515\uB2C8\uB2E4. \uADF8\uB9AC\uACE0
+  Flavor: "\uB2F9\uC2E0\uC740 \uBC30\uAC00 \uACE0\uD515\uB2C8\uB2E4.\n\uADF8\uB9AC\uACE0
     \uBB34\uC5C7\uC774\uB4E0 \uC0BC\uD0AC \uC218 \uC788\uB294 \uC704\uC7A5\uC774
-    \uC874\uC7AC\uD569\uB2C8\uB2E4.\n\uC8FC\uC778 \uC5C6\uB294 \uBB34\uAD6C\uB97C
-    \uC0BC\uCF1C \uAC15\uD574\uC9C8 \uC218 \uC788\uC2B5\uB2C8\uB2E4.\n\uB610\uD55C
-    \uAC15\uB825\uD55C \uD0D0\uC2DD \uB2A5\uB825\uC740 \uC555\uB3C4\uC801\uC778 \uC804\uD22C\uB825\uC744
-    \uC81C\uACF5\uD569\uB2C8\uB2E4."
+    \uC874\uC7AC\uD569\uB2C8\uB2E4.\n\uBB34\uC5C7\uC774\uB4E0 \uC0BC\uCF1C \uB9C9\uB300\uD55C
+    \uC874\uC7AC\uAC00 \uB420 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+  Number: 0
+  Summary: 
+  UiAccent: {r: 0.82, g: 0.16, b: 0.18, a: 1}
+  UiNameColor: {r: 1, g: 1, b: 1, a: 1}
+  UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives:
   - Name: "\uD0D0\uC2DD\uC790"
     Icon: {fileID: 0}
@@ -145,26 +148,32 @@ MonoBehaviour:
     Effects: []
   - Name: "\uAD76\uC8FC\uB9B0 \uAD34\uC218"
     Icon: {fileID: 0}
-    Description: "\uAD76\uC8FC\uB9B0 \uAD34\uC218\uB4E4\uC744 \uD574\uBC29\uD558\uC5EC
-      {b:UltDuration:all}\uCD08 \uB3D9\uC548 \uBC18\uACBD {b:MonsterRadius:all}m
-      \uB0B4 \uC801\uC744 \uC790\uB3D9\uC73C\uB85C \uBB3C\uC5B4\uB72F\uC5B4 {dmg:MonsterCoef+MonsterFlat}\uC758
-      \uD53C\uD574\uB97C \uAC00\uD569\uB2C8\uB2E4.\n\uD0D0\uC2DD\xB7\uAD34\uC218\uB85C
-      \uD50C\uB808\uC774\uC5B4\uB97C \uCC98\uCE58\uD558\uBA74 \uC9C0\uC18D \uC2DC\uAC04\uC774
-      {b:UltKillExtend}\uCD08 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+    Description: "\uAD76\uC8FC\uB9B0 \uAD34\uC218 {b:MonsterCount:all}\uB9C8\uB9AC\uB97C
+      \uD574\uBC29\uD558\uC5EC {b:UltDuration:all}\uCD08 \uB3D9\uC548 \uBC18\uACBD
+      {b:MonsterRadius:all}m \uB0B4 \uC801\uC744 \uC790\uB3D9\uC73C\uB85C \uBB3C\uC5B4\uB72F\uC5B4
+      {b:MonsterPowerMul*100}% \uD6A8\uACFC\uC758 \uD0D0\uC2DD \uACF5\uACA9\uC744
+      \uAC00\uD569\uB2C8\uB2E4.\n\uD0D0\uC2DD \uACF5\uACA9\uC73C\uB85C \uD50C\uB808\uC774\uC5B4\uB97C
+      \uCC98\uCE58\uD558\uBA74 \uC9C0\uC18D \uC2DC\uAC04\uC774 {b:UltKillExtend}\uCD08
+      \uC99D\uAC00\uD569\uB2C8\uB2E4."
     DetailedInfo: "\uAD34\uC218\uB294 \uB300\uC0C1\uB9C8\uB2E4 3\uCD08\uC758 \uACF5\uACA9
       \uB300\uAE30 \uC2DC\uAC04\uC774 \uC874\uC7AC\uD558\uBA70, \uCCB4\uB825\uC774
       30% \uC774\uD558\uC778 \uB300\uC0C1\uC5D0\uAC8C {b:MonsterLowHpBonus:all}%\uC758
-      \uCD94\uAC00 \uD53C\uD574\uB97C \uAC00\uD569\uB2C8\uB2E4."
+      \uCD94\uAC00 \uD53C\uD574\uB97C \uAC00\uD569\uB2C8\uB2E4.\n\n\uC9C0\uC18D \uC2DC\uAC04\uB3D9\uC548
+      \uACF5\uACA9\uB825, \uACF5\uACA9\uC18D\uB3C4, \uC774\uB3D9\uC18D\uB3C4\uAC00
+      \uC18C\uD3ED \uC99D\uAC00\uD569\uB2C8\uB2E4."
     Tip: 
     DevNote: 
     Slot: 3
     MaxLevel: 3
     Vars: []
     RequiredWeapon: 0
-    CooldownByLevel: []
+    CooldownByLevel:
+    - 25
+    - 20
+    - 15
     Cooldown: 8
     SoulCost: 0
-    CooldownAfterEffect: 0
+    CooldownAfterEffect: 1
     UltimateChargeCost: 0
     MotionData: {fileID: 0}
     EffectTiming: 0

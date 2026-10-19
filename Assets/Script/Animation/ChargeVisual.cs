@@ -32,7 +32,7 @@ public class ChargeVisual : MonoBehaviour
     {
         float a = _amount;
 
-        Debug.Log($"[Visual] a={a:F2} scale={(target != null ? target.localScale.x : -1f):F3}");
+        //Debug.Log($"[Visual] a={a:F2} scale={(target != null ? target.localScale.x : -1f):F3}");
 
         // 만충이면 살짝 맥동
         float pulse = a >= 0.999f

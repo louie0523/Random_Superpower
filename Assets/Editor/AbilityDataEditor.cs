@@ -338,6 +338,8 @@ public class AbilityDataEditor : Editor
         EditorGUILayout.PropertyField(_flavor, new GUIContent("플레이버",
             "능력 한 줄 소개. 시트에 ability.{Id}.flavor 가 있으면 그게 우선"));
         EditorGUILayout.PropertyField(_tags, new GUIContent("태그", "분류용. 다른 능력이 태그로 찾을 때 사용"), true);
+
+        AbilityHudInspector.Draw(serializedObject, (AbilityData)target);     // 추가
     }
 
     // ══════════════════ 탭: 패시브 / 스킬 ══════════════════
@@ -1013,7 +1015,8 @@ public class AbilityDataEditor : Editor
                     EditorGUILayout.PropertyField(stP, new GUIContent("상태이상"));
                     var type = (StatusType)stP.enumValueIndex;
 
-                    if (type == StatusType.Seal || type == StatusType.Stun) Hint("수치 없음 — 지속시간만 씀");
+                    if (type is StatusType.Seal or StatusType.Stun or StatusType.Evade or StatusType.Ghost or StatusType.Root)
+                        Hint("수치 없음 — 지속시간만 씀");
                     else DrawLevelValues(vals, levels, StatusValueLabel(type));
 
                     EditorGUILayout.PropertyField(dur, new GUIContent("지속 (초)"));
@@ -1044,10 +1047,15 @@ public class AbilityDataEditor : Editor
 
     static string StatusValueLabel(StatusType t) => t switch
     {
+
+
         StatusType.Slow => "이속 감소 (%)",
         StatusType.Frost => "공속 감소 (%)",
         StatusType.Burn => "초당 최대체력 %",
         StatusType.DeepWound => "회복 감소 (%)",
+        StatusType.Blind => "보이는 반경 (m, 최소 1)",
+        StatusType.Poison => "중첩당 초당 최대체력 %",
+        StatusType.ArmorBreak => "방어력 감소 (%)",
         _ => "값",
     };
 

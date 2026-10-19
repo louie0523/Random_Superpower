@@ -130,21 +130,19 @@ MonoBehaviour:
   UltKillExtend:
     Values:
     - 3
-  MonsterCoef:
+  MonsterCount:
     Values:
-    - 60
-    - 70
-    - 80
-  MonsterFlat:
-    Values:
-    - 10
-    - 40
-    - 70
+    - 3
+    - 4
+    - 5
   MonsterRadius:
     Values:
-    - 8
-    - 11
+    - 10
+    - 12
     - 14
+  MonsterPowerMul:
+    Values:
+    - 0.35
   MonsterTargetCd:
     Values:
     - 3
@@ -156,7 +154,20 @@ MonoBehaviour:
     - 30
     - 40
     - 50
-  MonsterAlter: {fileID: 0}
+  MaskAlter: {fileID: 11400000, guid: d2cecfabd04bf8242a38d61bc3f02f35, type: 2}
+  MonsterPrefab: {fileID: 767456018394871168, guid: 3882db2283b3eb448b9455d0842eab76, type: 3}
+  MonsterAttackState: Attack
+  MonsterHitAt: 0.4
+  MonsterOnlyInCombat: 1
+  RecentHitWindow: 5
+  MonsterSpeed: 14
+  BiteReach: 1.3
+  BiteRecover: 0.35
+  OrbitRadius: 4
+  OrbitHeight: 0.1
+  OrbitSpin: 25
+  ProwlRadius: 2.5
+  ProwlSpin: 45
   BiteFx: {fileID: 0}
   SpitFx: {fileID: 0}
   MonsterBiteFx: {fileID: 0}

@@ -89,6 +89,7 @@ public class WeaponSetupWindow : EditorWindow
         { MotionEventType.FovKick,      ("○", "시야각",       new Color(0.80f, 0.60f, 1.00f)) },
         { MotionEventType.LightFlash,   ("☆", "순간 조명",    new Color(1.00f, 0.95f, 0.50f)) },
         { MotionEventType.Custom,       ("◆", "커스텀",       new Color(0.75f, 0.75f, 0.75f)) },
+        { MotionEventType.Vfx,          ("✸", "VFX",          new Color(1.00f, 0.55f, 0.90f)) },
     };
 
     static (string icon, string label, Color color) Meta(MotionEventType t) =>
@@ -2069,12 +2070,15 @@ public class WeaponSetupWindow : EditorWindow
 
             case MotionEventType.GroundEffect:
                 ev.Prefab = (GameObject)EditorGUILayout.ObjectField("프리팹", ev.Prefab, typeof(GameObject), false);
+                ev.Vfx = (ToonVfx.VfxEffect)EditorGUILayout.ObjectField(new GUIContent("VFX 이펙트", "넣으면 프리팹 대신 이걸 씀 (풀링)"),
+                                                       ev.Vfx, typeof(ToonVfx.VfxEffect), false);
                 ev.PositionOffset = EditorGUILayout.Vector3Field("발밑 기준 위치", ev.PositionOffset);
                 ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
                 ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
                 ev.Lifetime = EditorGUILayout.FloatField("수명 (초)", ev.Lifetime);
                 Hint("플레이어 기준 위치(Z = 앞)에서 바닥을 찾아 바닥 기울기에 맞춰 생성합니다. 충격파·바닥 자국용.");
                 break;
+
 
             case MotionEventType.TrailStart:
             case MotionEventType.TrailEnd:
@@ -2106,6 +2110,17 @@ public class WeaponSetupWindow : EditorWindow
             case MotionEventType.Custom:
                 ev.Key = EditorGUILayout.TextField("키", ev.Key);
                 Hint("MotionEventPlayer.OnCustomEvent로 이 문자열이 전달됩니다.");
+                break;
+
+            case MotionEventType.Vfx:
+                ev.Vfx = (ToonVfx.VfxEffect)EditorGUILayout.ObjectField("VFX 이펙트", ev.Vfx, typeof(ToonVfx.VfxEffect), false);
+                ev.Space = (EventSpace)EditorGUILayout.EnumPopup("붙을 곳", ev.Space);
+                ev.PositionOffset = EditorGUILayout.Vector3Field("위치", ev.PositionOffset);
+                ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
+                ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
+                ev.FitToHit = EditorGUILayout.Toggle(new GUIContent("판정 범위에 맞추기",
+                    "호의 반지름 · 각도를 이 타격의 실제 판정 범위에 맞춤 (사거리 버프 반영)"), ev.FitToHit);
+                ev.VfxPalette = (ToonVfx.VfxPalette)EditorGUILayout.ObjectField("색 (비우면 기본)", ev.VfxPalette, typeof(ToonVfx.VfxPalette), false);
                 break;
         }
     }
