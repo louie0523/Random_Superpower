@@ -57,7 +57,7 @@ public class StatusVfx : MonoBehaviour
         }
 
         // Shared Mode — 내 캐릭터 = 내가 SA
-        if (status.HasStateAuthority && !showForOwner)
+        if (status.HasInputAuthority && !showForOwner)
         {
             StopAll(true);
             return;

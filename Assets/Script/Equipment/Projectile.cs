@@ -128,6 +128,7 @@ public class Projectile : MonoBehaviour
         foreach (var h in hits)
         {
             if (h.collider == _ignore) continue;
+            if (_ignore != null && h.collider.transform.root == _ignore.transform.root) continue;   // 추가
 
             int id = h.collider.gameObject.GetInstanceID();
             if (_hitIds.Contains(id)) continue;

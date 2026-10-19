@@ -98,6 +98,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (DevConsole.IsOpen || ClassPickPanel.IsShowing) return;
         if (Input.GetKeyDown(abilityKey)) ToggleAbility();
         if (Input.GetKeyDown(inventoryKey)) ToggleInventory();
 

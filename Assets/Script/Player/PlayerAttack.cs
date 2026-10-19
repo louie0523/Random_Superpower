@@ -629,16 +629,10 @@ public class PlayerAttack : NetworkBehaviour
 
         Vector3 aimPoint;
 
-        if (Physics.Raycast(camPos, camFwd, out var hit, maxAim,
-                            projectileMask, QueryTriggerInteraction.Ignore)
-            && hit.collider.gameObject != gameObject)
-        {
+        if (CastUtil.Raycast(camPos, camFwd, maxAim, projectileMask, transform.root, out var hit))
             aimPoint = hit.point;
-        }
         else
-        {
             aimPoint = camPos + camFwd * maxAim;
-        }
 
         Vector3 dir = aimPoint - from;
         return dir.sqrMagnitude > 0.0001f ? dir.normalized : camFwd;
@@ -686,9 +680,10 @@ public class PlayerAttack : NetworkBehaviour
     void OnProjectileHit(Collider col, Vector3 point, float baseDmg, bool forceCrit = false)
     {
         if (col == null) return;
-        if (!col.TryGetComponent<PlayerHealth>(out var target)) return;   // 지형이면 그냥 멈춤
-        if (target.IsDead) return;
-        if (col.gameObject == gameObject) return;
+        var target = col.GetComponentInParent<PlayerHealth>();
+        if (target == null || target.IsDead) return;                     // 지형이면 그냥 멈춤
+        if (target.transform.root == transform.root) return;
+        if (TeamUtil.IsFriendly(Object.InputAuthority, target)) return;
 
         float outgoing = Outgoing(baseDmg, DamageSource.RangedWeapon, forceCrit, out bool crit);
 

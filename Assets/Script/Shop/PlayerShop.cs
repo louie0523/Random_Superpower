@@ -213,9 +213,11 @@ public class PlayerShop : NetworkBehaviour
         if (index < 0 || index >= MaxItems) return;
 
         var item = database?.GetByIndex(index);
+        float before = _stats.Get(StatType.MaxHP);
         if (Purchase(item, GetLevel(index), out bool levelUp) && levelUp)
         {
-            float before = _stats.Get(StatType.MaxHP);
+            Levels.Set(index, Levels[index] + 1);
+            ApplyAll();
             _health.ApplyMaxHpGain(before);
         }
     }
@@ -226,9 +228,11 @@ public class PlayerShop : NetworkBehaviour
         if (index < 0 || index >= MaxExclusive) return;
 
         var item = GetExclusiveItem(index);
+        float before = _stats.Get(StatType.MaxHP);
         if (Purchase(item, GetExclusiveLevel(index), out bool levelUp) && levelUp)
         {
-            float before = _stats.Get(StatType.MaxHP);
+            ExclusiveLevels.Set(index, ExclusiveLevels[index] + 1);
+            ApplyAll();
             _health.ApplyMaxHpGain(before);
         }
     }

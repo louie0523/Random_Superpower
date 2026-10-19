@@ -39,6 +39,8 @@ public class AbilityPanel : UIPanel
     [SerializeField] private Button closeButton;
     [SerializeField] private LocText closeHint;
 
+    private (int, int, int, int) _shownIds;
+
     /// <summary>카드 하나가 어떤 항목인지</summary>
     struct Card
     {
@@ -57,7 +59,6 @@ public class AbilityPanel : UIPanel
 
     private int _passiveCount, _skillCount;
     private int _rankSig;
-    private (int, int, int) _shownIds;
 
     // ══════════════════ 생명주기 ══════════════════
 
@@ -89,7 +90,7 @@ public class AbilityPanel : UIPanel
         if (!IsOpen || _runtime == null) return;
 
         // 능력 자체가 바뀌었으면 (사망 리롤·진화) 전부 다시
-        var ids = (_runtime.MainAbilityId, _runtime.SubAbilityId, _runtime.RandomAbilityId);
+        var ids = (_runtime.MainAbilityId, _runtime.SubAbilityId, _runtime.RandomAbilityId, _runtime.RandomAbilityId2);
         if (ids != _shownIds) { Rebuild(); return; }
 
         // 레벨·포인트만 바뀌었으면 카드 내용만 갱신 (선택·상세창 유지)
@@ -125,7 +126,7 @@ public class AbilityPanel : UIPanel
             return;
         }
 
-        _shownIds = (_runtime.MainAbilityId, _runtime.SubAbilityId, _runtime.RandomAbilityId);
+        _shownIds = (_runtime.MainAbilityId, _runtime.SubAbilityId, _runtime.RandomAbilityId, _runtime.RandomAbilityId2);
 
         var main = _runtime.GetMainAbility();
         FillHeader(main);
@@ -134,6 +135,7 @@ public class AbilityPanel : UIPanel
         AddFrom(main, mainAccent, AbilityRuntime.OwnerMain);
         AddFrom(_runtime.GetSubAbility(), subAccent, AbilityRuntime.OwnerSub);
         AddFrom(_runtime.GetRandomAbility(), randomAccent, -1);
+        AddFrom(_runtime.GetRandomAbility2(), randomAccent, -1);
 
         _rankSig = ComputeRankSig();
         UpdateEmptyStates();

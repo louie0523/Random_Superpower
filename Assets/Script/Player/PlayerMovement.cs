@@ -100,9 +100,11 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
 
-        bool blocked = UIManager.InputBlocked || (_status != null && _status.IsStunned) || _status.Has(StatusType.Root);
+        bool blocked = UIManager.InputBlocked || (_status != null && (_status.IsStunned || _status.IsRooted));
         float h = HasInputAuthority ? Input.GetAxisRaw("Horizontal") : 0f;
         float v = HasInputAuthority ? Input.GetAxisRaw("Vertical") : 0f;
+
+        if (_status != null && (_status.IsStunned || _status.IsRooted)) { h = 0f; v = 0f; }
 
         if (_ability != null)
         {
