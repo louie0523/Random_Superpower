@@ -216,6 +216,12 @@ public class MotionEventPlayer : MonoBehaviour
         go.transform.localScale *= e.Scale;
         if (follow != null) go.transform.SetParent(follow, true);
 
+        if (!string.IsNullOrEmpty(e.RigState))
+        {
+            var ra = go.GetComponentInChildren<RigAnimator>();
+            if (ra != null) ra.Play(e.RigState);       // 한 번짜리면 끝나고 기본 상태로
+        }
+
         if (e.Lifetime > 0f) Destroy(go, e.Lifetime);
     }
 

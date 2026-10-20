@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c8884dfc841854428c20adc35289606, type: 3}
+  m_Name: toothModel_Rig
+  m_EditorClassIdentifier: Assembly-CSharp::RigAnimData
+  Bones:
+  - Bone
+  - Bone.001
+  BoneParents:
+  - Armature
+  - Armature
+  Rest:
+    Rot:
+    - {x: 0.7071068, y: 0, z: -0, w: 0.7071067}
+    - {x: 0.7071068, y: 0, z: -0, w: 0.7071067}
+    Pos:
+    - {x: -0, y: 0, z: 0.00043450503}
+    - {x: -0, y: -0.00013241678, z: 0.0038115897}
+  Chains: []
+  States:
+  - Name: Bite
+    Length: 0.089
+    Loop: 0
+    Speed: 1
+    BlendIn: 0.15
+    Keys:
+    - Time: 0
+      Ease: 0
+      Pose:
+        Rot:
+        - {x: 0.79171324, y: -0, z: -0, w: 0.6108929}
+        - {x: 0.58458173, y: -0, z: -0, w: 0.81133485}
+        Pos:
+        - {x: -0, y: -0.00037, z: -0.00096}
+        - {x: -0, y: -0.00105, z: 0.00793}
+      Free: 
+    - Time: 0.089
+      Ease: 0
+      Pose:
+        Rot:
+        - {x: 0.7335196, y: -0.002226258, z: 0.002402675, w: 0.6796604}
+        - {x: 0.7221263, y: -0, z: -0, w: 0.6917613}
+        Pos:
+        - {x: -0.00034, y: 0.0004, z: 0.00353}
+        - {x: -0, y: -0.00013, z: 0.00355}
+      Free: 
+  IdleState: Idle
+  MoveState: Walk
+  WalkRefSpeed: 5
+  RunState: Run
+  RunThreshold: 8
+  RunRefSpeed: 10

@@ -65,6 +65,9 @@ public class ComboStep
     [Tooltip("이 모션 동안만 이 무기 모델로 바꿔 쥠 (판정·스탯은 실제 무기 그대로). 비우면 들고 있는 무기")]
     public EquipmentData WeaponOverride;
 
+    [Tooltip("이 모션 동안 무기 모델을 숨김 — 맨손 스킬 (판정·스탯은 실제 무기 그대로)")]
+    public bool HideWeapon;
+
     [Header("Hand")]
     [Tooltip("이 모션 동안 손 표시 방식")]
     public HandVisibility HandMode = HandVisibility.Auto;
@@ -85,7 +88,7 @@ public class ComboStep
     /// <summary>이 타가 실제로 쓸 판정 값</summary>
     public void ResolveHitShape(EquipmentData weapon, out WeaponHitMode mode, out float range, out float angle, out float height, out float minRange)
     {
-        if (OverrideHitShape)
+        if (OverrideHitShape || weapon == null)
         {
             mode = HitMode;
             range = Range;

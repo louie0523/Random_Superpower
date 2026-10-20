@@ -153,10 +153,24 @@ public class DevourerAbility : AbilityBehaviour
     [Tooltip("물고 나서 다시 물 수 있을 때까지 대상 둘레를 맴도는 반지름 (m) · 빠르기 (°/초)")]
     public float ProwlRadius = 2.5f, ProwlSpin = 45f;
 
+    [Header("궁극기 — 괴수 이빨 연출 (모든 클라이언트)")]
+    [Tooltip("괴수가 물 때 대상 앞에 띄우는 이빨 (RigAnimator 모델). 비우면 탐식 모션의 Effect 이벤트 중 RigAnimator가 있는 프리팹")]
+    public GameObject MonsterTeethFx;
+    [Tooltip("크기 배율 — 탐식 모션 이벤트의 크기 기준 (0.5 = 절반)")]
+    public float MonsterTeethScale = 0.5f;
+    [Tooltip("이빨 애니메이션 시작 후 턱이 닫히는 시점 (초). 이 순간에 피해가 들어가도록 미리 띄움")]
+    public float MonsterTeethCloseAt = 0.2f;
+    [Tooltip("남아 있는 시간 (초). 0이면 탐식 모션 이벤트의 수명, 그것도 없으면 0.6초")]
+    public float MonsterTeethLife = 0f;
+    [Tooltip("대상 중심에서 괴수 쪽으로 당겨 띄우는 거리 (m)")]
+    public float MonsterTeethPull = 0.3f;
+    [Tooltip("모델 방향 보정 (°) — 괴수 → 대상 방향이 기준(+Z)")]
+    public Vector3 MonsterTeethRot;
+
     [Header("연출 — 모든 클라이언트")]
     public GameObject BiteFx;
     public GameObject SpitFx;
-    [Tooltip("괴수가 무는 순간 이펙트 — 비우면 BiteFx (탐식 이빨자국)")]
+    [Tooltip("괴수가 무는 순간 이펙트 — 이빨 연출이 있으면 이건 넣었을 때만, 없으면 비울 때 BiteFx")]
     public GameObject MonsterBiteFx;
     public GameObject EatFx;
     public GameObject BlastFx;
@@ -494,7 +508,7 @@ public class DevourerAbility : AbilityBehaviour
             info.IsMelee = true;
             h.RPC_TakeDamage(info);
             dealt += dmg;
-            _recent.Add(new Bitten { H = h, Time = Now });
+            MarkBitten(h);
             MarkHit(h);
             if (++n >= max) break;
         }
@@ -504,15 +518,24 @@ public class DevourerAbility : AbilityBehaviour
     }
 
     /// <summary>물고 나서 잠시 안에 죽으면 탐식 처치 — 소울 · 쿨 초기화 · 뱉을 것 · 궁 연장</summary>
+    /// <summary>탐식 처치 후보로 기록 — 같은 대상은 한 줄만 (여러 번 물면 시간만 갱신)</summary>
+    void MarkBitten(PlayerHealth h)
+    {
+        for (int i = 0; i < _recent.Count; i++)
+            if (_recent[i].H == h) { _recent[i] = new Bitten { H = h, Time = Now }; return; }
+        _recent.Add(new Bitten { H = h, Time = Now });
+    }
+
     void TickKillCredit()
     {
         for (int i = _recent.Count - 1; i >= 0; i--)
         {
+            if (i >= _recent.Count) continue;           // 아래에서 여러 줄을 지웠을 때
             var b = _recent[i];
             if (b.H == null || Now - b.Time > KillCreditWindow) { _recent.RemoveAt(i); continue; }
             if (!b.H.IsDead) continue;
 
-            _recent.RemoveAt(i);
+            _recent.RemoveAll(x => x.H == b.H);         // 한 처치는 한 번만 (괴수 여러 마리 · 탐식이 같이 물어도)
             OnDevourKill(b.H);
         }
     }
@@ -702,6 +725,9 @@ public class DevourerAbility : AbilityBehaviour
         _swarm.StopDistance = Mathf.Max(0.3f, BiteReach * 0.7f);
         _swarm.ProwlRadius = ProwlRadius;
         _swarm.ProwlSpin = ProwlSpin;
+
+        ResolveTeeth(out var teeth, out float scale, out float life, out string state);
+        _swarm.SetTeeth(teeth, scale, life, state, MonsterTeethRot, MonsterTeethPull);
     }
 
     void KillSwarm()
@@ -750,13 +776,56 @@ public class DevourerAbility : AbilityBehaviour
     /// <summary>공격 모션 시작 — MonsterHitAt 지점에서 Bite</summary>
     void StartAttack(int i, Beast b)
     {
-        float len = _swarm.AttackLength;                   // 모션이 없으면 0 → 다음 틱에 바로 물기
-        b.HitAt = Now + len * MonsterHitAt;
-        b.AttackEnd = Now + len;
+        float len = _swarm.AttackLength;                   // 모션이 없으면 0
+        float hit = HitDelay(len);
+        b.HitAt = Now + hit;
+        b.AttackEnd = Now + Mathf.Max(len, hit);
         b.NextBite = b.AttackEnd + BiteRecover;
 
-        _swarm.Attack(i);
+        _swarm.Attack(i, TeethDelay(len));
         Broadcast(EvBeastAttack + i, b.Target.transform.position);
+    }
+
+    /// <summary>공격 시작 → 물기까지 (초). 이빨 연출이 있으면 턱이 닫힐 시간은 확보</summary>
+    float HitDelay(float attackLen)
+    {
+        float hit = attackLen * MonsterHitAt;
+        if (_swarm != null && _swarm.HasTeeth) hit = Mathf.Max(hit, MonsterTeethCloseAt);
+        return hit;
+    }
+
+    /// <summary>공격 시작 → 이빨 띄우기까지 (초) — 턱이 닫히는 순간 = 물기</summary>
+    float TeethDelay(float attackLen) => Mathf.Max(0f, HitDelay(attackLen) - MonsterTeethCloseAt);
+
+    /// <summary>이빨 프리팹 · 크기 · 수명 · Rig 상태 — 비어 있으면 탐식 모션의 Effect 이벤트에서 가져옴</summary>
+    void ResolveTeeth(out GameObject prefab, out float scale, out float life, out string state)
+    {
+        prefab = MonsterTeethFx;
+        scale = MonsterTeethScale;
+        life = MonsterTeethLife;
+        state = null;
+
+        var skills = Data != null ? Data.Skills : null;
+        var sk = skills != null && DevourSkill >= 0 && DevourSkill < skills.Length ? skills[DevourSkill] : null;
+        var motion = sk != null ? sk.Motion : null;
+
+        MotionEvent src = null;
+        if (motion != null && motion.Events != null)
+            foreach (var e in motion.Events)
+            {
+                if (e == null || e.Type != MotionEventType.Effect || e.Prefab == null) continue;
+                bool match = prefab != null ? e.Prefab == prefab : e.Prefab.GetComponentInChildren<RigAnimator>(true) != null;
+                if (match) { src = e; break; }
+            }
+
+        if (src != null)
+        {
+            if (prefab == null) prefab = src.Prefab;
+            scale *= src.Scale;
+            if (life <= 0f) life = src.Lifetime;
+            state = src.RigState;
+        }
+        if (life <= 0f) life = 0.6f;
     }
 
     /// <summary>살아 있는 적이 범위 안에 있음 (최근에 물었는지는 안 봄)</summary>
@@ -824,7 +893,7 @@ public class DevourerAbility : AbilityBehaviour
         h.RPC_TakeDamage(info);
 
         if (dmg > 0f) _health?.RPC_Heal(Mathf.RoundToInt(dmg * Lv(DevourHealPct) * 0.01f * mul));
-        _recent.Add(new Bitten { H = h, Time = Now });
+        MarkBitten(h);
 
         b.HitUntil[h] = Now + Lv(MonsterTargetCd);          // 이 괴수는 3초 동안 이 대상 안 물음
 
@@ -995,11 +1064,13 @@ public class DevourerAbility : AbilityBehaviour
                 if (!sa && _swarm != null)
                 {
                     _swarm.SetTarget(i, NearestPlayer(pos), false);
-                    _swarm.Attack(i);
+                    _swarm.Attack(i, TeethDelay(_swarm.AttackLength));
                 }
                 break;
             case EvBeastBite:
-                Ctx.PlayEffectLocal(MonsterBiteFx != null ? MonsterBiteFx : BiteFx, pos);      // 이빨자국
+                // 이빨 연출이 있으면 그게 무는 이펙트 — MonsterBiteFx는 넣었을 때만 추가로
+                if (_swarm != null && _swarm.HasTeeth) Ctx.PlayEffectLocal(MonsterBiteFx, pos);
+                else Ctx.PlayEffectLocal(MonsterBiteFx != null ? MonsterBiteFx : BiteFx, pos);
                 if (!sa && _swarm != null) _swarm.Bite(i);
                 break;
         }

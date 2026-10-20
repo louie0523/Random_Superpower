@@ -113,7 +113,7 @@ public class RigAnimator : MonoBehaviour
 
         string start = string.IsNullOrEmpty(StartState) ? Data.IdleState : StartState;
         _cur = Data.Find(start) ?? Data.Find(Data.IdleState);
-        _isBase = true;
+        _isBase = _cur == null || _cur.Loop || _cur.Name == Data.IdleState;
         _t = 0f;
         _blend = 0f;
     }

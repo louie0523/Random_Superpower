@@ -76,6 +76,7 @@ public class WeaponAnimator : MonoBehaviour
         {
             if (step != null && step.WeaponOverride != null) armRig.BeginWeaponOverride(step.WeaponOverride);
             else armRig.EndWeaponOverride();
+            armRig.SetWeaponHidden(step != null && step.HideWeapon);
         }
 
         _step = step;
@@ -115,6 +116,7 @@ public class WeaponAnimator : MonoBehaviour
     public void StopSwing()
     {
         armRig?.EndWeaponOverride();
+        armRig?.SetWeaponHidden(false);
         _t = -1f;
         _step = null;
         if (armRig != null) armRig.ApplyPose(armRig.IdlePose);
@@ -138,6 +140,7 @@ public class WeaponAnimator : MonoBehaviour
         if (_t < 0f || _step == null)
         {
             armRig.EndWeaponOverride();
+            armRig.SetWeaponHidden(false);
 
             armRig.SetDrawAmount(_drawAmount, dt);
             var idle = armRig.GetEffectiveIdle();
@@ -163,6 +166,7 @@ public class WeaponAnimator : MonoBehaviour
         }
 
         // ── 모션 재생 ──
+        armRig.SetWeaponHidden(_step.HideWeapon);
         if (_freezeTimer > 0f) _freezeTimer -= dt;
         else _t += dt * _speed;
 
