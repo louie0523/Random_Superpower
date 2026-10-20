@@ -196,6 +196,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.4
         Pose:
           RightPos: {x: 0.99, y: -0.27, z: 0.958}
@@ -291,6 +292,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.72
         Pose:
           RightPos: {x: 0.488, y: -0.379, z: 2.145}
@@ -386,6 +388,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 1
         Pose:
           RightPos: {x: 0.86, y: -0.8, z: 1.28}
@@ -463,11 +466,17 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes: []
+      LengthHint: 0.4
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -568,6 +577,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.4
         Pose:
           RightPos: {x: 0.843, y: -0.793, z: 1.251}
@@ -663,6 +673,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.72
         Pose:
           RightPos: {x: 0.86, y: -0.8, z: 1.28}
@@ -758,6 +769,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 1
         Pose:
           RightPos: {x: 0.86, y: -0.8, z: 1.28}
@@ -835,11 +847,17 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes: []
+      LengthHint: 1
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -942,6 +960,8 @@ MonoBehaviour:
   HitscanRange: 200
   TracerPrefab: {fileID: 0}
   ProjectileSpeed: 60
+  SpreadAngle: 0
+  AttackSpeedScale: 1
   FireSound: {fileID: 0}
   FireVolume: 0.8
   FirePitchVariance: 0.08
