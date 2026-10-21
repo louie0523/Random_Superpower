@@ -96,7 +96,8 @@ public class OverheadUI : MonoBehaviour
         foreach (var p in _plates.Values)
         {
             if (p.H == null || p.O == null || !p.O.IsValid) { Show(p, false); continue; }
-            if (p.O.HasInputAuthority || p.H.IsDead) { Show(p, false); continue; }     // 나 · 죽은 사람
+            if (p.O.HasInputAuthority || p.H.IsDead) { Show(p, false); continue; }
+            if (InvisibleVisual.IsInvisible(p.H)) { Show(p, false); continue; }
 
             Vector3 world = p.H.transform.position + Vector3.up * (height + (p.A != null ? p.A.Lift : 0f));
             float dist = Vector3.Distance(camPos, world);

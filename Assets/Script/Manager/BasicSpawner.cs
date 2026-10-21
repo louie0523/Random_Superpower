@@ -40,6 +40,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     async void StartGame()
     {
         _runner = gameObject.AddComponent<NetworkRunner>();
+        var voice = gameObject.AddComponent<Photon.Voice.Fusion.FusionVoiceClient>();
+        _runner.AddCallbacks(voice);          // 추가 — 러너 신호(입장 · 퇴장)를 보이스 클라이언트도 받게
         _runner.ProvideInput = true;
 
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);

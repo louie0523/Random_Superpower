@@ -34,6 +34,9 @@ public class PlayerAttack : NetworkBehaviour
     private PlayerEnchant _enchant;
     private FPArmRig _fpRig;
 
+    /// <summary>변신 중 — 원거리 무기를 들고 있어도 좌클릭은 근접(형태의 공격)으로</summary>
+    public bool ForceMelee { get; set; }
+
     private float _atkSpd = 1f;         // 이번 공격의 공속 (시작 시점 고정)
     private int _overrideSource = -1;   // 공격을 대체한 Behaviour 번호. -1 = 일반 공격
 
@@ -210,7 +213,7 @@ public class PlayerAttack : NetworkBehaviour
         }
 
         var weapon = _equip != null ? _equip.GetWeapon() : null;
-        bool ranged = weapon != null && weapon.Class == WeaponClass.Ranged;
+        bool ranged = !ForceMelee && weapon != null && weapon.Class == WeaponClass.Ranged;
 
         if (!ranged)
         {
@@ -283,7 +286,7 @@ public class PlayerAttack : NetworkBehaviour
 
         // ── 원거리 ──
         var wpn = _equip.GetWeapon();
-        if (wpn != null && wpn.Class == WeaponClass.Ranged)
+        if (!ForceMelee && wpn != null && wpn.Class == WeaponClass.Ranged)
         {
             TickRanged(wpn, dt);
             return;
@@ -793,7 +796,7 @@ public class PlayerAttack : NetworkBehaviour
     void StartAttack()
     {
         var weapon = _equip != null ? _equip.GetWeapon() : null;
-        if (weapon == null || weapon.ComboLength == 0) return;
+        if (weapon == null || (weapon.ComboLength == 0 && !ForceMelee)) return;
 
         _pendingDamageMul = 1f;
         _isDashAttack = false;

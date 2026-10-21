@@ -32,7 +32,7 @@ public class ScoreboardView : MonoBehaviour
 
     void Update()
     {
-        bool show = Input.GetKey(key) && !DevConsole.IsOpen;
+        bool show = Input.GetKey(key) && !DevConsole.IsOpen && !CommsHud.ChatOpen;
 
         if (root != null && root.activeSelf != show)
         {

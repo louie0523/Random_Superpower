@@ -76,7 +76,7 @@ public class DevConsole : MonoBehaviour
 
     void Update()
     {
-        if (!IsOpen && (Input.GetKeyDown(_set.ToggleKey) || Input.GetKeyDown(_set.AltToggleKey)))
+        if (!IsOpen && !CommsHud.ChatOpen && (Input.GetKeyDown(_set.ToggleKey) || Input.GetKeyDown(_set.AltToggleKey)))
             Open();
 
         // 닫혀 있어도 다른 UI가 커서를 바꿨을 수 있으니 열려 있는 동안만 강제

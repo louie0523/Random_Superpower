@@ -16,6 +16,8 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private float assistWindow = 8f;
     [Tooltip("넉백 후 이 시간 안에 낙사하면 막타로 인정")]
     [SerializeField] private float fallCreditWindow = 5f;
+    [Tooltip("이 높이(Y) 아래로 떨어지면 낙사")]
+    [SerializeField] private float fallDeathY = -20f;
 
     [Header("소울")]
     [Tooltip("처치 시 고정 획득")]
@@ -94,6 +96,22 @@ public class PlayerHealth : NetworkBehaviour
 
     /// <summary>피해를 받았을 때 (SA). 능력이 반응용으로 구독 — (정보, 최종 피해)</summary>
     public event System.Action<DamageInfo, int> Damaged;
+
+    /// <summary>죽었을 때 (SA, 사망 처리가 다 끝난 뒤) — (처치자 · 없으면 None, 원인). 사망회귀 · 복수 · 갈땐 가더라도</summary>
+    public event System.Action<PlayerRef, DeathCause> Died;
+
+    /// <summary>내가 누군가를 처치했을 때 (SA) — 피해자 (더미면 None일 수 있음)</summary>
+    public event System.Action<PlayerRef> KilledPlayer;
+
+    /// <summary>처치 관여(어시스트)했을 때 (SA) — 체스의 거신병 폰</summary>
+    public event System.Action Assisted;
+
+    public int SoulPerKill => soulPerKill;
+    public int SoulPerAssist => soulPerAssist;
+    public float FallDeathY => fallDeathY;
+
+    /// <summary>피해자별 마지막 처치로 얻은 소울 (사망회귀가 되돌릴 때)</summary>
+    private readonly Dictionary<PlayerRef, int> _lastKillGain = new();
 
     public override void Spawned()
     {
@@ -187,6 +205,7 @@ public class PlayerHealth : NetworkBehaviour
         CombatTimer = default;
         _soulFrac = 0f;
         _recentDamage.Clear();
+        _lastKillGain.Clear();
 
         HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         IsDead = false;
@@ -207,7 +226,7 @@ public class PlayerHealth : NetworkBehaviour
             if (now - _recentDamage[i].Time > assistWindow)
                 _recentDamage.RemoveAt(i);
 
-        if (!IsDead && transform.position.y < -20f)
+        if (!IsDead && transform.position.y < fallDeathY)
             Die(DeathCause.Environment, PlayerRef.None);
 
         TickRegen();
@@ -249,6 +268,10 @@ public class PlayerHealth : NetworkBehaviour
             return;
         }
 
+        // 규칙 배율 — 약화(애교부리기 · 투명 망토) · 암살자 등 (DamageRules)
+        var atkNo = info.Attacker != PlayerRef.None ? Runner.GetPlayerObject(info.Attacker) : null;
+        float ruleMul = DamageRules.Multiplier(this, atkNo, info);
+
         float maxHp = _stats.Get(StatType.MaxHP);
         float raw = info.Amount;
 
@@ -263,9 +286,16 @@ public class PlayerHealth : NetworkBehaviour
         if (info.ExecuteBelow > 0f && HP <= maxHp * info.ExecuteBelow)
             raw *= 1f + info.ExecuteBonus;
 
+        raw *= ruleMul;
+
         int final = info.IgnoreDefense
             ? Mathf.Max(1, Mathf.RoundToInt(raw))
             : DamageCalc.CalcIncoming(_stats, raw, info.DefensePen);
+        if (ruleMul <= 0f) final = 0;           // 피해 0% (최소 1 피해 규칙 무시)
+
+        // 언데드 — 체력이 1 아래로 안 떨어짐
+        if (_status != null && _status.Has(StatusType.Undead) && HP - final < 1)
+            final = Mathf.Max(0, HP - 1);
 
         LastHitFrom = info.SourcePos;
         HP -= final;
@@ -371,7 +401,8 @@ public class PlayerHealth : NetworkBehaviour
     // ══════════════════ 사망 ══════════════════
 
     /// <param name="noPenalty">소울을 잃지 않음 (대인기피증 자폭 등 의도치 않은 사망)</param>
-    void Die(DeathCause cause, PlayerRef killer, bool noPenalty = false)
+    /// <param name="noCredit">낙사 막타 인정도 안 함 (데스 노트 등 자살 판정)</param>
+    void Die(DeathCause cause, PlayerRef killer, bool noPenalty = false, bool noCredit = false)
     {
         if (IsDead) return;
 
@@ -380,7 +411,7 @@ public class PlayerHealth : NetworkBehaviour
         _status?.ClearAll();
 
         // 환경사인데 최근 넉백을 맞았으면 그 사람에게 킬 인정
-        if (cause == DeathCause.Environment)
+        if (cause == DeathCause.Environment && !noCredit)
         {
             var faller = FindFallCredit();
             if (faller != PlayerRef.None)
@@ -414,6 +445,42 @@ public class PlayerHealth : NetworkBehaviour
         _ability?.RerollRandomAbility();
         _ability?.FireTrigger(TriggerType.OnDeath, null);
         _recentDamage.Clear();
+
+        Died?.Invoke(byPlayer ? killer : PlayerRef.None, cause);
+    }
+
+    /// <summary>
+    /// 즉사 — 회피 · 고스트 · 언데드 무시 (데스 노트 · 필연 · 갈땐 가더라도).
+    /// killer가 있으면 그 사람의 처치 (어시스트 포함), asSuicide면 아무도 소울 못 받음
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ForceKill(PlayerRef killer, NetworkBool asSuicide)
+    {
+        if (IsDead) return;
+        HP = 0;
+        if (!asSuicide && killer != PlayerRef.None) Die(DeathCause.Player, killer);
+        else Die(DeathCause.Suicide, PlayerRef.None, false, true);
+    }
+
+    /// <summary>그 자리에서 즉시 부활 (사망회귀) — 위치 그대로, 체력 가득</summary>
+    public void ReviveHere()
+    {
+        if (!HasStateAuthority || !IsDead) return;
+
+        RespawnTimer = default;
+        HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
+        IsDead = false;
+        if (_cc != null) _cc.enabled = true;
+
+        _ability?.FireTrigger(TriggerType.OnRespawn, null);
+    }
+
+    /// <summary>남이 이 사람을 옮김 (시공의 폭풍) — 이 사람 쪽 권한자에서 순간이동</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_TeleportTo(Vector3 pos)
+    {
+        if (IsDead) return;
+        Teleport(pos, transform.rotation);
     }
 
     PlayerRef FindFallCredit()
@@ -436,7 +503,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         var obj = Runner.GetPlayerObject(killer);
         if (obj == null || !obj.TryGetComponent<PlayerHealth>(out var kh)) return;
-        kh.RPC_AddKill(soulPerKill);
+        kh.RPC_AddKillOf(soulPerKill, Object.InputAuthority);
     }
 
     void GrantAssists(PlayerRef killer)
@@ -457,7 +524,28 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_AddKill(int soul)
+    public void RPC_AddKill(int soul) => AddKillLocal(soul);
+
+    /// <summary>처치 — 피해자를 알 때 (복수 · 사망회귀가 씀)</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddKillOf(int soul, PlayerRef victim)
+    {
+        int before = Soul;
+        AddKillLocal(soul);
+        _lastKillGain[victim] = Mathf.Max(0, Soul - before);
+        KilledPlayer?.Invoke(victim);
+    }
+
+    /// <summary>사망회귀 — 그 피해자를 처치해서 얻은 소울을 도로 뺏음</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_RevokeKillGain(PlayerRef victim)
+    {
+        if (!_lastKillGain.TryGetValue(victim, out int gain)) return;
+        _lastKillGain.Remove(victim);
+        Soul = Mathf.Max(0, Soul - gain);
+    }
+
+    void AddKillLocal(int soul)
     {
         Kills++;
         Soul += ScaledSoul(soul);
@@ -475,6 +563,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         Assists++;
         Soul += ScaledSoul(soul);
+        Assisted?.Invoke();
     }
 
     // ══════════════════ 회복 · 소울 ══════════════════

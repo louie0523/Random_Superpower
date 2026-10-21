@@ -17,6 +17,12 @@ public enum StatusType
     Ghost,      // 고스트 — 모든 공격 MISS + 사람 통과
     Blind,      // 암전 — 값(m) 반경만 보이고 나머지는 어둠 (본인 화면만). 작은 값이 우선, 최소 1m
     Root,       // 속박 — 이동·점프 불가 (공격·시점 회전은 가능)
+
+    // ── 추가 (순서가 저장값 — 뒤에만 추가) ──
+    Invisible,  // 투명 — 몸·손이 안 보임 (무기·변화 파츠는 보임), 머리 위 이름도 숨김 (수치 없음)
+    Undead,     // 언데드 — 체력이 1 아래로 안 떨어짐 (즉사 효과는 무시) (수치 없음)
+    Curse,      // 저주 — 채팅·보이스 불가 (수치 없음)
+    Weaken,     // 약화 — 가하는 모든 피해 N% 감소 (100 = 피해 없음). 맞는 쪽에서 계산
 }
 
 /// <summary>
@@ -33,7 +39,7 @@ public enum StatusType
 /// </summary>
 public class PlayerStatus : NetworkBehaviour
 {
-    public const int Capacity = 16;
+    public const int Capacity = 24;
     static readonly int TypeCount = System.Enum.GetValues(typeof(StatusType)).Length;
 
     [Tooltip("둔화·동상이 깎을 수 있는 최대치 (%)")]
@@ -73,7 +79,7 @@ public class PlayerStatus : NetworkBehaviour
 
     static bool IsFlag(StatusType t) =>
     t == StatusType.Seal || t == StatusType.Stun || t == StatusType.Evade || t == StatusType.Ghost
-    || t == StatusType.Root;
+    || t == StatusType.Root || t == StatusType.Invisible || t == StatusType.Undead || t == StatusType.Curse;
 
     /// <summary>값이 작을수록 강한 상태이상 — 암전(Blind) 값 = 보이는 반경(m)</summary>
     static bool LowerIsStronger(StatusType t) => t == StatusType.Blind;
@@ -104,6 +110,8 @@ public class PlayerStatus : NetworkBehaviour
         _stats = GetComponent<PlayerStats>();
         _health = GetComponent<PlayerHealth>();
         for (int i = 0; i < Capacity; i++) _inst[i] = new List<Instance>();
+
+        if (GetComponent<InvisibleVisual>() == null) gameObject.AddComponent<InvisibleVisual>();
 
         if (TypeCount > Capacity)
             Debug.LogError($"[PlayerStatus] StatusType이 {TypeCount}개인데 Capacity가 {Capacity}입니다 → Capacity를 늘리세요", this);
@@ -182,6 +190,23 @@ public class PlayerStatus : NetworkBehaviour
         PoisonStacks = _poisonStacks;
         Values.Set(i, _poisonPerStack * _poisonStacks);
         EndTimes.Set(i, _poisonStacks > 0 ? _poisonEnd : 0f);
+    }
+
+    /// <summary>이 종류만 해제 (투명 망토 끄기 · 언데드 끝 등). 어디서 불러도 됨</summary>
+    public void Clear(StatusType t)
+    {
+        if (HasStateAuthority) ClearLocal(t);
+        else RPC_Clear((int)t);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_Clear(int type) => ClearLocal((StatusType)type);
+
+    void ClearLocal(StatusType t)
+    {
+        if (t == StatusType.Poison) { ClearPoison(); return; }
+        _inst[(int)t].Clear();
+        Refresh(t);
     }
 
     /// <summary>전부 해제 — 사망, 라운드 초기화</summary>

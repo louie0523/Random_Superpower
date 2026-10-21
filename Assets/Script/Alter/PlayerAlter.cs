@@ -123,6 +123,38 @@ public class PlayerAlter : NetworkBehaviour
         // 카메라는 LateUpdate에서, 몸 · 머리는 FPArmRig.BodyLift로 (모션이 몸을 움직여도 항상 올라간 채로)
     }
 
+    /// <summary>지금 붙은 변신 (없으면 null) — 모든 클라이언트</summary>
+    public AlterData ActiveTransform
+    {
+        get
+        {
+            if (database == null || Object == null || !Object.IsValid) return null;
+            for (int i = 0; i < MaxAlters; i++)
+            {
+                var a = database.Get(Alters[i]);
+                if (a != null && a.IsTransform) return a;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>특정 변화의 파츠를 Idle/Walk 자동 전환으로 되돌림 (비행 끝 등)</summary>
+    public void ReleasePartState(AlterData alter)
+    {
+        if (alter == null) return;
+        foreach (var ra in _rigAnims)
+            if (ra != null && ra.name.StartsWith($"Alter_{alter.name}")) ra.Release();
+    }
+
+    /// <summary>t가 변화로 붙은 파츠(말 · 가면 등) 안에 있는가</summary>
+    public bool IsPart(Transform t)
+    {
+        if (t == null) return false;
+        foreach (var go in _spawned)
+            if (go != null && t.IsChildOf(go.transform)) return true;
+        return false;
+    }
+
     // ══════════════════ 탄 높이 — 보이는 것 올리기 (모든 클라이언트) ══════════════════
 
     /// <summary>올릴 대상 자동 — CameraRoot + 몸 · 머리 (서로 겹치면 위쪽 것만)</summary>

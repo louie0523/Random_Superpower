@@ -69,7 +69,8 @@ public class UIManager : MonoBehaviour
         get
         {
             var ui = Instance;
-            return ui != null && ui.AnyPanelOpen || DevConsole.IsOpen || ClassPickPanel.IsShowing;
+            return ui != null && ui.AnyPanelOpen || DevConsole.IsOpen || ClassPickPanel.IsShowing
+                   || CommsHud.ChatOpen || PlayerPickPanel.IsShowing || VoiceSettingsPanel.IsOpen;
         }
     }
 
@@ -98,7 +99,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (DevConsole.IsOpen || ClassPickPanel.IsShowing) return;
+        if (DevConsole.IsOpen || ClassPickPanel.IsShowing || CommsHud.ChatOpen || PlayerPickPanel.IsShowing || VoiceSettingsPanel.IsOpen) return;
         if (Input.GetKeyDown(abilityKey)) ToggleAbility();
         if (Input.GetKeyDown(inventoryKey)) ToggleInventory();
 

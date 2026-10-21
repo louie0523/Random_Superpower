@@ -73,6 +73,13 @@ public class AlterData : ScriptableObject
     [Tooltip("같은 그룹은 하나만 — 새로 붙이면 기존 것을 교체. 비우면 그룹 없음")]
     public string Group;
 
+    [Header("변신")]
+    [Tooltip("켜면 '변신' — 몸 · 손 · 무기를 숨기고 이 모델만 보임. 무기 · 스킬 잠금 · 공격 대체는 변신 능력(TransformAbility)이 함")]
+    public bool IsTransform;
+    [Tooltip("변신 중 내 화면을 3인칭으로")]
+    public bool TransformThirdPerson = true;
+    public ThirdPersonSettings TransformCamera = new();
+
     [Header("스탯 (중첩마다)")]
     public AlterStat[] Stats;
 

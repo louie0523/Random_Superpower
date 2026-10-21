@@ -1128,6 +1128,36 @@ public class AbilityRuntime : NetworkBehaviour
         }
     }
 
+    /// <summary>스킬 · (궁극기) · (랜덤) 쿨타임을 seconds만큼 늘림 — 맞는 쪽 SA (사망회귀)</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddCooldownAll(float seconds, NetworkBool includeUlt, NetworkBool includeRandom)
+    {
+        if (seconds <= 0f) return;
+        float now = Runner.SimulationTime;
+
+        for (int i = 0; i < SkillSlotExt.Count; i++)
+        {
+            var slot = (SkillSlot)i;
+            if (slot == SkillSlot.Ultimate && !includeUlt) continue;
+            if (slot.IsRandom() && !includeRandom) continue;
+            if (_slots[i] == null || HoldUntil[i] > 0f) continue;      // 지속 중인 스킬은 건드리지 않음
+
+            float end = Mathf.Max(CooldownEnd[i], now) + seconds;
+            CooldownEnd.Set(i, end);
+            CooldownTotal.Set(i, Mathf.Max(CooldownTotal[i], end - now));
+        }
+    }
+
+    /// <summary>남은 쿨타임을 seconds만큼 앞당김 (SA) — 필연적인 존재</summary>
+    public void ShiftCooldown(int slot, float seconds)
+    {
+        if (!HasStateAuthority || seconds <= 0f || slot < 0 || slot >= SkillSlotExt.Count) return;
+        float now = Runner.SimulationTime;
+        float end = CooldownEnd[slot];
+        if (end <= now) return;
+        CooldownEnd.Set(slot, Mathf.Max(now, end - seconds));
+    }
+
     void ReleaseCooldownSlot(int slot)
     {
         if (slot < 0 || slot >= SkillSlotExt.Count || HoldUntil[slot] <= 0f) return;

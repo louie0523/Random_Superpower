@@ -24,6 +24,8 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int ActiveWeaponSlot { get; set; }
 
+    /// <summary>변신 중 — 무기 · 아이템 교체 잠금 (권한자에서 변신 능력이 켬)</summary>
+    public bool Locked { get; set; }
     private int _startOverride;
 
     public int WeaponId
@@ -205,6 +207,7 @@ public class PlayerEquipment : NetworkBehaviour
 
     public void Equip(int id)
     {
+        if (Locked) return;
         if (!HasStateAuthority) return;
 
         var data = database.Get(id);
@@ -232,6 +235,7 @@ public class PlayerEquipment : NetworkBehaviour
 
     public bool PickUpWeapon(int id, out int slot)
     {
+        if (Locked) { slot = -1; return false; }
         slot = -1;
         if (!HasStateAuthority) return false;
 
@@ -260,6 +264,7 @@ public class PlayerEquipment : NetworkBehaviour
     /// <summary>슬롯의 무기를 다른 무기로 교체 (진화). 인챈트·처치 수는 OnWeaponChanged가 비움</summary>
     public void ReplaceWeaponAt(int slot, int newId)
     {
+        if (Locked) return;
         if (!HasStateAuthority) return;
         if (slot < 0 || slot >= WeaponSlots) return;
 
@@ -290,6 +295,7 @@ public class PlayerEquipment : NetworkBehaviour
     /// <summary>지정 슬롯의 무기를 인챈트·처치 수째로 바닥에</summary>
     public void DropWeaponAt(int slot)
     {
+        if (Locked) return;
         if (!HasStateAuthority) return;
         if (slot < 0 || slot >= WeaponSlots) return;
 
@@ -311,6 +317,7 @@ public class PlayerEquipment : NetworkBehaviour
     /// <summary>슬롯의 무기를 꺼내서 없앰 (탐식자). 인챈트 목록을 돌려줌. 다른 무기가 있으면 그쪽으로 바꿔 듦</summary>
     public bool TakeWeaponAt(int slot, out int id, out int[] enchants)
     {
+        if (Locked) { id = 0; enchants = null; return false; }
         id = 0;
         enchants = null;
         if (!HasStateAuthority || slot < 0 || slot >= WeaponSlots) return false;
@@ -350,6 +357,7 @@ public class PlayerEquipment : NetworkBehaviour
 
     public void SwapWithPickup(int id)
     {
+        if (Locked) return;
         if (!HasStateAuthority) return;
 
         int slot = Mathf.Clamp(ActiveWeaponSlot, 0, WeaponSlots - 1);
@@ -369,6 +377,7 @@ public class PlayerEquipment : NetworkBehaviour
 
     public void SwitchWeapon(int slot)
     {
+        if (Locked) return;
         if (!HasStateAuthority) return;
         if (slot < 0 || slot >= UsableSlots) return;
         if (slot == ActiveWeaponSlot) return;
@@ -383,6 +392,7 @@ public class PlayerEquipment : NetworkBehaviour
     /// <summary>다음·이전 무기 — 빈 칸은 건너뜀</summary>
     public void CycleWeapon(int dir)
     {
+        if (Locked) return;
         if (!HasStateAuthority) return;
         int n = UsableSlots;
         for (int step = 1; step < n; step++)
@@ -397,6 +407,7 @@ public class PlayerEquipment : NetworkBehaviour
     /// <summary>시작 무기만 든 처음 상태로</summary>
     public void ResetForNewRound()
     {
+
         if (!HasStateAuthority) return;
 
         for (int i = 0; i < WeaponSlots; i++)
@@ -412,6 +423,7 @@ public class PlayerEquipment : NetworkBehaviour
         HelmetId = 0;
         BootsId = 0;
         SwapTimer = default;
+        Locked = false;
 
         RefillAmmo(0);
         ApplyAll();

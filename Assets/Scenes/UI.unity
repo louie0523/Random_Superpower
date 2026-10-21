@@ -10179,12 +10179,24 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1846589968954000651, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
+      propertyPath: m_graphyMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1846589968954000651, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
       propertyPath: m_ramModuleState
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1846589968954000651, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
       propertyPath: m_audioModuleState
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1846589968954000651, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
+      propertyPath: m_fpsGraphResolution
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 1846589968954000651, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
+      propertyPath: m_ramGraphResolution
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 1846589968954000651, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
       propertyPath: m_advancedModuleState
@@ -10204,15 +10216,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1846589968963632669, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1846589968963653555, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1847577879073954613, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1926319193403874691, guid: d13a9812f6714e1449d4dc333c5824e6, type: 3}
       propertyPath: m_AnchoredPosition.y

@@ -45,6 +45,13 @@ public class PlayerMovement : NetworkBehaviour
     private PlayerShop _shop;
     private PlayerEquipment _equip;
 
+    /// <summary>비행 중 — 중력 대신 FlyUpSpeed로 올라감 (변신 능력이 켬)</summary>
+    public bool Flying { get; set; }
+    public float FlyUpSpeed { get; set; } = 6f;
+    public bool Grounded => _cc != null && _cc.isGrounded;
+    /// <summary>Space를 누르고 있는가 (내 캐릭터)</summary>
+    public bool JumpHeld => HasInputAuthority && !UIManager.InputBlocked && Input.GetKey(KeyCode.Space);
+
 
     public override void Spawned()
     {
@@ -130,11 +137,15 @@ public class PlayerMovement : NetworkBehaviour
             fpsCamera.LandDip(Mathf.Clamp01(-_verticalVel / 12f));
 
         if (grounded && _verticalVel < 0f) _verticalVel = -2f;
-        if (HasInputAuthority && grounded && !blocked && Input.GetKey(KeyCode.Space)) _verticalVel = jumpPower;
+        if (HasInputAuthority && grounded && !blocked && !Flying && Input.GetKey(KeyCode.Space)) _verticalVel = jumpPower;
 
         bool dashNoGravity = _ability != null && _ability.DashIgnoresGravity;
 
-        if (!dashNoGravity)
+        if (Flying)
+        {
+            _verticalVel = FlyUpSpeed;
+        }
+        else if (!dashNoGravity)
         {
             _verticalVel += gravity * Runner.DeltaTime;
         }
