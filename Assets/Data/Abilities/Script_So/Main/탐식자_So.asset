@@ -168,6 +168,12 @@ MonoBehaviour:
   OrbitSpin: 25
   ProwlRadius: 2.5
   ProwlSpin: 45
+  MonsterTeethFx: {fileID: 0}
+  MonsterTeethScale: 0.5
+  MonsterTeethCloseAt: 0.1
+  MonsterTeethLife: 0
+  MonsterTeethPull: 0.3
+  MonsterTeethRot: {x: 0, y: 0, z: 0}
   BiteFx: {fileID: 0}
   SpitFx: {fileID: 0}
   MonsterBiteFx: {fileID: 0}

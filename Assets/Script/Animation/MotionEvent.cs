@@ -62,6 +62,8 @@ public class MotionEvent
     public float Scale = 1f;
     [Tooltip("0이면 프리팹이 스스로 정리")]
     public float Lifetime = 2f;
+    [Tooltip("프리팹에 RigAnimator가 있을 때 재생할 상태. 비우면 프리팹의 기본 (StartState → Idle)")]
+    public string RigState;
 
     [Header("VFX")]
     [Tooltip("VFX Studio로 만든 이펙트. 붙을 곳·위치·회전·크기는 위 Effect 칸을 같이 씀")]

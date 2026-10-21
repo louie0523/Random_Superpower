@@ -62,6 +62,9 @@ public class FPArmRig : MonoBehaviour
     private float _recoilTarget;      // 목표 (발사 시 튀어오름)
     private float _recoilSeed;
 
+    private bool _weaponHidden;
+    public bool WeaponHidden => _weaponHidden;
+
     public float RecoilAmount => _recoilAmount;
     public float DrawAmount => _drawAmount;
     public bool HasBowString => _stringBone != null;
@@ -120,6 +123,13 @@ public class FPArmRig : MonoBehaviour
         var back = _overrideRestore;
         _overrideRestore = null;
         SwapKeepingLook(back);
+    }
+
+    /// <summary>모션 동안 무기 모델 숨기기 (맨손 스킬). 무기를 바꿔 쥐어도 유지</summary>
+    public void SetWeaponHidden(bool hide)
+    {
+        _weaponHidden = hide;
+        if (_weaponObj != null && _weaponObj.activeSelf == hide) _weaponObj.SetActive(!hide);
     }
 
     void SwapKeepingLook(EquipmentData w)
@@ -190,7 +200,7 @@ public class FPArmRig : MonoBehaviour
         _weaponObj.transform.localRotation = Quaternion.Euler(weapon.GetRotOffset(true));
         _weaponObj.transform.localScale = weapon.ScaleOverride;
 
-        _weaponObj.transform.localScale = weapon.ScaleOverride;
+        if (_weaponHidden) _weaponObj.SetActive(false);
 
         var rig = _weaponObj.GetComponentInChildren<WeaponRig>(true);
         CurrentWeaponRig = rig;

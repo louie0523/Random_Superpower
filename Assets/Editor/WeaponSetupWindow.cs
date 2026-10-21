@@ -119,6 +119,7 @@ public class WeaponSetupWindow : EditorWindow
 
     void OnDisable()
     {
+        ClearEffectPreviews();
         EditorApplication.update -= OnEditorUpdate;
         SceneView.duringSceneGui -= OnSceneGUI;
         Undo.undoRedoPerformed -= OnUndo;
@@ -2066,6 +2067,7 @@ public class WeaponSetupWindow : EditorWindow
                 ev.RotationOffset = EditorGUILayout.Vector3Field("회전", ev.RotationOffset);
                 ev.Scale = EditorGUILayout.FloatField("크기", ev.Scale);
                 ev.Lifetime = EditorGUILayout.FloatField("수명 (초, 0 = 프리팹이 정리)", ev.Lifetime);
+                DrawRigStateField(ev);
                 break;
 
             case MotionEventType.GroundEffect:
@@ -2147,6 +2149,10 @@ public class WeaponSetupWindow : EditorWindow
             "모델만 바뀌고 판정·스탯은 실제 무기 그대로. 비우면 들고 있는 무기"), step.WeaponOverride, typeof(EquipmentData), false);
         if (EditorGUI.EndChangeCheck()) SyncPreviewWeapon();
         if (step.WeaponOverride != null) Hint("모션이 끝나면 원래 무기로 돌아갑니다. 판정 범위 미리보기는 원래 무기 기준.");
+        EditorGUI.BeginChangeCheck();
+        step.HideWeapon = EditorGUILayout.Toggle(new GUIContent("무기 숨기기",
+            "이 모션 동안 무기 모델을 숨김 — 맨손 스킬. 판정·스탯은 실제 무기 그대로"), step.HideWeapon);
+        if (EditorGUI.EndChangeCheck()) RefreshPreview();
         EditorGUILayout.Space(4);
 
         EditorGUILayout.LabelField("타이밍 (비율 0~1 — 타임라인에서 드래그해도 됨)", EditorStyles.miniBoldLabel);
@@ -2491,6 +2497,7 @@ public class WeaponSetupWindow : EditorWindow
                 EditorGUILayout.Space(4);
                 _showHitbox = EditorGUILayout.Toggle("판정 범위 표시", _showHitbox);
                 _showTrail = EditorGUILayout.Toggle("무기 궤적 표시", _showTrail);
+                _showEffects = EditorGUILayout.Toggle("이펙트 미리보기", _showEffects);
                 _showOnlyDuringActive = EditorGUILayout.Toggle("판정 중에만", _showOnlyDuringActive);
                 if (GUILayout.Button("궤적 지우기")) _tipTrail.Clear();
             }
@@ -2675,6 +2682,7 @@ public class WeaponSetupWindow : EditorWindow
 
     void SpawnWeapon()
     {
+        ClearEffectPreviews();
         FindRig();
         if (_rig == null) return;
 
@@ -2706,6 +2714,7 @@ public class WeaponSetupWindow : EditorWindow
 
     void ClearPreview()
     {
+        ClearEffectPreviews();
         if (_rig == null) return;
         _rig.CleanWeaponOnly();
         SceneView.RepaintAll();
@@ -2736,7 +2745,10 @@ public class WeaponSetupWindow : EditorWindow
 
         var step = CurrentStep;
         if (step?.Motion != null && step.Motion.IsValid)
+        {
+            _rig.SetWeaponHidden(step.HideWeapon);
             _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
+        }
         else
             _rig.ApplyPose(_rig.GetEffectiveIdle());
 
@@ -3001,11 +3013,10 @@ public class WeaponSetupWindow : EditorWindow
 
     void OnSceneGUI(SceneView sv)
     {
-        if (Application.isPlaying) return;
-        if (_source == null || _rig == null) return;
+        if (Application.isPlaying || _source == null || _rig == null) { ClearEffectPreviews(); return; }
 
         var step = CurrentStep;
-        if (step == null) return;
+        if (step == null) { ClearEffectPreviews(); return; }
 
         Transform eye = GetEyeTransform();
         if (eye == null) return;
@@ -3018,13 +3029,9 @@ public class WeaponSetupWindow : EditorWindow
         var hitSrc = ResolvePreviewWeapon();
         if (hitSrc == null) hitSrc = _rig.CurrentWeapon;
 
-        if (_showHitbox)
-        {
-            if (hitSrc != null) DrawHitArc(eye, step, hitSrc, inActive);
-            else Handles.Label(eye.position + eye.forward * 1.2f,
-                "판정 범위: 기준 무기가 없음 — 창 위쪽 '테스트 무기'에 무기를 넣으세요", EditorStyles.whiteMiniLabel);
-        }
+        if (_showHitbox) DrawHitArc(eye, step, hitSrc, inActive);      // 무기가 없으면 이 단계의 판정 값으로
         if (_showTrail) DrawTipTrail(inActive);
+        if (Event.current.type == EventType.Layout) UpdateEffectPreviews(step);
         DrawEventMarkers(step, p);
 
         DrawInfoLabel(step, p, inActive, hitSrc);
@@ -3156,16 +3163,123 @@ public class WeaponSetupWindow : EditorWindow
         GUILayout.Label($"진행 {p * 100f:F0}%   {(inActive ? "◆ 판정 중" : "－")}",
             inActive ? EditorStyles.whiteBoldLabel : EditorStyles.whiteMiniLabel);
 
-        if (w != null)
-        {
-            step.ResolveHitShape(w, out var mode, out float range, out float angle, out _, out _);
-            GUILayout.Label(mode == WeaponHitMode.ForwardArc ? $"부채꼴 {range:F2}m / {angle:F0}°" : $"구체 {range:F2}m",
-                EditorStyles.whiteMiniLabel);
-        }
+   
+        step.ResolveHitShape(w, out var mode, out float range, out float angle, out _, out _);
+        GUILayout.Label(mode == WeaponHitMode.ForwardArc ? $"부채꼴 {range:F2}m / {angle:F0}°" : $"구체 {range:F2}m",
+            EditorStyles.whiteMiniLabel);
+        
 
         GUILayout.Label($"피해 ×{step.DamageMultiplier:F2}   대상 {step.MaxTargets}", EditorStyles.whiteMiniLabel);
 
         GUILayout.EndArea();
         Handles.EndGUI();
+    }
+
+    // ══════════════════════ 이펙트 미리보기 — Effect 이벤트 프리팹 + Rig 애니메이션 ══════════════════════
+
+    private bool _showEffects = true;
+    private readonly Dictionary<MotionEvent, (GameObject prefab, GameObject go)> _fxPreview = new();
+    private readonly List<MotionEvent> _fxDrop = new();
+
+    void DrawRigStateField(MotionEvent ev)
+    {
+        var ra = ev.Prefab != null ? ev.Prefab.GetComponentInChildren<RigAnimator>(true) : null;
+        if (ra == null || ra.Data == null) return;
+
+        var names = new List<string> { "(기본)" };
+        foreach (var s in ra.Data.States) if (s != null) names.Add(s.Name);
+
+        int cur = string.IsNullOrEmpty(ev.RigState) ? 0 : names.IndexOf(ev.RigState);
+        if (cur < 0) Hint($"Rig 상태 '{ev.RigState}'가 {ra.Data.name}에 없음 — 기본 상태로 재생됨");
+
+        EditorGUI.BeginChangeCheck();
+        int pick = EditorGUILayout.Popup("Rig 상태", Mathf.Max(0, cur), names.ToArray());
+        if (EditorGUI.EndChangeCheck()) ev.RigState = pick <= 0 ? "" : names[pick];
+    }
+
+    Transform EffectBasis(EventSpace space) => space switch
+    {
+        EventSpace.AttachToWeapon => _rig.WeaponTip,
+        EventSpace.AttachToMuzzle => _rig.Muzzle,
+        EventSpace.AttachToBody => _rig.Body,
+        EventSpace.AttachToHead => _rig.Head,
+        EventSpace.AttachToRightHand => _rig.RightHand,
+        EventSpace.AttachToLeftHand => _rig.LeftHand,
+        EventSpace.AttachToCamera => GetEyeTransform(),
+        _ => _rig.Body != null ? _rig.Body : GetEyeTransform(),
+    };
+
+    /// <summary>지금 재생 위치에서 살아 있는 Effect 프리팹을 씬에 띄우고 Rig 애니메이션을 그 시간에 맞춤 (저장 안 됨)</summary>
+    void UpdateEffectPreviews(ComboStep step)
+    {
+        float total = Mathf.Max(0.01f, step.TotalTime);
+        _fxDrop.Clear();
+        foreach (var kv in _fxPreview) _fxDrop.Add(kv.Key);
+
+        if (_showEffects && step.Events != null)
+        {
+            foreach (var ev in step.Events)
+            {
+                if (ev == null || ev.Type != MotionEventType.Effect || ev.Prefab == null) continue;
+                float age = _playT - ev.Time * total;
+                if (age < 0f || (ev.Lifetime > 0f && age > ev.Lifetime)) continue;
+
+                if (!_fxPreview.TryGetValue(ev, out var e) || e.go == null || e.prefab != ev.Prefab)
+                {
+                    if (e.go != null) DestroyImmediate(e.go);
+                    var go = Instantiate(ev.Prefab);
+                    go.name = "[미리보기] " + ev.Prefab.name;
+                    foreach (var t in go.GetComponentsInChildren<Transform>(true))
+                        t.gameObject.hideFlags = HideFlags.HideAndDontSave;
+                    e = (ev.Prefab, go);
+                    _fxPreview[ev] = e;
+                }
+                _fxDrop.Remove(ev);
+                PlaceEffectPreview(ev, e.go, age);
+            }
+        }
+
+        foreach (var ev in _fxDrop)
+        {
+            var go = _fxPreview[ev].go;
+            if (go != null) DestroyImmediate(go);
+            _fxPreview.Remove(ev);
+        }
+    }
+
+    void PlaceEffectPreview(MotionEvent ev, GameObject go, float age)
+    {
+        // World(생성 위치에 고정)도 미리보기에선 기준을 따라 그림 — 위치 확인용
+        Transform basis = EffectBasis(ev.Space);
+        if (basis == null) basis = GetEyeTransform();
+        if (basis == null) return;
+
+        go.transform.SetPositionAndRotation(basis.TransformPoint(ev.PositionOffset),
+                                            basis.rotation * Quaternion.Euler(ev.RotationOffset));
+        go.transform.localScale = ev.Prefab.transform.localScale * ev.Scale;
+
+        var ra = go.GetComponentInChildren<RigAnimator>(true);
+        if (ra == null || ra.Data == null) return;
+
+        string state = !string.IsNullOrEmpty(ev.RigState) && ra.Data.Find(ev.RigState) != null ? ev.RigState
+                     : !string.IsNullOrEmpty(ra.StartState) ? ra.StartState
+                     : ra.Data.IdleState;
+        var st = ra.Data.Find(state);
+        if (st == null) return;
+
+        float t = age * st.Speed * ra.SpeedMul;
+        // 한 번짜리가 끝나면 게임처럼 기본(Idle)으로
+        if (!st.Loop && t > st.Length && state != ra.Data.IdleState && ra.Data.Find(ra.Data.IdleState) is { } idle)
+        {
+            ra.PreviewState(idle.Name, (t - st.Length) / Mathf.Max(0.01f, st.Speed) * idle.Speed);
+            return;
+        }
+        ra.PreviewState(state, t);
+    }
+
+    void ClearEffectPreviews()
+    {
+        foreach (var kv in _fxPreview) if (kv.Value.go != null) DestroyImmediate(kv.Value.go);
+        _fxPreview.Clear();
     }
 }

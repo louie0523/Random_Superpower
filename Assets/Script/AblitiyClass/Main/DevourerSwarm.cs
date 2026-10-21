@@ -36,6 +36,7 @@ public class DevourerSwarm : MonoBehaviour
         public float ProwlDir = 1f; // 도는 방향 (±1)
         public float NextFlip;      // 가끔 방향을 바꿈
         public float Seed;
+        public float TeethAt = -1f; // 이 시각에 대상 앞에 이빨을 띄움
         public float Grow;      // 생길 때 0 → 1
         public float Punch;     // 물 때 (RigAnimator가 없을 때)
     }
@@ -47,6 +48,24 @@ public class DevourerSwarm : MonoBehaviour
     bool _hidden;
 
     public int Count => _beasts.Count;
+
+    // ── 이빨 연출 (물 때 대상 앞에 띄우는 RigAnimator 모델) ──
+    GameObject _teeth;
+    float _teethScale = 1f, _teethLife = 0.6f, _teethPull = 0.3f;
+    string _teethState;
+    Vector3 _teethRot;
+
+    public bool HasTeeth => _teeth != null;
+
+    public void SetTeeth(GameObject prefab, float scale, float life, string state, Vector3 rot, float pull)
+    {
+        _teeth = prefab;
+        _teethScale = scale;
+        _teethLife = Mathf.Max(0.05f, life);
+        _teethState = state;
+        _teethRot = rot;
+        _teethPull = pull;
+    }
 
     public static DevourerSwarm Create(Transform owner, PlayerHealth health, GameObject prefab, int count)
     {
@@ -130,12 +149,37 @@ public class DevourerSwarm : MonoBehaviour
         }
     }
 
-    /// <summary>공격 모션 시작</summary>
-    public void Attack(int i)
+    /// <summary>공격 모션 시작 · teethDelay초 뒤 대상 앞에 이빨</summary>
+    public void Attack(int i, float teethDelay = 0f)
     {
         if (i < 0 || i >= _beasts.Count) return;
         var b = _beasts[i];
         if (b.Anim != null && b.Anim.Has(AttackState)) b.Anim.Play(AttackState, AttackLength);   // 반복 상태여도 한 번 길이만
+        b.TeethAt = _teeth != null ? Time.time + Mathf.Max(0f, teethDelay) : -1f;
+    }
+
+    void SpawnTeeth(Beast b)
+    {
+        if (_teeth == null || b.Target == null || !b.Target.gameObject.activeInHierarchy) return;
+
+        Vector3 aim = b.Target.position + Vector3.up * AimHeight;
+        Vector3 dir = aim - b.Pos;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) dir = b.Go != null ? b.Go.transform.forward : Vector3.forward;
+        dir.Normalize();
+
+        var go = Instantiate(_teeth, aim - dir * _teethPull,
+                             Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(_teethRot));
+        go.transform.localScale *= _teethScale;
+        go.transform.SetParent(b.Target, true);         // 대상을 따라감
+        foreach (var c in go.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+
+        if (!string.IsNullOrEmpty(_teethState))
+        {
+            var ra = go.GetComponentInChildren<RigAnimator>();
+            if (ra != null) ra.Play(_teethState);
+        }
+        Destroy(go, _teethLife);
     }
 
     /// <summary>무는 순간 — 공격 모션이 없으면 살짝 커졌다 작아짐</summary>
@@ -176,6 +220,12 @@ public class DevourerSwarm : MonoBehaviour
         {
             var b = _beasts[i];
             if (b.Go == null) continue;
+
+            if (b.TeethAt >= 0f && Time.time >= b.TeethAt)
+            {
+                b.TeethAt = -1f;
+                SpawnTeeth(b);
+            }
 
             bool chase = b.Target != null && b.Target.gameObject.activeInHierarchy;
             Vector3 aim = chase ? b.Target.position + Vector3.up * AimHeight : Vector3.zero;
