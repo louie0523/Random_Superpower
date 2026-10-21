@@ -170,6 +170,9 @@ public abstract class TransformAbility : AbilityBehaviour
 
     public override bool CanUseSkill(AbilityData.SkillDef skill)
     {
+        // 다른 능력의 스킬 잠금은 AlterData의 '스킬 잠금(LockSkills)'이 함 — 여기선 이 능력의 스킬만
+        bool mine = Data.Skills != null && Array.IndexOf(Data.Skills, skill) >= 0;
+        if (!mine) return true;
         bool transformed = Form != null || CurrentFormFromAlter() != null;
         if (transformed) return AllowedWhileTransformed(skill);
         return !NeedsTransform(skill);

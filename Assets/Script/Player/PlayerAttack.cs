@@ -35,7 +35,16 @@ public class PlayerAttack : NetworkBehaviour
     private FPArmRig _fpRig;
 
     /// <summary>변신 중 — 원거리 무기를 들고 있어도 좌클릭은 근접(형태의 공격)으로</summary>
-    public bool ForceMelee { get; set; }
+    private bool _forceMelee;
+    private PlayerAlter _alterRef;
+    PlayerAlter AlterRef => _alterRef != null ? _alterRef : (_alterRef = GetComponent<PlayerAlter>());
+
+    /// <summary>변신 중 — 원거리 무기를 들고 있어도 좌클릭은 근접(형태의 공격)으로. 변화에 공격 모션이 있어도 자동</summary>
+    public bool ForceMelee
+    {
+        get => _forceMelee || (AlterRef != null && AlterRef.ActiveAttack != null);
+        set => _forceMelee = value;
+    }
 
     private float _atkSpd = 1f;         // 이번 공격의 공속 (시작 시점 고정)
     private int _overrideSource = -1;   // 공격을 대체한 Behaviour 번호. -1 = 일반 공격
@@ -1020,6 +1029,8 @@ public class PlayerAttack : NetworkBehaviour
         }
 
         if (step == null) return;
+        if (comboIndex < 0 && overrideSource == AbilityRuntime.AlterAttackSource && AlterRef != null)
+            AlterRef.PlayAttackAnim(speed);      // 용 물어뜯기 등 — 모든 화면, 공속 반영
 
         weaponAnim?.Play(step, speed);
 

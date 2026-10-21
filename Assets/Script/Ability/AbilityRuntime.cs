@@ -84,6 +84,13 @@ public class AbilityRuntime : NetworkBehaviour
 
     private static int _curseSeq;
 
+    /// <summary>공격 대체 출처 — 변화(AlterData.AttackMotion)</summary>
+    public const int AlterAttackSource = 1000;
+    private PlayerAlter _alterC;
+    PlayerAlter AlterC => _alterC != null ? _alterC : (_alterC = GetComponent<PlayerAlter>());
+
+
+
     // ══════════════════ 내부 상태 ══════════════════
 
     private bool _ghostOn;
@@ -806,6 +813,7 @@ public class AbilityRuntime : NetworkBehaviour
 
         var skill = _slots[slotIndex];
         if (skill == null) return false;
+        if (AlterC != null && AlterC.LocksSkill(skill.Slot)) return false;      // 변신 중 — 랜덤 능력 스킬만
 
         if (!MeetsWeaponRequirement(skill)) return false;
 
@@ -1080,6 +1088,7 @@ public class AbilityRuntime : NetworkBehaviour
     {
         var skill = GetSlot(slot);
         if (skill == null) return false;
+        if (AlterC != null && AlterC.LocksSkill(skill.Slot)) return false;
         for (int i = 0; i < _behaviours.Count; i++)
             if (!_behaviours[i].CanUseSkill(skill)) return false;
         return true;
@@ -1262,6 +1271,15 @@ public class AbilityRuntime : NetworkBehaviour
         source = -1;
         if (!HasStateAuthority) return false;
 
+        var aa = AlterC != null ? AlterC.ActiveAttack : null;
+        if (aa != null)
+        {
+            ovr.Step = aa.AttackStep;
+            ovr.DamageMul = 1f;
+            source = AlterAttackSource;
+            return true;
+        }
+
         for (int i = 0; i < _behaviours.Count; i++)
             if (_behaviours[i].TryOverrideAttack(out ovr))
             {
@@ -1272,8 +1290,15 @@ public class AbilityRuntime : NetworkBehaviour
         return false;
     }
 
-    public ComboStep GetOverrideStep(int source) =>
-        source >= 0 && source < _behaviours.Count ? _behaviours[source].GetOverrideStep() : null;
+    public ComboStep GetOverrideStep(int source)
+    {
+        if (source == AlterAttackSource)
+        {
+            var aa = AlterC != null ? AlterC.ActiveAttack : null;
+            return aa != null ? aa.AttackStep : null;
+        }
+        return source >= 0 && source < _behaviours.Count ? _behaviours[source].GetOverrideStep() : null;
+    }
 
     // ══════════════════ RPC ══════════════════
 

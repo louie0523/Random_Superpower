@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97f4f6a54dd5a9a48a5a4168edbc4561, type: 3}
+  m_Name: "\uB4F1\uC6A9\uBB38"
+  m_EditorClassIdentifier: Assembly-CSharp::AlterData
+  Id: 11004
+  DisplayName: "\uB4F1\uC6A9\uBB38"
+  Icon: {fileID: 0}
+  Description: 
+  Prefab: {fileID: 875673722013817384, guid: c01deb65d175b9341aa2706a5665824e, type: 3}
+  Attach: 5
+  BoneName: 
+  Position: {x: 0, y: -3, z: 0}
+  Rotation: {x: 0, y: 0, z: 0}
+  Scale: {x: 1, y: 1, z: 1}
+  Lift: 0
+  FaceMoveDirection: 1
+  FaceTurnSpeed: 8
+  ShowForSelf: 0
+  SelfShadow: 1
+  MaxStack: 1
+  StackOffset: {x: 0, y: 0, z: 0}
+  Group: 
+  IsTransform: 1
+  TransformThirdPerson: 1
+  TransformCamera:
+    Offset: {x: 0.4, y: 1.2, z: -7}
+    PivotHeight: 0.1
+    PitchOffset: 4
+    Fov: 4
+    BlendIn: 0.35
+    BlendOut: 0.3
+  LockSkills: 1
+  OverrideAttack: 1
+  Attack:
+    Name: "\uBB3C\uC5B4\uB72F\uAE30"
+    Duration: 0.6
+    HitStart: 0.5
+    HitEnd: 0.62
+    CancelPoint: 0.9
+    ComboResetTime: 0.8
+    OverrideHitShape: 1
+    NoWeaponEnchants: 0
+    HitMode: 0
+    Range: 5
+    HitAngle: 90
+    HitHeight: 2.5
+    MinRange: 0
+    DamageMultiplier: 1.5
+    RangeMultiplier: 1
+    RadiusMultiplier: 1
+    MaxTargets: 3
+    Motion:
+      Keys: []
+      Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes: []
+      LengthHint: 1
+    HitStopDuration: 0.07
+    CameraKickFov: 4
+    CameraShake: 0.4
+    LungeDistance: 0
+    WeaponOverride: {fileID: 0}
+    HideWeapon: 1
+    HandMode: 0
+    SwingSound: {fileID: 0}
+    TrailPrefab: {fileID: 0}
+    Events: []
+  AttackMotion: {fileID: 0}
+  AttackAnim: Attack
+  Hitboxes:
+  - Shape: 0
+    Center: {x: 0, y: 1.3, z: 0}
+    Size: {x: 0.9, y: 0, z: 7}
+    Rotation: {x: 0, y: 0, z: 0}
+  Stats: []

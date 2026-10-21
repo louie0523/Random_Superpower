@@ -32,7 +32,7 @@ public class DevourerSwarm : MonoBehaviour
         public Vector3 Pos, Vel;
         public Transform Target;
         public bool Prowl;
-        public float ProwlAngle;    // 대상 둘레 각도 (°)
+        public float ProwlAngle;    // 대상 둘레 각도임
         public float ProwlDir = 1f; // 도는 방향 (±1)
         public float NextFlip;      // 가끔 방향을 바꿈
         public float Seed;

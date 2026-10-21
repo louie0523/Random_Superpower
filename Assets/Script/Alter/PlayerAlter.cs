@@ -29,6 +29,8 @@ public class PlayerAlter : NetworkBehaviour
     private readonly List<GameObject> _spawned = new();
     private readonly List<Renderer> _renderers = new();
     private readonly List<RigAnimator> _rigAnims = new();
+    private readonly List<(GameObject root, IAlterPartAnim anim)> _partAnims = new();   // 코드 애니메이션 파츠 (용 등)
+    private readonly List<(Transform box, AlterData a)> _hitboxes = new();              // 변신 피격 범위
     private static readonly HashSet<int> _warnedLift = new();     // 파츠의 애니메이션 (말 걷기 등)
     private Vector3 _lastPos;
     private float _moveSpeed;
@@ -138,12 +140,58 @@ public class PlayerAlter : NetworkBehaviour
         }
     }
 
+    /// <summary>지금 붙은 변화 중 기본 공격을 바꾸는 것 (없으면 null) — 모든 클라이언트</summary>
+    public AlterData ActiveAttack
+    {
+        get
+        {
+            if (database == null || Object == null || !Object.IsValid) return null;
+            for (int i = 0; i < MaxAlters; i++)
+            {
+                var a = database.Get(Alters[i]);
+                if (a != null && a.AttackStep != null) return a;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>이 슬롯 스킬이 변화 때문에 잠겼는가 — 랜덤 능력 슬롯은 안 잠김</summary>
+    public bool LocksSkill(SkillSlot slot)
+    {
+        if (slot.IsRandom() || database == null || Object == null || !Object.IsValid) return false;
+        for (int i = 0; i < MaxAlters; i++)
+        {
+            var a = database.Get(Alters[i]);
+            if (a != null && a.LockSkills) return true;
+        }
+        return false;
+    }
+
+    /// <summary>변화 기본 공격의 모델 연출 — 공격 판정 시간에 맞춰서 (모든 클라이언트, PlayerAttack의 RPC_PlaySwing에서)</summary>
+    public void PlayAttackAnim(float speed)
+    {
+        var a = ActiveAttack;
+        if (a == null || string.IsNullOrEmpty(a.AttackAnim)) return;
+        var step = a.AttackStep;
+        float spd = Mathf.Max(0.05f, speed);
+        float dur = step.Duration / spd;
+        float hit = step.Duration * step.HitStart / spd;
+
+        string prefix = $"Alter_{a.name}";
+        foreach (var (root, pa) in _partAnims)
+            if (root != null && root.name.StartsWith(prefix)) pa.PlayAttack(a.AttackAnim, dur, hit);
+        foreach (var ra in _rigAnims)
+            if (ra != null && ra.name.StartsWith(prefix)) ra.Play(a.AttackAnim);
+    }
+
     /// <summary>특정 변화의 파츠를 Idle/Walk 자동 전환으로 되돌림 (비행 끝 등)</summary>
     public void ReleasePartState(AlterData alter)
     {
         if (alter == null) return;
         foreach (var ra in _rigAnims)
             if (ra != null && ra.name.StartsWith($"Alter_{alter.name}")) ra.Release();
+        foreach (var (root, pa) in _partAnims)
+            if (root != null && root.name.StartsWith($"Alter_{alter.name}")) pa.ReleaseState();
     }
 
     /// <summary>t가 변화로 붙은 파츠(말 · 가면 등) 안에 있는가</summary>
@@ -438,6 +486,12 @@ public class PlayerAlter : NetworkBehaviour
         // 사망·부활 시 보이기 다시 계산 (PlayerHealth가 렌더러를 끄고 켜는 것과 맞춤)
         bool dead = _health != null && _health.IsDead;
         if (dead != _wasDead) ApplyVisibility();
+
+#if UNITY_EDITOR
+        // 플레이 중 AlterData의 피격 범위 값을 바꾸면 바로 반영
+        foreach (var (box, a) in _hitboxes)
+            if (box != null) AlterHitboxes.Sync(box, a, _cc);
+#endif
     }
 
     // ══════════════════ 파츠 애니메이션 (모든 클라이언트) ══════════════════
@@ -459,8 +513,11 @@ public class PlayerAlter : NetworkBehaviour
         if (speed > 0f) _vel = Vector3.Lerp(_vel, d / dt, 1f - Mathf.Exp(-12f * dt));
         else _vel = Vector3.Lerp(_vel, Vector3.zero, 1f - Mathf.Exp(-12f * dt));
 
-        if (_rigAnims.Count == 0) return;
         bool moving = _moveSpeed > 0.6f;
+        foreach (var (root, pa) in _partAnims)
+            if (root != null) pa.SetMove(moving, _moveSpeed);
+        if (_rigAnims.Count == 0) return;
+
         for (int i = 0; i < _rigAnims.Count; i++)
         {
             var ra = _rigAnims[i];
@@ -475,6 +532,8 @@ public class PlayerAlter : NetworkBehaviour
     {
         foreach (var ra in _rigAnims)
             if (ra != null) ra.Play(state, hold);
+        foreach (var (root, pa) in _partAnims)
+            if (root != null) pa.PlayState(state, hold);
     }
 
     /// <summary>특정 변화의 파츠에만</summary>
@@ -483,6 +542,8 @@ public class PlayerAlter : NetworkBehaviour
         if (alter == null) return;
         foreach (var ra in _rigAnims)
             if (ra != null && ra.name.StartsWith($"Alter_{alter.name}")) ra.Play(state, hold);
+        foreach (var (root, pa) in _partAnims)
+            if (root != null && root.name.StartsWith($"Alter_{alter.name}")) pa.PlayState(state, hold);
     }
 
     bool HasWeaponAlter()
@@ -536,6 +597,11 @@ public class PlayerAlter : NetworkBehaviour
             // 파츠는 장식 — 충돌·물리가 판정을 막지 않게
             foreach (var c in go.GetComponentsInChildren<Collider>(true)) c.enabled = false;
             foreach (var rb in go.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
+
+            // 변신 피격 범위 — 파츠 콜라이더를 다 끈 뒤에 만듦 (플레이어 레이어 = 공격 판정에 걸림)
+            var hb = AlterHitboxes.Build(go, a, gameObject.layer, _cc);
+            if (hb != null) _hitboxes.Add((hb, a));
+            foreach (var pa in go.GetComponentsInChildren<IAlterPartAnim>(true)) _partAnims.Add((go, pa));
 
             _spawned.Add(go);
             ConfigureSelfView(go, a);
@@ -609,5 +675,7 @@ public class PlayerAlter : NetworkBehaviour
         _renderers.Clear();
         _rigAnims.Clear();
         _facers.Clear();
+        _partAnims.Clear();
+        _hitboxes.Clear();
     }
 }

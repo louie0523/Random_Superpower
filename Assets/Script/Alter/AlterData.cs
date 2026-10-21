@@ -80,6 +80,45 @@ public class AlterData : ScriptableObject
     public bool TransformThirdPerson = true;
     public ThirdPersonSettings TransformCamera = new();
 
+    [Header("변신 — 기본 공격 · 스킬")]
+    [Tooltip("붙어 있는 동안 기존 스킬 · 궁극기 사용 불가 (랜덤 능력 스킬은 가능)")]
+    public bool LockSkills;
+    [Tooltip("켜면 붙어 있는 동안 좌클릭 = 아래 '공격' (물어뜯기 등). 무기 스탯 그대로, 원거리 무기도 근접으로")]
+    public bool OverrideAttack;
+    [Tooltip("공격 — 길이 · 판정 시간(HitStart) · 범위(판정 덮어쓰기) · 피해 배율. 모델(DragonWave)은 이 판정 시간에 맞춰 입을 닫음")]
+    public ComboStep Attack = DefaultBite();
+    [Tooltip("(선택) 모션 에셋 — 넣으면 위 '공격' 대신 이걸 씀")]
+    public AbilityMotionData AttackMotion;
+    [Tooltip("공격할 때 모델이 재생할 상태 (DragonWave = Attack)")]
+    public string AttackAnim = "Attack";
+
+    /// <summary>이 변화의 기본 공격 (없으면 null)</summary>
+    public ComboStep AttackStep =>
+        AttackMotion != null && AttackMotion.Step != null ? AttackMotion.Step : (OverrideAttack ? Attack : null);
+
+    static ComboStep DefaultBite() => new()
+    {
+        Name = "물어뜯기",
+        Duration = 0.6f,
+        HitStart = 0.5f,
+        HitEnd = 0.62f,
+        CancelPoint = 0.9f,
+        OverrideHitShape = true,
+        HitMode = WeaponHitMode.ForwardArc,
+        Range = 4f,
+        HitAngle = 90f,
+        HitHeight = 2.5f,
+        DamageMultiplier = 1.5f,
+        MaxTargets = 3,
+        HitStopDuration = 0.07f,
+        CameraShake = 0.4f,
+    };
+
+    [Header("피격 범위")]
+    [Tooltip("변신 모델의 피격 콜라이더 — 비우면 없음 (원래 몸 판정만).\n" +
+         "기준: 붙는 자리(Root면 발밑) · 플레이어 방향 · m. 플레이 중 값을 바꾸면 바로 반영 (에디터)")]
+    public AlterHitbox[] Hitboxes;
+
     [Header("스탯 (중첩마다)")]
     public AlterStat[] Stats;
 
