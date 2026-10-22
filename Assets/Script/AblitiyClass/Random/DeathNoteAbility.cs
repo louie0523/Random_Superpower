@@ -37,6 +37,13 @@ public class DeathNoteAbility : AbilityBehaviour
         comms.Notice(NoticeKind.Small, TargetUtil.Text("notice.deathnote.write", "서걱서걱… 누군가 노트를 끄적였다"));
 
         float delay = Delay;
+
+        // 내 화면 HUD — 누구를 적었는지 · 남은 시간 (능력이 바뀌어도 남음). 대상이 먼저 죽으면 사라짐
+        string name = TargetUtil.NameOf(target);
+        HudExtras.AddTimed(Data, TargetUtil.Text("hud.deathnote.name", "데스 노트"), HudExtras.Number(Data, 1), delay,
+            left => target == null || target.IsDead ? null
+                  : TargetUtil.Text("hud.deathnote.left", "{0} — {1}초 뒤 심장 마비", name, Mathf.CeilToInt(left)));
+
         GameTimers.After(delay, () =>
         {
             if (target == null || target.IsDead || PlayerComms.Local == null) return;

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
+  m_Name: "\uC2DC\uACF5\uC758 \uD3ED\uD48D"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  Id: 8011
+  DisplayName: "\uC2DC\uACF5\uC758 \uD3ED\uD48D"
+  Kind: 2
+  Tier: 0
+  Tags: 
+  ExclusiveShopItems: []
+  Icon: {fileID: 0}
+  Flavor: " \uC0AC\uC6A9\uC2DC \uBC94\uC704 \uB0B4 \uC801 \uD55C\uBA85\uC744 \uC2DC\uACF5\uC758
+    \uD3ED\uD48D\uC73C\uB85C \uBCF4\uB0B4\uBC84\uB9BD\uB2C8\uB2E4!"
+  Number: 0
+  Summary: 
+  UiAccent: {r: 0, g: 0.73424315, b: 1, a: 1}
+  UiNameColor: {r: 0, g: 0, b: 0, a: 1}
+  UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
+  Passives: []
+  Skills:
+  - Name: "\uC601\uC6C5\uC774 \uB354 \uD544\uC694\uD574"
+    Icon: {fileID: 0}
+    Description: 
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 4
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  Behaviour: {fileID: 11400000, guid: 0ff6cb631ec60ef4f84ab4406e5738ea, type: 2}
+  MaxConcurrent: 0
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
+  Charges: []

@@ -16,11 +16,16 @@ MonoBehaviour:
   DisplayName: "\uB300\uC778\uAE30\uD53C\uC99D"
   Kind: 2
   Tier: 0
-  Tags: 
+  Tags: 04000000
   ExclusiveShopItems: []
   Icon: {fileID: 0}
   Flavor: "\uB204\uAD70\uAC00\uC640 3\uCD08 \uC774\uC0C1 5m\uC774\uB0B4\uC5D0 \uC788\uC744\uC2DC
-    \uC5C4\uCCAD\uB09C \uC790\uD3ED\uC744 \uD569\uB2C8\uB2E4."
+    \uBD80\uB044\uB7EC\uC6CC \uD130\uC838 \uBC84\uB9BD\uB2C8\uB2E4!"
+  Number: 0
+  Summary: 
+  UiAccent: {r: 0.91540956, g: 0, b: 1, a: 1}
+  UiNameColor: {r: 0, g: 0, b: 0, a: 1}
+  UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives: []
   Skills: []
   Behaviour: {fileID: 11400000, guid: fc340aa28267ae54fa55911a3ecffadc, type: 2}

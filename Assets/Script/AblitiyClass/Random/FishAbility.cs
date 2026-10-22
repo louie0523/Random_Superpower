@@ -148,6 +148,10 @@ public class FishAbility : TransformAbility
         else if (key == EvDragon) Ctx.PlayEffectLocal(DragonFx, pos);
     }
 
-    public override string DescToken(string key, int rank) =>
-        key == "form" ? (Form == Dragon ? "용" : "물고기") : null;
+    public override string DescToken(string key, int rank) => key switch
+    {
+        "form" => Form == Dragon ? "용" : "물고기",
+        "fly" => Form == Dragon ? Mathf.RoundToInt(FlyFuel01 * 100f).ToString() : null,     // 용일 때 남은 비행 % (숫자만)
+        _ => null,
+    };
 }

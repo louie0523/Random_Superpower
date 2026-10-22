@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 222fa65f0a93beb4a8f142a5789e9ebe, type: 3}
+  m_Name: "\uCCB4\uC2A4\uC758 \uAC70\uC2E0\uBCD1"
+  m_EditorClassIdentifier: Assembly-CSharp::ChessAbility
+  KnightSkill: 0
+  Colossus:
+    Alter: {fileID: 0}
+    Attack: {fileID: 0}
+    AttackAnim: Attack
+    CanFly: 0
+    FlyTime: 5
+    FlyUpSpeed: 6
+    FlyAnim: Flying
+  PawnsNeeded: 6
+  LeapForward: 16
+  LeapUp: 7
+  LandRadius: 3.5
+  LandCoef: 120
+  LandStun: 1
+  LandPush: 9
+  LandPushUp: 4
+  DiagonalWindow: 3
+  DiagonalAngle: 45
+  PromotionBelow: 0.18
+  PawnFx: {fileID: 0}
+  TransformFx: {fileID: 0}
+  LandFx: {fileID: 0}

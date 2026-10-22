@@ -62,6 +62,14 @@ public class PlayerStatus : NetworkBehaviour
     }
 
     private readonly List<Instance>[] _inst = new List<Instance>[Capacity];
+    /// <summary>상태 목록 · 참조 준비 — 다른 컴포넌트의 Spawned가 먼저 돌아 Apply를 불러도 되게</summary>
+    void EnsureInit()
+    {
+        if (_stats == null) _stats = GetComponent<PlayerStats>();
+        if (_health == null) _health = GetComponent<PlayerHealth>();
+        for (int i = 0; i < Capacity; i++)
+            if (_inst[i] == null) _inst[i] = new List<Instance>();
+    }
 
     private PlayerStats _stats;
     private PlayerHealth _health;
@@ -107,9 +115,7 @@ public class PlayerStatus : NetworkBehaviour
 
     public override void Spawned()
     {
-        _stats = GetComponent<PlayerStats>();
-        _health = GetComponent<PlayerHealth>();
-        for (int i = 0; i < Capacity; i++) _inst[i] = new List<Instance>();
+        EnsureInit();
 
         if (GetComponent<InvisibleVisual>() == null) gameObject.AddComponent<InvisibleVisual>();
 
@@ -135,6 +141,7 @@ public class PlayerStatus : NetworkBehaviour
 
     void ApplyLocal(StatusType t, float value, float duration, PlayerRef source, int maxStacks)
     {
+        EnsureInit();
         if (_health != null && _health.IsDead) return;
         if (duration <= 0f) return;
         if (t != StatusType.Evade && IsEvading && source != Object.InputAuthority) return;

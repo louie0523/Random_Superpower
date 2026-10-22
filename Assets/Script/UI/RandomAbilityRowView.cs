@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 랜덤 능력 HUD 한 줄 — 줄 프리팹 루트에 붙임. RandomAbilityHud가 두 줄(조커용) 복제해서 씀.
+/// 랜덤 능력 HUD 한 줄 — 줄 프리팹 루트에 붙임. RandomAbilityHud가 필요한 만큼 복제해서 씀
+/// (랜덤 능력 1~2줄 + 추가 줄 — 복수 시간 · 데스 노트 등).
 ///   [아이콘][이름표]  NO. N
 ///                    효과 요약
 /// </summary>
@@ -33,12 +34,19 @@ public class RandomAbilityRowView : MonoBehaviour
     [Tooltip("이름표와 번호 · 요약 사이")]
     public float Gap = 10f;
 
+    [Header("요약 줄 수")]
+    [Tooltip("요약이 길면 이 줄 수까지는 줄(배경)이 아래로 늘어남. 넘으면 글자만 아래로 삐져나감.\n" +
+             "아이콘 · 이름표 · 번호는 그대로 (위쪽 기준으로 붙어 있어야 함)")]
+    [Min(1)] public int MaxSummaryLines = 2;
+
     [Header("연출")]
     [Tooltip("능력이 바뀔 때 살짝 튐 (비우면 이 오브젝트)")]
     public RectTransform PopTarget;
 
     public int ShownId { get; private set; } = -1;
     private float _pop;
+    private bool _based;
+    private float _baseRowH, _baseSumH;
 
     void Awake()
     {
@@ -58,7 +66,108 @@ public class RandomAbilityRowView : MonoBehaviour
         if (id == ShownId) return;
         ShownId = id;
         _pop = 1f;
+        _live = false;
 
+        ApplyStyle(a);
+        if (Name != null) Name.text = AbilityUi.Name(a);
+        if (Number != null) Number.text = AbilityUi.NumberText(a);
+        if (Summary != null) Summary.text = AbilityUi.Summary(a);
+
+        if (AutoArrange) Arrange();
+        FitHeight();
+    }
+
+    /// <summary>추가 줄 (복수 시간 등) — 요약은 매 프레임 바뀔 수 있음 (남은 초)</summary>
+    public void BindExtra(HudExtraRow r)
+    {
+        if (r.Key != ShownId)
+        {
+            ShownId = r.Key;
+            _pop = 1f;
+            ApplyStyle(r.Style);
+            if (Name != null) Name.text = r.Name ?? "";
+            if (Number != null) Number.text = r.Number ?? "";
+            if (AutoArrange) Arrange();
+            SetText(Summary, r.Summary ?? "");
+            FitHeight();
+            return;
+        }
+        if (SetText(Summary, r.Summary ?? "")) FitHeight();
+    }
+
+    /// <summary>
+    /// 능력 줄의 요약을 지금 상태로 (Behaviour의 DescToken("hud") — 예: "폰 3 / 6").
+    /// null이면 원래 요약으로 돌아감
+    /// </summary>
+    public void SetLiveSummary(string live, AbilityData a)
+    {
+        bool changed = false;
+        if (live != null) { changed = SetText(Summary, live); _live = true; }
+        else if (_live) { changed = SetText(Summary, AbilityUi.Summary(a)); _live = false; }
+        if (changed) FitHeight();
+    }
+
+    /// <summary>글꼴 · 글자 크기 (0이면 그대로) — RandomAbilityHudStyle에서</summary>
+    public void ApplyFont(TMP_FontAsset font, float nameSize, float numberSize, float summarySize)
+    {
+        void One(TMP_Text t, float size)
+        {
+            if (t == null) return;
+            if (font != null) t.font = font;
+            if (size > 0f) t.fontSize = size;
+        }
+        One(Name, nameSize);
+        One(Number, numberSize);
+        One(Summary, summarySize);
+        if (AutoArrange && ShownId != -1) Arrange();
+        FitHeight();
+    }
+
+    /// <summary>
+    /// 요약 글 길이에 맞춰 높이 — MaxSummaryLines 줄까지는 요약 칸과 줄 전체(배경)가 아래로 늘어남.
+    /// 아이콘 · 이름표 · 번호는 위쪽 기준이라 그대로. 그보다 길면 글자만 아래로 넘침
+    /// </summary>
+    void FitHeight()
+    {
+        if (Summary == null) return;
+        var sr = Summary.rectTransform;
+        var row = (RectTransform)transform;
+        if (!_based)
+        {
+            _based = true;
+            _baseRowH = row.rect.height;
+            _baseSumH = sr.rect.height;
+        }
+
+        float w = sr.rect.width;
+        if (w <= 1f) return;
+
+        float pref = Summary.GetPreferredValues(Summary.text, w, 0f).y;
+        var sb = new System.Text.StringBuilder("가");
+        for (int i = 1; i < MaxSummaryLines; i++) sb.Append("\n가");
+        float maxH = Mathf.Max(_baseSumH, Summary.GetPreferredValues(sb.ToString(), w, 0f).y);
+        float h = Mathf.Clamp(pref, _baseSumH, maxH);
+        float extra = h - _baseSumH;
+
+        bool stretched = !Mathf.Approximately(sr.anchorMin.y, sr.anchorMax.y);     // 요약이 줄 높이에 붙어 늘어나는 프리팹
+        if (!stretched) sr.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, h);
+        row.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _baseRowH + extra);
+
+        var le = GetComponent<LayoutElement>();
+        if (le != null) le.preferredHeight = _baseRowH + extra;
+    }
+
+    bool _live;
+
+    static bool SetText(TMP_Text t, string s)
+    {
+        if (t == null || t.text == s) return false;
+        t.text = s;
+        return true;
+    }
+
+    void ApplyStyle(AbilityData a)
+    {
         if (Icon != null)
         {
             Icon.sprite = a != null ? a.Icon : null;
@@ -70,19 +179,8 @@ public class RandomAbilityRowView : MonoBehaviour
         if (AccentTargets != null)
             foreach (var g in AccentTargets) if (g != null) g.color = new Color(accent.r, accent.g, accent.b, g.color.a > 0f ? g.color.a : 1f);
 
-        if (Name != null)
-        {
-            Name.text = AbilityUi.Name(a);
-            Name.color = AbilityUi.NameColor(a);
-        }
-        if (Number != null)
-        {
-            Number.text = AbilityUi.NumberText(a);
-            Number.color = AbilityUi.NumberColor(a);
-        }
-        if (Summary != null) Summary.text = AbilityUi.Summary(a);
-
-        if (AutoArrange) Arrange();
+        if (Name != null) Name.color = AbilityUi.NameColor(a);
+        if (Number != null) Number.color = AbilityUi.NumberColor(a);
     }
 
     /// <summary>이름표 폭 = 이름 길이, 번호 · 요약은 그 오른쪽부터 줄 끝까지</summary>

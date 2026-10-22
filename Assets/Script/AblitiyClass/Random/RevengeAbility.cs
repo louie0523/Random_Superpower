@@ -32,6 +32,6 @@ public class RevengeAbility : AbilityBehaviour
     void OnDied(PlayerRef killer, DeathCause cause)
     {
         if (killer == PlayerRef.None || killer == Ctx.Object.InputAuthority) return;
-        RevengeMark.Begin(Ctx, killer, Window, BonusPercent, SuccessFx);
+        RevengeMark.Begin(Ctx, killer, Window, BonusPercent, SuccessFx, Data);
     }
 }

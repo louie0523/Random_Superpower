@@ -1,9 +1,14 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 /// 랜덤 능력 HUD — 왼쪽 위 소울 아래. 조커처럼 랜덤 능력이 둘이면 두 줄.
+/// 그 아래에 추가 줄 (HudExtras — 복수 시간 · 데스 노트 등, 능력이 바뀌어도 남는 효과).
+/// 능력 줄의 요약(한 줄 요약 칸)에도 설명처럼 {x:키} · {b:필드}를 쓸 수 있음 — 지금 상태로 계속 바뀜
+///   예) 필연: "궁극기를 5번 사용하면 … (현재 {x:ult}회)"
+/// 글꼴 · 글자 크기 · 요약 줄 수는 Style(RandomAbilityHudStyle)에서.
 /// 세팅
 ///   1. HUD 캔버스 안, 소울 표시 아래에 이 컴포넌트가 붙은 오브젝트 (프리팹 만들기 메뉴로 만든 RandomAbilityHud 프리팹을 끌어다 놓아도 됨)
 ///   2. Row Prefab = RandomAbilityRowView가 붙은 한 줄 프리팹 (비우면 기본 모양)
@@ -11,6 +16,10 @@ using UnityEngine.UI;
 /// </summary>
 public class RandomAbilityHud : MonoBehaviour
 {
+    [Header("모양")]
+    [Tooltip("글꼴 · 글자 크기 · 요약 줄 수 — Create → Game → UI → Random Ability HUD Style. 비우면 아래 값 / 줄 프리팹 그대로")]
+    [SerializeField] private RandomAbilityHudStyle style;
+
     [Header("연결 (비우면 기본 모양)")]
     [SerializeField] private RandomAbilityRowView rowPrefab;
     [SerializeField] private RectTransform rowParent;
@@ -29,8 +38,13 @@ public class RandomAbilityHud : MonoBehaviour
     [Header("쌓기 (Row Parent에 Layout Group이 없을 때)")]
     [SerializeField] private float rowGap = 6f;
 
-    private RandomAbilityRowView[] _rows;
+    private readonly List<RandomAbilityRowView> _rows = new();
+    private readonly List<HudExtraRow> _extras = new();
+    private RandomAbilityRowView _template;
     private bool _manualStack;
+    private float _liveAt;
+    private readonly string[] _live = new string[2];
+    private readonly AbilityData[] _liveFor = new AbilityData[2];
 
     void Awake()
     {
@@ -43,30 +57,40 @@ public class RandomAbilityHud : MonoBehaviour
             if (child.GetComponent<RandomAbilityRowView>() != null) Destroy(child.gameObject);
         }
 
-        RandomAbilityRowView template = rowPrefab;
-        GameObject temp = null;
-        if (template == null)
+        _template = rowPrefab;
+        if (_template == null)
         {
-            temp = new GameObject("RowTemplate");
-            temp.SetActive(false);
-            temp.transform.SetParent(transform, false);
+            // 기본 모양 줄 — 꺼 둔 채 남겨 두고 필요할 때마다 복제
+            var holder = new GameObject("RowTemplate");
+            holder.SetActive(false);
+            holder.transform.SetParent(transform, false);
             var st = ClassPickUiBuilder.RowStyle.Default;
             st.Width = width; st.Height = rowHeight; st.IconSize = iconSize;
             st.NameSize = nameSize; st.NumberSize = numberSize; st.SummarySize = summarySize;
             st.Background = background;
-            template = ClassPickUiBuilder.BuildRow(temp.transform, font, st);
+            _template = ClassPickUiBuilder.BuildRow(holder.transform, style != null && style.Font != null ? style.Font : font, st);
         }
 
-        _rows = new RandomAbilityRowView[2];
-        for (int i = 0; i < _rows.Length; i++)
-        {
-            _rows[i] = Instantiate(template, rowParent);
-            _rows[i].name = "RandomAbility_" + i;
-            _rows[i].gameObject.SetActive(false);
-        }
-        if (temp != null) Destroy(temp);
-
+        Row(0);
+        Row(1);
         _manualStack = rowParent.GetComponent<LayoutGroup>() == null;
+    }
+
+    RandomAbilityRowView Row(int i)
+    {
+        while (_rows.Count <= i)
+        {
+            var r = Instantiate(_template, rowParent);
+            r.name = "RandomAbility_" + _rows.Count;
+            if (style != null)
+            {
+                r.MaxSummaryLines = style.MaxSummaryLines;
+                r.ApplyFont(style.Font, style.NameSize, style.NumberSize, style.SummarySize);
+            }
+            r.gameObject.SetActive(false);
+            _rows.Add(r);
+        }
+        return _rows[i];
     }
 
     void LateUpdate()
@@ -76,8 +100,31 @@ public class RandomAbilityHud : MonoBehaviour
         AbilityData a1 = ar != null ? ar.GetRandomAbility() : null;
         AbilityData a2 = ar != null ? ar.GetRandomAbility2() : null;
 
-        Show(_rows[0], a1);
-        Show(_rows[1], a2);
+        // 요약의 {x:} 상태 글은 조금씩 띄엄띄엄 계산 (정규식이라)
+        if (Time.unscaledTime >= _liveAt || a1 != _liveFor[0] || a2 != _liveFor[1])
+        {
+            _liveFor[0] = a1;
+            _liveFor[1] = a2;
+            _liveAt = Time.unscaledTime + (style != null ? style.LiveRefresh : 0.2f);
+            _live[0] = LiveSummary(a1);
+            _live[1] = LiveSummary(a2);
+        }
+
+        int used = 0;
+        if (a1 != null) ShowAbility(Row(used++), a1, _live[0]);
+        if (a2 != null) ShowAbility(Row(used++), a2, _live[1]);
+
+        _extras.Clear();
+        HudExtras.Collect(_extras);
+        foreach (var e in _extras)
+        {
+            var r = Row(used++);
+            if (!r.gameObject.activeSelf) r.gameObject.SetActive(true);
+            r.BindExtra(e);
+        }
+
+        for (int i = used; i < _rows.Count; i++)
+            if (_rows[i].gameObject.activeSelf) _rows[i].gameObject.SetActive(false);
 
         // Layout Group이 없으면 보이는 줄만 위에서부터
         if (_manualStack)
@@ -90,15 +137,24 @@ public class RandomAbilityHud : MonoBehaviour
                 rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
                 rt.pivot = new Vector2(0f, 1f);
                 rt.anchoredPosition = new Vector2(0f, -y);
-                y += rt.rect.height + rowGap;
+                y += rt.rect.height + (style != null ? style.RowGap : rowGap);
             }
         }
     }
 
-    static void Show(RandomAbilityRowView r, AbilityData a)
+    static void ShowAbility(RandomAbilityRowView r, AbilityData a, string live)
     {
-        bool on = a != null;
-        if (r.gameObject.activeSelf != on) r.gameObject.SetActive(on);
-        if (on) r.Bind(a);
+        if (!r.gameObject.activeSelf) r.gameObject.SetActive(true);
+        r.Bind(a);
+        r.SetLiveSummary(live, a);
+    }
+
+    /// <summary>한 줄 요약에 {x:} · {b:} 같은 토큰이 있으면 지금 상태로 바꾼 글, 없으면 null (원래 요약 그대로)</summary>
+    static string LiveSummary(AbilityData a)
+    {
+        if (a == null) return null;
+        string raw = AbilityUi.Summary(a);
+        if (string.IsNullOrEmpty(raw) || raw.IndexOf('{') < 0) return null;
+        return AbilityDescTokens.Apply(raw, a, null, 1, 1);
     }
 }

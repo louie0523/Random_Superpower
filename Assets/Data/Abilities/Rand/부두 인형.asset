@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
+  m_Name: "\uBD80\uB450 \uC778\uD615"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  Id: 8009
+  DisplayName: "\uBD80\uB450 \uC778\uD615"
+  Kind: 2
+  Tier: 0
+  Tags: 
+  ExclusiveShopItems: []
+  Icon: {fileID: 0}
+  Flavor: "\uC6D0\uD558\uB294 \uD50C\uB808\uC774\uC5B4 \uD55C\uBA85\uC744 \uC9C0\uC815\uD558\uC5EC
+    20\uCD08\uAC04 '\uC800\uC8FC' \uC0C1\uD0DC\uB85C \uB9CC\uB4E4\uC5B4 \uC18C\uD1B5\uC744
+    \uD560 \uC218 \uC5C6\uB3C4\uB85D \uD569\uB2C8\uB2E4. \uB610\uD55C \uC0B4\uC544\uC788\uB294
+    \uB3D9\uC548 \uCD5C\uB300 999\uCD08\uC758 '\uBD09\uC778' \uD6A8\uACFC\uB97C \uBC1B\uC2B5\uB2C8\uB2E4.\n"
+  Number: 0
+  Summary: 
+  UiAccent: {r: 0, g: 0, b: 0, a: 1}
+  UiNameColor: {r: 1, g: 0, b: 0, a: 1}
+  UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
+  Passives: []
+  Skills:
+  - Name: "\uBD80\uB450 \uC778\uD615"
+    Icon: {fileID: 0}
+    Description: "\uC608\uC804\uBD80\uD130 \uB108\uAC00 \uC815\uB9D0 \uC2EB\uC5C8\uC5B4"
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 4
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  Behaviour: {fileID: 11400000, guid: fb909443bc15ef34c9b48a57b518f778, type: 2}
+  MaxConcurrent: 0
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
+  Charges: []

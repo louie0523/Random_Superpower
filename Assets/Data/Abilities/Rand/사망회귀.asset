@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
+  m_Name: "\uC0AC\uB9DD\uD68C\uADC0"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  Id: 8007
+  DisplayName: "\uC0AC\uB9DD\uD68C\uADC0"
+  Kind: 2
+  Tier: 0
+  Tags: 
+  ExclusiveShopItems: []
+  Icon: {fileID: 0}
+  Flavor: "\uC0AC\uB9DD\uC2DC \uC989\uC2DC \uADF8 \uC790\uB9AC\uC5D0\uC11C \uBD80\uD65C\uD558\uACE0,
+    \uC790\uC2E0\uC744 \uCC98\uCE58\uD55C \uC801\uC758 \uC18C\uC6B8\uC744 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4.\n\uB610\uD55C
+    \uBAA8\uB4E0 \uC801\uC758 \uC2A4\uD0AC \uCFE8\uD0C0\uC784\uC744 8\uCD08 \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4!"
+  Number: 0
+  Summary: 
+  UiAccent: {r: 0, g: 1, b: 0.19907355, a: 1}
+  UiNameColor: {r: 0, g: 0, b: 0, a: 1}
+  UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
+  Passives: []
+  Skills: []
+  Behaviour: {fileID: 11400000, guid: dc931ebb512b4df4a90783c56627fd1a, type: 2}
+  MaxConcurrent: 0
+  ExcludeFromRoll: 0
+  RollWeight: 1
+  EvolveToId: 0
+  EvolveKillCount: 0
+  Charges: []

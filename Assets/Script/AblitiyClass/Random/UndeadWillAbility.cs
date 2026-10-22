@@ -81,6 +81,8 @@ public class UndeadWillAbility : AbilityBehaviour
 
     public override string DescToken(string key, int rank)
     {
+        if (key == "left")            // 최후의 발악 남은 초 (숫자만, 발악 중일 때만)
+            return _phase == Phase.LastStand ? Mathf.CeilToInt(_endAt - Now).ToString() : null;
         if (key != "undead") return null;
         return _phase switch
         {

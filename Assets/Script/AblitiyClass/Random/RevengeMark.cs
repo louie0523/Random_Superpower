@@ -18,8 +18,11 @@ public class RevengeMark : MonoBehaviour
     private float _bonus;
     private GameObject _fx;
     private bool _buffed;
+    private AbilityData _source;
+    private string _targetName;
+    private HudExtras.Provider _hud;
 
-    public static void Begin(AbilityRuntime ctx, PlayerRef target, float window, float bonusPercent, GameObject fx)
+    public static void Begin(AbilityRuntime ctx, PlayerRef target, float window, float bonusPercent, GameObject fx, AbilityData source = null)
     {
         if (ctx == null || !ctx.HasStateAuthority) return;
 
@@ -35,6 +38,15 @@ public class RevengeMark : MonoBehaviour
         m._bonus = bonusPercent;
         m._fx = fx;
         m._buffed = false;
+        m._source = source;
+        m._targetName = TargetUtil.NameOf(ctx.Runner, target);
+
+        // 내 화면 HUD — 랜덤 능력 줄 아래 '복수 시간' (능력이 바뀌어도 남음)
+        if (ctx.HasInputAuthority)
+        {
+            m._hud = m.HudRow;
+            HudExtras.Add(m._hud);
+        }
 
         m._health.KilledPlayer += m.OnKilled;
         m._health.Died += m.OnDied;
@@ -77,8 +89,31 @@ public class RevengeMark : MonoBehaviour
         if (_buffed) Destroy(this);
     }
 
+    bool HudRow(out HudExtraRow row)
+    {
+        row = new HudExtraRow
+        {
+            Key = -9001,
+            Style = _source,
+            Name = TargetUtil.Text("hud.revenge.name", "복수 시간"),
+            Number = HudExtras.Number(_source, 1),
+        };
+        if (_buffed)
+            row.Summary = TargetUtil.Text("hud.revenge.done",
+                "복수 성공! 다음에 죽을 때까지 이동 속도 · 최대 체력 · 공격력 +{0}%", Mathf.RoundToInt(_bonus));
+        else
+        {
+            int left = Mathf.CeilToInt(_until - Time.time);
+            if (left <= 0) return false;
+            row.Summary = TargetUtil.Text("hud.revenge.left",
+                "당신을 처치한 {0}을(를) {1}초 이내에 처치하세요", _targetName, left);
+        }
+        return true;
+    }
+
     void Clear()
     {
+        if (_hud != null) { HudExtras.Remove(_hud); _hud = null; }
         if (_stats != null) _stats.RemoveBySource(Src);
         if (_health != null)
         {

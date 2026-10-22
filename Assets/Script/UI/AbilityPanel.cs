@@ -41,6 +41,9 @@ public class AbilityPanel : UIPanel
 
     private (int, int, int, int) _shownIds;
 
+    private float _liveAt;
+    private int _liveSig;
+
     /// <summary>카드 하나가 어떤 항목인지</summary>
     struct Card
     {
@@ -99,6 +102,23 @@ public class AbilityPanel : UIPanel
         {
             _rankSig = sig;
             RefreshCards();
+        }
+
+        // {x:} 상태 글(폰 수 · 남은 초 등)이 바뀌었으면 카드 갱신 — 0.5초마다 확인, 글이 같으면 안 건드림
+        if (Time.unscaledTime >= _liveAt)
+        {
+            _liveAt = Time.unscaledTime + 0.5f;
+            int live = 17;
+            foreach (var c in _cards)
+            {
+                var m = BuildModel(c);
+                live = live * 31 + (m.Body != null ? m.Body.GetHashCode() : 0);
+            }
+            if (live != _liveSig)
+            {
+                _liveSig = live;
+                RefreshCards();
+            }
         }
     }
 

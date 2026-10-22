@@ -16,23 +16,34 @@ MonoBehaviour:
   DisplayName: "\uAF43\uAC8C"
   Kind: 2
   Tier: 0
-  Tags: 
+  Tags: 00000000
+  ExclusiveShopItems: []
   Icon: {fileID: 0}
   Flavor: "\uC774\uB3D9\uC18D\uB3C4\uC640 \uCCB4\uB825\uC774 \uC99D\uAC00\uD558\uACE0,
-    \uADFC\uC811 \uBB34\uAE30 \uD53C\uD574\uAC00 100% \uC99D\uAC00\uD558\uB294 \uB300\uC2E0,
-    \uC591 \uC606(A,D\uD0A4)\uC73C\uB85C \uBC16\uC5D0 \uC6C0\uC9C1\uC774\uC9C0 \uBABB\uD569\uB2C8\uB2E4."
+    \uADFC\uC811 \uBB34\uAE30 \uD53C\uD574\uAC00 \uB300\uD3ED \uC99D\uAC00\uD558\uB294
+    \uB300\uC2E0, \uC591 \uC606\uC73C\uB85C \uBC16\uC5D0 \uC6C0\uC9C1\uC774\uC9C0
+    \uBABB\uD569\uB2C8\uB2E4."
+  Number: 0
+  Summary: 
+  UiAccent: {r: 1, g: 0, b: 0.07060623, a: 1}
+  UiNameColor: {r: 1, g: 1, b: 1, a: 1}
+  UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives:
   - Name: "\uAF43\uAC8C\uC758 \uD798"
     Icon: {fileID: 0}
-    Description: 
+    Description: "\uCCB4\uB825\uACFC \uC774\uB3D9\uC18D\uB3C4\uAC00 60% \uC99D\uAC00\uD558\uACE0,
+      \uADFC\uC811 \uBB34\uAE30 \uD53C\uD574\uAC00 100% \uC99D\uAC00\uD569\uB2C8\uB2E4."
     DetailedInfo: 
     Tip: 
     DevNote: 
+    MaxLevel: 3
+    Vars: []
     Effects:
     - Trigger: 0
       Effect: 0
       Target: 0
       RequireStateId: 0
+      RequireWeapon: 0
       ChargeSlot: 0
       CostChargeSlot: 0
       ChargeCost: 0
@@ -42,12 +53,15 @@ MonoBehaviour:
       Chance: 1
       Stat: 0
       ModType: 1
+      Status: 0
+      Alter: {fileID: 0}
       PerTargetCooldown: 0
       Interval: 0
     - Trigger: 0
       Effect: 0
       Target: 0
       RequireStateId: 0
+      RequireWeapon: 0
       ChargeSlot: 0
       CostChargeSlot: 0
       ChargeCost: 0
@@ -57,27 +71,15 @@ MonoBehaviour:
       Chance: 1
       Stat: 3
       ModType: 1
+      Status: 0
+      Alter: {fileID: 0}
       PerTargetCooldown: 0
       Interval: 0
     - Trigger: 0
       Effect: 0
       Target: 0
       RequireStateId: 0
-      ChargeSlot: 0
-      CostChargeSlot: 0
-      ChargeCost: 0
-      Values:
-      - 0.6
-      Duration: 0
-      Chance: 1
-      Stat: 3
-      ModType: 1
-      PerTargetCooldown: 0
-      Interval: 0
-    - Trigger: 0
-      Effect: 0
-      Target: 0
-      RequireStateId: 0
+      RequireWeapon: 0
       ChargeSlot: 0
       CostChargeSlot: 0
       ChargeCost: 0
@@ -87,6 +89,8 @@ MonoBehaviour:
       Chance: 1
       Stat: 11
       ModType: 0
+      Status: 0
+      Alter: {fileID: 0}
       PerTargetCooldown: 0
       Interval: 0
   Skills: []

@@ -88,6 +88,12 @@ public class InevitableAbility : AbilityBehaviour
         });
     }
 
-    public override string DescToken(string key, int rank) =>
-        key == "stack" ? $"{_uses} / {UsesNeeded}" : null;
+    public override string DescToken(string key, int rank) => key switch
+    {
+        "stack" => $"{_uses} / {UsesNeeded}",
+        "ult" => _uses.ToString(),                          // 현재 궁극기 사용 횟수 (숫자만)
+        "ultneed" => UsesNeeded.ToString(),
+        "ultleft" => Mathf.Max(0, UsesNeeded - _uses).ToString(),
+        _ => null,
+    };
 }

@@ -227,6 +227,12 @@ public class ChessAbility : TransformAbility
         Ctx.PlayEffectLocal(fx, pos);
     }
 
-    public override string DescToken(string key, int rank) =>
-        key == "pawn" ? (IsTransformed ? "승격함" : $"폰 {_pawns} / {PawnsNeeded}") : null;
+    public override string DescToken(string key, int rank) => key switch
+    {
+        "pawn" => IsTransformed ? "승격함" : $"폰 {_pawns} / {PawnsNeeded}",
+        "pawns" => _pawns.ToString(),                       // 숫자만 — "현재 폰 {x:pawns}개"
+        "pawnsneed" => PawnsNeeded.ToString(),
+        "pawnsleft" => Mathf.Max(0, PawnsNeeded - _pawns).ToString(),
+        _ => null,
+    };
 }

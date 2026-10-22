@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cec5a42909569541aa38d3f38437895, type: 3}
+  m_Name: "\uC0AC\uB9DD\uD68C\uADC0_So"
+  m_EditorClassIdentifier: Assembly-CSharp::DeathRewindAbility
+  EnemyCooldownAdd: 8
+  ReviveFx: {fileID: 0}
