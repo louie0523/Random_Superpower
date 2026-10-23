@@ -31,7 +31,7 @@ MonoBehaviour:
     DamageMultiplier: 1
     RangeMultiplier: 1
     RadiusMultiplier: 1
-    MaxTargets: 1
+    MaxTargets: 0
     Motion:
       Keys:
       - Time: 0
@@ -367,6 +367,7 @@ MonoBehaviour:
     CameraShake: 0.3
     LungeDistance: 0
     WeaponOverride: {fileID: 11400000, guid: 47a6ac69dd82c4a4f9c0eba56f5d378b, type: 2}
+    HideWeapon: 0
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -384,6 +385,7 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       Scale: 1
       Lifetime: 2
+      RigState: 
       Vfx: {fileID: 0}
       FitToHit: 1
       VfxPalette: {fileID: 0}

@@ -25,9 +25,9 @@ MonoBehaviour:
     \uB429\uB2C8\uB2E4.\n\uD604\uC7AC \uD3F0 : {x:pawnsneed}/{x:pawnsleft}\uAC1C\n"
   Number: 0
   Summary: "\uD50C\uB808\uC774\uC5B4 \uCC98\uCE58\uC2DC\uB9C8\uB2E4 '\uD3F0'\uC744
-    \uD68D\uB4DD\uD569\uB2C8\uB2E4.\n'\uD3F0'\uC774 6\uAC1C \uC774\uC0C1\uC774 \uB418\uBA74,
-    \uD504\uB85C\uBAA8\uC158\uD558\uC5EC \uCCB4\uC2A4\uC758 \uAC70\uC2E0\uBCD1\uC774
-    \uB429\uB2C8\uB2E4.\n\uD604\uC7AC \uD3F0 : {x:pawn}\n\uD604\uC7AC \uD3F0 : {x:pawnsneed}/{x:pawnsleft}\uAC1C\n"
+    \uD68D\uB4DD\uD569\uB2C8\uB2E4.\r\n'\uD3F0'\uC774 6\uAC1C \uC774\uC0C1\uC774
+    \uB418\uBA74, \uD504\uB85C\uBAA8\uC158\uD558\uC5EC \uCCB4\uC2A4\uC758 \uAC70\uC2E0\uBCD1\uC774
+    \uB429\uB2C8\uB2E4.\r\n\uD604\uC7AC \uD3F0 : {x:pawnsneed}/{x:pawnsleft}\uAC1C"
   UiAccent: {r: 1, g: 1, b: 1, a: 1}
   UiNameColor: {r: 0, g: 0, b: 0, a: 1}
   UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}

@@ -48,7 +48,9 @@ public class ComboStep
     public float DamageMultiplier = 1f;
     public float RangeMultiplier = 1f;
     public float RadiusMultiplier = 1f;
-    public int MaxTargets = 1;
+
+    [Tooltip("한 번에 맞힐 수 있는 최대 수 — 0 = 제한 없음 (범위 안 전부)")]
+    public int MaxTargets = 0;
 
     [Header("Motion")]
     public SwingMotion Motion = new();

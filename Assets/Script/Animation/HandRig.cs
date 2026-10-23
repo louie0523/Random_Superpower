@@ -14,15 +14,26 @@ public class HandRig : MonoBehaviour
     [Tooltip("굽힘 1.0일 때 관절이 도는 각도")]
     public Vector3 CurlAxis = new(0f, 0f, -70f);
 
+    [Header("손가락 끝")]
+    [Tooltip("손가락 끝 위치를 직접 지정 — 마지막 마디 본 아래에 빈 오브젝트를 만들어 손톱 끝에 두고 여기에.\n" +
+             "비우면 _end 본 → 그것도 없으면 자동 (마지막 마디 방향으로 마디 길이 × Virtual Tip Ratio)")]
+    public Transform[] TipOverrides = new Transform[HandPose.FingerCount];
+    [Tooltip("_end 본이 없을 때 자동 끝 길이 = 바로 앞 마디 길이 × 이 값")]
+    [Range(0.3f, 1.5f)] public float VirtualTipRatio = 0.8f;
+
     [Header("IK")]
     [Range(1, 20)] public int IkIterations = 8;
     [Range(0f, 90f)] public float MaxJointAngle = 90f;
 
     // 각 손가락의 관절 체인 (뿌리 → 끝)
     [System.NonSerialized] public Transform[][] Chains;
-    [System.NonSerialized] public Transform[] Tips;      // _end 본
+    [System.NonSerialized] public Transform[] Tips;      // _end 본 · 지정한 끝 · (가상 끝이면) 마지막 마디
     private Quaternion[][] _rest;
     private bool _built;
+
+    [System.NonSerialized] private Vector3[] _tipLocal;     // 가상 끝 — 마지막 마디 기준 위치
+    [System.NonSerialized] private bool[] _virtualTip;
+    [System.NonSerialized] private bool[] _overrideTip;
 
     public bool IsBuilt => _built && Chains != null;
 
@@ -51,6 +62,11 @@ public class HandRig : MonoBehaviour
         Chains = new Transform[HandPose.FingerCount][];
         Tips = new Transform[HandPose.FingerCount];
         _rest = new Quaternion[HandPose.FingerCount][];
+        _tipLocal = new Vector3[HandPose.FingerCount];
+        _virtualTip = new bool[HandPose.FingerCount];
+        _overrideTip = new bool[HandPose.FingerCount];
+        if (TipOverrides == null || TipOverrides.Length != HandPose.FingerCount)
+            System.Array.Resize(ref TipOverrides, HandPose.FingerCount);
 
         // ── 체인만 구성 (rest는 아직 안 건드림) ──
         for (int f = 0; f < HandPose.FingerCount; f++)
@@ -72,7 +88,16 @@ public class HandRig : MonoBehaviour
             }
 
             Chains[f] = chain.ToArray();
-            if (Tips[f] == null && chain.Count > 0) Tips[f] = chain[^1];
+
+            if (TipOverrides[f] != null) { Tips[f] = TipOverrides[f]; _overrideTip[f] = true; }
+            if (Tips[f] == null && chain.Count > 0)
+            {
+                // _end 본 없음 → 가상 끝: 마지막 마디가 뻗는 방향(앞 마디들과 같은 로컬 축)으로 마디 길이만큼.
+                // 예전엔 마지막 마디 본 자체를 끝으로 써서, 끝 마디는 IK로 절대 안 돌았음
+                _virtualTip[f] = true;
+                Tips[f] = chain[^1];
+                _tipLocal[f] = VirtualTipLocal(chain);
+            }
         }
 
         // ── rest 복원 (없을 때만 캡처) ──
@@ -133,20 +158,77 @@ public class HandRig : MonoBehaviour
         return true;
     }
 
-    /// <summary>지정한 마디를 target으로 보냄 (그 앞쪽 관절들만 회전)</summary>
+    // ══════════════════ 손가락 끝 ══════════════════
+
+    /// <summary>
+    /// 마지막 마디 기준 가상 끝 위치. 본이 뻗는 로컬 축은 '앞 마디에서 본 다음 마디 위치'로 알아냄
+    /// (블렌더 본이면 보통 Y) → 모델이 휘어져 있어도 마지막 마디 자체 방향을 따름
+    /// </summary>
+    Vector3 VirtualTipLocal(List<Transform> chain)
+    {
+        var last = chain[^1];
+        if (chain.Count >= 2 && chain[^2] != null)
+            return chain[^2].InverseTransformPoint(last.position) * VirtualTipRatio;
+        if (last.parent != null)
+            return last.parent.InverseTransformPoint(last.position) * VirtualTipRatio;
+        return Vector3.up * 0.02f;
+    }
+
+    /// <summary>손가락 끝 (월드) — _end 본 · 직접 지정 · 가상 끝</summary>
+    public Vector3 TipPos(int f)
+    {
+        if (Chains == null || Tips == null || f < 0 || f >= Tips.Length || Tips[f] == null) return transform.position;
+        if (_virtualTip != null && f < _virtualTip.Length && _virtualTip[f]) return Tips[f].TransformPoint(_tipLocal[f]);
+        return Tips[f].position;
+    }
+
+    /// <summary>인스펙터 표시용 — 끝을 어디서 잡았는지</summary>
+    public string TipSourceLabel(int f)
+    {
+        if (_overrideTip != null && f < _overrideTip.Length && _overrideTip[f]) return "지정";
+        if (_virtualTip != null && f < _virtualTip.Length && _virtualTip[f]) return "자동(가상)";
+        return Tips != null && f < Tips.Length && Tips[f] != null ? "_end 본" : "없음";
+    }
+
+    /// <summary>손가락 일자로 — 각 마디(둘째부터)를 바로 앞 마디 방향으로. 첫 마디(손바닥 쪽)는 그대로</summary>
+    public void StraightenFinger(int f)
+    {
+        if (!_built) Build();
+        var chain = Chains != null && f >= 0 && f < Chains.Length ? Chains[f] : null;
+        if (chain == null || chain.Length < 2) return;
+
+        for (int j = 1; j < chain.Length; j++)
+        {
+            if (chain[j] == null || chain[j - 1] == null) continue;
+            Vector3 parentDir = chain[j].position - chain[j - 1].position;
+            Vector3 end = j + 1 < chain.Length && chain[j + 1] != null ? chain[j + 1].position : TipPos(f);
+            Vector3 cur = end - chain[j].position;
+            if (parentDir.sqrMagnitude < 1e-10f || cur.sqrMagnitude < 1e-10f) continue;
+            chain[j].rotation = Quaternion.FromToRotation(cur, parentDir) * chain[j].rotation;
+        }
+    }
+
+    // ══════════════════ IK (부분) ══════════════════
+
+    /// <summary>
+    /// 지정한 마디를 target으로 보냄 (그 앞쪽 관절들만 회전).
+    /// jointIndex = 마디 수이면 손가락 끝 — 끝 마디까지 전부 돌림
+    /// </summary>
     public void SolveIKPartial(int finger, int jointIndex, Vector3 worldTarget)
     {
         if (!_built) Build();
         if (Chains == null || finger >= Chains.Length) return;
 
         var chain = Chains[finger];
-        if (chain == null || jointIndex >= chain.Length) return;
+        if (chain == null || jointIndex > chain.Length) return;
 
-        Transform endBone = chain[jointIndex];
-        if (endBone == null) return;
+        bool toTip = jointIndex == chain.Length;            // 손가락 끝 (끝 마디까지 돌림)
+        Transform endBone = toTip ? null : chain[jointIndex];
+        if (!toTip && endBone == null) return;
+        Vector3 EndPos() => toTip ? TipPos(finger) : endBone.position;
 
         // 루트 마디는 회전만 (이동 불가)
-        if (jointIndex == 0)
+        if (!toTip && jointIndex == 0)
         {
             Transform parent = endBone.parent;
             if (parent == null) return;
@@ -170,7 +252,7 @@ public class HandRig : MonoBehaviour
                 var bone = chain[j];
                 if (bone == null) continue;
 
-                Vector3 toEnd = endBone.position - bone.position;
+                Vector3 toEnd = EndPos() - bone.position;
                 Vector3 toTarget = worldTarget - bone.position;
 
                 if (toEnd.sqrMagnitude < 1e-8f || toTarget.sqrMagnitude < 1e-8f) continue;
@@ -301,8 +383,7 @@ public class HandRig : MonoBehaviour
         var chain = Chains[finger];
         if (chain == null || chain.Length == 0) return;
 
-        Transform tip = Tips[finger];
-        if (tip == null) return;
+        if (Tips == null || Tips[finger] == null) return;
 
         for (int iter = 0; iter < IkIterations; iter++)
         {
@@ -311,7 +392,7 @@ public class HandRig : MonoBehaviour
                 var bone = chain[j];
                 if (bone == null) continue;
 
-                Vector3 toTip = tip.position - bone.position;
+                Vector3 toTip = TipPos(finger) - bone.position;
                 Vector3 toTarget = worldTarget - bone.position;
 
                 if (toTip.sqrMagnitude < 1e-8f || toTarget.sqrMagnitude < 1e-8f) continue;
@@ -350,9 +431,7 @@ public class HandRig : MonoBehaviour
         for (int f = 0; f < HandPose.FingerCount; f++) BakeToPose(f, pose);
     }
 
-    public Vector3 GetTipPosition(int finger) =>
-        (Chains != null && Tips != null && finger < Tips.Length && Tips[finger] != null)
-            ? Tips[finger].position : transform.position;
+    public Vector3 GetTipPosition(int finger) => TipPos(finger);
 
     static Vector3 NormalizeEuler(Vector3 e) => new(N(e.x), N(e.y), N(e.z));
     static float N(float a)
@@ -553,7 +632,7 @@ public class HandRig : MonoBehaviour
 
         string s = "[HandRig] 체인 —";
         for (int f = 0; f < HandPose.FingerCount; f++)
-            s += $" [{f}]{FingerRoots[f]?.name ?? "없음"}({GetJointCount(f)}마디)";
+            s += $" [{f}]{(FingerRoots[f] != null ? FingerRoots[f].name : "없음")}({GetJointCount(f)}마디 · 끝 {TipSourceLabel(f)})";
         Debug.Log(s);
     }
 

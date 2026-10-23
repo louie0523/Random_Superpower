@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(HandRig))]
@@ -41,6 +41,23 @@ public class HandRigEditor : Editor
         if (GUILayout.Button("본 자동 탐색", GUILayout.Height(24))) rig.Rebuild();
         if (GUILayout.Button("Rest 자세로")) rig.ResetToRest();
 
+        // ── 손가락별 끝 · 펴기 ──
+        if (rig.IsBuilt)
+        {
+            EditorGUILayout.Space(4);
+            EditorGUILayout.LabelField("손가락", EditorStyles.miniBoldLabel);
+            for (int f = 0; f < HandPose.FingerCount; f++)
+            {
+                int n = rig.GetJointCount(f);
+                if (n == 0) continue;
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"{FingerNames[f]}  마디 {n}  ·  끝: {rig.TipSourceLabel(f)}", GUILayout.MinWidth(160));
+                if (GUILayout.Button("일자로", GUILayout.Width(60))) Straighten(rig, f);
+                EditorGUILayout.EndHorizontal();
+            }
+            if (GUILayout.Button("전부 일자로")) Straighten(rig, -1);
+        }
+
         EditorGUILayout.Space(4);
         EditorGUILayout.LabelField("프리셋", EditorStyles.miniBoldLabel);
 
@@ -70,6 +87,21 @@ public class HandRigEditor : Editor
                 ? "씬에서 조작한 결과가 포즈에 저장됩니다."
                 : "편집 대상이 없습니다. 모션 툴이나 FPArmRig에서 지정하세요.",
             MessageType.None);
+    }
+
+    /// <summary>손가락을 일자로 — 각 마디를 바로 앞 마디 방향으로 (f = -1이면 전부)</summary>
+    void Straighten(HandRig rig, int f)
+    {
+        Undo.RegisterFullObjectHierarchyUndo(rig.gameObject, "Straighten Finger");
+        for (int i = 0; i < HandPose.FingerCount; i++)
+            if (f < 0 || f == i) rig.StraightenFinger(i);
+
+        if (EditTarget != null)
+        {
+            rig.BakeAll(EditTarget);
+            OnPoseChanged?.Invoke();
+        }
+        SceneView.RepaintAll();
     }
 
     void ApplyPreset(HandRig rig, HandPose p)
@@ -189,12 +221,16 @@ public class HandRigEditor : Editor
 
     void DrawJointHandles(HandRig rig, int f, Transform[] chain)
     {
-        for (int j = 0; j < chain.Length; j++)
+        // 마지막 = 손가락 끝 (끝 마디의 휘어짐도 이걸로 잡음). '둘 다' 모드에선 끝점 IK 손잡이가 대신함
+        int count = Mode == IkMode.JointRotate ? chain.Length + 1 : chain.Length;
+        for (int j = 0; j < count; j++)
         {
-            var bone = chain[j];
-            if (bone == null) continue;
+            bool isTip = j == chain.Length;
+            var bone = isTip ? null : chain[j];
+            if (!isTip && bone == null) continue;
+            Vector3 pos = isTip ? rig.GetTipPosition(f) : bone.position;
 
-            float hs = HandleUtility.GetHandleSize(bone.position);
+            float hs = HandleUtility.GetHandleSize(pos);
 
             // 뒤쪽 마디일수록 작게
             float t = chain.Length > 1 ? (float)j / (chain.Length - 1) : 0f;
@@ -205,11 +241,12 @@ public class HandRigEditor : Editor
 
             EditorGUI.BeginChangeCheck();
             Vector3 np = Handles.FreeMoveHandle(
-                bone.position, size, Vector3.zero, Handles.SphereHandleCap);
+                pos, size, Vector3.zero, Handles.SphereHandleCap);
 
             if (EditorGUI.EndChangeCheck())
             {
-                // 이 마디까지의 부분 체인에 IK
+                Undo.RecordObjects(chain, "Finger IK");
+                // 이 마디까지의 부분 체인에 IK (끝이면 끝 마디까지 전부)
                 rig.SolveIKPartial(f, j, np);
 
                 if (EditTarget != null)
@@ -236,6 +273,7 @@ public class HandRigEditor : Editor
 
         if (EditorGUI.EndChangeCheck())
         {
+            Undo.RecordObjects(rig.Chains[f], "Finger Tip IK");
             _dragging[f] = true;
             _targets[f] = np;
 

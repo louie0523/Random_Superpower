@@ -44,7 +44,11 @@ public class ChessAbility : TransformAbility
     public GameObject PawnFx;
     public GameObject TransformFx;
     public GameObject LandFx;
-    const int EvPawn = 0, EvTransform = 1, EvLand = 2;
+    [Tooltip("도약할 때 거신병 모델이 재생할 상태 (AlterClipAnimator · RigAnimator의 상태 이름). 비우면 없음")]
+    public string LeapAnim = "Leap";
+    [Tooltip("착지할 때 재생할 상태. 비우면 없음")]
+    public string LandAnim = "Land";
+    const int EvPawn = 0, EvTransform = 1, EvLand = 2, EvLeap = 3;
 
     protected override TransformForm[] Forms => new[] { Colossus };
 
@@ -159,6 +163,7 @@ public class ChessAbility : TransformAbility
         fwd = Quaternion.Euler(0f, yawOffset, 0f) * fwd.normalized;
 
         Movement.AddKnockback(fwd * LeapForward + Vector3.up * LeapUp);
+        Broadcast(EvLeap, Ctx.transform.position);
         _leap = kind;
         _leftGround = false;
         _leapStart = Now;
@@ -223,8 +228,12 @@ public class ChessAbility : TransformAbility
 
     protected override void OnFormEvent(int key, Vector3 pos)
     {
+        // 모델 동작 (모든 화면)
+        string anim = key switch { EvLeap => LeapAnim, EvLand => LandAnim, _ => null };
+        if (!string.IsNullOrEmpty(anim) && Alter != null) Alter.PlayPartState(Colossus.Alter, anim);
+
         GameObject fx = key switch { EvPawn => PawnFx, EvTransform => TransformFx, EvLand => LandFx, _ => null };
-        Ctx.PlayEffectLocal(fx, pos);
+        if (fx != null) Ctx.PlayEffectLocal(fx, pos);
     }
 
     public override string DescToken(string key, int rank) => key switch

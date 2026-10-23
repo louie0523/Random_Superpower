@@ -15,6 +15,9 @@ public class CommsHud : MonoBehaviour
     [Header("글꼴")]
     [Tooltip("알림 글꼴 (한글). 비우면 씬의 아무 TMP 글꼴 → TMP 기본")]
     [SerializeField] private TMP_FontAsset font;
+    [Tooltip("채팅 · 선택 창 글꼴 (한글 TTF/OTF — 예: 나눔고딕 · Noto Sans KR).\n" +
+             "비우면 위 TMP 글꼴의 원본 글꼴 파일 → 그것도 없으면 Unity 기본(OS 글꼴로 대체)")]
+    [SerializeField] private UnityEngine.Font chatFont;
     [Tooltip("채팅 · 선택 창 글자 크기 배율")]
     [Range(0.6f, 2f)][SerializeField] private float uiScale = 1f;
 
@@ -74,6 +77,15 @@ public class CommsHud : MonoBehaviour
     void OnDestroy()
     {
         if (_inst == this) { _inst = null; ChatOpen = false; PickShowing = false; }
+    }
+
+    /// <summary>IMGUI(채팅 · 선택 창)용 글꼴 — 한글이 □로 안 나오게</summary>
+    UnityEngine.Font ChatFont()
+    {
+        if (chatFont != null) return chatFont;
+        var f = Font();
+        if (f != null && f.sourceFontFile != null) chatFont = f.sourceFontFile;
+        return chatFont;
     }
 
     TMP_FontAsset Font()
@@ -207,6 +219,7 @@ public class CommsHud : MonoBehaviour
         ChatOpen = true;
         _openFrame = Time.frameCount;
         _input = "";
+        Input.imeCompositionMode = IMECompositionMode.On;      // 한글 · 일본어 · 중국어 등 조합 입력 켜기
         if (!TeamChatAvailable) _channel = ChatChannel.Match;
     }
 
@@ -214,13 +227,17 @@ public class CommsHud : MonoBehaviour
     {
         ChatOpen = false;
         _input = "";
+        Input.imeCompositionMode = IMECompositionMode.Auto;
         GUI.FocusControl(null);
     }
 
     void SendChat()
     {
-        if (!string.IsNullOrWhiteSpace(_input) && PlayerComms.Local != null)
-            PlayerComms.Local.SendChat(_channel, _input);
+        // 한글은 마지막 글자가 아직 '조합 중'일 수 있음 (예: "안녕" 치고 바로 Enter → '녕'이 조합 중) → 붙여서 보냄
+        string text = _input + Input.compositionString;
+        if (text.Length > PlayerComms.MaxChatLength) text = text.Substring(0, PlayerComms.MaxChatLength);
+        if (!string.IsNullOrWhiteSpace(text) && PlayerComms.Local != null)
+            PlayerComms.Local.SendChat(_channel, text);
         CloseChat();
     }
 
@@ -232,8 +249,10 @@ public class CommsHud : MonoBehaviour
         if (Mathf.Approximately(s, _styleScale) && _line != null) return;
         _styleScale = s;
 
+        var cf = ChatFont();
         _line = new GUIStyle(GUI.skin.label)
         {
+            font = cf,
             fontSize = Mathf.RoundToInt(20 * s),
             richText = true,
             wordWrap = true,
@@ -243,6 +262,7 @@ public class CommsHud : MonoBehaviour
 
         _field = new GUIStyle(GUI.skin.textField)
         {
+            font = cf,
             fontSize = Mathf.RoundToInt(21 * s),
             alignment = TextAnchor.MiddleLeft,
         };
@@ -344,9 +364,13 @@ public class CommsHud : MonoBehaviour
         var tagRect = new Rect(x, bottom - inputH, tagW, inputH);
         GUI.Label(tagRect, $"<color={ChannelColor(_channel)}>[{ChannelLabel(_channel)}]</color>", _tag);
 
+        var fieldRect = new Rect(x + tagW, bottom - inputH, w - tagW, inputH);
         GUI.SetNextControlName("ChatInput");
-        _input = GUI.TextField(new Rect(x + tagW, bottom - inputH, w - tagW, inputH), _input, PlayerComms.MaxChatLength, _field);
-        GUI.FocusControl("ChatInput");
+        _input = GUI.TextField(fieldRect, _input, PlayerComms.MaxChatLength, _field);
+        // 매 프레임 다시 포커스하면 조합 중인 글자가 끊김 → 포커스가 빠졌을 때만
+        if (GUI.GetNameOfFocusedControl() != "ChatInput") GUI.FocusControl("ChatInput");
+        // IME 후보 창(한자 · 일본어 변환 등)이 입력 칸 옆에 뜨게
+        Input.compositionCursorPos = new Vector2(fieldRect.x + 8f, fieldRect.yMax);
     }
 
     static string Escape(string s) => string.IsNullOrEmpty(s) ? s : s.Replace("<", "<​");
@@ -419,7 +443,7 @@ public class CommsHud : MonoBehaviour
         GUILayout.Label(_pickTitle, title);
         GUILayout.Space(6f * s);
 
-        var btn = new GUIStyle(GUI.skin.button) { fontSize = Mathf.RoundToInt(20 * s), richText = true };
+        var btn = new GUIStyle(GUI.skin.button) { font = ChatFont(), fontSize = Mathf.RoundToInt(20 * s), richText = true };
         PlayerHealth picked = null;
         var local = PlayerComms.Local != null ? PlayerComms.Local.transform.root : null;
 
@@ -447,7 +471,7 @@ public class CommsHud : MonoBehaviour
     }
 }
 
-/// <summary>플레이어 선택 창 (부두 인형 · 데스 노트). 자신 및 팀도 고를 수 있음ddd</summary>
+/// <summary>플레이어 선택 창 (부두 인형 · 데스 노트). 자신 · 팀도 고를 수 있음</summary>
 public static class PlayerPickPanel
 {
     public static bool IsShowing => CommsHud.PickShowing;

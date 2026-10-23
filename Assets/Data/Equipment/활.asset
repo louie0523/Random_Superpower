@@ -64,39 +64,39 @@ MonoBehaviour:
   RightGrip:
     Fingers:
     - Joints:
-      - {x: -0.28186023, y: -0.0659526, z: 0.12686521, w: 0.94874144}
-      - {x: -0.1475359, y: 0.110676676, z: 0.21993896, w: 0.95792}
-      - {x: -0.15129425, y: -0.055723786, z: 0.32708156, w: 0.9311405}
+      - {x: 0.11171318, y: -0.0013528998, z: -0.021188226, w: 0.99351364}
+      - {x: -0.20199393, y: 0.017633116, z: 0.2227568, w: 0.9535549}
+      - {x: 0.06864055, y: 0.06547317, z: 0.1741926, w: 0.98013204}
     - Joints:
-      - {x: 0.08092195, y: 0.073123224, z: -0.015654933, w: 0.9939112}
-      - {x: -0.2871764, y: -0.3420871, z: 0.08769982, w: 0.89040154}
-      - {x: -0.53044325, y: -0.034184236, z: 0.46632767, w: 0.7071068}
+      - {x: 0.2945633, y: 0.0048668627, z: -0.08570472, w: 0.9517687}
+      - {x: -0.0010832144, y: 0.02375108, z: 0.15551688, w: 0.98754716}
+      - {x: 0.056204934, y: 0.0033040629, z: -0.02560422, w: 0.99808544}
     - Joints:
-      - {x: 0.15918031, y: 0.15136884, z: -0.07701409, w: 0.9725318}
-      - {x: -0.3782298, y: 0.029636905, z: -0.0438492, w: 0.92419755}
-      - {x: -0.6520678, y: -0.009468835, z: -0.27334598, w: 0.7071069}
+      - {x: 0.23266533, y: -0.0023712083, z: -0.025815655, w: 0.97221136}
+      - {x: -0.09648514, y: 0.0037114343, z: -0.067642845, w: 0.9930264}
+      - {x: 0.1262964, y: -0.0154888565, z: -0.15824905, w: 0.97916627}
     - Joints:
-      - {x: 0.051804624, y: -0.05744741, z: -0.12916607, w: 0.9886012}
-      - {x: -0.30814984, y: 0.16581419, z: 0.03074895, w: 0.9362712}
-      - {x: -0.67198527, y: -0.01640373, z: -0.2194694, w: 0.70710677}
+      - {x: 0.080917105, y: 0.00097060384, z: -0.023240114, w: 0.99644935}
+      - {x: 0.08435971, y: -0.036635254, z: -0.2122863, w: 0.97287}
+      - {x: -0.076177254, y: 0.006985954, z: -0.0031100067, w: 0.99706507}
   LeftGrip:
     Fingers:
     - Joints:
-      - {x: -0.18152608, y: -0.021615108, z: 0.26108563, w: 0.9478478}
-      - {x: -0.111347735, y: -0.0005301842, z: -0.15383227, w: 0.98180294}
-      - {x: -0.07898221, y: -0.011142491, z: 0.34551892, w: 0.93501574}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
     - Joints:
-      - {x: -0.050033744, y: -0.005553929, z: 0.108373575, w: 0.9928348}
-      - {x: -0.10738622, y: 0.0024024602, z: -0.16003664, w: 0.9812496}
-      - {x: -0.37173083, y: 0.027088422, z: 0.06928735, w: 0.9253549}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
     - Joints:
-      - {x: -0.0063360534, y: 0.00014297102, z: -0.0010090716, w: 0.99997944}
-      - {x: -0.14965166, y: 0.005074661, z: 0.02764992, w: 0.9883391}
-      - {x: -0.505172, y: 0.052644163, z: 0.04337045, w: 0.8603191}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
     - Joints:
-      - {x: -0.021253683, y: -0.001288167, z: -0.018130342, w: 0.9996089}
-      - {x: -0.13696907, y: 0.0011330185, z: -0.0086813, w: 0.99053663}
-      - {x: -0.47139534, y: 0.03728804, z: 0.08104377, w: 0.87739843}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1}
   HitMode: 0
   Range: 3
   HitAngle: 100
@@ -199,6 +199,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.32
         Pose:
           RightPos: {x: 0.98, y: -0.52, z: 1.16}
@@ -276,6 +277,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.65
         Pose:
           RightPos: {x: 0.002, y: -0.969, z: 1.424}
@@ -353,6 +355,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 1
         Pose:
           RightPos: {x: 0.86, y: -0.8, z: 1.28}
@@ -430,11 +433,18 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes: []
+      LengthHint: 0.55
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
+    HideWeapon: 0
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -452,6 +462,10 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       Scale: 1
       Lifetime: 2
+      RigState: 
+      Vfx: {fileID: 0}
+      FitToHit: 1
+      VfxPalette: {fileID: 0}
       ShakeAmount: 0.3
       FlashColor: {r: 1, g: 1, b: 1, a: 0.35}
       FlashDuration: 0.12
@@ -557,6 +571,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.38
         Pose:
           RightPos: {x: 0.8, y: -0.3, z: 1.0999999}
@@ -634,6 +649,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.56
         Pose:
           RightPos: {x: 0.486, y: -1.058, z: 0.958}
@@ -711,6 +727,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 1
         Pose:
           RightPos: {x: 0.86, y: -0.8, z: 1.28}
@@ -788,11 +805,18 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes: []
+      LengthHint: 1
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
+    HideWeapon: 0
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -810,6 +834,10 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       Scale: 1
       Lifetime: 2
+      RigState: 
+      Vfx: {fileID: 0}
+      FitToHit: 1
+      VfxPalette: {fileID: 0}
       ShakeAmount: 0.3
       FlashColor: {r: 1, g: 1, b: 1, a: 0.35}
       FlashDuration: 0.12
@@ -917,6 +945,8 @@ MonoBehaviour:
   HitscanRange: 200
   TracerPrefab: {fileID: 0}
   ProjectileSpeed: 60
+  SpreadAngle: 0
+  AttackSpeedScale: 1
   FireSound: {fileID: 0}
   FireVolume: 0.8
   FirePitchVariance: 0.08
@@ -982,26 +1012,26 @@ MonoBehaviour:
   RecoilSwaySpeed: 30
   StringPullDir: {x: -2.0767135e-10, y: -1, z: 0}
   StringPullDistance: 0.04484598
-  StringHandOffset: {x: 0.00781762, y: 0.024513751, z: 0.014857858}
-  StringHandRot: {x: 72.83941, y: 118.32118, z: 98.17671}
+  StringHandOffset: {x: 0.008526267, y: 0.015655948, z: 0.0069448217}
+  StringHandRot: {x: 72.83942, y: 118.32121, z: 98.17673}
   StringHandPose:
     Fingers:
     - Joints:
-      - {x: -0.17343073, y: -0.018307421, z: 0.25451362, w: 0.95121473}
-      - {x: -0.2923908, y: 0.32309464, z: 0.054480854, w: 0.89841485}
-      - {x: -0.5693802, y: -0.26046816, z: 0.16751519, w: 0.7615125}
+      - {x: 0, y: 0, z: 0, w: 1.0000001}
+      - {x: 0, y: 0, z: 0, w: 1}
+      - {x: 0, y: 0, z: 0, w: 1.0000001}
     - Joints:
-      - {x: -0.055998065, y: -0.005794858, z: 0.11179788, w: 0.9921349}
-      - {x: -0.17915094, y: 0.016643796, z: -0.14110507, w: 0.9735077}
-      - {x: -0.34274748, y: 0.029468814, z: 0.040164586, w: 0.9381059}
+      - {x: -0.018107818, y: 0.00017893178, z: 0.009081403, w: 0.9997948}
+      - {x: 0.12115458, y: 0.017061252, z: 0.15753391, w: 0.97990495}
+      - {x: 0.13108508, y: -0.014563631, z: 0.09926723, w: 0.98628116}
     - Joints:
-      - {x: -0.0063361158, y: 0.00014293125, z: -0.0010091597, w: 0.9999795}
-      - {x: -0.19499125, y: 0.0027697654, z: 0.021842556, w: 0.98055786}
-      - {x: -0.6129938, y: -0.03399835, z: -0.11307544, w: 0.7812149}
+      - {x: 0.030790202, y: 0.0008679339, z: 0.053387232, w: 0.99809873}
+      - {x: 0.10344995, y: 0.019308427, z: 0.18686889, w: 0.97673196}
+      - {x: 0.13491175, y: -0.00030995024, z: -0.012971813, w: 0.9907727}
     - Joints:
-      - {x: 0.02148734, y: -0.0019493571, z: -0.017223852, w: 0.9996189}
-      - {x: -0.25809112, y: 0.06494897, z: 0.1311154, w: 0.95497614}
-      - {x: -0.25629857, y: -0.2797364, z: -0.20259947, w: 0.9027803}
+      - {x: 0.011935047, y: 0.001044203, z: 0.03150495, w: 0.99943185}
+      - {x: 0.056918614, y: 0.00490916, z: 0.07855654, w: 0.99527144}
+      - {x: 0.04337948, y: -0.0001321132, z: -0.02137386, w: 0.9988301}
   StringHandBlendTime: 0.12
   ProjectileGravity: 45
   PierceCount: 0

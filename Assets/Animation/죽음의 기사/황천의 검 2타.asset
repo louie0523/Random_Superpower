@@ -31,7 +31,7 @@ MonoBehaviour:
     DamageMultiplier: 1
     RangeMultiplier: 1
     RadiusMultiplier: 1
-    MaxTargets: 1
+    MaxTargets: 0
     Motion:
       Keys:
       - Time: 0
@@ -436,11 +436,14 @@ MonoBehaviour:
       Amplitude: 1
       Interp: 1
       Smoothness: 1.5
+      Shakes: []
+      LengthHint: 0.7
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
     WeaponOverride: {fileID: 0}
+    HideWeapon: 0
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -458,6 +461,7 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       Scale: 1.5
       Lifetime: 2
+      RigState: 
       Vfx: {fileID: 0}
       FitToHit: 1
       VfxPalette: {fileID: 0}

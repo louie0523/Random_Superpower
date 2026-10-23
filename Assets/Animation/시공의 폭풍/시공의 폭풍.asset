@@ -1,0 +1,697 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93a947148812d8d4f8635b65435026f1, type: 3}
+  m_Name: "\uC2DC\uACF5\uC758 \uD3ED\uD48D"
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityMotionData
+  DisplayName: "\uC77C\uACA9"
+  Note: 
+  Step:
+    Name: "1\uD0C0"
+    Duration: 2
+    HitStart: 0.19444445
+    HitEnd: 0.2777778
+    CancelPoint: 1
+    ComboResetTime: 0.8
+    OverrideHitShape: 1
+    NoWeaponEnchants: 0
+    HitMode: 0
+    Range: 4
+    HitAngle: 65
+    HitHeight: 1.2
+    MinRange: 2
+    DamageMultiplier: 1
+    RangeMultiplier: 1
+    RadiusMultiplier: 1
+    MaxTargets: 1
+    Motion:
+      Keys:
+      - Time: 0
+        Pose:
+          RightPos: {x: 0.86, y: -0.8, z: 1.28}
+          RightRot: {x: 22.102999, y: -56.82199, z: -30.660004}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: -7.7726403e-10, y: -1.9821783e-10, z: 0.0000000080601374, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 1
+      - Time: 0.12777779
+        Pose:
+          RightPos: {x: 0.86, y: -0.711, z: 1.273}
+          RightRot: {x: 3.810581, y: -54.036957, z: -8.9600525}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: -0.055484775, y: 0.015222505, z: 0.0020168815, w: 0.99834144}
+              - {x: -0.20466137, y: 0.15982544, z: -0.07702329, w: 0.9626199}
+              - {x: 0.04395379, y: -0.29288933, z: 0.08156965, w: 0.95164615}
+            - Joints:
+              - {x: 0.093159504, y: -0.08481003, z: 0.07343997, w: 0.98931056}
+              - {x: 0.4418544, y: 0.056992255, z: 0.18289822, w: 0.8763931}
+              - {x: 0.4259189, y: -0.021425212, z: 0.17082705, w: 0.88822985}
+            - Joints:
+              - {x: 0.23331636, y: 0.033336688, z: 0.0593739, w: 0.9700139}
+              - {x: 0.015281457, y: -0.034179993, z: 0.07107888, w: 0.9967679}
+              - {x: 0.07720949, y: -0.33262095, z: -0.021356013, w: 0.9396521}
+            - Joints:
+              - {x: 0.1462858, y: 0.0010852342, z: -0.025858892, w: 0.9889038}
+              - {x: 0.04214678, y: -0.056593142, z: 0.11786641, w: 0.9905193}
+              - {x: 0.042906415, y: -0.17300127, z: 0.14875978, w: 0.9726768}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: -0.055484775, y: 0.015222505, z: 0.0020168815, w: 0.99834144}
+              - {x: -0.20466137, y: 0.15982544, z: -0.07702329, w: 0.9626199}
+              - {x: 0.04395379, y: -0.29288933, z: 0.08156965, w: 0.95164615}
+            - Joints:
+              - {x: 0.093159504, y: -0.08481003, z: 0.07343997, w: 0.98931056}
+              - {x: 0.4418544, y: 0.056992255, z: 0.18289822, w: 0.8763931}
+              - {x: 0.4259189, y: -0.021425212, z: 0.17082705, w: 0.88822985}
+            - Joints:
+              - {x: 0.23331636, y: 0.033336688, z: 0.0593739, w: 0.9700139}
+              - {x: 0.015281457, y: -0.034179993, z: 0.07107888, w: 0.9967679}
+              - {x: 0.07720949, y: -0.33262095, z: -0.021356013, w: 0.9396521}
+            - Joints:
+              - {x: 0.1462858, y: 0.0010852342, z: -0.025858892, w: 0.9889038}
+              - {x: 0.04214678, y: -0.056593142, z: 0.11786641, w: 0.9905193}
+              - {x: 0.042906415, y: -0.17300127, z: 0.14875978, w: 0.9726768}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.1916208
+            value: 0.61213756
+            inSlope: 1.4990555
+            outSlope: 1.4990555
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 0
+      - Time: 0.22777778
+        Pose:
+          RightPos: {x: 0.86, y: -0.8, z: 1.28}
+          RightRot: {x: 22.102999, y: -56.82199, z: -30.660004}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.103003, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: -0.099133134, y: 0.014968288, z: -0.0015446753, w: 0.9949604}
+              - {x: -0.3385851, y: 0.16596471, z: -0.066449665, w: 0.92379665}
+              - {x: 0.04976377, y: -0.2919795, z: 0.062211346, w: 0.953101}
+            - Joints:
+              - {x: 0.09166046, y: -0.08529003, z: 0.07524605, w: 0.9892736}
+              - {x: 0.17148674, y: 0.003399934, z: 0.19557375, w: 0.9655733}
+              - {x: 0.8273669, y: 0.0054346635, z: 0.13979965, w: 0.5439583}
+            - Joints:
+              - {x: 0.2198458, y: 0.03136975, z: 0.064534135, w: 0.9728922}
+              - {x: -0.067077845, y: -0.039997313, z: 0.08152337, w: 0.993607}
+              - {x: 0.07720949, y: -0.33262095, z: -0.021356013, w: 0.9396521}
+            - Joints:
+              - {x: 0.12940617, y: 0.0002596909, z: -0.017229455, w: 0.99144197}
+              - {x: -0.045617033, y: -0.07143326, z: 0.15991622, w: 0.98348534}
+              - {x: 0.042906415, y: -0.17300127, z: 0.14875978, w: 0.9726768}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: -0.099133134, y: 0.014968288, z: -0.0015446753, w: 0.9949604}
+              - {x: -0.3385851, y: 0.16596471, z: -0.066449665, w: 0.92379665}
+              - {x: 0.04976377, y: -0.2919795, z: 0.062211346, w: 0.953101}
+            - Joints:
+              - {x: 0.09166046, y: -0.08529003, z: 0.07524605, w: 0.9892736}
+              - {x: 0.17148674, y: 0.003399934, z: 0.19557375, w: 0.9655733}
+              - {x: 0.8273669, y: 0.0054346635, z: 0.13979965, w: 0.5439583}
+            - Joints:
+              - {x: 0.2198458, y: 0.03136975, z: 0.064534135, w: 0.9728922}
+              - {x: -0.067077845, y: -0.039997313, z: 0.08152337, w: 0.993607}
+              - {x: 0.07720949, y: -0.33262095, z: -0.021356013, w: 0.9396521}
+            - Joints:
+              - {x: 0.12940617, y: 0.0002596909, z: -0.017229455, w: 0.99144197}
+              - {x: -0.045617033, y: -0.07143326, z: 0.15991622, w: 0.98348534}
+              - {x: 0.042906415, y: -0.17300127, z: 0.14875978, w: 0.9726768}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 0
+      - Time: 0.45277777
+        Pose:
+          RightPos: {x: 0.8644011, y: -0.815, z: 1.274}
+          RightRot: {x: 23.175043, y: -60.38858, z: -38.49817}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: -0.10536558, y: 0.015026062, z: -0.00096755446, w: 0.99431956}
+              - {x: -0.3428909, y: 0.166476, z: -0.06512363, w: 0.92220956}
+              - {x: 0.048774682, y: -0.2927651, z: 0.08900347, w: 0.95078284}
+            - Joints:
+              - {x: 0.08887815, y: -0.08567408, z: 0.07702633, w: 0.9893572}
+              - {x: 0.164276, y: 0.0011765474, z: 0.1998649, w: 0.96595347}
+              - {x: 0.8273668, y: 0.005434664, z: 0.13979964, w: 0.5439583}
+            - Joints:
+              - {x: 0.21525973, y: 0.030690778, z: 0.06632403, w: 0.9738186}
+              - {x: -0.06796692, y: -0.03955675, z: 0.08853702, w: 0.99296385}
+              - {x: 0.085738905, y: -0.3328855, z: -0.017251117, w: 0.9389029}
+            - Joints:
+              - {x: 0.12163782, y: -0.00013738315, z: -0.013154651, w: 0.9924873}
+              - {x: -0.05175107, y: -0.073046625, z: 0.14973064, w: 0.98466593}
+              - {x: 0.04427337, y: -0.17247698, z: 0.13119319, w: 0.9752334}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: -0.10536558, y: 0.015026062, z: -0.00096755446, w: 0.99431956}
+              - {x: -0.3428909, y: 0.166476, z: -0.06512363, w: 0.92220956}
+              - {x: 0.048774682, y: -0.2927651, z: 0.08900347, w: 0.95078284}
+            - Joints:
+              - {x: 0.08887815, y: -0.08567408, z: 0.07702633, w: 0.9893572}
+              - {x: 0.164276, y: 0.0011765474, z: 0.1998649, w: 0.96595347}
+              - {x: 0.8273668, y: 0.005434664, z: 0.13979964, w: 0.5439583}
+            - Joints:
+              - {x: 0.21525973, y: 0.030690778, z: 0.06632403, w: 0.9738186}
+              - {x: -0.06796692, y: -0.03955675, z: 0.08853702, w: 0.99296385}
+              - {x: 0.085738905, y: -0.3328855, z: -0.017251117, w: 0.9389029}
+            - Joints:
+              - {x: 0.12163782, y: -0.00013738315, z: -0.013154651, w: 0.9924873}
+              - {x: -0.05175107, y: -0.073046625, z: 0.14973064, w: 0.98466593}
+              - {x: 0.04427337, y: -0.17247698, z: 0.13119319, w: 0.9752334}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 0
+      - Time: 0.59166664
+        Pose:
+          RightPos: {x: 0.842, y: -0.609, z: 1.228}
+          RightRot: {x: 19.238213, y: -23.38086, z: -32.6351}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0.2647211, y: 0.043209378, z: -0.16379586, w: 0.94932956}
+              - {x: 0.42784095, y: 0.4872957, z: 0.21442044, w: 0.7304238}
+              - {x: 0.43339497, y: 0.5238542, z: 0.08259534, w: 0.72864515}
+            - Joints:
+              - {x: 0.26705244, y: 0.011872239, z: -0.13161919, w: 0.9545776}
+              - {x: 0.50725347, y: 0.06030893, z: -0.117347, w: 0.85163766}
+              - {x: 0.69185716, y: -0.016026797, z: 0.1451784, w: 0.70710677}
+            - Joints:
+              - {x: 0.18059109, y: -0.015525423, z: -0.14039822, w: 0.9733624}
+              - {x: 0.5612999, y: -0.11691803, z: -0.00672697, w: 0.8192848}
+              - {x: 0.69814026, y: 0.019287337, z: 0.11058144, w: 0.7071068}
+            - Joints:
+              - {x: 0.063949294, y: -0.099766634, z: -0.08300244, w: 0.9894785}
+              - {x: 0.4690951, y: -0.21180384, z: 0.026772127, w: 0.85695523}
+              - {x: 0.68382406, y: 0.024211287, z: -0.17832164, w: 0.7071068}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0.2647211, y: 0.043209378, z: -0.16379586, w: 0.94932956}
+              - {x: 0.42784095, y: 0.4872957, z: 0.21442044, w: 0.7304238}
+              - {x: 0.43339497, y: 0.5238542, z: 0.08259534, w: 0.72864515}
+            - Joints:
+              - {x: 0.26705244, y: 0.011872239, z: -0.13161919, w: 0.9545776}
+              - {x: 0.50725347, y: 0.06030893, z: -0.117347, w: 0.85163766}
+              - {x: 0.69185716, y: -0.016026797, z: 0.1451784, w: 0.70710677}
+            - Joints:
+              - {x: 0.18059109, y: -0.015525423, z: -0.14039822, w: 0.9733624}
+              - {x: 0.5612999, y: -0.11691803, z: -0.00672697, w: 0.8192848}
+              - {x: 0.69814026, y: 0.019287337, z: 0.11058144, w: 0.7071068}
+            - Joints:
+              - {x: 0.063949294, y: -0.099766634, z: -0.08300244, w: 0.9894785}
+              - {x: 0.4690951, y: -0.21180384, z: 0.026772127, w: 0.85695523}
+              - {x: 0.68382406, y: 0.024211287, z: -0.17832164, w: 0.7071068}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 1
+      - Time: 0.68333334
+        Pose:
+          RightPos: {x: 0.842, y: -0.609, z: 1.228}
+          RightRot: {x: 28.02109, y: -10.974823, z: -2.3768616}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0.31227413, y: 0.007250513, z: -0.0784258, w: 0.94672155}
+              - {x: 0.45706508, y: 0.26764533, z: 0.34335116, w: 0.77560776}
+              - {x: 0.43364018, y: 0.46817484, z: 0.0617888, w: 0.7674313}
+            - Joints:
+              - {x: 0.2876603, y: 0.0050617615, z: -0.11802216, w: 0.95041925}
+              - {x: 0.5165232, y: 0.043656483, z: -0.09184823, w: 0.85021293}
+              - {x: 0.69185716, y: -0.016026797, z: 0.1451784, w: 0.70710677}
+            - Joints:
+              - {x: 0.18059112, y: -0.015525419, z: -0.14039822, w: 0.9733624}
+              - {x: 0.5512511, y: -0.059842207, z: -0.091389194, w: 0.82715744}
+              - {x: 0.69814026, y: 0.019287337, z: 0.11058145, w: 0.70710677}
+            - Joints:
+              - {x: 0.069269635, y: -0.0978809, z: -0.1139493, w: 0.9862234}
+              - {x: 0.49020675, y: -0.11173013, z: -0.15154853, w: 0.851027}
+              - {x: 0.68382406, y: 0.024211291, z: -0.17832164, w: 0.7071068}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0.31227413, y: 0.007250513, z: -0.0784258, w: 0.94672155}
+              - {x: 0.45706508, y: 0.26764533, z: 0.34335116, w: 0.77560776}
+              - {x: 0.43364018, y: 0.46817484, z: 0.0617888, w: 0.7674313}
+            - Joints:
+              - {x: 0.2876603, y: 0.0050617615, z: -0.11802216, w: 0.95041925}
+              - {x: 0.5165232, y: 0.043656483, z: -0.09184823, w: 0.85021293}
+              - {x: 0.69185716, y: -0.016026797, z: 0.1451784, w: 0.70710677}
+            - Joints:
+              - {x: 0.18059112, y: -0.015525419, z: -0.14039822, w: 0.9733624}
+              - {x: 0.5512511, y: -0.059842207, z: -0.091389194, w: 0.82715744}
+              - {x: 0.69814026, y: 0.019287337, z: 0.11058145, w: 0.70710677}
+            - Joints:
+              - {x: 0.069269635, y: -0.0978809, z: -0.1139493, w: 0.9862234}
+              - {x: 0.49020675, y: -0.11173013, z: -0.15154853, w: 0.851027}
+              - {x: 0.68382406, y: 0.024211291, z: -0.17832164, w: 0.7071068}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 0
+      - Time: 0.80277777
+        Pose:
+          RightPos: {x: 0.842, y: -0.609, z: 1.228}
+          RightRot: {x: 17.99067, y: -24.331055, z: -35.611145}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0.31454447, y: 0.004707001, z: -0.07128796, w: 0.94655037}
+              - {x: 0.46184936, y: 0.26049182, z: 0.3599123, w: 0.7676603}
+              - {x: 0.43364018, y: 0.46817484, z: 0.0617888, w: 0.7674313}
+            - Joints:
+              - {x: 0.28560832, y: 0.0075163464, z: -0.12529634, w: 0.95009077}
+              - {x: 0.5504691, y: -0.03754445, z: 0.033647817, w: 0.83333194}
+              - {x: 0.69185716, y: -0.016026797, z: 0.1451784, w: 0.70710677}
+            - Joints:
+              - {x: 0.19550478, y: -0.020631934, z: -0.12468542, w: 0.97252554}
+              - {x: 0.5257044, y: -0.097889006, z: -0.035690203, w: 0.84426254}
+              - {x: 0.69814026, y: 0.019287337, z: 0.11058145, w: 0.70710677}
+            - Joints:
+              - {x: 0.07085705, y: -0.09720472, z: -0.124344885, w: 0.9849208}
+              - {x: 0.4830077, y: -0.14824317, z: -0.08806226, w: 0.85847116}
+              - {x: 0.68382406, y: 0.024211295, z: -0.17832164, w: 0.7071068}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0.31454447, y: 0.004707001, z: -0.07128796, w: 0.94655037}
+              - {x: 0.46184936, y: 0.26049182, z: 0.3599123, w: 0.7676603}
+              - {x: 0.43364018, y: 0.46817484, z: 0.0617888, w: 0.7674313}
+            - Joints:
+              - {x: 0.28560832, y: 0.0075163464, z: -0.12529634, w: 0.95009077}
+              - {x: 0.5504691, y: -0.03754445, z: 0.033647817, w: 0.83333194}
+              - {x: 0.69185716, y: -0.016026797, z: 0.1451784, w: 0.70710677}
+            - Joints:
+              - {x: 0.19550478, y: -0.020631934, z: -0.12468542, w: 0.97252554}
+              - {x: 0.5257044, y: -0.097889006, z: -0.035690203, w: 0.84426254}
+              - {x: 0.69814026, y: 0.019287337, z: 0.11058145, w: 0.70710677}
+            - Joints:
+              - {x: 0.07085705, y: -0.09720472, z: -0.124344885, w: 0.9849208}
+              - {x: 0.4830077, y: -0.14824317, z: -0.08806226, w: 0.85847116}
+              - {x: 0.68382406, y: 0.024211295, z: -0.17832164, w: 0.7071068}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 0
+      - Time: 0.9861111
+        Pose:
+          RightPos: {x: 0.86, y: -0.8, z: 1.28}
+          RightRot: {x: 22.102999, y: -56.82199, z: -30.660004}
+          UseLeftHand: 0
+          LeftPos: {x: -0.86, y: -0.8, z: 1.28}
+          LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
+          WeaponPos: {x: 0, y: 0, z: 0}
+          WeaponRot: {x: 0, y: 0, z: 0}
+          CamPos: {x: 0, y: 0, z: 0}
+          CamRot: {x: 0, y: 0, z: 0}
+          CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: -0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
+          UseWeaponGrip: 0
+          RightFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: -0.000000029908538, y: -0.0000000010254493, z: 0.000000002084118, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: -3.327838e-11, y: -0.0000000013821979, z: 0.000000028051266, w: 1}
+              - {x: 0.000000024224635, y: -0.0000000160215, z: -0.000000002760244, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+          LeftFingers:
+            Fingers:
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+              - {x: -0.000000029908538, y: -0.0000000010254493, z: 0.000000002084118, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1}
+            - Joints:
+              - {x: -3.327838e-11, y: -0.0000000013821979, z: 0.000000028051266, w: 1}
+              - {x: 0.000000024224635, y: -0.0000000160215, z: -0.000000002760244, w: 1.0000001}
+              - {x: 0, y: 0, z: 0, w: 1.0000001}
+        Ease:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        Hold: 0
+      Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes:
+      - Start: 0.18673469
+        End: 0.28571427
+        Hands: 0
+        Independent: 0
+        PosAmount: 1.31
+        RotAmount: 8.4
+        CamAmount: 0
+        Frequency: 24.5
+        Fade: 0.2
+        Build: 0.362
+        Seed: 0
+      LengthHint: 2
+    HitStopDuration: 0.05
+    CameraKickFov: 4
+    CameraShake: 0.3
+    LungeDistance: 0
+    WeaponOverride: {fileID: 0}
+    HideWeapon: 1
+    HandMode: 1
+    SwingSound: {fileID: 0}
+    TrailPrefab: {fileID: 0}
+    Events: []
+  CameraRoll: 0
+  PreviewWeaponData: {fileID: 0}

@@ -2171,7 +2171,8 @@ public class WeaponSetupWindow : EditorWindow
         }
         using (new EditorGUILayout.HorizontalScope())
         {
-            step.MaxTargets = EditorGUILayout.IntField("최대 대상", step.MaxTargets);
+            step.MaxTargets = Mathf.Max(0, EditorGUILayout.IntField(
+                new GUIContent("최대 대상", "0 = 제한 없음 (범위 안 전부)"), step.MaxTargets));
             step.LungeDistance = EditorGUILayout.FloatField("전진 (m)", step.LungeDistance);
         }
         step.NoWeaponEnchants = EditorGUILayout.Toggle(
@@ -3167,9 +3168,9 @@ public class WeaponSetupWindow : EditorWindow
         step.ResolveHitShape(w, out var mode, out float range, out float angle, out _, out _);
         GUILayout.Label(mode == WeaponHitMode.ForwardArc ? $"부채꼴 {range:F2}m / {angle:F0}°" : $"구체 {range:F2}m",
             EditorStyles.whiteMiniLabel);
-        
 
-        GUILayout.Label($"피해 ×{step.DamageMultiplier:F2}   대상 {step.MaxTargets}", EditorStyles.whiteMiniLabel);
+
+        GUILayout.Label($"피해 ×{step.DamageMultiplier:F2}   대상 {(step.MaxTargets > 0 ? step.MaxTargets.ToString() : "∞")}", EditorStyles.whiteMiniLabel);
 
         GUILayout.EndArea();
         Handles.EndGUI();

@@ -696,6 +696,7 @@ public class PlayerAttack : NetworkBehaviour
         if (target == null || target.IsDead) return;                     // 지형이면 그냥 멈춤
         if (target.transform.root == transform.root) return;
         if (TeamUtil.IsFriendly(Object.InputAuthority, target)) return;
+        if (target == _health) return;
 
         float outgoing = Outgoing(baseDmg, DamageSource.RangedWeapon, forceCrit, out bool crit);
 
@@ -934,11 +935,13 @@ public class PlayerAttack : NetworkBehaviour
         if (flatFwd.sqrMagnitude < 0.001f) flatFwd = transform.forward;
 
         int hits = 0;
+        var done = new System.Collections.Generic.HashSet<PlayerHealth>();   // 한 사람에 콜라이더가 여러 개여도 한 번만
 
         foreach (var col in cols)
         {
             if (col.gameObject == gameObject) continue;
-            if (!col.TryGetComponent<PlayerHealth>(out var target)) continue;
+            var target = col.GetComponentInParent<PlayerHealth>();     // 자식 피격 콜라이더(변신 범위)도
+            if (target == null || target == _health || !done.Add(target)) continue;
             if (target.IsDead) continue;
 
             Vector3 toTarget = col.transform.position - origin;
@@ -969,7 +972,7 @@ public class PlayerAttack : NetworkBehaviour
             }
 
             ApplyHit(target, col.gameObject, step);
-            if (++hits >= step.MaxTargets) break;
+            if (step.MaxTargets > 0 && ++hits >= step.MaxTargets) break;      // 0 = 제한 없음
         }
     }
 
@@ -1058,11 +1061,16 @@ public class PlayerAttack : NetworkBehaviour
         {
             if (col.gameObject == gameObject) continue;
 
-            int id = col.gameObject.GetInstanceID();
+
+
+            var target = col.GetComponentInParent<PlayerHealth>();
+
+            int id = target.GetInstanceID();
             if (_hitThisAttack.Contains(id)) continue;
 
-            if (!col.TryGetComponent<PlayerHealth>(out var target)) continue;
+            if (target == null || target == _health) continue;
             if (target.IsDead) continue;
+
 
             Vector3 to = col.transform.position - origin;
             if (Mathf.Abs(to.y) > height) continue;
@@ -1076,6 +1084,7 @@ public class PlayerAttack : NetworkBehaviour
 
             _hitThisAttack.Add(id);
             ApplyHit(target, col.gameObject, step);
+
         }
     }
 

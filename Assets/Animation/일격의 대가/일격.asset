@@ -22,6 +22,7 @@ MonoBehaviour:
     CancelPoint: 1
     ComboResetTime: 0.8
     OverrideHitShape: 1
+    NoWeaponEnchants: 0
     HitMode: 1
     Range: 1.75
     HitAngle: 120
@@ -30,7 +31,7 @@ MonoBehaviour:
     DamageMultiplier: 1
     RangeMultiplier: 1
     RadiusMultiplier: 1
-    MaxTargets: 12
+    MaxTargets: 0
     Motion:
       Keys:
       - Time: 0
@@ -45,6 +46,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -106,6 +111,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.42
         Pose:
           RightPos: {x: 0.86, y: -0.7, z: 1.28}
@@ -118,6 +124,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -179,6 +189,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.47499996
         Pose:
           RightPos: {x: 0.86, y: -0.7, z: 1.28}
@@ -191,6 +202,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -252,6 +267,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.5
         Pose:
           RightPos: {x: 0.86, y: -0.7, z: 1.28}
@@ -264,6 +280,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -325,6 +345,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       - Time: 0.85
         Pose:
           RightPos: {x: 0.86, y: -0.7, z: 1.28}
@@ -337,6 +358,10 @@ MonoBehaviour:
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
+          BodyPos: {x: 0, y: 0, z: 0}
+          BodyRot: {x: 0, y: 0, z: 0}
+          HeadPos: {x: 0, y: 0, z: 0}
+          HeadRot: {x: 0, y: 0, z: 0}
           UseWeaponGrip: 0
           RightFingers:
             Fingers:
@@ -398,11 +423,18 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        Hold: 0
       Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes: []
+      LengthHint: 1.2
     HitStopDuration: 0.15
     CameraKickFov: 0
     CameraShake: 0.6
     LungeDistance: 0
+    WeaponOverride: {fileID: 0}
+    HideWeapon: 0
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -412,13 +444,24 @@ MonoBehaviour:
       Clip: {fileID: 0}
       Volume: 0.8
       Pitch: 1
+      Clips: []
+      PitchJitter: 0.08
       Prefab: {fileID: 0}
       Space: 1
       PositionOffset: {x: 0, y: 0, z: 0}
       RotationOffset: {x: 0, y: 0, z: 0}
       Scale: 1
       Lifetime: 2
+      RigState: 
+      Vfx: {fileID: 0}
+      FitToHit: 1
+      VfxPalette: {fileID: 0}
       ShakeAmount: 0.3
+      FlashColor: {r: 1, g: 1, b: 1, a: 0.35}
+      FlashDuration: 0.12
+      LightIntensity: 4
+      LightRange: 6
+      FovAmount: -4
       Key: 
       ShowFirstPerson: 1
       ShowThirdPerson: 1
