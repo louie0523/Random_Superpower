@@ -33,10 +33,14 @@ public class PlayerAttack : NetworkBehaviour
     private PlayerStatus _status;
     private PlayerEnchant _enchant;
     private FPArmRig _fpRig;
+    private PlayerMovement _moveRef;
 
     /// <summary>변신 중 — 원거리 무기를 들고 있어도 좌클릭은 근접(형태의 공격)으로</summary>
     private bool _forceMelee;
     private PlayerAlter _alterRef;
+    public bool AttackRooted =>
+    IsAttacking && _overrideSource == AbilityRuntime.AlterAttackSource
+    && AlterRef != null && AlterRef.ActiveAttack != null && AlterRef.ActiveAttack.RootDuringAttack;
     PlayerAlter AlterRef => _alterRef != null ? _alterRef : (_alterRef = GetComponent<PlayerAlter>());
 
     /// <summary>변신 중 — 원거리 무기를 들고 있어도 좌클릭은 근접(형태의 공격)으로. 변화에 공격 모션이 있어도 자동</summary>
@@ -45,6 +49,10 @@ public class PlayerAttack : NetworkBehaviour
         get => _forceMelee || (AlterRef != null && AlterRef.ActiveAttack != null);
         set => _forceMelee = value;
     }
+    /// <summary>능력이 잠시 공격을 막음 (거신병 도약 중 등)</summary>
+    public bool Locked { get; set; }
+    private float _alterAtkReady;
+
 
     private float _atkSpd = 1f;         // 이번 공격의 공속 (시작 시점 고정)
     private int _overrideSource = -1;   // 공격을 대체한 Behaviour 번호. -1 = 일반 공격
@@ -187,6 +195,7 @@ public class PlayerAttack : NetworkBehaviour
         _shop = GetComponent<PlayerShop>();
         _status = GetComponent<PlayerStatus>();
         _enchant = GetComponent<PlayerEnchant>();
+        _moveRef = GetComponent<PlayerMovement>();
         if (weaponAnim == null) weaponAnim = GetComponentInChildren<WeaponAnimator>(true);
 
         _fpRig = weaponAnim != null && weaponAnim.ArmRig != null
@@ -808,6 +817,14 @@ public class PlayerAttack : NetworkBehaviour
         var weapon = _equip != null ? _equip.GetWeapon() : null;
         if (weapon == null || (weapon.ComboLength == 0 && !ForceMelee)) return;
 
+        if (Locked) return;
+        var alterAtk = AlterRef != null ? AlterRef.ActiveAttack : null;
+        if (alterAtk != null && alterAtk.AttackCooldown > 0f && Runner.SimulationTime < _alterAtkReady) return;   // 변화 공격 내부 쿨
+        if (AlterRef != null && AlterRef.GroundOnlyAttack)
+        {
+            if (_moveRef == null) _moveRef = GetComponent<PlayerMovement>();
+            if (_moveRef != null && (_moveRef.IsAirborne || Time.time < _moveRef.LockMoveUntil)) return;   // 공중 · 착지 중
+        }
         _pendingDamageMul = 1f;
         _isDashAttack = false;
         _dashStarted = false;
@@ -821,6 +838,9 @@ public class PlayerAttack : NetworkBehaviour
 
         if (_ability != null && _ability.TryOverrideAttack(out _override, out _overrideSource))
         {
+            if (_overrideSource == AbilityRuntime.AlterAttackSource && alterAtk != null)
+                _alterAtkReady = Runner.SimulationTime + alterAtk.AttackCooldown;
+
             _pendingDamageMul = _override.DamageMul;
             _current = _override.Step ?? weapon.GetStep(0);
             if (_current == null) return;
@@ -1064,13 +1084,11 @@ public class PlayerAttack : NetworkBehaviour
 
 
             var target = col.GetComponentInParent<PlayerHealth>();
-
-            int id = target.GetInstanceID();
-            if (_hitThisAttack.Contains(id)) continue;
-
             if (target == null || target == _health) continue;
             if (target.IsDead) continue;
 
+            int id = target.GetInstanceID();
+            if (_hitThisAttack.Contains(id)) continue;
 
             Vector3 to = col.transform.position - origin;
             if (Mathf.Abs(to.y) > height) continue;

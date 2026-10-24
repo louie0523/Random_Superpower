@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9dbf792fc77bb9443a6bdfa9d84c0a00, type: 2}
+    - target: {fileID: -7239507436085175931, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.10126575
+      objectReference: {fileID: 0}
+    - target: {fileID: -7239507436085175931, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0011274343
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
       propertyPath: m_Name
       value: wooden_knight_3d_model
@@ -59,5 +67,110 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2082553939697433141}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1083448488757054017}
   m_SourcePrefab: {fileID: 100100000, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
+--- !u!1 &7221196667278489672 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
+  m_PrefabInstance: {fileID: 7563709580775212313}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2082553939697433141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7221196667278489672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9025f3e7b794245904e9d45abdc394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlterClipAnimator
+  Animator: {fileID: 1083448488757054017}
+  Idle: {fileID: -203655887218126122, guid: 64ddf13c799dd674691ec9de6b7b4094, type: 3}
+  Walk: {fileID: -203655887218126122, guid: ee225f0abba6aae4580df7a56b91136c, type: 3}
+  Run: {fileID: 0}
+  WalkRefSpeed: 3
+  RunThreshold: 6
+  RunRefSpeed: 7
+  MoveThreshold: 0.6
+  BaseFade: 0.2
+  Footsteps: 1
+  WalkStepFrames: 1000000020000000
+  RunStepFrames: 
+  StepTimes:
+  - 0.05
+  - 0.55
+  Footstep:
+    ShakeRadius: 14
+    ShakeAmount: 0.08
+    ShakeSelf: 0.3
+    Sound: {fileID: 0}
+    Volume: 0.9
+    SoundRange: 30
+    PitchJitter: 0.06
+    Fx: {fileID: 0}
+    FxLife: 2
+  AirAnims: 1
+  JumpState: Leap
+  LandState: Land
+  LandHeight: 0.3
+  MinAirHeight: 1
+  JumpUpSpeed: 1.5
+  GroundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  LandFeelMul: 1.5
+  LandRecover: 0.15
+  FreezeFacingOnLand: 1
+  FacingReturnSpeed: 6
+  States:
+  - Name: Attack
+    Clip: {fileID: -203655887218126122, guid: d5964957ad742c144aa8dd4f5512d914, type: 3}
+    Speed: 1
+    FadeIn: 0.12
+    HitAt: 0.4
+    HitFrame: 22
+    HoldEnd: 0
+  - Name: Leap
+    Clip: {fileID: -203655887218126122, guid: 16d2ec34127322e4289e623f0222081a, type: 3}
+    Speed: 1
+    FadeIn: 0.12
+    HitAt: -1
+    HitFrame: 14
+    HoldEnd: 0
+  - Name: Land
+    Clip: {fileID: -203655887218126122, guid: 81bf7980b546e904193eead3ee6da403, type: 3}
+    Speed: 1
+    FadeIn: 0.12
+    HitAt: -1
+    HitFrame: 9
+    HoldEnd: 0.15
+--- !u!95 &1083448488757054017
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7221196667278489672}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: abe7c1a6adf257c499ee7b47570f787f, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

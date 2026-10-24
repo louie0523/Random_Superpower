@@ -32,7 +32,32 @@ MonoBehaviour:
   UiNameColor: {r: 0, g: 0, b: 0, a: 1}
   UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives: []
-  Skills: []
+  Skills:
+  - Name: "\uB098\uC774\uD2B8 \uD589\uB9C8\uBC95"
+    Icon: {fileID: 0}
+    Description: 
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 4
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 13
+    SoulCost: 0
+    CooldownAfterEffect: 1
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
   Behaviour: {fileID: 11400000, guid: 909bc1e15d8d67845865753204bf9579, type: 2}
   MaxConcurrent: 0
   ExcludeFromRoll: 0

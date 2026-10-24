@@ -91,6 +91,16 @@ public class AlterData : ScriptableObject
     public AbilityMotionData AttackMotion;
     [Tooltip("공격할 때 모델이 재생할 상태 (DragonWave = Attack)")]
     public string AttackAnim = "Attack";
+    [Tooltip("공격 판정 순간에 쿵 — 앞쪽 범위 기절 · 밀치기 · 주변 화면 흔들림 (거신병 내려찍기 등). 끄면 없음")]
+    public ShockwaveDef AttackWave = new() { Enabled = false, Radius = 3.5f, Forward = 1.8f, Stun = 0.8f, Push = 8f, PushUp = 3.5f };
+    [Tooltip("변화 기본 공격 동안 이동 · 점프 금지 (내려찍기 등 발이 묶이는 공격)")]
+    public bool RootDuringAttack = false;
+    [Tooltip("변화 기본 공격 내부 쿨타임 (초, 공격 시작부터). 0 = 없음")]
+    [Min(0f)] public float AttackCooldown = 0f;
+    [Tooltip("붙어 있는 동안 점프 세기 배율 (1 = 그대로 · 1.4면 높이 약 2배)")]
+    [Min(0.1f)] public float JumpMultiplier = 1f;
+    [Tooltip("땅에 있을 때만 기본 공격 (공중에선 좌클릭 무시)")]
+    public bool GroundOnlyAttack = false;
 
     /// <summary>이 변화의 기본 공격 (없으면 null)</summary>
     public ComboStep AttackStep =>

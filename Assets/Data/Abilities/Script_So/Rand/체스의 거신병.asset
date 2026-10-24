@@ -14,24 +14,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChessAbility
   KnightSkill: 0
   Colossus:
-    Alter: {fileID: 0}
+    Alter: {fileID: 11400000, guid: 0d1c259f50be2e343852309eb5707286, type: 2}
     Attack: {fileID: 0}
     AttackAnim: Attack
     CanFly: 0
     FlyTime: 5
     FlyUpSpeed: 6
     FlyAnim: Flying
-  PawnsNeeded: 6
-  LeapForward: 16
-  LeapUp: 7
-  LandRadius: 3.5
-  LandCoef: 120
-  LandStun: 1
-  LandPush: 9
-  LandPushUp: 4
+  PawnsNeeded: 1
+  LeapForward: 40
+  LeapUp: 22
+  TakeoffWave:
+    Enabled: 1
+    Radius: 2.5
+    Forward: 0
+    DamageCoef: 0
+    Stun: 0.5
+    Push: 6
+    PushUp: 3
+    Feel:
+      ShakeRadius: 10
+      ShakeAmount: 0.2
+      ShakeSelf: 0.4
+      Sound: {fileID: 0}
+      Volume: 1
+      SoundRange: 35
+      PitchJitter: 0.06
+      Fx: {fileID: 0}
+      FxLife: 2
+  LandWave:
+    Enabled: 1
+    Radius: 3.5
+    Forward: 0
+    DamageCoef: 120
+    Stun: 1
+    Push: 9
+    PushUp: 4
+    Feel:
+      ShakeRadius: 14
+      ShakeAmount: 0.45
+      ShakeSelf: 0.4
+      Sound: {fileID: 0}
+      Volume: 1
+      SoundRange: 35
+      PitchJitter: 0.06
+      Fx: {fileID: 0}
+      FxLife: 2
   DiagonalWindow: 3
   DiagonalAngle: 45
+  ChainDelay: 1.45
   PromotionBelow: 0.18
   PawnFx: {fileID: 0}
   TransformFx: {fileID: 0}
   LandFx: {fileID: 0}
+  LeapAnim: Leap
+  LandAnim: Land

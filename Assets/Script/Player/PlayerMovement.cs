@@ -35,6 +35,8 @@ public class PlayerMovement : NetworkBehaviour
     private PlayerAnimator _anim;
 
     private float _currentSpeed;
+    /// <summary>이 시각(Time.time)까지 이동 · 점프 막음 — 착지 동작 등</summary>
+    public float LockMoveUntil { get; set; }
 
     public bool IsMoving => _speed01 > 0.1f;
     public Vector3 LocalMoveDir => _localMoveDir;
@@ -44,13 +46,21 @@ public class PlayerMovement : NetworkBehaviour
 
     private PlayerShop _shop;
     private PlayerEquipment _equip;
+    /// <summary>능력이 잠시 이동 · 점프를 막음 (거신병 도약 중 등)</summary>
+    public bool InputLocked { get; set; }
+    private PlayerAttack _attackRef;
+    private PlayerAlter _alterRef;
 
     /// <summary>비행 중 — 중력 대신 FlyUpSpeed로 올라감 (변신 능력이 켬)</summary>
     public bool Flying { get; set; }
     public float FlyUpSpeed { get; set; } = 6f;
     public bool Grounded => _cc != null && _cc.isGrounded;
+    /// <summary>공중 — 땅에서 떨어졌거나, 막 뛰어서 올라가는 중 (뛴 틱엔 isGrounded가 아직 true라서)</summary>
+    public bool IsAirborne => _cc != null && (!_cc.isGrounded || _verticalVel > 0f);
     /// <summary>Space를 누르고 있는가 (내 캐릭터)</summary>
     public bool JumpHeld => HasInputAuthority && !UIManager.InputBlocked && Input.GetKey(KeyCode.Space);
+    /// <summary>점프한 순간 (내 캐릭터) — 변신 모델이 점프 동작을 바로 틀게</summary>
+    public event System.Action Jumped;
 
 
     public override void Spawned()
@@ -62,6 +72,8 @@ public class PlayerMovement : NetworkBehaviour
         _shop = GetComponent<PlayerShop>();
         _equip = GetComponent<PlayerEquipment>();
         _status = GetComponent<PlayerStatus>();
+        _alterRef = GetComponent<PlayerAlter>();
+        _attackRef = GetComponent<PlayerAttack>();
 
         if (armRoot != null) armRoot.SetActive(true);   // 항상 켬
 
@@ -123,6 +135,16 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
+        // 능력 · 착지 동작 · 발 묶이는 공격 — 이동 · 점프 막기
+        if (_attackRef == null) _attackRef = GetComponent<PlayerAttack>();
+        if (_alterRef == null) _alterRef = GetComponent<PlayerAlter>();
+        if (InputLocked || Time.time < LockMoveUntil || (_attackRef != null && _attackRef.AttackRooted))
+        { h = 0f; v = 0f; blocked = true; }
+
+        // 땅에서만 공격하는 변신 — 공격 중엔 점프 못 함 (공중 공격이 되지 않게)
+        if (_attackRef != null && _attackRef.IsAttacking && _alterRef != null && _alterRef.GroundOnlyAttack)
+            blocked = true;
+
         _localMoveDir = new Vector3(h, 0f, v).normalized;
 
         float speed = _stats.Get(StatType.MoveSpeed);
@@ -137,7 +159,11 @@ public class PlayerMovement : NetworkBehaviour
             fpsCamera.LandDip(Mathf.Clamp01(-_verticalVel / 12f));
 
         if (grounded && _verticalVel < 0f) _verticalVel = -2f;
-        if (HasInputAuthority && grounded && !blocked && !Flying && Input.GetKey(KeyCode.Space)) _verticalVel = jumpPower;
+        if (HasInputAuthority && grounded && !blocked && !Flying && Input.GetKey(KeyCode.Space))
+        {
+            _verticalVel = jumpPower * JumpMul();
+            Jumped?.Invoke();
+        }
 
         bool dashNoGravity = _ability != null && _ability.DashIgnoresGravity;
 
@@ -169,6 +195,12 @@ public class PlayerMovement : NetworkBehaviour
 
 
 
+    }
+
+    float JumpMul()
+    {
+        if (_alterRef == null) _alterRef = GetComponent<PlayerAlter>();
+        return _alterRef != null ? _alterRef.JumpMultiplier : 1f;
     }
 
 

@@ -64,6 +64,22 @@ public class PlayerAlter : NetworkBehaviour
     /// <summary>지금 올라타 있는 높이 (m)</summary>
     public float Lift => _lift;
 
+    /// <summary>붙은 변화들의 점프 세기 배율 (곱)</summary>
+    public float JumpMultiplier
+    {
+        get
+        {
+            if (database == null || Object == null || !Object.IsValid) return 1f;
+            float m = 1f;
+            for (int i = 0; i < MaxAlters; i++)
+            {
+                var a = database.Get(Alters[i]);
+                if (a != null) m *= a.JumpMultiplier;
+            }
+            return m;
+        }
+    }
+
     public override void Spawned()
     {
         _stats = GetComponent<PlayerStats>();
@@ -92,6 +108,8 @@ public class PlayerAlter : NetworkBehaviour
         Rebuild();
         if (HasStateAuthority) ApplyStats();
     }
+
+
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
@@ -167,21 +185,42 @@ public class PlayerAlter : NetworkBehaviour
         return false;
     }
 
-    /// <summary>변화 기본 공격의 모델 연출 — 공격 판정 시간에 맞춰서 (모든 클라이언트, PlayerAttack의 RPC_PlaySwing에서)</summary>
+    /// <summary>
+    /// 변화 기본 공격의 모델 연출 — 공격 판정 시간에 맞춰서 (모든 클라이언트, PlayerAttack의 RPC_PlaySwing에서).
+    /// AttackWave가 켜져 있으면 판정 순간에 쿵: 모든 화면 소리 · 흔들림, 권한자는 기절 · 밀치기 · 피해
+    /// </summary>
     public void PlayAttackAnim(float speed)
     {
         var a = ActiveAttack;
-        if (a == null || string.IsNullOrEmpty(a.AttackAnim)) return;
+        if (a == null) return;
         var step = a.AttackStep;
         float spd = Mathf.Max(0.05f, speed);
         float dur = step.Duration / spd;
         float hit = step.Duration * step.HitStart / spd;
 
-        string prefix = $"Alter_{a.name}";
-        foreach (var (root, pa) in _partAnims)
-            if (root != null && root.name.StartsWith(prefix)) pa.PlayAttack(a.AttackAnim, dur, hit);
-        foreach (var ra in _rigAnims)
-            if (ra != null && ra.name.StartsWith(prefix)) ra.Play(a.AttackAnim);
+        if (!string.IsNullOrEmpty(a.AttackAnim))
+        {
+            string prefix = $"Alter_{a.name}";
+            foreach (var (root, pa) in _partAnims)
+                if (root != null && root.name.StartsWith(prefix)) pa.PlayAttack(a.AttackAnim, dur, hit);
+            foreach (var ra in _rigAnims)
+                if (ra != null && ra.name.StartsWith(prefix)) ra.Play(a.AttackAnim);
+        }
+
+        var wave = a.AttackWave;
+        if (wave != null && wave.Enabled)
+        {
+            var self = this;
+            GameTimers.After(hit, () =>
+            {
+                if (self == null || self.Object == null || !self.Object.IsValid) return;
+                if (self._health != null && self._health.IsDead) return;
+                if (!self.Has(a)) return;                                    // 그 사이 변신이 풀림
+                Vector3 c = Shockwave.Center(self.transform, wave.Forward);
+                Shockwave.Feel(c, wave.Feel, self.transform);
+                if (self.HasStateAuthority) Shockwave.Hit(self.GetComponent<AbilityRuntime>(), c, wave);
+            });
+        }
     }
 
     /// <summary>특정 변화의 파츠를 Idle/Walk 자동 전환으로 되돌림 (비행 끝 등)</summary>
@@ -643,6 +682,21 @@ public class PlayerAlter : NetworkBehaviour
             if (r != null) return r;
         }
         return null;
+    }
+
+    /// <summary>붙은 변화 중 '땅에서만 공격'이 하나라도 있으면</summary>
+    public bool GroundOnlyAttack
+    {
+        get
+        {
+            if (database == null || Object == null || !Object.IsValid) return false;
+            for (int i = 0; i < MaxAlters; i++)
+            {
+                var a = database.Get(Alters[i]);
+                if (a != null && a.GroundOnlyAttack) return true;
+            }
+            return false;
+        }
     }
 
     /// <summary>본인 화면에서 시야를 가리는 파츠는 숨김 (그림자만 남길 수 있음)</summary>
