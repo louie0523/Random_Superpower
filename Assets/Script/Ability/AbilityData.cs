@@ -155,6 +155,9 @@ public class AbilityData : ScriptableObject
         [Header("Slot")]
         public SkillSlot Slot = SkillSlot.Skill1;
 
+        [Tooltip("처음엔 칸에 안 놓임 — 능력이 SwapSkill로 바꿔 끼우는 '변형' 스킬")]
+        public bool StartHidden;
+
         [Header("레벨")]
         [Tooltip("최대 레벨. 1이면 강화 불가. 궁극기는 보통 3.\nEffects의 Values와 Vars의 칸 수를 이 값에 맞추세요")]
         [Min(1)] public int MaxLevel = 5;

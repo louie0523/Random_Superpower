@@ -31,7 +31,8 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
         public float FadeIn = 0.12f;
         [Tooltip("타격 순간 (0~1, 클립 길이 대비). 0 이상이면 변화 기본 공격의 판정 순간에 맞춰 재생 속도를 조절. 음수면 안 맞춤")]
         public float HitAt = -1f;
-        [Tooltip("타격 순간을 프레임 번호로 (Animation 창 위쪽 숫자). 0 이상이면 Hit At 대신 이걸 씀")]
+        [Tooltip("타격 순간을 프레임 번호로 (Animation 창 위쪽 숫자). 0 이상이면 Hit At 대신 이걸 씀.\n" +
+                 "도약(Leap) 상태에선 '이륙 프레임' — 체스 나이트 이동이 이 프레임에 날아오름")]
         public int HitFrame = -1;
         [Tooltip("다 재생한 뒤 마지막 자세로 이만큼 더 머무름 (초)")]
         public float HoldEnd = 0f;
@@ -73,6 +74,9 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
     public bool AirAnims = true;
     public string JumpState = "Leap";
     public string LandState = "Land";
+    [Tooltip("켜면 스페이스 점프도 Jump State의 Hit Frame(이륙 프레임)까지 준비 동작을 하고 나서 뜸 (그동안 이동 멈춤).\n" +
+             "Hit Frame이 없으면 바로 뜸")]
+    public bool JumpWaitsTakeoff = true;
     [Tooltip("떨어지는 중 땅까지 이 거리(m) 이하가 되면 착지 동작")]
     public float LandHeight = 1.5f;
     [Tooltip("이 높이(m) 이상 떠 봐야 착지 동작이 나옴 — 계단 · 턱 · 막 뛴 순간엔 안 나오게")]
@@ -130,6 +134,7 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
     Transform _body;                // 플레이어 루트 — 높이 · 땅 판정 기준 (모델 위치를 내려 둬도 정확하게)
     PlayerMovement _move;
     bool _jumpPlayed;
+    float _jumpWait;            // 이번 점프의 준비 시간 (초) — 준비 중 땅에 있는 걸 '안 뜸'으로 보지 않게
 
     // 착지 중 방향 고정
     float _freezeUntil = -1f, _returnT = 1f;
@@ -200,6 +205,7 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
         if (!AirAnims || _abilityLeap || _jumpPlayed) return;
         _jumpPlayed = true;
         _groundedFor = 0f;
+        _jumpWait = JumpTakeoff();
         PlayNamed(JumpState);
     }
 
@@ -256,11 +262,25 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
         return true;
     }
 
-    void PlayNamed(string state)
+    /// <summary>상태의 Hit Frame / Hit At 순간 (초, 재생 속도 반영). 없으면 0 — 도약 이륙 시간 등</summary>
+    public float EventTime(string state)
+    {
+        var s = Find(state);
+        if (s == null || s.Clip == null) return 0f;
+        float len = s.Clip.length;
+        float t = s.HitFrame >= 0 ? s.HitFrame / Mathf.Max(1f, s.Clip.frameRate)
+                : s.HitAt >= 0f ? s.HitAt * len : 0f;
+        return Mathf.Clamp(t, 0f, len) / Mathf.Max(0.01f, s.Speed);
+    }
+
+    /// <summary>스페이스 점프가 기다릴 시간 (초) — PlayerMovement가 물어봄. 0이면 바로 뜸</summary>
+    public float JumpTakeoff() => AirAnims && JumpWaitsTakeoff && isActiveAndEnabled ? EventTime(JumpState) : 0f;
+
+    void PlayNamed(string state, float startClipTime = 0f)
     {
         if (string.IsNullOrEmpty(state)) return;
         var s = Find(state);
-        if (s != null && _index.TryGetValue(state, out int i)) Begin(i, s, s.Speed, -1f);
+        if (s != null && _index.TryGetValue(state, out int i)) Begin(i, s, s.Speed, -1f, startClipTime);
     }
 
     public void ReleaseState()
@@ -281,16 +301,17 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
         Begin(i, s, Mathf.Clamp(speed, 0.1f, 5f), -1f);
     }
 
-    void Begin(int i, ClipState s, float speed, float hold)
+    void Begin(int i, ClipState s, float speed, float hold, float startClipTime = 0f)
     {
         var p = _plays[i];
-        p.SetTime(0);
+        startClipTime = Mathf.Clamp(startClipTime, 0f, s.Clip.length);
+        p.SetTime(startClipTime);
         p.SetDone(false);
         p.SetSpeed(speed);
         _oneShot = i;
         _holdLoop = hold > 0f;
         _oneShotEnd = _holdLoop ? Time.time + hold
-                                : Time.time + s.Clip.length / Mathf.Max(0.01f, speed) + s.HoldEnd;
+                                : Time.time + (s.Clip.length - startClipTime) / Mathf.Max(0.01f, speed) + s.HoldEnd;
         CrossTo(i, s.FadeIn);
     }
 
@@ -335,8 +356,8 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
             if (grounded)
             {
                 _groundedFor += dt;
-                if (_groundedFor > 0.4f) _jumpPlayed = false;            // 점프 신호는 왔는데 거의 안 뜸
-                if (_groundedFor > 1f) _abilityLeap = false;             // 혹시 남은 표시 정리
+                if (_groundedFor > 0.4f + _jumpWait) { _jumpPlayed = false; _jumpWait = 0f; }            // 점프 신호는 왔는데 거의 안 뜸
+                if (_groundedFor > 3f) _abilityLeap = false;             // 혹시 남은 표시 정리
                 return;
             }
             if (_vy > JumpUpSpeed || h > 0.6f)
@@ -358,7 +379,9 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
         if (!_jumpPlayed && !_abilityLeap && !_landPlayed && _airTime < 0.5f && _vy > JumpUpSpeed)
         {
             _jumpPlayed = true;
-            PlayNamed(JumpState);
+            // 이미 떠 있음 (다른 화면) — 준비 동작은 건너뛰고 이륙 프레임부터
+            var js = Find(JumpState);
+            PlayNamed(JumpState, js != null ? EventTime(JumpState) * Mathf.Max(0.01f, js.Speed) : 0f);
         }
 
         // 점프 동작이 끝나도 공중에선 마지막 자세 유지
@@ -388,6 +411,7 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
                 Shockwave.Feel(modelPos, LandFeel(), transform);
             _abilityLeap = false;
             _jumpPlayed = false;
+            _jumpWait = 0f;
 
             // 착지 동작이 재생 중이면 끝날 때까지 + LandRecover 동안 이동 막기
             if (LandRecover >= 0f && _move != null && _landPlayed && _oneShot >= 0

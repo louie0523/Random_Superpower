@@ -80,6 +80,21 @@ public class PlayerAlter : NetworkBehaviour
         }
     }
 
+    public float FallGravityMultiplier
+    {
+        get
+        {
+            if (database == null || Object == null || !Object.IsValid) return 1f;
+            float m = 1f;
+            for (int i = 0; i < MaxAlters; i++)
+            {
+                var a = database.Get(Alters[i]);
+                if (a != null) m *= a.FallGravity;
+            }
+            return m;
+        }
+    }
+
     public override void Spawned()
     {
         _stats = GetComponent<PlayerStats>();

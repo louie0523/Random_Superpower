@@ -99,6 +99,7 @@ MonoBehaviour:
   RootDuringAttack: 1
   AttackCooldown: 0.9
   JumpMultiplier: 4
+  FallGravity: 2
   GroundOnlyAttack: 1
   Hitboxes:
   - Shape: 0

@@ -55,6 +55,14 @@ public abstract class AbilityBehaviour : ScriptableObject
     /// <summary>모든 클라이언트에 이벤트 전송. SA에서만 동작</summary>
     protected void Broadcast(int key, Vector3 pos) => Ctx.BroadcastBehaviourEvent(this, key, pos);
 
+    /// <summary>스킬 변형 — 이 능력의 Skills[from]이 놓인 칸을 Skills[to]로 바꿈</summary>
+    protected bool SwapSkill(int from, int to, bool resetCooldown = false)
+    {
+        if (Data == null || Data.Skills == null) return false;
+        if (from < 0 || from >= Data.Skills.Length || to < 0 || to >= Data.Skills.Length) return false;
+        return Ctx.SwapSkill(Data.Skills[from], Data.Skills[to], resetCooldown);
+    }
+
     /// <summary>TryOverrideAttack이 쓰는 모션. 원격 클라이언트가 같은 모션을 재생할 때 사용</summary>
     public virtual ComboStep GetOverrideStep() => null;
     public virtual void OnEquip() { }

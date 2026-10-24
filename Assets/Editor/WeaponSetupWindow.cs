@@ -1097,7 +1097,7 @@ public class WeaponSetupWindow : EditorWindow
 
     bool IsTwoHand()
     {
-        var w = ResolvePreviewWeapon();
+        var w = DesiredPreviewWeapon();         // 이 모션만 쥐는 무기가 있으면 그 무기 기준
         return w != null && w.Grip == GripType.TwoHand;
     }
 
@@ -1796,12 +1796,22 @@ public class WeaponSetupWindow : EditorWindow
             {
                 var cap = CaptureCurrentPose();
                 cap.CamPos = p.CamPos; cap.CamRot = p.CamRot; cap.CamFov = p.CamFov;   // 카메라는 유지
-                k.Pose = cap;
+                Modify("Capture Pose", () => k.Pose = cap);       // 저장 표시 · 되돌리기
                 PreviewPose(cap);
             }
-            if (GUILayout.Button("Idle 복사", EditorStyles.miniButtonMid)) { k.Pose = _rig.GetEffectiveIdle().Clone(); PreviewPose(k.Pose); }
+            if (GUILayout.Button("Idle 복사", EditorStyles.miniButtonMid))
+            {
+                var idle = _rig.GetEffectiveIdle().Clone();
+                Modify("Copy Idle", () => k.Pose = idle);
+                PreviewPose(k.Pose);
+            }
             using (new EditorGUI.DisabledScope(index == 0))
-                if (GUILayout.Button("앞 키 복사", EditorStyles.miniButtonMid)) { k.Pose = motion.Keys[index - 1].Pose.Clone(); PreviewPose(k.Pose); }
+                if (GUILayout.Button("앞 키 복사", EditorStyles.miniButtonMid))
+                {
+                    var prev = motion.Keys[index - 1].Pose.Clone();
+                    Modify("Copy Prev Key", () => k.Pose = prev);
+                    PreviewPose(k.Pose);
+                }
             if (GUILayout.Button("복제", EditorStyles.miniButtonMid)) { DuplicateKey(step, k); return; }
             if (GUILayout.Button("삭제", EditorStyles.miniButtonRight)) { DeleteKey(step, k); return; }
         }
@@ -2782,14 +2792,17 @@ public class WeaponSetupWindow : EditorWindow
         }
 
         // 무기 추가 오프셋 (기본 오프셋 대비 차이)
+        //  - 기준은 '지금 손에 든 무기' — 이 모션만 쥐는 무기(WeaponOverride)면 그 무기의 기본 오프셋
+        //    (예전엔 원래 미리보기 무기 기준으로 빼서, 재생 땐 다른 무기 기준으로 더해져 위치 · 회전이 틀어졌음)
+        //  - 회전은 적용 쪽(FPArmRig: Euler(기본 + 추가))과 같은 식으로 빼야 그대로 돌아옴
         var weaponT = _rig.GetWeaponTransform();
-        var w = ResolvePreviewWeapon();
+        var w = _rig.CurrentWeapon != null ? _rig.CurrentWeapon : ResolvePreviewWeapon();
         if (weaponT != null && w != null)
         {
             Vector3 baseP = w.GetPosOffset(true);
             Vector3 baseR = w.GetRotOffset(true);
             p.WeaponPos = weaponT.localPosition - baseP;
-            p.WeaponRot = NormalizeEuler((Quaternion.Inverse(Quaternion.Euler(baseR)) * weaponT.localRotation).eulerAngles);
+            p.WeaponRot = NormalizeEuler(weaponT.localRotation.eulerAngles - baseR);
         }
 
         // 몸 · 머리
@@ -3164,7 +3177,7 @@ public class WeaponSetupWindow : EditorWindow
         GUILayout.Label($"진행 {p * 100f:F0}%   {(inActive ? "◆ 판정 중" : "－")}",
             inActive ? EditorStyles.whiteBoldLabel : EditorStyles.whiteMiniLabel);
 
-   
+
         step.ResolveHitShape(w, out var mode, out float range, out float angle, out _, out _);
         GUILayout.Label(mode == WeaponHitMode.ForwardArc ? $"부채꼴 {range:F2}m / {angle:F0}°" : $"구체 {range:F2}m",
             EditorStyles.whiteMiniLabel);

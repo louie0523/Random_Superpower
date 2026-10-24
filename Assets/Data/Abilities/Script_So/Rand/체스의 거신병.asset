@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 222fa65f0a93beb4a8f142a5789e9ebe, type: 3}
   m_Name: "\uCCB4\uC2A4\uC758 \uAC70\uC2E0\uBCD1"
   m_EditorClassIdentifier: Assembly-CSharp::ChessAbility
-  KnightSkill: 0
+  PromotionSkill: 0
+  KnightSkill: 1
   Colossus:
     Alter: {fileID: 11400000, guid: 0d1c259f50be2e343852309eb5707286, type: 2}
     Attack: {fileID: 0}
@@ -63,6 +64,8 @@ MonoBehaviour:
   DiagonalWindow: 3
   DiagonalAngle: 45
   ChainDelay: 1.45
+  TakeoffDelay: -1
+  LeapFallGravity: 3
   PromotionBelow: 0.18
   PawnFx: {fileID: 0}
   TransformFx: {fileID: 0}

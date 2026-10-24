@@ -547,6 +547,7 @@ public class AbilityRuntime : NetworkBehaviour
         if (a.Skills != null)
             foreach (var s in a.Skills)
             {
+                if (s == null || s.StartHidden) continue;
                 int idx = s.Slot.Index();
                 if (secondRandom && s.Slot == SkillSlot.Random) idx = SkillSlot.Random2.Index();
                 if (idx < 0 || idx >= _slots.Length) continue;
@@ -1116,6 +1117,27 @@ public class AbilityRuntime : NetworkBehaviour
         for (int i = 0; i < _slots.Length; i++)
             if (_slots[i] == skill) return i;
         return skill.Slot.Index();
+    }
+
+    /// <summary>
+    /// 스킬 변형 — from이 놓인 칸에 to를 놓음. 그 칸이 아니면 false.
+    /// resetCooldown이면 그 칸 쿨타임도 비움 (권한자)
+    /// </summary>
+    public bool SwapSkill(AbilityData.SkillDef from, AbilityData.SkillDef to, bool resetCooldown = false)
+    {
+        if (from == null || to == null || from == to) return false;
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            if (_slots[i] != from) continue;
+            _slots[i] = to;
+            if (resetCooldown && HasStateAuthority)
+            {
+                CooldownEnd.Set(i, 0f);
+                HoldUntil.Set(i, 0f);
+            }
+            return true;
+        }
+        return false;
     }
 
     /// <summary>원카드 — 일반 스킬(궁극기·랜덤 제외)의 쿨타임을 seconds만큼 늘림 (맞는 쪽 SA)</summary>

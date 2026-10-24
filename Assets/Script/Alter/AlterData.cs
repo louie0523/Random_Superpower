@@ -99,6 +99,8 @@ public class AlterData : ScriptableObject
     [Min(0f)] public float AttackCooldown = 0f;
     [Tooltip("붙어 있는 동안 점프 세기 배율 (1 = 그대로 · 1.4면 높이 약 2배)")]
     [Min(0.1f)] public float JumpMultiplier = 1f;
+    [Tooltip("내려올 때 중력 배율 (올라갈 땐 그대로). 1 = 그대로 · 2 = 2배 빠르게 떨어짐")]
+    [Min(0.1f)] public float FallGravity = 1f;
     [Tooltip("땅에 있을 때만 기본 공격 (공중에선 좌클릭 무시)")]
     public bool GroundOnlyAttack = false;
 

@@ -435,6 +435,8 @@ public class AbilityDataEditor : Editor
         if (isSkill)
         {
             var slot = (SkillSlot)el.FindPropertyRelative("Slot").enumValueIndex;
+            EditorGUILayout.PropertyField(el.FindPropertyRelative("StartHidden"),
+    new GUIContent("처음엔 숨김 (변형)", "칸에 안 놓이고, 능력이 SwapSkill로 바꿔 끼울 때 나타남"));
             _sb.Append('[').Append(slot.Label()).Append("]  ");
         }
 

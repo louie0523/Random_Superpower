@@ -48,6 +48,12 @@ public class PlayerMovement : NetworkBehaviour
     private PlayerEquipment _equip;
     /// <summary>능력이 잠시 이동 · 점프를 막음 (거신병 도약 중 등)</summary>
     public bool InputLocked { get; set; }
+    /// <summary>능력이 잠시 정하는 '내려올 때 중력 배율' (0 = 안 씀 → AlterData Fall Gravity). 거신병 도약 등</summary>
+    public float FallGravityOverride { get; set; }
+    private float _jumpAt;              // 준비 동작 뒤 뜰 시각 (0 = 없음) — 거신병 점프 이륙 프레임
+    private AlterClipAnimator _clipAnim;
+    /// <summary>점프 준비 동작 중 (아직 땅이지만 곧 뜸)</summary>
+    public bool JumpPending => _jumpAt > 0f;
     private PlayerAttack _attackRef;
     private PlayerAlter _alterRef;
 
@@ -56,7 +62,7 @@ public class PlayerMovement : NetworkBehaviour
     public float FlyUpSpeed { get; set; } = 6f;
     public bool Grounded => _cc != null && _cc.isGrounded;
     /// <summary>공중 — 땅에서 떨어졌거나, 막 뛰어서 올라가는 중 (뛴 틱엔 isGrounded가 아직 true라서)</summary>
-    public bool IsAirborne => _cc != null && (!_cc.isGrounded || _verticalVel > 0f);
+    public bool IsAirborne => _cc != null && (!_cc.isGrounded || _verticalVel > 0f || _jumpAt > 0f);
     /// <summary>Space를 누르고 있는가 (내 캐릭터)</summary>
     public bool JumpHeld => HasInputAuthority && !UIManager.InputBlocked && Input.GetKey(KeyCode.Space);
     /// <summary>점프한 순간 (내 캐릭터) — 변신 모델이 점프 동작을 바로 틀게</summary>
@@ -138,7 +144,7 @@ public class PlayerMovement : NetworkBehaviour
         // 능력 · 착지 동작 · 발 묶이는 공격 — 이동 · 점프 막기
         if (_attackRef == null) _attackRef = GetComponent<PlayerAttack>();
         if (_alterRef == null) _alterRef = GetComponent<PlayerAlter>();
-        if (InputLocked || Time.time < LockMoveUntil || (_attackRef != null && _attackRef.AttackRooted))
+        if (InputLocked || Time.time < LockMoveUntil || (_attackRef != null && _attackRef.AttackRooted) || _jumpAt > 0f)
         { h = 0f; v = 0f; blocked = true; }
 
         // 땅에서만 공격하는 변신 — 공격 중엔 점프 못 함 (공중 공격이 되지 않게)
@@ -159,9 +165,17 @@ public class PlayerMovement : NetworkBehaviour
             fpsCamera.LandDip(Mathf.Clamp01(-_verticalVel / 12f));
 
         if (grounded && _verticalVel < 0f) _verticalVel = -2f;
-        if (HasInputAuthority && grounded && !blocked && !Flying && Input.GetKey(KeyCode.Space))
+        if (_jumpAt > 0f)
         {
-            _verticalVel = jumpPower * JumpMul();
+            // 준비 동작 중 — 기절 · 떨어짐 · 비행이면 취소, 이륙 프레임이 되면 뜸
+            if (!grounded || Flying || (_status != null && (_status.IsStunned || _status.IsRooted))) _jumpAt = 0f;
+            else if (Runner.SimulationTime >= _jumpAt) { _jumpAt = 0f; _verticalVel = jumpPower * JumpMul(); }
+        }
+        else if (HasInputAuthority && grounded && !blocked && !Flying && Input.GetKey(KeyCode.Space))
+        {
+            float wait = JumpWait();
+            if (wait > 0.001f) _jumpAt = Runner.SimulationTime + wait;      // 준비 동작 먼저
+            else _verticalVel = jumpPower * JumpMul();
             Jumped?.Invoke();
         }
 
@@ -173,7 +187,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else if (!dashNoGravity)
         {
-            _verticalVel += gravity * Runner.DeltaTime;
+            _verticalVel += gravity * (_verticalVel < 0f ? FallMul() : 1f) * Runner.DeltaTime;   // 내려올 때만 배율
         }
         else
         {
@@ -195,6 +209,21 @@ public class PlayerMovement : NetworkBehaviour
 
 
 
+    }
+
+    /// <summary>내려올 때 중력 배율 — 능력이 정한 값 우선, 없으면 붙은 변화(AlterData)</summary>
+    float FallMul()
+    {
+        if (FallGravityOverride > 0f) return FallGravityOverride;
+        if (_alterRef == null) _alterRef = GetComponent<PlayerAlter>();
+        return _alterRef != null ? _alterRef.FallGravityMultiplier : 1f;
+    }
+
+    /// <summary>변신 모델(AlterClipAnimator)의 점프 준비 시간 — Leap 상태 Hit Frame. 없으면 0</summary>
+    float JumpWait()
+    {
+        if (_clipAnim == null || !_clipAnim.isActiveAndEnabled) _clipAnim = GetComponentInChildren<AlterClipAnimator>();
+        return _clipAnim != null ? _clipAnim.JumpTakeoff() : 0f;
     }
 
     float JumpMul()
