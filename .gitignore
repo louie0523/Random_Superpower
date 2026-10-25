@@ -116,3 +116,14 @@ InitTestScene*.unity*
 # 유료 에셋 (Asset Store) — 공개 저장소에 올리면 안 됨
 /Assets/MyAsset/Shader/Toon Shaders Pro/
 /Assets/MyAsset/Shader/Toon Shaders Pro.meta
+
+# ── 비밀 (App ID · API 키) ──
+**/PhotonAppSettings.asset
+**/PhotonAppSettings.asset.meta
+**/PhotonServerSettings.asset
+**/PhotonServerSettings.asset.meta
+/Assets/Secrets/
+/Assets/Secrets.meta
+
+
+
