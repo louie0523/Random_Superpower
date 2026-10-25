@@ -3,10 +3,8 @@
 > 죽을 때마다 초능력이 바뀌는 1인칭 카툰풍 멀티플레이 배틀로얄  
 > Unity 6.3 (URP) · Photon Fusion 2 (Shared Mode) · 1인 개발
 
-<!-- 스크린샷 / GIF / 플레이 영상 -->
-<!-- ![메인 이미지](docs/main.png) -->
-<!-- 플레이 영상: https://youtu.be/... -->
-<!-- 빌드 다운로드: https://... -->
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/5fb2760a-f84e-4fcc-8d59-adff66ad9678" />
+
 
 ---
 
