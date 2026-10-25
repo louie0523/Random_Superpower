@@ -48,7 +48,7 @@ Developed custom editor tools to streamline animation, rigging, and visual effec
 
 ## Tech Stack
 
-- Unity 6.3.21f1 · URP · Shader Graph toon shader
+- Unity 6.3.21f1 · URP
 - Photon Fusion 2 — Shared Mode (each player has authority over their own character)
 - Photon Voice 2
 - Unity Localization — Google Sheets integration, with multilingual support planned
