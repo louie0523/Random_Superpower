@@ -373,6 +373,14 @@ public class WeaponSetupWindow : EditorWindow
                 Hint("씬에서 무기를 직접 옮긴 뒤 '씬 위치 저장'을 누르면 편합니다.");
             }
 
+        // ── 둥둥 (떠 있는 무기) ──
+        if (Fold("둥둥 (떠 있는 무기)", _weapon.FloatFree || _weapon.UseFloat))
+            using (Box()) DrawWeaponFloat();
+
+        // ── 파츠 (모델 여러 개) ──
+        if (Fold("파츠 (모델 여러 개)", _weapon.PartCount > 1 || _weapon.MainParent != WeaponParent.Default))
+            using (Box()) DrawWeaponParts();
+
         // ── 손 자세 ──
         if (Fold("손 기본 자세"))
             using (Box())
@@ -759,6 +767,7 @@ public class WeaponSetupWindow : EditorWindow
         step.Motion ??= new SwingMotion();
         step.Motion.Keys ??= new List<PoseKey>();
         step.Motion.Shakes ??= new List<MotionShake>();
+        step.Motion.Floats ??= new List<MotionFloat>();
         step.Events ??= new MotionEvent[0];
 
         // 떨림 속도(초당)를 맞추려고 모션 길이를 모션에 적어 둠
@@ -816,6 +825,14 @@ public class WeaponSetupWindow : EditorWindow
         EditorGUILayout.Space(4);
         if (Fold("떨림 구간 (힘주기)", step.Motion.Shakes.Count > 0))
             using (Box()) DrawShakes(step);
+
+        // ── 둥둥 ──
+        if (Fold("둥둥 구간 (무기가 떠다님)", step.Motion.Floats.Count > 0))
+            using (Box()) DrawFloats(step);
+
+        // ── 파츠 부모 ──
+        if (Fold("파츠 부모 (이 모션 동안)", step.PartParents != null && step.PartParents.Length > 0))
+            using (Box()) DrawStepParents(step);
 
         // ── 선택한 것 ──
         EditorGUILayout.Space(6);
@@ -1102,6 +1119,305 @@ public class WeaponSetupWindow : EditorWindow
     }
 
     // ─────────── 타임라인 ───────────
+
+    // ══════════════════ 파츠 (모델 여러 개) ══════════════════
+
+    static readonly string[] ParentNames = { "기본 (무기 설정)", "오른손", "왼손", "팔 (손을 안 따라감)" };
+    static readonly string[] PartParentNames = { "오른손", "왼손", "팔 (손을 안 따라감)" };     // 추가 파츠 — 기본 없음
+
+    /// <summary>지금 손에 든 무기 (파츠 이름 · 수)</summary>
+    EquipmentData PartsWeapon => _rig != null && _rig.CurrentWeapon != null ? _rig.CurrentWeapon : DesiredPreviewWeapon();
+
+    /// <summary>파츠 고르기 — allowAll이면 맨 앞에 '전부'(-1)</summary>
+    int PartPopup(GUIContent label, int value, bool allowAll)
+    {
+        var w = PartsWeapon;
+        int n = Mathf.Max(1, w != null ? w.PartCount : 1);
+        var names = new List<string>();
+        if (allowAll) names.Add("전부");
+        for (int i = 0; i < n; i++) names.Add($"{i}번 · {(w != null ? w.PartName(i) : "메인")}");
+        int idx = allowAll ? value + 1 : value;
+        idx = Mathf.Clamp(idx, 0, names.Count - 1);
+        idx = EditorGUILayout.Popup(label, idx, names.ToArray());
+        return allowAll ? idx - 1 : idx;
+    }
+
+    /// <summary>무기 설정 — 0번 부모 + 추가 파츠 목록</summary>
+    void DrawWeaponParts()
+    {
+        Hint("한 무기에 모델 여러 개 — 0번 = 위 '무기 배치'의 모델 (판정 · 총구 · 끝점 · 왼손 그립 기준), 1번부터 추가.\n" +
+             "파츠마다 붙는 곳(오른손 · 왼손 · 팔)과 위치 · 회전 · 크기를 따로. 모션 탭의 '파츠 부모'로 모션 동안만 바꿀 수 있음.\n" +
+             "씬에서 파츠를 옮기고 '씬 위치 저장' → 그 파츠의 기본값. 모션 키의 '씬 포즈 저장'은 파츠마다 따로 계산됨");
+
+        Undo.RecordObject(_weapon, "Weapon Parts");
+
+        EditorGUI.BeginChangeCheck();
+        var mp = (WeaponParent)EditorGUILayout.Popup(new GUIContent("0번 (메인) 붙는 곳",
+            "기본 = 잡는 손 (둥둥의 '손을 따라가지 않음'을 켰으면 팔)"), (int)_weapon.MainParent, ParentNames);
+        if (EditorGUI.EndChangeCheck())
+        {
+            _weapon.MainParent = mp;
+            EditorUtility.SetDirty(_weapon);
+            SpawnWeapon();
+            return;
+        }
+
+        var list = _weapon.ExtraParts ?? new WeaponPart[0];
+        int remove = -1;
+        bool respawn = false, refresh = false;
+
+        for (int i = 0; i < list.Length; i++)
+        {
+            var d = list[i] ??= new WeaponPart();
+            int idx = i + 1;
+            using (Box())
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField($"{idx}번", EditorStyles.boldLabel, GUILayout.Width(30));
+                    d.Name = EditorGUILayout.TextField(d.Name);
+                    if (GUILayout.Button(new GUIContent("선택", "씬에서 이 파츠 고르기"), EditorStyles.miniButton, GUILayout.Width(36)))
+                    {
+                        var t = _rig != null ? _rig.GetPartTransform(idx) : null;
+                        if (t != null) Selection.activeGameObject = t.gameObject;
+                    }
+                    if (GUILayout.Button("✕", EditorStyles.miniButton, GUILayout.Width(22))) remove = i;
+                }
+
+                EditorGUI.BeginChangeCheck();
+                d.ModelPrefab = (GameObject)EditorGUILayout.ObjectField("모델", d.ModelPrefab, typeof(GameObject), false);
+                int pi = Mathf.Clamp((int)d.Parent - 1, 0, 2);
+                pi = EditorGUILayout.Popup("붙는 곳", pi, PartParentNames);
+                d.Parent = (WeaponParent)(pi + 1);
+                if (EditorGUI.EndChangeCheck()) respawn = true;
+
+                EditorGUI.BeginChangeCheck();
+                d.Position = EditorGUILayout.Vector3Field("위치", d.Position);
+                d.Rotation = EditorGUILayout.Vector3Field("회전", d.Rotation);
+                d.Scale = EditorGUILayout.Vector3Field("크기", d.Scale);
+                d.UseFloat = EditorGUILayout.ToggleLeft(new GUIContent("이 파츠 항상 둥둥"), d.UseFloat);
+                d.Float ??= new FloatWave();
+                if (d.UseFloat)
+                    using (new EditorGUI.IndentLevelScope()) DrawFloatWave(d.Float);
+                if (EditorGUI.EndChangeCheck()) refresh = true;
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button(new GUIContent("씬 위치 저장", "씬에서 옮긴 이 파츠의 위치 · 회전 · 크기를 기본값으로 (둥둥 흔들림은 빼고)"), EditorStyles.miniButtonLeft))
+                    {
+                        var t = _rig != null ? _rig.GetPartTransform(idx) : null;
+                        if (t != null)
+                        {
+                            _rig.GetPartLastFloat(idx, out var fP, out var fR);
+                            d.Position = t.localPosition - fP;
+                            d.Rotation = NormalizeEuler(t.localRotation.eulerAngles - fR);
+                            d.Scale = t.localScale;
+                            refresh = true;
+                        }
+                    }
+                    if (GUILayout.Button("초기화", EditorStyles.miniButtonRight))
+                    {
+                        d.Position = d.Rotation = Vector3.zero;
+                        d.Scale = Vector3.one;
+                        refresh = true;
+                    }
+                }
+            }
+        }
+
+        if (remove >= 0)
+        {
+            var l = new List<WeaponPart>(list);
+            l.RemoveAt(remove);
+            _weapon.ExtraParts = l.ToArray();
+            respawn = true;
+            Hint("파츠를 지우면 그 뒤 번호가 한 칸씩 당겨짐 — 모션 키의 파츠 값은 번호 기준이라 확인 필요");
+        }
+
+        if (GUILayout.Button("+ 파츠 추가"))
+        {
+            var l = new List<WeaponPart>(list) { new WeaponPart { Name = $"파츠 {list.Length + 1}" } };
+            _weapon.ExtraParts = l.ToArray();
+            respawn = true;
+        }
+
+        if (respawn || refresh) EditorUtility.SetDirty(_weapon);
+        if (respawn) SpawnWeapon();
+        else if (refresh && !_playing) RefreshPreview();
+    }
+
+    /// <summary>모션 — 이 모션 동안 파츠가 붙는 곳</summary>
+    void DrawStepParents(ComboStep step)
+    {
+        var w = PartsWeapon;
+        int n = Mathf.Max(1, w != null ? w.PartCount : 1);
+        Hint("이 모션 동안만 파츠가 붙는 곳을 바꿈 (예: 펜은 오른손, 노트는 왼손). 기본 = 무기 설정대로.\n" +
+             "키의 무기 · 파츠 위치는 여기서 정한 곳 기준 — 바꾸면 이미 찍은 키는 다시 '씬 포즈 저장' 필요");
+
+        var arr = step.PartParents ?? new WeaponParent[0];
+        EditorGUI.BeginChangeCheck();
+        var next = new WeaponParent[n];
+        for (int i = 0; i < n; i++)
+        {
+            var cur = i < arr.Length ? arr[i] : WeaponParent.Default;
+            next[i] = (WeaponParent)EditorGUILayout.Popup($"{i}번 · {(w != null ? w.PartName(i) : "메인")}", (int)cur, ParentNames);
+        }
+        if (EditorGUI.EndChangeCheck())
+        {
+            bool any = false;
+            foreach (var v in next) if (v != WeaponParent.Default) any = true;
+            Modify("Part Parents", () => step.PartParents = any ? next : null);
+            if (!_playing) RefreshPreview();
+        }
+    }
+
+    /// <summary>키 — 추가 파츠의 위치 · 회전 · 크기</summary>
+    void DrawKeyExtraParts(ArmPose p)
+    {
+        var w = PartsWeapon;
+        int n = w != null ? w.PartCount : 1;
+        if (n <= 1) return;
+
+        for (int i = 1; i < n; i++)
+        {
+            EditorGUILayout.Space(2);
+            EditorGUILayout.LabelField($"{i}번 파츠 · {w.PartName(i)}", EditorStyles.miniBoldLabel);
+            Vector3 pos = p.PartPos(i), rot = p.PartRot(i), scl = p.PartScale(i);
+            EditorGUI.BeginChangeCheck();
+            pos = EditorGUILayout.Vector3Field("추가 위치", pos);
+            rot = EditorGUILayout.Vector3Field("추가 회전", rot);
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                scl = EditorGUILayout.Vector3Field("크기 (배율)", scl);
+                if (GUILayout.Button(new GUIContent("1", "원래 크기로"), EditorStyles.miniButton, GUILayout.Width(22))) scl = Vector3.one;
+            }
+            if (EditorGUI.EndChangeCheck()) p.SetPart(i, pos, rot, scl);
+        }
+    }
+
+    // ══════════════════ 둥둥 ══════════════════
+
+    static float Div(float a, float b) => Mathf.Abs(b) < 1e-5f ? 1f : a / b;
+
+    /// <summary>무기 설정 — 손에서 벗어나 떠 있음 · 항상 둥둥</summary>
+    void DrawWeaponFloat()
+    {
+        Hint("손을 벗어나 공중에 떠 있는 특수 무기용.\n" +
+             "'손을 따라가지 않음'을 켜면 무기가 손 대신 팔(화면) 기준 자리에 놓임 → 위 '무기 배치'의 위치 · 회전이 그 자리.\n" +
+             "'항상 둥둥'은 가만히 있을 때 · 모션 중 모두 제자리를 중심으로 떠다님 (모션 키 위치가 중심)");
+
+        EditorGUI.BeginChangeCheck();
+        bool free = EditorGUILayout.ToggleLeft(new GUIContent("손을 따라가지 않음 (떠 있는 무기)",
+            "켜면 손이 움직여도 무기는 제자리 — 손 대신 팔 기준. 켜고 끄면 무기 위치를 다시 맞춰야 함"), _weapon.FloatFree);
+        if (EditorGUI.EndChangeCheck())
+        {
+            Undo.RecordObject(_weapon, "Float Free");
+            _weapon.FloatFree = free;
+            EditorUtility.SetDirty(_weapon);
+            SpawnWeapon();
+            return;
+        }
+
+        Undo.RecordObject(_weapon, "Weapon Float");        // 바뀐 게 있을 때만 되돌리기에 남음
+        EditorGUI.BeginChangeCheck();
+        bool use = EditorGUILayout.ToggleLeft(new GUIContent("항상 둥둥", "제자리를 중심으로 계속 떠다님"), _weapon.UseFloat);
+        _weapon.Float ??= new FloatWave();
+        if (use)
+        {
+            using (new EditorGUI.IndentLevelScope())
+                DrawFloatWave(_weapon.Float);
+        }
+        if (EditorGUI.EndChangeCheck())
+        {
+            _weapon.UseFloat = use;
+            EditorUtility.SetDirty(_weapon);
+            if (!_playing) RefreshPreview();
+        }
+
+        bool prev = EditorGUILayout.ToggleLeft(new GUIContent("편집 중에도 움직여 보기",
+            "끄면 편집 모드에선 제자리에 멈춰 있음 (플레이에선 항상 움직임).\n켜 둔 동안엔 계속 다시 그려서 씬에서 손 · 무기를 옮길 수 없음 — 옮길 땐 끄기"),
+            FPArmRig.EditorFloatPreview);
+        if (prev != FPArmRig.EditorFloatPreview)
+        {
+            FPArmRig.EditorFloatPreview = prev;
+            RefreshPreview();
+        }
+    }
+
+    static void DrawFloatWave(FloatWave w)
+    {
+        w.PosAmount = EditorGUILayout.Vector3Field(new GUIContent("위치 (cm)", "축마다 떠다니는 거리 — 위아래 둥둥이면 Y만 크게"), w.PosAmount);
+        w.RotAmount = EditorGUILayout.Vector3Field(new GUIContent("회전 (°)", "축마다 기울어지는 각도"), w.RotAmount);
+        w.Speed = EditorGUILayout.Slider(new GUIContent("빠르기 (초당)", "0.3~0.8 = 둥둥 · 2 이상 = 붕붕"), w.Speed, 0.05f, 4f);
+        w.Wander = EditorGUILayout.Slider(new GUIContent("불규칙함", "0 = 일정한 물결 · 1 = 제멋대로 떠돎"), w.Wander, 0f, 1f);
+        w.Seed = EditorGUILayout.IntField(new GUIContent("무늬", "숫자를 바꾸면 다른 모양"), w.Seed);
+    }
+
+    /// <summary>모션의 둥둥 구간</summary>
+    void DrawFloats(ComboStep step)
+    {
+        var list = step.Motion.Floats;
+        Hint("구간 동안 무기가 키 위치(제자리)를 중심으로 둥둥 떠다님 — 떨림보다 느리고 크게. 키 자세 위에 더해져서 키를 따로 안 찍어도 됨.\n" +
+             "구간이 모션 처음 · 끝에 붙어 있으면 그쪽은 페이드 없이 바로. 손에서 벗어난 무기면 무기 설정의 '손을 따라가지 않음'도 같이");
+
+        EditorGUI.BeginChangeCheck();
+        int remove = -1;
+        for (int i = 0; i < list.Count; i++)
+        {
+            var f = list[i];
+            if (f == null) { remove = i; continue; }
+            f.Wave ??= new FloatWave();
+
+            using (Box())
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField($"둥둥 {i + 1}", EditorStyles.boldLabel);
+                    if (GUILayout.Button(new GUIContent("▶", "이 구간 시작으로 이동"), EditorStyles.miniButton, GUILayout.Width(24)))
+                        Scrub(step, Mathf.Min(f.Start, f.End));
+                    if (GUILayout.Button("✕", EditorStyles.miniButton, GUILayout.Width(22))) remove = i;
+                }
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    float a = f.Start, b = f.End;
+                    EditorGUILayout.LabelField("구간", GUILayout.Width(52));
+                    a = EditorGUILayout.FloatField(a, GUILayout.Width(42));
+                    EditorGUILayout.MinMaxSlider(ref a, ref b, 0f, 1f);
+                    b = EditorGUILayout.FloatField(b, GUILayout.Width(42));
+                    f.Start = Mathf.Clamp01(Mathf.Min(a, b));
+                    f.End = Mathf.Clamp01(Mathf.Max(a, b));
+                    if (GUILayout.Button(new GUIContent("전체", "모션 처음부터 끝까지"), EditorStyles.miniButton, GUILayout.Width(36)))
+                    { f.Start = 0f; f.End = 1f; }
+                }
+                Hint($"{f.Start * step.TotalTime:0.00}초 ~ {f.End * step.TotalTime:0.00}초");
+
+                f.Fade = EditorGUILayout.Slider(new GUIContent("부드럽게", "들어오고 빠지는 길이 (구간 대비)"), f.Fade, 0f, 0.5f);
+                f.Part = PartPopup(new GUIContent("파츠", "떠다닐 파츠 — 전부 / 0번(메인) / 1번 …"), f.Part, true);
+                DrawFloatWave(f.Wave);
+            }
+        }
+
+        if (remove >= 0) Modify("Remove Float", () => list.RemoveAt(remove));
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button(new GUIContent("+ 둥둥 추가 (모션 전체)", "모션 처음부터 끝까지 — 구간은 아래에서 줄이기")))
+                Modify("Add Float", () => list.Add(new MotionFloat { Start = 0f, End = 1f }));
+            if (list.Count > 0 && GUILayout.Button(new GUIContent("미리보기", "처음부터 재생"), GUILayout.Width(70)))
+            {
+                _playAll = false;
+                _playT = 0f;
+                _playing = true;
+            }
+        }
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            if (_target != null) EditorUtility.SetDirty(_target);
+            if (!_playing) RefreshPreview();
+        }
+    }
 
     // ══════════════════ 떨림 구간 ══════════════════
 
@@ -1854,6 +2170,15 @@ public class WeaponSetupWindow : EditorWindow
             {
                 p.WeaponPos = EditorGUILayout.Vector3Field("무기 추가 위치", p.WeaponPos);
                 p.WeaponRot = EditorGUILayout.Vector3Field("무기 추가 회전", p.WeaponRot);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    p.WeaponScale = EditorGUILayout.Vector3Field(new GUIContent("무기 크기 (배율)",
+                        "무기 기본 크기에 곱함. 1 = 그대로, 2 = 두 배. 0인 축은 1로 봄 — 키 사이는 부드럽게 커지고 작아짐"),
+                        ArmPose.Scl(p.WeaponScale));
+                    if (GUILayout.Button(new GUIContent("1", "원래 크기로"), EditorStyles.miniButton, GUILayout.Width(22)))
+                        p.WeaponScale = Vector3.one;
+                }
+                DrawKeyExtraParts(p);
                 EditorGUILayout.Space(2);
                 p.CamPos = EditorGUILayout.Vector3Field("카메라 위치", p.CamPos);
                 p.CamRot = EditorGUILayout.Vector3Field("카메라 회전", p.CamRot);
@@ -2390,7 +2715,14 @@ public class WeaponSetupWindow : EditorWindow
 
         if ((parts & PosePart.RightHand) != 0) { dst.RightPos = src.RightPos; dst.RightRot = src.RightRot; }
         if ((parts & PosePart.LeftHand) != 0) { dst.UseLeftHand = src.UseLeftHand; dst.LeftPos = src.LeftPos; dst.LeftRot = src.LeftRot; }
-        if ((parts & PosePart.Weapon) != 0) { dst.WeaponPos = src.WeaponPos; dst.WeaponRot = src.WeaponRot; }
+        if ((parts & PosePart.Weapon) != 0) { dst.WeaponPos = src.WeaponPos; dst.WeaponRot = src.WeaponRot; dst.WeaponScale = src.WeaponScale;
+            if (src.Parts != null)
+            {
+                dst.Parts = new PartPose[src.Parts.Length];
+                for (int j = 0; j < src.Parts.Length; j++) dst.Parts[j] = src.Parts[j]?.Clone();
+            }
+            else dst.Parts = null;
+        }
         if ((parts & PosePart.Camera) != 0) { dst.CamPos = src.CamPos; dst.CamRot = src.CamRot; dst.CamFov = src.CamFov; }
         if ((parts & PosePart.Body) != 0)
         {
@@ -2682,6 +3014,7 @@ public class WeaponSetupWindow : EditorWindow
         }
         cp.WeaponPos = EditorGUILayout.Vector3Field("무기 위치", cp.WeaponPos);
         cp.WeaponRot = EditorGUILayout.Vector3Field("무기 회전", cp.WeaponRot);
+        cp.WeaponScale = EditorGUILayout.Vector3Field("무기 크기 (배율)", ArmPose.Scl(cp.WeaponScale));
         cp.CamRot = EditorGUILayout.Vector3Field("카메라 회전", cp.CamRot);
         cp.CamFov = EditorGUILayout.FloatField("FOV 추가", cp.CamFov);
         if (!body) return;
@@ -2705,6 +3038,7 @@ public class WeaponSetupWindow : EditorWindow
         }
 
         var w = DesiredPreviewWeapon();
+        _rig.SetPartParents(_tab == Tab.Motion ? CurrentStep?.PartParents : null);
         _rig.Mount(w);
         if (w != null) MarkPreviewWeapon();
 
@@ -2719,6 +3053,12 @@ public class WeaponSetupWindow : EditorWindow
 
     void MarkPreviewWeapon()
     {
+        // 추가 파츠도 씬에 저장되지 않게
+        for (int i = 1; _rig != null && i < _rig.PartCount; i++)
+        {
+            var pt = _rig.GetPartTransform(i);
+            if (pt != null) pt.gameObject.hideFlags = HideFlags.DontSave;
+        }
         var t = _rig?.GetWeaponTransform();
         if (t != null) t.gameObject.hideFlags = HideFlags.DontSave;
     }
@@ -2755,6 +3095,7 @@ public class WeaponSetupWindow : EditorWindow
         if (_rig.CurrentWeapon != DesiredPreviewWeapon()) { SyncPreviewWeapon(); return; }
 
         var step = CurrentStep;
+        ApplyStepParents();
         if (step?.Motion != null && step.Motion.IsValid)
         {
             _rig.SetWeaponHidden(step.HideWeapon);
@@ -2766,9 +3107,19 @@ public class WeaponSetupWindow : EditorWindow
         SceneView.RepaintAll();
     }
 
+    /// <summary>모션 탭이면 지금 타의 '파츠 부모', 아니면 무기 설정대로</summary>
+    void ApplyStepParents()
+    {
+        if (_rig == null) return;
+        var step = _tab == Tab.Motion ? CurrentStep : null;
+        _rig.SetPartParents(step?.PartParents);
+        MarkPreviewWeapon();
+    }
+
     void PreviewPose(ArmPose pose)
     {
         if (_rig == null) return;
+        ApplyStepParents();
         _rig.ApplyPose(pose);
         SceneView.RepaintAll();
     }
@@ -2801,8 +3152,25 @@ public class WeaponSetupWindow : EditorWindow
         {
             Vector3 baseP = w.GetPosOffset(true);
             Vector3 baseR = w.GetRotOffset(true);
-            p.WeaponPos = weaponT.localPosition - baseP;
-            p.WeaponRot = NormalizeEuler(weaponT.localRotation.eulerAngles - baseR);
+            // 둥둥 흔들림은 빼고 저장 — 키에는 '제자리'만
+            p.WeaponPos = weaponT.localPosition - baseP - _rig.LastWeaponFloatPos;
+            p.WeaponRot = NormalizeEuler(weaponT.localRotation.eulerAngles - baseR - _rig.LastWeaponFloatRot);
+
+            // 크기 배율 = 지금 크기 ÷ 무기 기본 크기 (씬에서 크기 도구로 바꿔도 됨)
+            Vector3 so = w.ScaleOverride, ls = weaponT.localScale;
+            p.WeaponScale = new Vector3(Div(ls.x, so.x), Div(ls.y, so.y), Div(ls.z, so.z));
+        }
+
+        // 추가 파츠 (1번~) — 각자 부모 · 기본값 기준으로 같은 식
+        for (int i = 1; i < _rig.PartCount; i++)
+        {
+            var pt = _rig.GetPartTransform(i);
+            if (pt == null || !_rig.GetPartBase(i, out var bP, out var bR, out var bS)) continue;
+            _rig.GetPartLastFloat(i, out var fP, out var fR);
+            Vector3 l = pt.localScale;
+            p.SetPart(i, pt.localPosition - bP - fP,
+                      NormalizeEuler(pt.localRotation.eulerAngles - bR - fR),
+                      new Vector3(Div(l.x, bS.x), Div(l.y, bS.y), Div(l.z, bS.z)));
         }
 
         // 몸 · 머리
@@ -2837,15 +3205,18 @@ public class WeaponSetupWindow : EditorWindow
             return;
         }
 
+        // 둥둥 흔들림은 빼고 (기본 자리만)
+        Vector3 lp = t.localPosition - _rig.LastWeaponFloatPos;
+        Vector3 le = NormalizeEuler(t.localRotation.eulerAngles - _rig.LastWeaponFloatRot);
         if (_firstPerson)
         {
-            _weapon.FpPositionOffset = t.localPosition;
-            _weapon.FpRotationOffset = NormalizeEuler(t.localRotation.eulerAngles);
+            _weapon.FpPositionOffset = lp;
+            _weapon.FpRotationOffset = le;
         }
         else
         {
-            _weapon.PositionOffset = t.localPosition;
-            _weapon.RotationOffset = NormalizeEuler(t.localRotation.eulerAngles);
+            _weapon.PositionOffset = lp;
+            _weapon.RotationOffset = le;
         }
         _weapon.ScaleOverride = t.localScale;
         EditorUtility.SetDirty(_weapon);
@@ -2984,6 +3355,14 @@ public class WeaponSetupWindow : EditorWindow
         _lastTime = now;
 
         if (Application.isPlaying) return;
+
+        // 무기 둥둥 미리보기 — 재생 중이 아니어도 계속 움직여 봄
+        if (!_playing && FPArmRig.EditorFloatPreview && _rig != null && _rig.CurrentWeapon != null && _rig.CurrentWeapon.UseFloat)
+        {
+            RefreshPreview();
+            return;
+        }
+
         if (!_playing || _source == null || _rig == null) return;
 
         var step = CurrentStep;
@@ -3009,6 +3388,7 @@ public class WeaponSetupWindow : EditorWindow
             else if (!_loop) { StopPlay(); return; }
         }
 
+        _rig.SetPartParents(step.PartParents);
         _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
         SceneView.RepaintAll();
         Repaint();
@@ -3177,7 +3557,7 @@ public class WeaponSetupWindow : EditorWindow
         GUILayout.Label($"진행 {p * 100f:F0}%   {(inActive ? "◆ 판정 중" : "－")}",
             inActive ? EditorStyles.whiteBoldLabel : EditorStyles.whiteMiniLabel);
 
-
+   
         step.ResolveHitShape(w, out var mode, out float range, out float angle, out _, out _);
         GUILayout.Label(mode == WeaponHitMode.ForwardArc ? $"부채꼴 {range:F2}m / {angle:F0}°" : $"구체 {range:F2}m",
             EditorStyles.whiteMiniLabel);

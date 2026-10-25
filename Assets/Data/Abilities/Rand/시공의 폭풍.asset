@@ -36,6 +36,7 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 4
+    StartHidden: 0
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0
@@ -57,7 +58,7 @@ MonoBehaviour:
   Behaviour: {fileID: 11400000, guid: 0ff6cb631ec60ef4f84ab4406e5738ea, type: 2}
   MaxConcurrent: 0
   ExcludeFromRoll: 0
-  RollWeight: 1
+  RollWeight: 0.9
   EvolveToId: 0
   EvolveKillCount: 0
   Charges: []

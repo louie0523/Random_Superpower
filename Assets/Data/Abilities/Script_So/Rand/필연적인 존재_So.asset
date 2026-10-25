@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InevitableAbility
   UltCdrSpeedPercent: 40
   UsesNeeded: 5
+  SnapMotion: {fileID: 11400000, guid: b66983e0699c14241bf4c287df18c467, type: 2}
   SnapDelay: 3
   SnapRatio: 0.5
   SnapFx: {fileID: 0}

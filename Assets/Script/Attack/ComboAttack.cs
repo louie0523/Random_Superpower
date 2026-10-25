@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public enum HandVisibility
 {
@@ -69,6 +69,10 @@ public class ComboStep
 
     [Tooltip("이 모션 동안 무기 모델을 숨김 — 맨손 스킬 (판정·스탯은 실제 무기 그대로)")]
     public bool HideWeapon;
+
+    [Tooltip("이 모션 동안 파츠가 붙는 곳 — [0] = 0번(메인), [1] = 1번 … 비거나 Default면 무기 설정대로.\n" +
+             "키의 무기 · 파츠 위치는 여기서 정한 부모 기준")]
+    public WeaponParent[] PartParents;
 
     [Header("Hand")]
     [Tooltip("이 모션 동안 손 표시 방식")]

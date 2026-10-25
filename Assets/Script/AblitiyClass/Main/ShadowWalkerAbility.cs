@@ -28,6 +28,9 @@ public class ShadowWalkerAbility : AbilityBehaviour
     [Tooltip("그림자가 내 겉모습(팔·손·무기·몸통·머리)을 복제해서 내 모션을 그대로 따라 함.\n" +
              "손 IK·손가락·무기 휘두르기까지 전부 — 따로 리그를 만들 필요 없음")]
     public bool ShadowCopiesMe = true;
+    [Tooltip("켜면 그림자는 그림자 무기(스킬) 동안에만 기본 공격을 따라 휘두름 — 피해가 없는 헛스윙이 안 보이게.\n" +
+         "변신(용 · 거신병 등) 중엔 상관없이 다 따라 함")]
+    public bool EchoOnlyWithWeapon = true;
     [Tooltip("그림자 재질 (검게 · 반투명 등). 비우면 검은 Unlit")]
     public Material ShadowMaterial;
     [Tooltip("그림자에 추가로 붙일 것 (연기 파티클 등) — 선택.\nShadowCopiesMe를 끄면 이게 그림자 모델 자체 (가만히 따라다니기만 함)")]
@@ -158,6 +161,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
                     _mimic = go.AddComponent<ShadowMimic>();
                     // 다른 사람 화면: 몸 전체 · 내 화면: 팔 · 손 · 무기만
                     _mimic.Init(Ctx.transform, rig, ShadowMaterial, Lv(EchoDelay), armsOnly: Ctx.HasInputAuthority);
+                    _mimic.MimicBasicAttack = !EchoOnlyWithWeapon;
                 }
                 else Debug.LogWarning("[쉐도우 워커] FPArmRig를 못 찾아서 그림자가 모습을 따라 할 수 없음");
             }
@@ -264,6 +268,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
     {
         if (!_weaponOn) return;
         _weaponOn = false;
+        if (_mimic != null) _mimic.MimicAttackUntil = 0f;
         if (WeaponAlter != null) _alter?.Remove(WeaponAlter);
         ReleaseCooldown(WeaponSkill);
     }
@@ -469,6 +474,10 @@ public class ShadowWalkerAbility : AbilityBehaviour
             case EvZone:
                 ShadowZoneView.Create(pos, Lv(ZoneRadius), Lv(ZoneDuration), Ctx.transform, Ctx.HasInputAuthority,
                                       ZoneDomePrefab, EnemyMarkerPrefab, Ctx.HitMask, Lv(ZoneVisionRadius));
+                break;
+
+            case EvWeaponOn:
+                if (_mimic != null) _mimic.MimicAttackUntil = Time.time + Lv(WeaponDuration);
                 break;
         }
     }

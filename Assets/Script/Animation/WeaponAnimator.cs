@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>1인칭 팔 전체의 스웨이/바빙. 포즈는 FPArmRig가 담당.</summary>
 public class WeaponAnimator : MonoBehaviour
@@ -41,6 +41,8 @@ public class WeaponAnimator : MonoBehaviour
     private float _t = -1f;
 
     public bool IsAttacking => _t >= 0f;
+    /// <summary>지금 재생 중인 게 기본 공격(좌클릭)인지 — PlayerAttack이 켬. 스킬 모션이면 false</summary>
+    public bool BasicAttack { get; set; }
     public float Progress01 => _step == null ? 0f : Mathf.Clamp01(_t / _step.TotalTime);
 
     private float _freezeTimer;
@@ -63,8 +65,21 @@ public class WeaponAnimator : MonoBehaviour
 
     /// <summary>공격 시작</summary>
 
+    /// <summary>모션 끝 자세로 계속 버티는 중 (StopSwing 할 때까지) — 껴안기 등</summary>
+    public bool IsHolding => _holdEnd && _t >= 0f;
+    private bool _holdEnd;
+
+    /// <summary>모션을 재생하고 끝 자세로 계속 버팀 — StopSwing으로 끝냄 (미래로 가자 껴안기 등)</summary>
+    public void PlayHold(ComboStep step, float speed = 1f)
+    {
+        Play(step, speed);
+        _holdEnd = true;
+    }
+
     public void Play(ComboStep step, float speed = 1f)
     {
+        BasicAttack = false;
+        _holdEnd = false;
         _blendFrom = CaptureCurrent();
         _blendTimer = blendInTime;
         _blendDuration = blendInTime;
@@ -77,6 +92,7 @@ public class WeaponAnimator : MonoBehaviour
             if (step != null && step.WeaponOverride != null) armRig.BeginWeaponOverride(step.WeaponOverride);
             else armRig.EndWeaponOverride();
             armRig.SetWeaponHidden(step != null && step.HideWeapon);
+            armRig.SetPartParents(step != null ? step.PartParents : null);     // 이 모션 동안 파츠가 붙는 곳
         }
 
         _step = step;
@@ -115,8 +131,10 @@ public class WeaponAnimator : MonoBehaviour
     }
     public void StopSwing()
     {
+        _holdEnd = false;
         armRig?.EndWeaponOverride();
         armRig?.SetWeaponHidden(false);
+        armRig?.SetPartParents(null);
         _t = -1f;
         _step = null;
         if (armRig != null) armRig.ApplyPose(armRig.IdlePose);
@@ -133,7 +151,7 @@ public class WeaponAnimator : MonoBehaviour
     // ── 스윙 포즈 (손/무기) ──
 
     void HandleSwingPose()
-    {   
+    {
         float dt = Time.deltaTime;
 
         // ── 모션 없음: 블렌드 아웃 중이거나 Idle ──
@@ -141,13 +159,14 @@ public class WeaponAnimator : MonoBehaviour
         {
             armRig.EndWeaponOverride();
             armRig.SetWeaponHidden(false);
+            armRig.SetPartParents(null);
 
             armRig.SetDrawAmount(_drawAmount, dt);
             var idle = armRig.GetEffectiveIdle();
 
-          //  Debug.Log($"[Swing] draw={_drawAmount:F2} " +
-          //$"left={idle.LeftPos} right={idle.RightPos} " +
-          //$"blendTimer={_blendTimer:F2}");
+            //  Debug.Log($"[Swing] draw={_drawAmount:F2} " +
+            //$"left={idle.LeftPos} right={idle.RightPos} " +
+            //$"blendTimer={_blendTimer:F2}");
 
             if (_blendTimer > 0f && _blendFrom != null)
             {
@@ -167,10 +186,13 @@ public class WeaponAnimator : MonoBehaviour
 
         // ── 모션 재생 ──
         armRig.SetWeaponHidden(_step.HideWeapon);
+        armRig.SetPartParents(_step.PartParents);
         if (_freezeTimer > 0f) _freezeTimer -= dt;
         else _t += dt * _speed;
 
-        if (_t >= _step.TotalTime)
+        if (_t >= _step.TotalTime && _holdEnd)
+            _t = _step.TotalTime;                  // 끝 자세로 버팀
+        else if (_t >= _step.TotalTime)
         {
             // 종료 → 블렌드 아웃 시작
             _blendFrom = CaptureCurrent();
@@ -181,7 +203,7 @@ public class WeaponAnimator : MonoBehaviour
             _step = null;
 
             armRig.ApplyPose(_blendFrom);
-            return; 
+            return;
         }
 
         var pose = _step.Motion != null && _step.Motion.IsValid

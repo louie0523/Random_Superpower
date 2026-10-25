@@ -1,8 +1,10 @@
 using UnityEngine;
 
 /// <summary>
-/// 부두 인형 — 플레이어 선택 창에서 지정 → 대상이 '저주'(20초: 채팅 · 보이스 불가) + 봉인 999초(스킬 불가, 죽으면 풀림).
-/// 창을 닫으면(취소) 쿨타임이 돌아옴.
+/// 부두 인형 — F → 플레이어 선택 창(스킬 데이터 '플레이어 먼저 고르기') → 고르면 모션 → 효과 타이밍에
+///   대상이 '저주'(20초: 채팅 · 보이스 불가) + 봉인 999초(스킬 불가, 죽으면 풀림).
+/// 창을 닫으면 아무것도 안 씀 (쿨 · 모션 없음).
+/// 데이터: 플레이어 먼저 고르기 켜기 · 효과 타이밍 = 모션 종료(또는 판정 프레임) · 대상 필요 끄기
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Voodoo")]
 public class VoodooAbility : AbilityBehaviour
@@ -20,15 +22,11 @@ public class VoodooAbility : AbilityBehaviour
 
     bool IsMine(AbilityData.SkillDef s) => Data.Skills != null && System.Array.IndexOf(Data.Skills, s) == DollSkill;
 
-    public override bool OnSkillUsed(int slot, AbilityData.SkillDef skill)
+    public override bool OnSkillEffect(AbilityData.SkillDef skill)
     {
         if (!IsMine(skill)) return false;
-        if (!Ctx.HasInputAuthority) return true;
-
-        var ctx = Ctx;
-        PlayerPickPanel.Open(TargetUtil.Text("ability.voodoo.pick", "저주할 사람"), true,
-            picked => Curse(picked),
-            () => ctx.ResetCooldown(slot));
+        Curse(Ctx.TakePickedTarget());
+        ReleaseCooldown(DollSkill);                 // '효과 끝나고 쿨타임'을 켰으면 여기서 시작
         return true;
     }
 

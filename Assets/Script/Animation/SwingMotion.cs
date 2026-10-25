@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,6 +49,57 @@ public class MotionShake
     public int Seed = 0;
 }
 
+/// <summary>
+/// 둥둥 — 무기가 제자리를 중심으로 천천히 떠다니는 흔들림 (떨림보다 느리고 크게).
+/// 무기 설정(항상)과 모션의 둥둥 구간이 같이 씀
+/// </summary>
+[Serializable]
+public class FloatWave
+{
+    [Tooltip("위치 흔들림 (cm) — 축마다. 위아래로만 둥둥이면 Y만")]
+    public Vector3 PosAmount = new(0.6f, 1.5f, 0.6f);
+    [Tooltip("회전 흔들림 (°) — 축마다")]
+    public Vector3 RotAmount = new(3f, 4f, 6f);
+    [Tooltip("빠르기 (초당 왕복) — 0.3~0.8 = 둥둥, 2 이상 = 붕붕")]
+    [Min(0.01f)] public float Speed = 0.5f;
+    [Tooltip("불규칙함 — 0 = 일정한 물결, 1 = 제멋대로 떠돎")]
+    [Range(0f, 1f)] public float Wander = 0.35f;
+    [Tooltip("무늬 (바꾸면 다른 모양)")]
+    public int Seed = 0;
+
+    /// <summary>sec초일 때 흔들림 — 위치(m) · 회전(°)</summary>
+    public void Sample(float sec, out Vector3 pos, out Vector3 rot)
+    {
+        float ph = sec * Speed * Mathf.PI * 2f;
+        float o = Seed * 1.618f;
+        float u = sec * Speed;
+
+        Vector3 a = Vector3.Lerp(Wave(ph, o), SwingMotion.Noise3(u * 1.3f, Seed * 17 + 3), Wander);
+        Vector3 b = Vector3.Lerp(Wave(ph * 0.9f + 1.7f, o + 3.1f), SwingMotion.Noise3(u * 1.1f, Seed * 17 + 11), Wander);
+        pos = Vector3.Scale(a, PosAmount) * 0.01f;
+        rot = Vector3.Scale(b, RotAmount);
+    }
+
+    // 축마다 조금씩 다른 속도 — 같이 오르내리지 않고 물에 뜬 것처럼
+    static Vector3 Wave(float ph, float o) =>
+        new(Mathf.Sin(ph * 0.83f + o), Mathf.Sin(ph + o * 2.3f), Mathf.Sin(ph * 0.71f + o * 3.7f));
+}
+
+/// <summary>둥둥 구간 — 이 구간 동안 무기가 제 자리(키 위치)를 중심으로 떠다님. 키 자세 위에 더해짐</summary>
+[Serializable]
+public class MotionFloat
+{
+    [Tooltip("시작 (모션 전체 0~1)")]
+    [Range(0f, 1f)] public float Start = 0f;
+    [Tooltip("끝 (모션 전체 0~1)")]
+    [Range(0f, 1f)] public float End = 1f;
+    [Tooltip("들어오고 빠지는 부드러움 (구간 길이 대비)")]
+    [Range(0f, 0.5f)] public float Fade = 0.15f;
+    [Tooltip("떠다닐 파츠 — -1 = 전부, 0 = 0번(메인), 1 = 1번 …")]
+    public int Part = -1;
+    public FloatWave Wave = new();
+}
+
 [Serializable]
 public class SwingMotion
 {
@@ -68,6 +119,9 @@ public class SwingMotion
     [Tooltip("떨림 구간들 — 손이 잠깐 바르르 떨림 (힘주기)")]
     public List<MotionShake> Shakes = new();
 
+    [Tooltip("둥둥 구간들 — 무기가 제자리를 중심으로 떠다님")]
+    public List<MotionFloat> Floats = new();
+
     [HideInInspector]
     [Tooltip("모션 길이 (초) — 떨림 속도(초당)를 맞추려고 편집 창이 넣어 둠")]
     public float LengthHint = 1f;
@@ -80,7 +134,7 @@ public class SwingMotion
         if (!IsValid) return idle?.Clone();
 
         t = Mathf.Clamp01(t);
-        return ApplyShakes(EvaluateKeys(t), t);
+        return ApplyFloats(ApplyShakes(EvaluateKeys(t), t), t);
     }
 
     ArmPose EvaluateKeys(float t)
@@ -152,6 +206,49 @@ public class SwingMotion
         return p;
     }
 
+    // ══════════════════ 둥둥 ══════════════════
+
+    ArmPose ApplyFloats(ArmPose p, float t)
+    {
+        if (Floats == null || Floats.Count == 0 || p == null) return p;
+        float sec = t * Mathf.Max(0.05f, LengthHint);
+
+        foreach (var f in Floats)
+        {
+            if (f == null || f.Wave == null) continue;
+            float a = Envelope(f.Start, f.End, f.Fade, t);
+            if (a <= 0f) continue;
+
+            if (f.Part >= 0)
+            {
+                f.Wave.Sample(sec, out var pos, out var rot);
+                p.AddFloat(f.Part, pos * a, rot * a);
+            }
+            else
+            {
+                // 전부 — 파츠마다 조금씩 다르게 (같이 오르내리지 않게)
+                for (int i = 0; i < ArmPose.MaxParts; i++)
+                {
+                    f.Wave.Sample(sec + i * 1.37f, out var pos, out var rot);
+                    p.AddFloat(i, pos * a, rot * a);
+                }
+            }
+        }
+        return p;
+    }
+
+    /// <summary>구간 세기 0~1 — 페이드 인/아웃만. 구간이 모션 처음/끝에 붙어 있으면 그쪽은 페이드 없이</summary>
+    public static float Envelope(float start, float end, float fade, float t)
+    {
+        float s = Mathf.Min(start, end), e = Mathf.Max(start, end);
+        if (t < s || t > e || e - s < 0.0001f) return 0f;
+        float u = (t - s) / (e - s);
+        float f = Mathf.Max(0.0001f, fade);
+        float inA = s <= 0.0001f ? 1f : Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(u / f));
+        float outA = e >= 0.9999f ? 1f : Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((1f - u) / f));
+        return inA * outA;
+    }
+
     /// <summary>구간 안 세기 0~1 — 페이드 인/아웃 + 점점 세지기</summary>
     public static float Envelope(MotionShake s, float t)
     {
@@ -167,7 +264,7 @@ public class SwingMotion
     }
 
     /// <summary>-1 ~ 1 부드러운 잡음 (축마다 다름). 펄린 잡음은 실제로 ±0.5 근처만 나와서 넓혀 줌 → 설정한 세기가 거의 그대로 나옴</summary>
-    static Vector3 Noise3(float time, int seed)
+    public static Vector3 Noise3(float time, int seed)
     {
         float o = seed * 13.37f;
         return new Vector3(
@@ -216,6 +313,17 @@ public class SwingMotion
         v = Spline(Rot[3], true, seg, s); r.CamRot = v;
         v = Spline(Rot[4], true, seg, s); r.BodyRot = v;
         v = Spline(Rot[5], true, seg, s); r.HeadRot = v;
+
+        // 추가 파츠 — 키 중 가장 많이 가진 수만큼
+        int np = 0;
+        foreach (var k in Keys) if (k?.Pose?.Parts != null) np = Mathf.Max(np, k.Pose.Parts.Length);
+        for (int j = 0; j < np; j++)
+        {
+            int jj = j;
+            var e = r.Extra(jj);
+            e.Pos = Spline(p => p.ExtraPos(jj), false, seg, s);
+            e.Rot = Spline(p => p.ExtraRot(jj), true, seg, s);
+        }
 
         r.CamFov = SplineF(seg, s);
         return r;

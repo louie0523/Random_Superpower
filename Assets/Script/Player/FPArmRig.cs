@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>1인칭 팔/무기 배치. 카메라 자식으로 둡니다.</summary>
 public class FPArmRig : MonoBehaviour
@@ -80,6 +80,152 @@ public class FPArmRig : MonoBehaviour
     public MuzzleFlash MuzzleFlash => _muzzleFlash;
 
     public Transform WeaponTip { get; private set; }
+
+    // ══════════════════ 파츠 (모델 여러 개) · 둥둥 ══════════════════
+    //  0번 = 메인 모델 (EquipmentData.ModelPrefab — 판정 · 총구 · 끝점 · 왼손 그립 기준)
+    //  1번~ = EquipmentData.ExtraParts. 파츠마다 부모(오른손 · 왼손 · 팔)를 따로, 모션이 잠깐 바꿀 수 있음
+
+    class PartInst
+    {
+        public GameObject Obj;
+        public float Phase;
+        public Vector3 FloatPos, FloatRot;      // 마지막으로 더한 둥둥
+    }
+    private readonly System.Collections.Generic.List<PartInst> _parts = new();
+    private WeaponParent[] _parentOverride;
+
+    /// <summary>파츠 배치(부모 · 개수)가 바뀔 때마다 +1 — 그림자 복제 등이 다시 만들 때 봄</summary>
+    public int PartLayoutVersion { get; private set; }
+
+    /// <summary>파츠 수 (0번 메인 포함). 무기가 없으면 0</summary>
+    public int PartCount => _parts.Count;
+
+    /// <summary>파츠 i의 모델 (0 = 메인 = GetWeaponTransform)</summary>
+    public Transform GetPartTransform(int i) =>
+        i >= 0 && i < _parts.Count && _parts[i].Obj != null ? _parts[i].Obj.transform : null;
+
+    /// <summary>마지막으로 메인 무기에 더한 둥둥 흔들림 — 편집 창이 '씬 포즈 저장' 때 빼려고 봄</summary>
+    public Vector3 LastWeaponFloatPos => GetPartLastFloat(0, out var p, out _) ? p : Vector3.zero;
+    public Vector3 LastWeaponFloatRot => GetPartLastFloat(0, out _, out var r) ? r : Vector3.zero;
+
+    public bool GetPartLastFloat(int i, out Vector3 pos, out Vector3 rot)
+    {
+        pos = rot = Vector3.zero;
+        if (i < 0 || i >= _parts.Count) return false;
+        pos = _parts[i].FloatPos;
+        rot = _parts[i].FloatRot;
+        return true;
+    }
+
+    /// <summary>파츠 i의 기본 위치 · 회전 · 크기 (무기 설정 — 키 값은 이 위에 더해짐)</summary>
+    public bool GetPartBase(int i, out Vector3 pos, out Vector3 rot, out Vector3 scale)
+    {
+        pos = rot = Vector3.zero;
+        scale = Vector3.one;
+        if (_weapon == null) return false;
+        if (i <= 0)
+        {
+            pos = _weapon.GetPosOffset(true);
+            rot = _weapon.GetRotOffset(true);
+            scale = _weapon.ScaleOverride;
+            return true;
+        }
+        var d = PartDef(i);
+        if (d == null) return false;
+        pos = d.Position;
+        rot = d.Rotation;
+        scale = d.Scale;
+        return true;
+    }
+
+    WeaponPart PartDef(int i) =>
+        _weapon != null && _weapon.ExtraParts != null && i >= 1 && i - 1 < _weapon.ExtraParts.Length ? _weapon.ExtraParts[i - 1] : null;
+
+    /// <summary>무기 설정의 부모 (모션이 안 바꿨을 때)</summary>
+    public WeaponParent DefaultParent(int i)
+    {
+        if (_weapon == null) return WeaponParent.RightHand;
+        if (i <= 0)
+        {
+            if (_weapon.MainParent != WeaponParent.Default) return _weapon.MainParent;
+            if (_weapon.FloatFree) return WeaponParent.Arm;
+            return _weapon.Grip == GripType.LeftHand ? WeaponParent.LeftHand : WeaponParent.RightHand;
+        }
+        var d = PartDef(i);
+        return d == null || d.Parent == WeaponParent.Default ? WeaponParent.RightHand : d.Parent;
+    }
+
+    /// <summary>지금 파츠 i가 붙는 곳 (모션이 바꿨으면 그것)</summary>
+    public WeaponParent CurrentParent(int i)
+    {
+        if (_parentOverride != null && i >= 0 && i < _parentOverride.Length && _parentOverride[i] != WeaponParent.Default)
+            return _parentOverride[i];
+        return DefaultParent(i);
+    }
+
+    public Transform ParentTransform(WeaponParent p)
+    {
+        switch (p)
+        {
+            case WeaponParent.LeftHand: return LeftHand != null ? LeftHand : RightHand;
+            case WeaponParent.Arm:
+                if (RightHand != null && RightHand.parent != null) return RightHand.parent;
+                if (LeftHand != null && LeftHand.parent != null) return LeftHand.parent;
+                return ArmRoot != null ? ArmRoot : transform;
+            default: return RightHand != null ? RightHand : LeftHand;
+        }
+    }
+
+    /// <summary>
+    /// 모션 동안 파츠 부모 바꾸기 — [i] = 파츠 i (Default = 무기 설정). null이면 전부 무기 설정대로.
+    /// 바뀐 파츠만 옮김 (매 프레임 불러도 됨)
+    /// </summary>
+    public void SetPartParents(WeaponParent[] parents)
+    {
+        _parentOverride = parents;
+        ApplyParents();
+    }
+
+    void ApplyParents()
+    {
+        bool changed = false;
+        for (int i = 0; i < _parts.Count; i++)
+        {
+            var go = _parts[i].Obj;
+            if (go == null) continue;
+            var want = ParentTransform(CurrentParent(i));
+            if (want == null || go.transform.parent == want) continue;
+            go.transform.SetParent(want, false);
+            changed = true;
+        }
+        if (changed) PartLayoutVersion++;
+    }
+
+    /// <summary>편집 모드에서 무기 설정의 둥둥을 움직여 볼지 — 편집 창이 켬</summary>
+    public static bool EditorFloatPreview;
+
+    static float FloatClock()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return (float)UnityEditor.EditorApplication.timeSinceStartup;
+#endif
+        return Time.time;
+    }
+
+    /// <summary>무기 설정의 '항상 둥둥' (파츠 i)</summary>
+    void PartIdleFloat(int i, out Vector3 pos, out Vector3 rot)
+    {
+        pos = rot = Vector3.zero;
+        if (_weapon == null || i < 0 || i >= _parts.Count) return;
+        if (!Application.isPlaying && !EditorFloatPreview) return;
+
+        bool use; FloatWave wave;
+        if (i == 0) { use = _weapon.UseFloat; wave = _weapon.Float; }
+        else { var d = PartDef(i); use = d != null && d.UseFloat; wave = d?.Float; }
+        if (!use || wave == null) return;
+        wave.Sample(FloatClock() + _parts[i].Phase, out pos, out rot);
+    }
+
     public EquipmentData CurrentWeapon => _weapon;
 
     public Transform GetWeaponTransform() =>
@@ -129,7 +275,8 @@ public class FPArmRig : MonoBehaviour
     public void SetWeaponHidden(bool hide)
     {
         _weaponHidden = hide;
-        if (_weaponObj != null && _weaponObj.activeSelf == hide) _weaponObj.SetActive(!hide);
+        foreach (var part in _parts)
+            if (part.Obj != null && part.Obj.activeSelf == hide) part.Obj.SetActive(!hide);
     }
 
     void SwapKeepingLook(EquipmentData w)
@@ -148,11 +295,14 @@ public class FPArmRig : MonoBehaviour
 
         MountInternal(w);
 
-        if (_weaponObj == null) return;
-        foreach (var t in _weaponObj.GetComponentsInChildren<Transform>(true))
-            if (layer >= 0) t.gameObject.layer = layer;
-        if (!visible)
-            foreach (var r in _weaponObj.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+        foreach (var part in _parts)
+        {
+            if (part.Obj == null) continue;
+            foreach (var t in part.Obj.GetComponentsInChildren<Transform>(true))
+                if (layer >= 0) t.gameObject.layer = layer;
+            if (!visible)
+                foreach (var r in part.Obj.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+        }
     }
 
     // ══════════════════ 무기 장착 ══════════════════
@@ -185,16 +335,35 @@ public class FPArmRig : MonoBehaviour
             return;
         }
 
-        Transform hand = weapon.Grip == GripType.LeftHand ? LeftHand : RightHand;
+        // 0번 (메인) — 붙는 곳: 무기 설정 (잡는 손 · 손을 따라가지 않음 · 파츠 부모) 또는 모션이 바꾼 곳
+        Transform hand = ParentTransform(CurrentParentFor(weapon, 0));
         if (hand == null) return;
 
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
-            _weaponObj = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(
-                weapon.ModelPrefab, hand);
-        else
-#endif
-            _weaponObj = Instantiate(weapon.ModelPrefab, hand);
+        _weaponObj = SpawnModel(weapon.ModelPrefab, hand);
+        _parts.Add(new PartInst { Obj = _weaponObj, Phase = Application.isPlaying ? Random.Range(0f, 100f) : 0f });
+
+        // 1번~ — 추가 모델 (장식: 콜라이더 끔)
+        if (weapon.ExtraParts != null)
+            for (int i = 0; i < weapon.ExtraParts.Length; i++)
+            {
+                var d = weapon.ExtraParts[i];
+                GameObject go = null;
+                if (d != null && d.ModelPrefab != null)
+                {
+                    var parent = ParentTransform(CurrentParentFor(weapon, i + 1));
+                    if (parent != null)
+                    {
+                        go = SpawnModel(d.ModelPrefab, parent);
+                        go.name = $"{d.ModelPrefab.name} (파츠 {i + 1})";
+                        if (Application.isPlaying)
+                            foreach (var c in go.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+                        if (_weaponHidden) go.SetActive(false);
+                    }
+                }
+                // 모델이 없어도 자리는 남김 — 번호가 밀리지 않게
+                _parts.Add(new PartInst { Obj = go, Phase = Application.isPlaying ? Random.Range(0f, 100f) : 0f });
+            }
+        PartLayoutVersion++;
 
         _weaponObj.transform.localPosition = weapon.GetPosOffset(true);
         _weaponObj.transform.localRotation = Quaternion.Euler(weapon.GetRotOffset(true));
@@ -223,6 +392,27 @@ public class FPArmRig : MonoBehaviour
         if (_stringBone != null) _stringRestPos = _stringBone.localPosition;
 
         ApplyPose(GetEffectiveIdle());
+    }
+
+    GameObject SpawnModel(GameObject prefab, Transform parent)
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            return (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(prefab, parent);
+#endif
+        return Instantiate(prefab, parent);
+    }
+
+    /// <summary>Mount 중 — _weapon이 바뀌는 중이라 무기를 직접 받아서</summary>
+    WeaponParent CurrentParentFor(EquipmentData w, int i)
+    {
+        if (_parentOverride != null && i >= 0 && i < _parentOverride.Length && _parentOverride[i] != WeaponParent.Default)
+            return _parentOverride[i];
+        var keep = _weapon;
+        _weapon = w;
+        var p = DefaultParent(i);
+        _weapon = keep;
+        return p;
     }
 
     static Transform FindDeep(Transform root, string name)
@@ -289,6 +479,15 @@ public class FPArmRig : MonoBehaviour
 
     void DestroyWeapon()
     {
+        foreach (var part in _parts)
+        {
+            if (part.Obj == null || part.Obj == _weaponObj) continue;
+            if (Application.isPlaying) Destroy(part.Obj);
+            else DestroyImmediate(part.Obj);
+        }
+        if (_parts.Count > 0) PartLayoutVersion++;
+        _parts.Clear();
+
         if (_weaponObj == null) return;
 
         if (Application.isPlaying) Destroy(_weaponObj);
@@ -312,6 +511,7 @@ public class FPArmRig : MonoBehaviour
 
     public void CleanAll()
     {
+        DestroyWeapon();
         CleanChildren(RightHand);
         CleanChildren(LeftHand);
 
@@ -492,18 +692,37 @@ public class FPArmRig : MonoBehaviour
             }
         }
 
-        if (_weaponObj != null && _weapon != null)
-        {
-            _weaponObj.transform.localPosition =
-                _weapon.GetPosOffset(true) + pose.WeaponPos;
-            _weaponObj.transform.localRotation =
-                Quaternion.Euler(_weapon.GetRotOffset(true) + pose.WeaponRot);
-            _weaponObj.transform.localScale = _weapon.ScaleOverride;
-        }
+        ApplyParts(pose);
 
         ApplyFingers(pose, showLeft);
         ApplyCameraPose(pose);
         ApplyBodyPose(pose);
+    }
+
+    /// <summary>
+    /// 파츠마다: 기본(무기 설정) + 키 값 + 둥둥(무기 설정 · 모션 구간). 부모 기준 로컬 값.
+    /// 회전은 오일러를 더함 (편집 창의 '씬 포즈 저장'도 같은 식으로 뺌)
+    /// </summary>
+    void ApplyParts(ArmPose pose)
+    {
+        if (_weapon == null) return;
+        for (int i = 0; i < _parts.Count; i++)
+        {
+            var part = _parts[i];
+            if (part.Obj == null) continue;
+            if (!GetPartBase(i, out var bp, out var br, out var bs)) continue;
+
+            PartIdleFloat(i, out var fp, out var fr);
+            fp += pose.PartFloatPos(i);
+            fr += pose.PartFloatRot(i);
+            part.FloatPos = fp;
+            part.FloatRot = fr;
+
+            var t = part.Obj.transform;
+            t.localPosition = bp + pose.PartPos(i) + fp;
+            t.localRotation = Quaternion.Euler(br + pose.PartRot(i) + fr);
+            t.localScale = Vector3.Scale(bs, pose.PartScale(i));
+        }
     }
 
     // ══════════════════ 몸 · 머리 ══════════════════

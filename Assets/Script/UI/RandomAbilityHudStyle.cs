@@ -15,8 +15,8 @@ public class RandomAbilityHudStyle : ScriptableObject
     public float NameSize, NumberSize, SummarySize;
 
     [Header("요약")]
-    [Tooltip("요약이 길면 이 줄 수까지 줄(배경)이 아래로 늘어남. 넘으면 글자만 아래로")]
-    [Min(1)] public int MaxSummaryLines = 2;
+    [Tooltip("요약이 길면 이 줄 수까지 줄(배경)이 아래로 늘어남. 넘으면 글자만 아래로. 0 = 제한 없음 (3줄 · 4줄도 배경이 같이)")]
+    [Min(0)] public int MaxSummaryLines = 0;
     [Tooltip("요약 칸의 {x:} 상태 글(현재 궁극기 사용 횟수 등)을 다시 계산하는 간격 (초)")]
     [Min(0.05f)] public float LiveRefresh = 0.2f;
 

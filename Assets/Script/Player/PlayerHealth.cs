@@ -462,6 +462,15 @@ public class PlayerHealth : NetworkBehaviour
         else Die(DeathCause.Suicide, PlayerRef.None, false, true);
     }
 
+    /// <summary>즉사 — 소울을 잃지 않음 · 아무도 처치 인정 안 함 (미래로 가자 시전자 · 모두 동지 등)</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_Sacrifice()
+    {
+        if (IsDead) return;
+        HP = 0;
+        Die(DeathCause.Suicide, PlayerRef.None, true, true);
+    }
+
     /// <summary>그 자리에서 즉시 부활 (사망회귀) — 위치 그대로, 체력 가득</summary>
     public void ReviveHere()
     {

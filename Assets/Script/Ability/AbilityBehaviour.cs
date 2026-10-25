@@ -17,6 +17,10 @@ public abstract class AbilityBehaviour : ScriptableObject
     /// <summary>설명의 {x:키} 자리에 넣을 글. null·빈 문자열이면 그 줄째 사라짐</summary>
     public virtual string DescToken(string key, int rank) => null;
 
+    /// <summary>지금 상태에 따라 바꿔 보여 줄 HUD 한 줄 요약 · 플레이버 (변신 등). null이면 능력 데이터 그대로</summary>
+    public virtual string SummaryOverride() => null;
+    public virtual string FlavorOverride() => null;
+
     /// <summary>{dmg:계수필드} 표시에 곱할 배율 (이름·상태 보정 등)</summary>
     public virtual float DescDamageMul(string coefField, int rank) => 1f;
 

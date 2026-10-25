@@ -149,12 +149,15 @@ public class RandomAbilityHud : MonoBehaviour
         r.SetLiveSummary(live, a);
     }
 
-    /// <summary>한 줄 요약에 {x:} · {b:} 같은 토큰이 있으면 지금 상태로 바꾼 글, 없으면 null (원래 요약 그대로)</summary>
+    /// <summary>
+    /// 지금 보여 줄 요약 — 변신 등으로 바뀐 요약(AbilityUi.Summary가 능력에게 물어봄)까지.
+    /// {x:} · {b:} 같은 토큰이 있으면 지금 상태로 바꿈
+    /// </summary>
     static string LiveSummary(AbilityData a)
     {
         if (a == null) return null;
         string raw = AbilityUi.Summary(a);
-        if (string.IsNullOrEmpty(raw) || raw.IndexOf('{') < 0) return null;
+        if (string.IsNullOrEmpty(raw) || raw.IndexOf('{') < 0) return raw ?? "";
         return AbilityDescTokens.Apply(raw, a, null, 1, 1);
     }
 }

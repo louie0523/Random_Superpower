@@ -9,6 +9,14 @@ public class TransformForm
     [Tooltip("모양 · 깡스탯 — AlterData의 '변신(IsTransform)'을 켤 것. 모델은 Attach = Root 권장")]
     public AlterData Alter;
 
+    [Header("변신 중 글 (비우면 능력 데이터 그대로)")]
+    [Tooltip("변신 중 플레이버 (능력 창 위쪽 · 요약이 비었을 때 HUD). 시트 키 'ability.{Id}.flavor.{형태 키}'가 있으면 그게 먼저")]
+    [TextArea(2, 4)] public string Flavor;
+    [Tooltip("변신 중 HUD 한 줄 요약. {x:} 토큰도 됨. 시트 키 'ability.{Id}.summary.{형태 키}'가 있으면 그게 먼저")]
+    [TextArea(2, 4)] public string Summary;
+    [Tooltip("시트 키에 붙일 이름 (예: colossus · dragon). 비우면 시트 키 안 찾음")]
+    public string TextKey;
+
     [Header("기본 공격 (좌클릭)")]
     [Tooltip("비우면 기본 공격 없음. 스텝의 '판정 덮어쓰기'를 켜고 범위 · 피해 배율(1.5 = 공격력 150%)을 넣을 것 — 무기 판정")]
     public AbilityMotionData Attack;
@@ -50,6 +58,23 @@ public abstract class TransformAbility : AbilityBehaviour
 
     /// <summary>이 능력의 모든 형태 — 다른 화면에서 이벤트를 받을 때 형태 번호로 씀</summary>
     protected abstract TransformForm[] Forms { get; }
+
+    // ══════════════════ 변신 중 글 ══════════════════
+
+    public override string SummaryOverride() => FormText(Form, "summary", Form?.Summary);
+    public override string FlavorOverride() => FormText(Form, "flavor", Form?.Flavor);
+
+    string FormText(TransformForm f, string kind, string raw)
+    {
+        if (f == null) return null;
+        string fallback = string.IsNullOrWhiteSpace(raw) ? null : LocUtil.Resolve(raw);
+        if (!string.IsNullOrEmpty(f.TextKey) && Data != null)
+        {
+            string s = LocUtil.GetOr($"ability.{Data.Id}.{kind}.{f.TextKey}", fallback);
+            return string.IsNullOrWhiteSpace(s) ? null : s;
+        }
+        return fallback;
+    }
 
     /// <summary>변신 중에도 쓸 수 있는 이 능력의 스킬인가 (기본: 이 능력의 스킬은 전부)</summary>
     protected virtual bool AllowedWhileTransformed(AbilityData.SkillDef skill) =>

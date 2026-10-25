@@ -30,7 +30,7 @@ MonoBehaviour:
   Behaviour: {fileID: 11400000, guid: a743325738170364dbae72b9bc387eb1, type: 2}
   MaxConcurrent: 0
   ExcludeFromRoll: 0
-  RollWeight: 1
+  RollWeight: 0.6
   EvolveToId: 0
   EvolveKillCount: 0
   Charges: []

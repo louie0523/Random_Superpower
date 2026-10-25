@@ -37,6 +37,7 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 4
+    StartHidden: 0
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0
@@ -45,8 +46,8 @@ MonoBehaviour:
     SoulCost: 0
     CooldownAfterEffect: 0
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
-    EffectTiming: 0
+    MotionData: {fileID: 11400000, guid: c2fa9b1791cabe2448acd75f9c9235fa, type: 2}
+    EffectTiming: 1
     NeedsTarget: 0
     HitMode: 0
     Range: 6
@@ -58,7 +59,7 @@ MonoBehaviour:
   Behaviour: {fileID: 11400000, guid: a4540d967a642d749b8b166dfb3b0da5, type: 2}
   MaxConcurrent: 0
   ExcludeFromRoll: 0
-  RollWeight: 1
+  RollWeight: 0.8
   EvolveToId: 0
   EvolveKillCount: 0
   Charges: []

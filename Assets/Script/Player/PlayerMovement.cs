@@ -68,6 +68,113 @@ public class PlayerMovement : NetworkBehaviour
     /// <summary>점프한 순간 (내 캐릭터) — 변신 모델이 점프 동작을 바로 틀게</summary>
     public event System.Action Jumped;
 
+    // ══════════════════ 능력이 직접 움직임 · 붙잡힘 · 벽꿍 ══════════════════
+
+    /// <summary>
+    /// 능력이 위치를 직접 정함 (미래로 가자 돌진 · 지구 던지기 상승 · 활공 등) — 켜져 있으면 여기선 이동 · 중력 · 넉백을 안 함.
+    /// 시점 회전은 그대로. 권한자에서 켜고 끔
+    /// </summary>
+    public bool ExternalControl { get; set; }
+
+    /// <summary>나를 붙잡고 있는 사람 (미래로 가자) — 그 사람 기준 CarryOffset 자리에 고정, 시점만 돌릴 수 있음</summary>
+    [Networked] public NetworkObject CarriedBy { get; set; }
+    [Networked] public Vector3 CarryOffset { get; set; }
+    public bool IsCarried => Object != null && Object.IsValid && CarriedBy != null;
+    private bool _ccOffForCarry;
+    private PlayerHealth _healthRef;
+
+    /// <summary>붙잡기 / 놓기 (어디서 불러도 됨 — 붙잡힌 사람 쪽 권한자에서 처리). carrier가 null이면 놓음</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetCarrier(NetworkObject carrier, Vector3 offset)
+    {
+        CarriedBy = carrier;
+        CarryOffset = offset;
+        _push = Vector3.zero;
+        _verticalVel = 0f;
+        if (carrier == null) EndCarry();
+    }
+
+    Vector3 CarryPos()
+    {
+        var t = CarriedBy.transform;
+        return t.position + t.rotation * CarryOffset;
+    }
+
+    /// <summary>권한자 — 붙잡혀 있으면 그 자리로 옮기고 true (이동 안 함)</summary>
+    bool TickCarried()
+    {
+        if (CarriedBy == null) { EndCarry(); return false; }
+
+        if (_healthRef == null) _healthRef = GetComponent<PlayerHealth>();
+        if (!CarriedBy.IsValid || (_healthRef != null && _healthRef.IsDead))
+        {
+            CarriedBy = null;
+            EndCarry();
+            return false;
+        }
+
+        if (_cc != null && _cc.enabled) { _cc.enabled = false; _ccOffForCarry = true; }    // 벽 · 사람 통과
+        transform.position = CarryPos();
+        _verticalVel = 0f;
+        _push = Vector3.zero;
+        _localMoveDir = Vector3.zero;
+        _speed01 = 0f;
+        _currentSpeed = 0f;
+        return true;
+    }
+
+    void EndCarry()
+    {
+        if (!_ccOffForCarry) return;
+        _ccOffForCarry = false;
+        if (_healthRef == null) _healthRef = GetComponent<PlayerHealth>();
+        if (_cc != null) _cc.enabled = _healthRef == null || !_healthRef.IsDead;
+    }
+
+    /// <summary>모든 화면 — 붙잡힌 사람은 붙잡은 사람의 '보이는' 위치에 딱 붙어 보이게 (네트워크 지연으로 뒤처지지 않게)</summary>
+    void LateUpdate()
+    {
+        if (Object == null || !Object.IsValid) return;
+        var c = CarriedBy;
+        if (c != null && c.IsValid) transform.position = CarryPos();
+    }
+
+    // 벽꿍 (푸스로다) — 밀려나는 동안 벽에 부딪히면 최대 체력 N% 피해 (한 번)
+    private float _slamUntil, _slamPct;
+    private PlayerRef _slamBy;
+
+    /// <summary>벽에 부딪혔을 때 (권한자) — 연출용</summary>
+    public event System.Action WallSlammed;
+
+    /// <summary>밀치기 + 그동안 벽에 부딪히면 최대 체력 maxHpPct% 피해 (by의 피해로)</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_KnockbackSlam(Vector3 velocity, float maxHpPct, PlayerRef by, float window)
+    {
+        ApplyKnockback(velocity);
+        _slamUntil = Runner.SimulationTime + Mathf.Max(0.05f, window);
+        _slamPct = maxHpPct;
+        _slamBy = by;
+    }
+
+    void TickSlam()
+    {
+        if (_slamUntil <= 0f) return;
+        if (Runner.SimulationTime > _slamUntil) { _slamUntil = 0f; return; }
+        if ((_cc.collisionFlags & CollisionFlags.Sides) == 0) return;
+        if (_push.sqrMagnitude < 4f) return;                    // 거의 멈춘 뒤 살짝 닿은 건 아님
+
+        _slamUntil = 0f;
+        if (_healthRef == null) _healthRef = GetComponent<PlayerHealth>();
+        if (_healthRef != null && _slamPct > 0f)
+        {
+            var info = DamageInfo.FromPlayerHit(0, _slamBy, transform.position, true);
+            info.MaxHpPercent = _slamPct;
+            _healthRef.RPC_TakeDamage(info);
+        }
+        _push = Vector3.zero;
+        WallSlammed?.Invoke();
+    }
+
 
     public override void Spawned()
     {
@@ -115,6 +222,19 @@ public class PlayerMovement : NetworkBehaviour
         transform.Rotate(Vector3.up * yaw);
         fpsCamera.OnBodyRotated(yaw);
         fpsCamera.SetBodyYaw(transform.eulerAngles.y);
+
+        // 붙잡힘 · 능력이 직접 움직이는 중 — 시점만 돌고 이동 · 중력 · 넉백 없음
+        if (TickCarried()) return;
+        if (ExternalControl)
+        {
+            _verticalVel = 0f;
+            _push = Vector3.zero;
+            _localMoveDir = Vector3.zero;
+            _speed01 = 0f;
+            _currentSpeed = 0f;
+            _jumpAt = 0f;
+            return;
+        }
 
         if ((_shop != null && _shop.IsShopping) || UIManager.InputBlocked)
         {
@@ -203,6 +323,7 @@ public class PlayerMovement : NetworkBehaviour
         _push = Vector3.MoveTowards(_push, Vector3.zero, knockbackDecay * Runner.DeltaTime);
 
         _cc.Move(motion * Runner.DeltaTime);
+        TickSlam();
 
         _anim?.SetMovement(_speed01, _cc.isGrounded, fpsCamera.Pitch);
 

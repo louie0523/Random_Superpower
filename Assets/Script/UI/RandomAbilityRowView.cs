@@ -35,9 +35,9 @@ public class RandomAbilityRowView : MonoBehaviour
     public float Gap = 10f;
 
     [Header("요약 줄 수")]
-    [Tooltip("요약이 길면 이 줄 수까지는 줄(배경)이 아래로 늘어남. 넘으면 글자만 아래로 삐져나감.\n" +
+    [Tooltip("요약이 길면 이 줄 수까지는 줄(배경)이 아래로 늘어남. 넘으면 글자만 아래로 삐져나감. 0 = 제한 없음 (몇 줄이든 배경이 같이 늘어남)\n" +
              "아이콘 · 이름표 · 번호는 그대로 (위쪽 기준으로 붙어 있어야 함)")]
-    [Min(1)] public int MaxSummaryLines = 2;
+    [Min(0)] public int MaxSummaryLines = 0;
 
     [Header("연출")]
     [Tooltip("능력이 바뀔 때 살짝 튐 (비우면 이 오브젝트)")]
@@ -143,9 +143,13 @@ public class RandomAbilityRowView : MonoBehaviour
         if (w <= 1f) return;
 
         float pref = Summary.GetPreferredValues(Summary.text, w, 0f).y;
-        var sb = new System.Text.StringBuilder("가");
-        for (int i = 1; i < MaxSummaryLines; i++) sb.Append("\n가");
-        float maxH = Mathf.Max(_baseSumH, Summary.GetPreferredValues(sb.ToString(), w, 0f).y);
+        float maxH = float.MaxValue;                                   // 0 = 제한 없음
+        if (MaxSummaryLines > 0)
+        {
+            var sb = new System.Text.StringBuilder("가");
+            for (int i = 1; i < MaxSummaryLines; i++) sb.Append("\n가");
+            maxH = Mathf.Max(_baseSumH, Summary.GetPreferredValues(sb.ToString(), w, 0f).y);
+        }
         float h = Mathf.Clamp(pref, _baseSumH, maxH);
         float extra = h - _baseSumH;
 
@@ -153,8 +157,16 @@ public class RandomAbilityRowView : MonoBehaviour
         if (!stretched) sr.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, h);
         row.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _baseRowH + extra);
 
+        // Layout Group 아래면 LayoutElement로 높이를 알려야 배경 · 다음 줄이 같이 밀림 (없으면 붙임)
         var le = GetComponent<LayoutElement>();
-        if (le != null) le.preferredHeight = _baseRowH + extra;
+        if (le == null && transform.parent != null && transform.parent.GetComponent<LayoutGroup>() != null)
+            le = gameObject.AddComponent<LayoutElement>();
+        if (le != null)
+        {
+            le.preferredHeight = _baseRowH + extra;
+            le.minHeight = _baseRowH + extra;
+            LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);
+        }
     }
 
     bool _live;

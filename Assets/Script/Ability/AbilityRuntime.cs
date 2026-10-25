@@ -24,6 +24,11 @@ public class AbilityRuntime : NetworkBehaviour
     [Tooltip("쿨타임 감소 상한")]
     [Range(0f, 1f)][SerializeField] private float maxCooldownReduction = 0.9f;
 
+    private PlayerHealth _picked;
+    private int _pickedSlot = -1;
+    private int _pickQueued = -1;       // 고른 뒤 다음 틱에 쓸 칸
+    private bool _picking;
+
 
 
     // ══════════════════ 네트워크 상태 ══════════════════
@@ -492,6 +497,9 @@ public class AbilityRuntime : NetworkBehaviour
         _effectEntry.Clear();
         for (int i = 0; i < _slots.Length; i++) _slots[i] = null;
 
+        System.Array.Clear(_slotOver, 0, _slotOver.Length);
+        System.Array.Clear(_slotBase, 0, _slotBase.Length);
+
         var main = database.Get(MainAbilityId);
         var sub = database.Get(SubAbilityId);
         var rand = database.Get(RandomAbilityId);
@@ -687,6 +695,14 @@ public class AbilityRuntime : NetworkBehaviour
             return;
         }
 
+        // 선택 창에서 고른 스킬 — 이제 사용
+        if (_pickQueued >= 0)
+        {
+            int s = _pickQueued;
+            _pickQueued = -1;
+            if (!TryUseSkill(s)) { _picked = null; _pickedSlot = -1; }      // 그새 못 쓰게 됨 (기절 · 시전 중 등)
+        }   
+
         // 스킬 입력
         for (int i = 0; i < SkillSlotExt.Count; i++)
             if (_input != null && _input.Consume(i))
@@ -802,6 +818,37 @@ public class AbilityRuntime : NetworkBehaviour
 
     // ══════════════════ 스킬 ══════════════════
 
+    /// <summary>이번 사용에서 고른 사람 — 효과 타이밍에 Behaviour가 가져감 (가져가면 비움)</summary>
+    public PlayerHealth TakePickedTarget()
+    {
+        var p = _picked;
+        _picked = null;
+        return p;
+    }
+
+    /// <summary>true = 지금은 쓰지 말 것 (선택 창을 열었음 / 고르는 중)</summary>
+    bool PickGate(int slotIndex, AbilityData.SkillDef skill)
+    {
+        if (!skill.PickPlayerFirst) return false;
+        if (_pickedSlot == slotIndex && _picked != null) { _pickedSlot = -1; return false; }   // 골랐음 → 진행
+        if (_picking || !HasInputAuthority) return true;                                     // 더미 등은 못 고름
+
+        _picking = true;
+        string title = string.IsNullOrEmpty(skill.PickTitle) ? "대상 고르기" : LocUtil.Resolve(skill.PickTitle);
+        PlayerPickPanel.Open(title, skill.PickIncludeSelf,
+            h =>
+            {
+                _picking = false;
+                if (h == null) return;
+                _picked = h;
+                _pickedSlot = slotIndex;
+                _pickQueued = slotIndex;
+            },
+            () => { _picking = false; });
+        return true;
+    }
+
+
     public bool TryUseSkill(int slotIndex)
     {
         if (!HasStateAuthority) return false;
@@ -834,6 +881,8 @@ public class AbilityRuntime : NetworkBehaviour
 
         if (_health.Soul < skill.SoulCost)
         { if (logSkills) Debug.Log($"[Skill] {skill.Name} → 소울 부족"); return false; }
+
+        if (PickGate(slotIndex, skill)) return false;
 
         bool handled = false;
         for (int i = 0; i < _behaviours.Count; i++)
@@ -1235,6 +1284,40 @@ public class AbilityRuntime : NetworkBehaviour
         RandomAbilityKills = 0;
 
         if (DualRandom) RollSecondRandom(inUse);
+    }
+
+    /// <summary>랜덤 능력을 이걸로 (탈모빔이 남에게 줌) — 어디서 불러도 됨, 이 사람 권한자에서 처리</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetRandomAbility(int id)
+    {
+        if (database == null || database.Get(id) == null) return;
+        if (RandomAbilityId == id || (DualRandom && RandomAbilityId2 == id)) return;
+        RandomAbilityId = id;
+        RandomAbilityKills = 0;
+    }
+
+    // ── 칸 덮어쓰기 (전설의 용: Q · E · 궁 = 용 스킬) — 원래 스킬은 기억했다가 되돌림 ──
+    private readonly AbilityData.SkillDef[] _slotBase = new AbilityData.SkillDef[SkillSlotExt.Count];
+    private readonly bool[] _slotOver = new bool[SkillSlotExt.Count];
+
+    public void OverrideSlot(int slot, AbilityData.SkillDef skill, bool resetCooldown = true)
+    {
+        if (slot < 0 || slot >= _slots.Length || skill == null || _slots[slot] == skill) return;
+        if (!_slotOver[slot]) { _slotBase[slot] = _slots[slot]; _slotOver[slot] = true; }
+        _slots[slot] = skill;
+        if (resetCooldown && HasStateAuthority)
+        {
+            CooldownEnd.Set(slot, 0f);
+            HoldUntil.Set(slot, 0f);
+        }
+    }
+
+    public void RestoreSlot(int slot)
+    {
+        if (slot < 0 || slot >= _slots.Length || !_slotOver[slot]) return;
+        _slots[slot] = _slotBase[slot];
+        _slotBase[slot] = null;
+        _slotOver[slot] = false;
     }
 
     /// <summary>두 번째 랜덤 능력 — 첫 번째와 다른 것으로</summary>

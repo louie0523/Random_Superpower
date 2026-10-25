@@ -87,7 +87,7 @@ public static class AbilityDescTokens
         return text;
     }
 
-    static AbilityBehaviour FindLive(AbilityData owner)
+    public static AbilityBehaviour FindLive(AbilityData owner)
     {
         if (owner == null || Local == null) return null;
         var list = Local.Behaviours;

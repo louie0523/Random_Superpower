@@ -119,6 +119,11 @@ public class AbilityPanel : UIPanel
                 _liveSig = live;
                 RefreshCards();
             }
+            if (abilityFlavor != null && _runtime != null)
+            {
+                string fl = AbilityUi.Flavor(_runtime.GetMainAbility());
+                if (abilityFlavor.text != fl) abilityFlavor.text = fl;
+            }
         }
     }
 
@@ -181,10 +186,8 @@ public class AbilityPanel : UIPanel
         if (abilityName != null)
             abilityName.text = LocUtil.GetOr($"ability.{data.Id}.name",
                                              LocUtil.Resolve(data.DisplayName));
-
         if (abilityFlavor != null)
-            abilityFlavor.text = LocUtil.GetOr($"ability.{data.Id}.flavor",
-                                               LocUtil.Resolve(data.Flavor));
+            abilityFlavor.text = AbilityUi.Flavor(data);
     }
 
     /// <summary>패시브는 패시브 열, 스킬은 스킬 열. 출처는 카드 띠 색으로만 구분</summary>

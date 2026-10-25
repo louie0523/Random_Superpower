@@ -152,9 +152,12 @@ public class JokerClone : NetworkBehaviour
         if (armRig != null)
         {
             armRig.Mount(w);        // 손에 쥐기 + 그립 · 기본 자세 (플레이어와 같은 설정)
-            var wt = armRig.GetWeaponTransform();
-            if (wt != null)
-                foreach (var c in wt.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+            for (int i = 0; i < armRig.PartCount; i++)
+            {
+                var wt = armRig.GetPartTransform(i);
+                if (wt != null)
+                    foreach (var c in wt.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+            }
             return;
         }
 
@@ -442,12 +445,14 @@ public class JokerClone : NetworkBehaviour
             _swingT += dt * _swingSpeed;
             if (_swingT < total)
             {
+                armRig.SetPartParents(_swingStep.PartParents);
                 armRig.ApplySwing(_swingStep.Motion, _swingT / total, _swingStep.HandMode);
                 return;
             }
             _swingStep = null;
         }
 
+        armRig.SetPartParents(null);
         armRig.ApplyPose(armRig.GetEffectiveIdle());
     }
 }

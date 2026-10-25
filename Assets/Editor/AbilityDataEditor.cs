@@ -437,8 +437,21 @@ public class AbilityDataEditor : Editor
             var slot = (SkillSlot)el.FindPropertyRelative("Slot").enumValueIndex;
             EditorGUILayout.PropertyField(el.FindPropertyRelative("StartHidden"),
     new GUIContent("처음엔 숨김 (변형)", "칸에 안 놓이고, 능력이 SwapSkill로 바꿔 끼울 때 나타남"));
+
+            var pickFirst = el.FindPropertyRelative("PickPlayerFirst");
+            EditorGUILayout.PropertyField(pickFirst, new GUIContent("플레이어 먼저 고르기",
+                "누르면 선택 창 → 고르면 사용 (쿨 · 모션) → 효과 타이밍에 고른 사람에게"));
+            if (pickFirst.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(el.FindPropertyRelative("PickTitle"), new GUIContent("창 제목"));
+                EditorGUILayout.PropertyField(el.FindPropertyRelative("PickIncludeSelf"), new GUIContent("나도 고를 수 있음"));
+                EditorGUI.indentLevel--;
+            }
             _sb.Append('[').Append(slot.Label()).Append("]  ");
         }
+
+
 
         string name = el.FindPropertyRelative("Name").stringValue;
         _sb.Append(string.IsNullOrWhiteSpace(name) ? "(이름 없음)" : name);

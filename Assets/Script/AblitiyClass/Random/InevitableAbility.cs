@@ -4,7 +4,9 @@ using UnityEngine;
 
 /// <summary>
 /// 필연적인 존재 — 이 능력을 가진 동안 궁극기 쿨타임이 40% 빨리 줄어듦.
-/// 궁극기를 5번 쓰면 큰 알림 "○○이(가) 필연적인 힘을 사용합니다!" → 잠시 뒤 살아 있는 적의 절반(내림, 무작위)이 사망 (내 처치로 인정).
+/// 궁극기를 5번 쓰면 큰 알림 "○○이(가) 필연적인 힘을 사용합니다!" → (그 궁극기 모션이 끝나면) 필연 모션 재생
+///   → 모션의 판정 프레임(판정 시작)에 살아 있는 적의 절반(내림, 무작위)이 사망 (내 처치로 인정).
+///   모션을 안 넣으면 예전처럼 SnapDelay초 뒤.
 /// 그 뒤 스택은 처음부터. 스택은 능력이 바뀌면(죽으면) 사라짐.
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Inevitable")]
@@ -14,8 +16,12 @@ public class InevitableAbility : AbilityBehaviour
     public float UltCdrSpeedPercent = 40f;
     [Tooltip("이 횟수만큼 궁극기를 쓰면 발동")]
     public int UsesNeeded = 5;
-    [Tooltip("알림 뒤 사망까지 (초)")]
+    [Tooltip("필연 모션 (손가락 튕기기 등) — 모션 편집 창에서. 발동은 이 모션의 '판정 시작' 순간 → 끝에서 터지게 하려면 판정 시작을 0.9 정도로.\n" +
+             "비우면 알림 뒤 SnapDelay초")]
+    public AbilityMotionData SnapMotion;
+    [Tooltip("모션이 없을 때 — 알림 뒤 사망까지 (초)")]
     public float SnapDelay = 3f;
+    const int SnapTag = 1;
     [Tooltip("살아 있는 적 중 죽는 비율 (0.5 = 절반, 내림)")]
     [Range(0f, 1f)] public float SnapRatio = 0.5f;
 
@@ -66,26 +72,38 @@ public class InevitableAbility : AbilityBehaviour
             if (SnapFx != null) comms.PlayFx(SnapFx, Ctx.transform.position + Vector3.up);
         }
 
+        // 모션이 있으면 — 지금 모션(궁극기)이 끝나면 이어서 재생 → 판정 프레임에 OnChainHit
+        if (SnapMotion != null && SnapMotion.Step != null) { ChainMotion(SnapTag); return; }
+
         var ctx = Ctx;
         var me = Ctx.Object.InputAuthority;
         float ratio = SnapRatio;
         var victimFx = VictimFx;
+        GameTimers.After(SnapDelay, () => KillHalf(ctx, me, ratio, victimFx));
+    }
 
-        GameTimers.After(SnapDelay, () =>
+    public override AbilityMotionData GetChainMotion(int tag) => tag == SnapTag ? SnapMotion : null;
+
+    public override void OnChainHit(int tag)
+    {
+        if (tag != SnapTag) return;
+        KillHalf(Ctx, Ctx.Object.InputAuthority, SnapRatio, VictimFx);
+    }
+
+    static void KillHalf(AbilityRuntime ctx, PlayerRef me, float ratio, GameObject victimFx)
+    {
+        if (ctx == null) return;
+        var alive = TargetUtil.AliveEnemies(ctx);
+        int n = Mathf.FloorToInt(alive.Count * ratio);
+        if (n <= 0) return;
+
+        TargetUtil.Shuffle(alive);
+        var c = PlayerComms.Local;
+        for (int i = 0; i < n; i++)
         {
-            if (ctx == null) return;
-            var alive = TargetUtil.AliveEnemies(ctx);
-            int n = Mathf.FloorToInt(alive.Count * ratio);
-            if (n <= 0) return;
-
-            TargetUtil.Shuffle(alive);
-            var c = PlayerComms.Local;
-            for (int i = 0; i < n; i++)
-            {
-                if (c != null && victimFx != null) c.PlayFx(victimFx, TargetUtil.Chest(alive[i]));
-                alive[i].RPC_ForceKill(me, false);
-            }
-        });
+            if (c != null && victimFx != null) c.PlayFx(victimFx, TargetUtil.Chest(alive[i]));
+            alive[i].RPC_ForceKill(me, false);
+        }
     }
 
     public override string DescToken(string key, int rank) => key switch

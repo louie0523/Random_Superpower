@@ -25,16 +25,45 @@ MonoBehaviour:
   Number: 0
   Summary: "\uAD81\uADF9\uAE30 \uCFE8\uD0C0\uC784\uC774 40% \uBE60\uB974\uAC8C \uAC10\uC18C\uD569\uB2C8\uB2E4.\n\uAD81\uADF9\uAE30\uB97C
     5\uBC88 \uC0AC\uC6A9\uC2DC \uC0B4\uC544\uC788\uB294 \uD50C\uB808\uC774\uC5B4\uC758
-    \uC808\uBC18\uC744 \uCC98\uCE58\uD569\uB2C8\uB2E4. ( \uD604\uC7AC : \t{x:stack})"
+    \uC808\uBC18\uC744 \uCC98\uCE58\uD569\uB2C8\uB2E4. ( \uD604\uC7AC : {x:stack})"
   UiAccent: {r: 0.575233, g: 0, b: 1, a: 1}
   UiNameColor: {r: 1, g: 0, b: 0, a: 1}
   UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives: []
-  Skills: []
+  Skills:
+  - Name: "\uD551\uAC70 \uC2A4\uB0C5"
+    Icon: {fileID: 0}
+    Description: "\uBAA8\uB4E0 \uC0DD\uBA85\uC758 50%...."
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 4
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 30
+    SoulCost: 0
+    CooldownAfterEffect: 1
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 1
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
   Behaviour: {fileID: 11400000, guid: cdeb9095fb671364c89776b16dcb9d80, type: 2}
   MaxConcurrent: 0
   ExcludeFromRoll: 0
-  RollWeight: 1
+  RollWeight: 0.3
   EvolveToId: 0
   EvolveKillCount: 0
   Charges: []

@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: "\uBB3C\uACE0\uAE30_So"
   m_EditorClassIdentifier: Assembly-CSharp::FishAbility
   Fish:
-    Alter: {fileID: 0}
+    Alter: {fileID: 11400000, guid: 48fd56ed722b8fb4cac62e15a7cf1d15, type: 2}
+    Flavor: 
+    Summary: 
+    TextKey: 
     Attack: {fileID: 0}
     AttackAnim: 
     CanFly: 0
@@ -22,6 +25,9 @@ MonoBehaviour:
     FlyAnim: Flying
   Dragon:
     Alter: {fileID: 11400000, guid: 78247662f215cbd45a79b5b4503919b7, type: 2}
+    Flavor: "\uC6A9\uBB38\uC5D0 \uC131\uACF5\uC801\uC73C\uB85C \uC62C\uB790\uC2B5\uB2C8\uB2E4."
+    Summary: 
+    TextKey: 
     Attack: {fileID: 0}
     AttackAnim: Attack
     CanFly: 1
@@ -30,9 +36,9 @@ MonoBehaviour:
     FlyAnim: Flying
   BounceUp: 7
   BounceSide: 2.5
-  SplashRadius: 2.5
+  SplashRadius: 3
   SplashDamage: 10
-  SelfDamagePercent: 5
+  SelfDamagePercent: 10
   SelfStun: 1.5
   DragonChance: 0.05
   FirstBounceDelay: 0.5

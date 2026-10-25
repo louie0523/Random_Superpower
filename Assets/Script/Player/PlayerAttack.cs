@@ -1056,6 +1056,7 @@ public class PlayerAttack : NetworkBehaviour
             AlterRef.PlayAttackAnim(speed);      // 용 물어뜯기 등 — 모든 화면, 공속 반영
 
         weaponAnim?.Play(step, speed);
+        if (weaponAnim != null) weaponAnim.BasicAttack = true;
 
         // 판정 범위를 같이 넘김 — Vfx 이벤트가 사거리(버프 포함)·각도에 맞춰 크기를 정함
         var weapon2 = _equip != null ? _equip.GetWeapon() : null;

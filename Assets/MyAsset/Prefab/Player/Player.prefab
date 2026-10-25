@@ -1101,7 +1101,7 @@ MonoBehaviour:
   RightHand: {fileID: 6004190479214023139}
   LeftHand: {fileID: 788133037138274134}
   RightHandRig: {fileID: 2895705743865759798}
-  LeftHandRig: {fileID: 2895705743865759798}
+  LeftHandRig: {fileID: 2768802568798439844}
   RightHandPrefab: {fileID: 7788032058989571394, guid: dc85320b2f848c44a8576657d504d94c, type: 3}
   LeftHandPrefab: {fileID: 3552246198162937025, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
   IdlePose:
@@ -1112,6 +1112,8 @@ MonoBehaviour:
     LeftRot: {x: 22.103, y: 56.822, z: 30.66}
     WeaponPos: {x: 0, y: 0, z: 0}
     WeaponRot: {x: 0, y: 0, z: 0}
+    WeaponScale: {x: 0, y: 0, z: 0}
+    Parts: []
     CamPos: {x: 0, y: 0, z: 0}
     CamRot: {x: 0, y: 0, z: 0}
     CamFov: 0
@@ -1836,6 +1838,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4181536952661282427, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
   m_PrefabInstance: {fileID: 3528516872023304493}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2768802568798439844 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1628909031642914953, guid: 7eb114eb9e5a2a441880733c14a392e6, type: 3}
+  m_PrefabInstance: {fileID: 3528516872023304493}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3bf480ae5f05e54cb519bd614b2c90d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandRig
 --- !u!1001 &3750476100158400027
 PrefabInstance:
   m_ObjectHideFlags: 0

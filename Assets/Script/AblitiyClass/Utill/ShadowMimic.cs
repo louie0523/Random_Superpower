@@ -11,6 +11,10 @@ using UnityEngine.Rendering;
 ///   → 손 IK(양손 그립)·손가락 굽힘·무기 휘두르기·몸통·머리 모션이 따로 설정 없이 다 따라옴
 ///   → 무기를 바꾸면 자동으로 다시 복제
 /// ShadowFollower와 같은 오브젝트에 붙음 (이 오브젝트가 그림자의 '발 위치')
+///
+/// 변신(AlterData.IsTransform — 용 · 거신병 등) 중엔 변신 모델(변화 파츠)도 복제하고,
+/// 주인처럼 몸 · 손 · 무기는 숨김 → 그림자도 변신 모습 + 그 모션을 따라 함 (물기 · 내려찍기 포함).
+/// 변신이 아닐 땐 MimicBasicAttack이 꺼져 있으면 기본 공격 동안 그림자는 자세를 그대로 둠 (스킬 모션은 따라 함).
 /// </summary>
 [DefaultExecutionOrder(10000)]      // 주인 리그·IK가 다 끝난 뒤에 따라 함
 public class ShadowMimic : MonoBehaviour
@@ -44,6 +48,24 @@ public class ShadowMimic : MonoBehaviour
     private int _lastTransformCount;
     private float _checkTimer;
 
+    private PlayerAlter _alter;
+    private WeaponAnimator _weaponAnim;
+    private AlterData _lastForm;
+    private bool _transformed;
+
+    // 기본 공격 동안 자세 고정
+    private Vector3[] _heldP;
+    private Quaternion[] _heldR;
+    private bool _holding;
+    private float _release = 1f;        // 고정이 풀린 뒤 실제 자세로 돌아가는 정도 (0 → 1)
+    [Tooltip("기본 공격 고정이 풀린 뒤 실제 자세로 돌아가는 시간 (초)")]
+    public float ReleaseBlend = 0.15f;
+
+    /// <summary>그림자가 기본 공격 모션도 따라 함 — 쉐도우 워커가 그림자 무기(Shift) 동안 켬. 변신 중엔 항상 따라 함</summary>
+    public bool MimicBasicAttack = true;
+    /// <summary>이 시각(Time.time)까지는 MimicBasicAttack이 꺼져 있어도 기본 공격을 따라 함 — 그림자 무기 지속 시간</summary>
+    [System.NonSerialized] public float MimicAttackUntil;
+
     // ══════════════════ 설정 ══════════════════
 
     [Tooltip("팔 · 손 · 무기만 복제 (몸 · 머리 제외) — 쉐도우 워커 본인 화면용 (내 그림자 몸이 시야를 가리지 않게)")]
@@ -57,6 +79,8 @@ public class ShadowMimic : MonoBehaviour
         Material = mat;
         Delay = delay;
         _follower = GetComponent<ShadowFollower>();
+        _alter = owner != null ? owner.GetComponent<PlayerAlter>() : null;
+        _weaponAnim = owner != null ? owner.GetComponentInChildren<WeaponAnimator>(true) : null;
         Rebuild();
     }
 
@@ -69,8 +93,14 @@ public class ShadowMimic : MonoBehaviour
         _dst.Clear();
         _renderers.Clear();
         _count = 0;
+        _holding = false;
+        _release = 1f;
+        _heldP = null;
+        _heldR = null;
 
         if (_owner == null || _rig == null) return;
+        _lastForm = CurrentForm();
+        _transformed = _lastForm != null;
 
         foreach (var root in Sources())
             CloneTree(root);
@@ -96,6 +126,10 @@ public class ShadowMimic : MonoBehaviour
             Add(_rig.Body);
             Add(_rig.Head);
         }
+        // 변신 중 — 변신 모델 등 변화 파츠 (Attach = Root라 위 셋 밖에 있음)
+        if (_transformed && _alter != null)
+            foreach (var t in _owner.GetComponentsInChildren<Transform>(true))
+                if (_alter.IsPart(t) && (t.parent == null || !_alter.IsPart(t.parent))) Add(t);
         return list;
     }
 
@@ -202,11 +236,21 @@ public class ShadowMimic : MonoBehaviour
 
         bool hidden = _follower != null && _follower.Hidden;
         foreach (var (s, d) in _renderers)
-            if (d != null) d.enabled = !hidden && s != null && s.enabled && s.gameObject.activeInHierarchy;
+            if (d != null) d.enabled = !hidden && s != null && s.enabled && s.gameObject.activeInHierarchy
+                                       && !(_transformed && s.forceRenderingOff);      // 변신 중 주인처럼 몸 · 손 · 무기 숨김
+    }
+
+    AlterData CurrentForm()
+    {
+        if (_alter == null || _alter.Object == null || !_alter.Object.IsValid) return null;
+        return _alter.ActiveTransform;
     }
 
     bool NeedsRebuild()
     {
+        // 변신 · 변신 풀림
+        if (CurrentForm() != _lastForm) return true;
+
         // 무기 모델이 바뀜 (교체 · 모션 전용 무기)
         if (_rig.GetWeaponTransform() != _lastWeapon) return true;
 
@@ -238,8 +282,46 @@ public class ShadowMimic : MonoBehaviour
             f.R[i] = inv * s.rotation;
         }
 
+        HoldDuringBasicAttack(ref f, n);
+
         _head = (_head + 1) % BufferSize;
         _count = Mathf.Min(_count + 1, BufferSize);
+    }
+
+    /// <summary>기본 공격 중이면 공격 직전 자세를 그대로 기록 (그림자는 안 휘두름). 끝나면 부드럽게 돌아감</summary>
+    void HoldDuringBasicAttack(ref Frame f, int n)
+    {
+        bool hold = !_transformed && !MimicBasicAttack && Time.time >= MimicAttackUntil && _weaponAnim != null
+                    && _weaponAnim.IsAttacking && _weaponAnim.BasicAttack;
+
+        if (hold)
+        {
+            if (!_holding)
+            {
+                // 공격 직전 자세 = 바로 전 기록 (없으면 지금)
+                int prev = (_head - 1 + BufferSize) % BufferSize;
+                bool hasPrev = _count > 0 && _buf[prev].P != null && _buf[prev].P.Length == n;
+                if (_heldP == null || _heldP.Length != n) { _heldP = new Vector3[n]; _heldR = new Quaternion[n]; }
+                System.Array.Copy(hasPrev ? _buf[prev].P : f.P, _heldP, n);
+                System.Array.Copy(hasPrev ? _buf[prev].R : f.R, _heldR, n);
+                _holding = true;
+            }
+            System.Array.Copy(_heldP, f.P, n);
+            System.Array.Copy(_heldR, f.R, n);
+            _release = 0f;
+            return;
+        }
+
+        _holding = false;
+        if (_release >= 1f || _heldP == null || _heldP.Length != n) { _release = 1f; return; }
+
+        _release = ReleaseBlend > 0.001f ? Mathf.MoveTowards(_release, 1f, Time.deltaTime / ReleaseBlend) : 1f;
+        float k = _release * _release * (3f - 2f * _release);
+        for (int i = 0; i < n; i++)
+        {
+            f.P[i] = Vector3.Lerp(_heldP[i], f.P[i], k);
+            f.R[i] = Quaternion.Slerp(_heldR[i], f.R[i], k);
+        }
     }
 
     void Apply(float t)

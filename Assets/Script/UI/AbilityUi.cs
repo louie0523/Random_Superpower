@@ -15,15 +15,27 @@ public static class AbilityUi
         if (a == null) return LocUtil.GetOr("ui.ability.none", "-");
         return LocUtil.GetOr($"ability.{a.Id}.name", LocUtil.Resolve(a.DisplayName ?? a.name));
     }
-
-    /// <summary>한 줄 요약 — 시트 ability.{Id}.summary → Summary 칸 → 플레이버</summary>
+    /// <summary>한 줄 요약 — 능력이 지금 바꾼 요약(변신 등) → 시트 ability.{Id}.summary → Summary 칸 → 플레이버</summary>
     public static string Summary(AbilityData a)
     {
         if (a == null) return "";
+        var live = AbilityDescTokens.FindLive(a);
+        string ov = live != null ? live.SummaryOverride() : null;
+        if (!string.IsNullOrWhiteSpace(ov)) return ov;
+
         string s = LocUtil.GetOr($"ability.{a.Id}.summary", LocUtil.Resolve(a.Summary ?? ""));
-        if (string.IsNullOrWhiteSpace(s))
-            s = LocUtil.GetOr($"ability.{a.Id}.flavor", LocUtil.Resolve(a.Flavor ?? ""));
+        if (string.IsNullOrWhiteSpace(s)) s = Flavor(a);
         return s ?? "";
+    }
+
+    /// <summary>플레이버 — 능력이 지금 바꾼 글(변신 등) → 시트 ability.{Id}.flavor → Flavor 칸</summary>
+    public static string Flavor(AbilityData a)
+    {
+        if (a == null) return "";
+        var live = AbilityDescTokens.FindLive(a);
+        string ov = live != null ? live.FlavorOverride() : null;
+        if (!string.IsNullOrWhiteSpace(ov)) return ov;
+        return LocUtil.GetOr($"ability.{a.Id}.flavor", LocUtil.Resolve(a.Flavor ?? "")) ?? "";
     }
 
     // ══════════════════ 번호 (NO. N / 진화 NO. N - 단계) ══════════════════

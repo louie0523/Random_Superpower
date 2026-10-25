@@ -5,6 +5,35 @@ public enum EquipSlot { Weapon, Armor, Helmet, Boots }
 public enum GripType { RightHand, LeftHand, TwoHand }
 public enum WeaponClass { Melee, Ranged }
 
+/// <summary>무기 모델(파츠)이 붙는 곳 — 팔 = 손과 같은 기준 공간 (손을 따라가지 않고 떠 있음)</summary>
+public enum WeaponParent
+{
+    [Tooltip("무기 설정을 따름 (0번 = 잡는 손 · '손을 따라가지 않음', 추가 파츠 = 그 파츠의 부모)")]
+    Default,
+    RightHand,
+    LeftHand,
+    [Tooltip("손과 같은 공간 (팔 기준) — 손이 움직여도 따라가지 않음")]
+    Arm,
+}
+
+/// <summary>무기의 추가 모델 하나 (1번부터) — 예: 노트(0번 = 메인) + 펜(1번)</summary>
+[System.Serializable]
+public class WeaponPart
+{
+    [Tooltip("편집 창에 보이는 이름")]
+    public string Name = "파츠";
+    public GameObject ModelPrefab;
+    [Tooltip("붙는 곳 (기본 = 오른손)")]
+    public WeaponParent Parent = WeaponParent.RightHand;
+    [Tooltip("부모 기준 위치 · 회전 · 크기")]
+    public Vector3 Position;
+    public Vector3 Rotation;
+    public Vector3 Scale = Vector3.one;
+    [Tooltip("이 파츠만 항상 둥둥")]
+    public bool UseFloat;
+    public FloatWave Float = new();
+}
+
 /// <summary>아이템 등급 — 인챈트 비용(EnchantRules)과 상자 드롭 확률에 사용</summary>
 public enum ItemGrade { C, B, A, S }
 
@@ -121,6 +150,30 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Header("─── Weapon: Grip ───")]
     public HandPose RightGrip;
     public HandPose LeftGrip;
+
+    [Header("─── Weapon: 둥둥 (떠 있는 무기) ───")]
+    [Tooltip("손을 따라가지 않고 팔 기준 자리에 떠 있음 (손에서 벗어난 특수 무기). 켜면 위치 · 회전 오프셋이 팔(화면) 기준")]
+    public bool FloatFree;
+    [Tooltip("항상 제자리를 중심으로 둥둥 떠다님 (가만히 · 모션 중 모두)")]
+    public bool UseFloat;
+    public FloatWave Float = new();
+
+    [Header("─── Weapon: 파츠 (모델 여러 개) ───")]
+    [Tooltip("0번(메인 모델 = 위 ModelPrefab)이 붙는 곳. 기본 = 잡는 손(Grip) · '손을 따라가지 않음'이면 팔")]
+    public WeaponParent MainParent = WeaponParent.Default;
+    [Tooltip("추가 모델 — 1번부터 (예: 0번 노트 + 1번 펜). 판정 · 총구 · 끝점 · 왼손 그립은 0번 기준")]
+    public WeaponPart[] ExtraParts;
+
+    /// <summary>파츠 수 (0번 메인 포함)</summary>
+    public int PartCount => 1 + (ExtraParts?.Length ?? 0);
+
+    /// <summary>파츠 이름 — 0번은 무기 이름</summary>
+    public string PartName(int i)
+    {
+        if (i <= 0) return string.IsNullOrEmpty(DisplayName) ? name : DisplayName;
+        var p = ExtraParts != null && i - 1 < ExtraParts.Length ? ExtraParts[i - 1] : null;
+        return p != null && !string.IsNullOrEmpty(p.Name) ? p.Name : $"파츠 {i}";
+    }
 
     [Header("─── Weapon: Hit Shape ───")]
     public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;

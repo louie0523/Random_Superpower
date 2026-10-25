@@ -158,6 +158,13 @@ public class AbilityData : ScriptableObject
         [Tooltip("처음엔 칸에 안 놓임 — 능력이 SwapSkill로 바꿔 끼우는 '변형' 스킬")]
         public bool StartHidden;
 
+        [Tooltip("누르면 먼저 플레이어 선택 창 → 고르면 그때 사용 (쿨 · 모션) → 효과 타이밍에 Behaviour가 고른 사람을 씀. 창을 닫으면 안 씀")]
+        public bool PickPlayerFirst;
+        [Tooltip("선택 창 제목 (시트 키도 됨)")]
+        public string PickTitle = "대상 고르기";
+        [Tooltip("선택 창에 나도 나옴")]
+        public bool PickIncludeSelf = true;
+
         [Header("레벨")]
         [Tooltip("최대 레벨. 1이면 강화 불가. 궁극기는 보통 3.\nEffects의 Values와 Vars의 칸 수를 이 값에 맞추세요")]
         [Min(1)] public int MaxLevel = 5;

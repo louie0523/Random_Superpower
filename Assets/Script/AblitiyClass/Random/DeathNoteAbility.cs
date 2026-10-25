@@ -2,10 +2,10 @@ using Fusion;
 using UnityEngine;
 
 /// <summary>
-/// 데스 노트 — 플레이어 선택 창에서 아무나(나 · 팀 포함) 지정 → 모두에게 "서걱서걱…" 작은 메시지 →
-/// 60초 뒤 그 사람이 심장 마비로 사망 (자살 판정 — 아무도 소울 안 받음) + 글로벌 채팅 기록.
-/// 쿨타임 64초는 데이터에서. 창을 닫으면(취소) 쿨타임이 돌아옴.
-/// 예약은 능력이 바뀌어도(내가 죽어도) 남음.
+/// 데스 노트 — F → 플레이어 선택 창(스킬 데이터 '플레이어 먼저 고르기') → 고르면 모션 → 효과 타이밍에 이름을 적음:
+///   모두에게 "서걱서걱…" 작은 메시지 → Delay초 뒤 그 사람이 심장 마비로 사망 (자살 판정 — 아무도 소울 안 받음) + 글로벌 채팅 기록.
+/// 창을 닫으면 아무것도 안 씀. 예약은 능력이 바뀌어도(내가 죽어도) 남음.
+/// 데이터: 플레이어 먼저 고르기 켜기 · 효과 타이밍 = 모션 종료(또는 판정 프레임) · 쿨 64 · 대상 필요 끄기
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Death Note")]
 public class DeathNoteAbility : AbilityBehaviour
@@ -17,15 +17,11 @@ public class DeathNoteAbility : AbilityBehaviour
 
     bool IsMine(AbilityData.SkillDef s) => Data.Skills != null && System.Array.IndexOf(Data.Skills, s) == NoteSkill;
 
-    public override bool OnSkillUsed(int slot, AbilityData.SkillDef skill)
+    public override bool OnSkillEffect(AbilityData.SkillDef skill)
     {
         if (!IsMine(skill)) return false;
-        if (!Ctx.HasInputAuthority) return true;          // 더미 등 — 고를 사람이 없음
-
-        var ctx = Ctx;
-        PlayerPickPanel.Open(TargetUtil.Text("ability.deathnote.pick", "이름을 적을 사람"), true,
-            picked => Write(picked),
-            () => ctx.ResetCooldown(slot));
+        Write(Ctx.TakePickedTarget());
+        ReleaseCooldown(NoteSkill);
         return true;
     }
 

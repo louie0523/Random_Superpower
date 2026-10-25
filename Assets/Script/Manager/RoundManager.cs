@@ -89,6 +89,17 @@ public class RoundManager : NetworkBehaviour
         Debug.Log($"[Round] 승리 — Player {winner.PlayerId} ({soul} 소울)");
     }
 
+    /// <summary>능력이 즉시 승리를 선언 (전설의 용) — 어디서 불러도 됨</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_DeclareWinner(PlayerRef winner)
+    {
+        if (GameOver) return;
+        int soul = 0;
+        var obj = Runner.GetPlayerObject(winner);
+        if (obj != null && obj.TryGetComponent<PlayerHealth>(out var h)) soul = h.Soul;
+        EndRound(winner, soul);
+    }
+
     // ══════════════════ 재시작 ══════════════════
 
     void Restart()

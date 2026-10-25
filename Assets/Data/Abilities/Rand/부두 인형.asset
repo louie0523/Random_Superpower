@@ -32,21 +32,25 @@ MonoBehaviour:
   Skills:
   - Name: "\uBD80\uB450 \uC778\uD615"
     Icon: {fileID: 0}
-    Description: "\uC608\uC804\uBD80\uD130 \uB108\uAC00 \uC815\uB9D0 \uC2EB\uC5C8\uC5B4"
+    Description: "\"\uC608\uC804\uBD80\uD130 \uB108\uAC00 \uB108\uBB34 \uC2EB\uB354\uB77C.\""
     DetailedInfo: 
     Tip: 
     DevNote: 
     Slot: 4
+    StartHidden: 0
+    PickPlayerFirst: 1
+    PickTitle: "\uC800\uC8FC \uB300\uC0C1"
+    PickIncludeSelf: 1
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0
     CooldownByLevel: []
-    Cooldown: 8
+    Cooldown: 44
     SoulCost: 0
-    CooldownAfterEffect: 0
+    CooldownAfterEffect: 1
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
-    EffectTiming: 0
+    MotionData: {fileID: 11400000, guid: 8fe6f9ba5d28f004e8a755e22969440a, type: 2}
+    EffectTiming: 1
     NeedsTarget: 0
     HitMode: 0
     Range: 6
