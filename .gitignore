@@ -124,6 +124,8 @@ InitTestScene*.unity*
 **/PhotonServerSettings.asset.meta
 /Assets/Secrets/
 /Assets/Secrets.meta
+/Assets/MyAsset/Localization/Google Sheets Service.asset
+/Assets/MyAsset/Localization/Google Sheets Service.asset.meta
 
 
 
