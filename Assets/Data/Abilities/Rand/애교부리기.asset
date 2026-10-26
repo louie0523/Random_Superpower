@@ -30,11 +30,15 @@ MonoBehaviour:
   Skills:
   - Name: "\uC560\uAD50\uBD80\uB9AC\uAE30"
     Icon: {fileID: 0}
-    Description: 
-    DetailedInfo: "\uBFCC\uC789\uBFCC\uC789"
+    Description: "\uBFCC\uC789\uBFCC\uC789"
+    DetailedInfo: 
     Tip: 
     DevNote: 
     Slot: 4
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0

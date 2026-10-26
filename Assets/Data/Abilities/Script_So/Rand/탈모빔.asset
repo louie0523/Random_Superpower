@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\uD0C8\uBAA8\uBE54"
   m_EditorClassIdentifier: Assembly-CSharp::BaldBeamAbility
   BeamSkill: 0
-  ComradeAlter: {fileID: 0}
+  ComradeAlter: {fileID: 11400000, guid: e7a105761a23af34195ed773e9674922, type: 2}
   BeamRange: 30
   BeamRadius: 0.8
   WallMask:
@@ -22,7 +22,7 @@ MonoBehaviour:
   SoulPerConvert: 20
   EndDelay: 2.5
   MinPlayers: 2
-  BeamFx: {fileID: 0}
+  BeamFx: {fileID: 4400540927185546459, guid: 14721b3ff88654144ba9697743ad4fed, type: 3}
   BeamLife: 0.35
-  BeamColor: {r: 1, g: 0.95, b: 0.6, a: 1}
+  BeamColor: {r: 1, g: 1, b: 1, a: 1}
   ConvertFx: {fileID: 0}

@@ -17,8 +17,8 @@ MonoBehaviour:
   Step:
     Name: "1\uD0C0"
     Duration: 1
-    HitStart: 0.27
-    HitEnd: 0.45
+    HitStart: 0.7589099
+    HitEnd: 0.8301887
     CancelPoint: 0.75
     ComboResetTime: 0.8
     OverrideHitShape: 0

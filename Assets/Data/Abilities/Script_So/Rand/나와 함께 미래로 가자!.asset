@@ -16,7 +16,7 @@ MonoBehaviour:
   CarryDistance: 2
   CarryHeight: 0
   HugDelay: 1.5
-  HugMotion: {fileID: 0}
+  HugMotion: {fileID: 11400000, guid: 039a7765e2009ec4283e8c1e5e88874d, type: 2}
   DashSpeed: 60
   DashTime: 10
   SoulMultiplier: 3

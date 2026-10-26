@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: "\uC9C0\uAD6C\uB358\uC9C0\uAE30"
   m_EditorClassIdentifier: Assembly-CSharp::EarthThrowAbility
   ThrowSkill: 0
-  RiseHeight: 100
-  RiseSpeed: 80
+  RiseHeight: 150
+  RiseSpeed: 50
   GhostWhileCasting: 1
   AimRange: 1500
   AimMask:
     serializedVersion: 2
     m_Bits: 968
-  FlightTime: 2
+  FlightTime: 4
   WindUp: 0.4
-  ExplodeRadius: 50
+  ExplodeRadius: 55
   Damage: 3000
-  ReturnDelay: 1.5
-  EarthPrefab: {fileID: 0}
-  EarthSize: 14
+  ReturnDelay: 1
+  EarthPrefab: {fileID: 1998571120304598423, guid: 7613548ef57d3e74994ca1cf6f99c31d, type: 3}
+  EarthSize: 50
   EarthSpin: 90
   RiseFx: {fileID: 0}
   ExplosionFx: {fileID: 0}

@@ -35389,20 +35389,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed6501d44f3b4c48a6fe94b447e6188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicSpawner
-  playerPrefab: {fileID: 0}
-  dummySpawnDistance: 5
-  debugAlter: {fileID: 0}
-  StoneGet: 259
-  spawnDummyKey: 286
-  clearDummyKey: 287
-  rerollAbilityKey: 288
-  suicideKey: 289
-  healKey: 290
-  soulGainKey: 282
-  soulLoseKey: 283
-  AddAlter: 260
-  RemoveAlter: 261
-  soulCheatAmount: 50
 --- !u!114 &1401543695
 MonoBehaviour:
   m_ObjectHideFlags: 0

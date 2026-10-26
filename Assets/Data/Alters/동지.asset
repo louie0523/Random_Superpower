@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97f4f6a54dd5a9a48a5a4168edbc4561, type: 3}
+  m_Name: "\uB3D9\uC9C0"
+  m_EditorClassIdentifier: Assembly-CSharp::AlterData
+  Id: 11007
+  DisplayName: "\uB3D9\uC9C0"
+  Icon: {fileID: 0}
+  Description: 
+  Prefab: {fileID: 1788304060448899716, guid: 8a2e0074ede2721448b0f10b8fbf26d6, type: 3}
+  Attach: 0
+  BoneName: 
+  Position: {x: 0, y: 1.4217577, z: 0}
+  Rotation: {x: -0, y: 0, z: 0}
+  Scale: {x: 1, y: 1, z: 1}
+  Lift: 0
+  FaceMoveDirection: 0
+  FaceTurnSpeed: 8
+  ShowForSelf: 0
+  SelfShadow: 1
+  MaxStack: 1
+  StackOffset: {x: 0, y: 0, z: 0}
+  Group: 
+  IsTransform: 0
+  TransformThirdPerson: 0
+  TransformCamera:
+    Offset: {x: 0.4, y: 0.35, z: -3.6}
+    PivotHeight: 0.1
+    PitchOffset: 4
+    Fov: 4
+    BlendIn: 0.35
+    BlendOut: 0.3
+  LockSkills: 0
+  OverrideAttack: 0
+  Attack:
+    Name: "\uBB3C\uC5B4\uB72F\uAE30"
+    Duration: 0.6
+    HitStart: 0.5
+    HitEnd: 0.62
+    CancelPoint: 0.9
+    ComboResetTime: 0.8
+    OverrideHitShape: 1
+    NoWeaponEnchants: 0
+    HitMode: 0
+    Range: 4
+    HitAngle: 90
+    HitHeight: 2.5
+    MinRange: 0
+    DamageMultiplier: 1.5
+    RangeMultiplier: 1
+    RadiusMultiplier: 1
+    MaxTargets: 3
+    Motion:
+      Keys: []
+      Amplitude: 1
+      Interp: 0
+      Smoothness: 1
+      Shakes: []
+      Floats: []
+      LengthHint: 1
+    HitStopDuration: 0.07
+    CameraKickFov: 4
+    CameraShake: 0.4
+    LungeDistance: 0
+    WeaponOverride: {fileID: 0}
+    HideWeapon: 0
+    PartParents: 
+    HandMode: 0
+    SwingSound: {fileID: 0}
+    TrailPrefab: {fileID: 0}
+    Events: []
+  AttackMotion: {fileID: 0}
+  AttackAnim: Attack
+  AttackWave:
+    Enabled: 0
+    Radius: 3.5
+    Forward: 1.8
+    DamageCoef: 0
+    Stun: 0.8
+    Push: 8
+    PushUp: 3.5
+    Feel:
+      ShakeRadius: 12
+      ShakeAmount: 0.3
+      ShakeSelf: 0.4
+      Sound: {fileID: 0}
+      Volume: 1
+      SoundRange: 35
+      PitchJitter: 0.06
+      Fx: {fileID: 0}
+      FxLife: 2
+  RootDuringAttack: 0
+  AttackCooldown: 0
+  JumpMultiplier: 1
+  FallGravity: 1
+  GroundOnlyAttack: 0
+  Hitboxes: []
+  Stats: []
