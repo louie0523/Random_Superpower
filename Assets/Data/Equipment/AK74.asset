@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56f6bb414ca2824449c1f6f8dac2ea77, type: 3}
-  m_Name: AK47
+  m_Name: AK74
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentData
   Id: 1004
-  DisplayName: AK47
+  DisplayName: AK74
   NameEntry:
     m_TableReference:
       m_TableCollectionName: 
@@ -98,6 +98,16 @@ MonoBehaviour:
       - {x: -0.22038603, y: 0.0005063536, z: -0.022105409, w: 0.975162}
       - {x: -0.24021265, y: -0.08826404, z: -0.31864667, w: 0.91267294}
       - {x: 0.25844225, y: -0.10660285, z: -0.040068656, w: 0.95929044}
+  FloatFree: 0
+  UseFloat: 0
+  Float:
+    PosAmount: {x: 0.6, y: 1.5, z: 0.6}
+    RotAmount: {x: 3, y: 4, z: 6}
+    Speed: 0.5
+    Wander: 0.35
+    Seed: 0
+  MainParent: 0
+  ExtraParts: []
   HitMode: 0
   Range: 3
   HitAngle: 100
@@ -132,6 +142,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822002, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -210,6 +222,8 @@ MonoBehaviour:
           LeftRot: {x: -7.6470013, y: 92.522, z: -7.590004}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -288,6 +302,8 @@ MonoBehaviour:
           LeftRot: {x: 45.903004, y: 21.121996, z: 66.36}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0.000006048012, y: -0.000009373722, z: 61.923023}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -366,6 +382,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822002, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -439,6 +457,7 @@ MonoBehaviour:
       Interp: 0
       Smoothness: 1
       Shakes: []
+      Floats: []
       LengthHint: 0.55
     HitStopDuration: 0.05
     CameraKickFov: 4
@@ -446,6 +465,7 @@ MonoBehaviour:
     LungeDistance: 0
     WeaponOverride: {fileID: 0}
     HideWeapon: 0
+    PartParents: 
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -478,6 +498,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822002, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -556,6 +578,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822002, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -634,6 +658,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822002, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: -0.0000003270613, y: -0.00000006890623, z: 0.0000004760929}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -712,6 +738,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822002, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -785,6 +813,7 @@ MonoBehaviour:
       Interp: 0
       Smoothness: 1
       Shakes: []
+      Floats: []
       LengthHint: 1
     HitStopDuration: 0.05
     CameraKickFov: 4
@@ -792,6 +821,7 @@ MonoBehaviour:
     LungeDistance: 0
     WeaponOverride: {fileID: 0}
     HideWeapon: 0
+    PartParents: 
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -841,6 +871,8 @@ MonoBehaviour:
     LeftRot: {x: 5, y: 12, z: 0}
     WeaponPos: {x: 0, y: 0, z: 0}
     WeaponRot: {x: 0, y: 0, z: 0}
+    WeaponScale: {x: 0, y: 0, z: 0}
+    Parts: []
     CamPos: {x: 0, y: 0, z: 0}
     CamRot: {x: 0, y: 0, z: 0}
     CamFov: 0
@@ -935,6 +967,8 @@ MonoBehaviour:
     LeftRot: {x: -76.0058, y: -147.90271, z: 43.61921}
     WeaponPos: {x: 0, y: 0, z: 0}
     WeaponRot: {x: -0, y: 0, z: 0}
+    WeaponScale: {x: 0, y: 0, z: 0}
+    Parts: []
     CamPos: {x: 0, y: 0, z: 0}
     CamRot: {x: 0, y: 0, z: 0}
     CamFov: 0

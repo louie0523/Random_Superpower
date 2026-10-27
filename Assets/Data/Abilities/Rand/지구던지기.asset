@@ -51,7 +51,7 @@ MonoBehaviour:
     SoulCost: 0
     CooldownAfterEffect: 0
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
+    MotionData: {fileID: 11400000, guid: 5b3d2803bc5e43048b25abe701edef49, type: 2}
     EffectTiming: 0
     NeedsTarget: 0
     HitMode: 0
