@@ -55,6 +55,10 @@ public class ComboStep
     [Header("Motion")]
     public SwingMotion Motion = new();
 
+    [Tooltip("이전 타 위치에서 시작 — 이 타의 첫 키 자리에 '이전 타를 누른 순간의 자세'(검 위치 등)를 넣고,\n" +
+             "두 번째 키까지 가며 원래 모션으로 이어짐. 1타 오른→왼, 2타 왼→오 같은 이어 베기용")]
+    public bool ContinueFromPrevious;
+
     [Header("Feel")]
     [Tooltip("맞았을 때 화면 정지 시간")]
     public float HitStopDuration = 0.05f;

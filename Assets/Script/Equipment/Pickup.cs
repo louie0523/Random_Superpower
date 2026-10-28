@@ -25,6 +25,9 @@ public class Pickup : NetworkBehaviour
     /// <summary>무기에 딸린 처치 수 (진화 조건)</summary>
     [Networked] public int WeaponKills { get; set; }
 
+    /// <summary>남은 탄약 + 1 (0 = 모름 → 가득). 버린 총의 탄창 유지용</summary>
+    [Networked] public int AmmoPlus1 { get; set; }
+
     [Header("수명")]
     [Tooltip("이 시간이 지나면 사라짐. 0이면 영구")]
     [SerializeField] private float lifetime = 60f;
@@ -81,10 +84,11 @@ public class Pickup : NetworkBehaviour
         Log($"스폰 — SA={HasStateAuthority} pos={transform.position}");
     }
 
-    public void InitWeapon(int weaponId, int[] enchants, int kills = 0)
+    public void InitWeapon(int weaponId, int[] enchants, int kills = 0, int ammo = -1)
     {
         Init(PickupKind.Weapon, weaponId);
         WeaponKills = Mathf.Max(0, kills);
+        AmmoPlus1 = ammo >= 0 ? ammo + 1 : 0;
 
         if (enchants == null) return;
         for (int i = 0; i < PlayerEnchant.MaxEnchants && i < enchants.Length; i++)
@@ -275,6 +279,7 @@ public class Pickup : NetworkBehaviour
             case PickupKind.Weapon:
                 if (!player.TryGetComponent<PlayerEquipment>(out var eq)) return false;
                 if (!eq.PickUpWeapon(ItemId, out int slot)) return false;
+                if (AmmoPlus1 > 0) eq.SetAmmoAt(slot, AmmoPlus1 - 1);     // 버린 총 — 남은 탄 그대로
 
                 // 무기를 끼운 뒤에 인챈트·처치 수를 덮어씀 (순서 중요)
                 if (player.TryGetComponent<PlayerEnchant>(out var pe))

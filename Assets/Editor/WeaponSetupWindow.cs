@@ -322,6 +322,15 @@ public class WeaponSetupWindow : EditorWindow
 
     void DrawWeaponTab()
     {
+        // ── 한 번에 저장 ──
+        using (Box())
+        {
+            if (GUILayout.Button(new GUIContent("씬 그립 한 번에 저장",
+                "씬에서 맞춰 둔 걸 전부 무기 설정으로: 무기 위치 · 회전 · 크기(0번) + 추가 파츠 위치 + 손 기본 자세 + 손가락 그립(오른손 · 왼손)\n" +
+                "둥둥 흔들림은 빼고 저장. Ctrl+Z로 되돌릴 수 있음"), GUILayout.Height(26)))
+                CaptureAllGrip();
+        }
+
         // ── 배치 ──
         if (Fold("무기 배치"))
             using (Box())
@@ -582,7 +591,14 @@ public class WeaponSetupWindow : EditorWindow
     {
         EditorGUI.BeginChangeCheck();
         _previewDraw = EditorGUILayout.Slider("차징 미리보기", _previewDraw, 0f, 1f);
-        if (EditorGUI.EndChangeCheck()) ApplyPreviewDraw();
+        if (EditorGUI.EndChangeCheck()) { _rangedPlay = RangedPlay.None; ApplyPreviewDraw(); }
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            bool on = _rangedPlay == RangedPlay.Charge;
+            if (GUILayout.Button(on ? "■ 정지" : "▶ 차징 재생 (당김 → 놓기 반복)", GUILayout.Height(22)))
+                StartRangedPlay(on ? RangedPlay.None : RangedPlay.Charge);
+        }
 
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -667,7 +683,15 @@ public class WeaponSetupWindow : EditorWindow
 
         EditorGUI.BeginChangeCheck();
         _previewRecoil = EditorGUILayout.Slider("반동 미리보기", _previewRecoil, 0f, 1f);
-        if (EditorGUI.EndChangeCheck()) ApplyPreviewRecoil();
+        if (EditorGUI.EndChangeCheck()) { _rangedPlay = RangedPlay.None; ApplyPreviewRecoil(); }
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            bool on = _rangedPlay == RangedPlay.Recoil;
+            if (GUILayout.Button(on ? "■ 정지" : "▶ 반동 재생 (발사)", GUILayout.Height(22)))
+                StartRangedPlay(on ? RangedPlay.None : RangedPlay.Recoil);
+            _recoilPlayShots = EditorGUILayout.IntSlider(new GUIContent("발 수", "연사 미리보기 — 분당 발사 · 누적 배율대로"), _recoilPlayShots, 1, 20);
+        }
 
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -727,6 +751,77 @@ public class WeaponSetupWindow : EditorWindow
             AssetDatabase.OpenAsset(_weapon.ModelPrefab);
 
         Hint("모드와 화살 연결은 프리팹의 WeaponRig에서 정합니다. 차징 미리보기 슬라이더로 따라오는지 확인하세요.");
+    }
+
+    // ══════════════════ 원거리 재생 미리보기 (차징 · 반동) ══════════════════
+
+    enum RangedPlay { None, Charge, Recoil }
+    private RangedPlay _rangedPlay;
+    private float _rangedT;
+    private int _recoilPlayShots = 6, _recoilFired;
+    private float _recoilNextShot;
+
+    void StartRangedPlay(RangedPlay mode)
+    {
+        _rangedPlay = mode;
+        _rangedT = 0f;
+        _recoilFired = 0;
+        _recoilNextShot = 0f;
+        _playing = false;
+        if (_rig == null) return;
+        _rig.SetRecoilPreview(0f);
+        _previewRecoil = 0f;
+        _previewDraw = 0f;
+        _rig.SetDrawAmount(0f);
+        _rig.ApplyPose(_rig.GetEffectiveIdle());
+        SceneView.RepaintAll();
+    }
+
+    /// <summary>OnEditorUpdate에서 — 재생 중이면 true</summary>
+    bool TickRangedPlay(float dt)
+    {
+        if (_rangedPlay == RangedPlay.None || _rig == null || _weapon == null) return false;
+        _rangedT += dt;
+
+        if (_rangedPlay == RangedPlay.Charge)
+        {
+            float pull = Mathf.Max(0.05f, _weapon.MaxDrawTime);
+            const float hold = 0.35f, rest = 0.5f;
+            float t = _rangedT;
+            if (t < pull) _previewDraw = t / pull;
+            else if (t < pull + hold) _previewDraw = 1f;
+            else if (t < pull + hold + rest) _previewDraw = 0f;           // 놓음
+            else { _rangedT = 0f; _previewDraw = 0f; }                   // 반복
+            _rig.SetDrawAmount(_previewDraw, dt);
+            if (_previewDraw <= 0f) _rig.CurrentWeaponRig?.OnFired();
+            _rig.ApplyPose(_rig.GetEffectiveIdle());
+        }
+        else
+        {
+            float interval = 60f / Mathf.Max(1f, _weapon.RoundsPerMinute);
+            int shots = _weapon.FullAuto ? _recoilPlayShots : 1;
+            if (_recoilFired < shots && _rangedT >= _recoilNextShot)
+            {
+                float mul = Mathf.Min(Mathf.Pow(_weapon.RecoilRamp, _recoilFired), _weapon.RecoilMaxMul);
+                _rig.AddRecoil(mul);
+                _rig.MuzzleFlash?.Play();
+                _recoilFired++;
+                _recoilNextShot = _rangedT + interval;
+            }
+            _rig.SetDrawAmount(0f, dt);                                  // 반동 오르내림이 여기서 돎
+            _rig.ApplyPose(_rig.GetEffectiveIdle());
+
+            // 다 쏘고 돌아오면 잠깐 쉬고 반복
+            float done = _recoilNextShot + Mathf.Max(0.1f, _weapon.RecoilFallTime) * 2f + 0.6f;
+            if (_recoilFired >= shots && _rangedT >= done)
+            {
+                _rangedT = 0f;
+                _recoilFired = 0;
+                _recoilNextShot = 0f;
+            }
+        }
+        SceneView.RepaintAll();
+        return true;
     }
 
     void ApplyPreviewRecoil()
@@ -2488,6 +2583,12 @@ public class WeaponSetupWindow : EditorWindow
         step.HideWeapon = EditorGUILayout.Toggle(new GUIContent("무기 숨기기",
             "이 모션 동안 무기 모델을 숨김 — 맨손 스킬. 판정·스탯은 실제 무기 그대로"), step.HideWeapon);
         if (EditorGUI.EndChangeCheck()) RefreshPreview();
+
+        EditorGUI.BeginChangeCheck();
+        step.ContinueFromPrevious = EditorGUILayout.Toggle(new GUIContent("이전 타 위치에서 시작",
+            "첫 키 자리에 '이전 타를 누른 순간의 자세'(검 위치 등)를 넣고, 두 번째 키까지 가며 원래 모션으로 이어짐.\n" +
+            "미리보기는 앞 타의 캔슬 지점 자세에서 시작하는 걸로 보여 줌"), step.ContinueFromPrevious);
+        if (EditorGUI.EndChangeCheck()) RefreshPreview();
         EditorGUILayout.Space(4);
 
         EditorGUILayout.LabelField("타이밍 (비율 0~1 — 타임라인에서 드래그해도 됨)", EditorStyles.miniBoldLabel);
@@ -3099,12 +3200,25 @@ public class WeaponSetupWindow : EditorWindow
         if (step?.Motion != null && step.Motion.IsValid)
         {
             _rig.SetWeaponHidden(step.HideWeapon);
-            _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
+            _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode,
+                            _tab == Tab.Motion ? PreviewCont(step) : null);
         }
         else
             _rig.ApplyPose(_rig.GetEffectiveIdle());
 
         SceneView.RepaintAll();
+    }
+
+    /// <summary>미리보기용 '이전 타 위치에서 시작' — 앞 타의 캔슬 지점 자세에서 시작 (게임에서 누르는 타이밍)</summary>
+    MotionContinuity PreviewCont(ComboStep step)
+    {
+        if (step == null || !step.ContinueFromPrevious || _source == null || _rig == null) return null;
+        int i = Mathf.Clamp(_comboIndex, 0, _source.ComboLength - 1);
+        if (i <= 0) return null;
+        var prev = _source.GetStep(i - 1);
+        if (prev?.Motion == null || !prev.Motion.IsValid) return null;
+        var from = prev.Motion.Evaluate(Mathf.Clamp01(prev.CancelPoint), _rig.GetEffectiveIdle());
+        return MotionContinuity.From(from, step.Motion);
     }
 
     /// <summary>모션 탭이면 지금 타의 '파츠 부모', 아니면 무기 설정대로</summary>
@@ -3239,6 +3353,46 @@ public class WeaponSetupWindow : EditorWindow
         SpawnWeapon();
     }
 
+    /// <summary>무기 · 파츠 · 손 자세 · 손가락 그립을 씬에서 한 번에</summary>
+    void CaptureAllGrip()
+    {
+        if (_rig == null || _weapon == null) return;
+        Undo.RecordObject(_weapon, "Capture All Grip");
+
+        CaptureWeaponTransform();
+
+        // 추가 파츠 기본 위치
+        if (_weapon.ExtraParts != null)
+            for (int i = 1; i < _rig.PartCount; i++)
+            {
+                var t = _rig.GetPartTransform(i);
+                var d = i - 1 < _weapon.ExtraParts.Length ? _weapon.ExtraParts[i - 1] : null;
+                if (t == null || d == null) continue;
+                _rig.GetPartLastFloat(i, out var fP, out var fR);
+                d.Position = t.localPosition - fP;
+                d.Rotation = NormalizeEuler(t.localRotation.eulerAngles - fR);
+                d.Scale = t.localScale;
+            }
+
+        CaptureWeaponIdlePose();
+
+        // 손가락
+        if (_rig.RightHandRig != null)
+        {
+            _weapon.RightGrip ??= new HandPose();
+            _rig.RightHandRig.BakeAll(_weapon.RightGrip);
+        }
+        if (_rig.LeftHandRig != null && (_weapon.Grip == GripType.TwoHand || _weapon.UseLeftHand))
+        {
+            _weapon.LeftGrip ??= new HandPose();
+            _rig.LeftHandRig.BakeAll(_weapon.LeftGrip);
+        }
+
+        EditorUtility.SetDirty(_weapon);
+        RefreshPreview();
+        ShowNotification(new GUIContent("무기 · 파츠 · 손 자세 · 손가락 그립 저장됨"));
+    }
+
     void CaptureWeaponIdlePose()
     {
         if (_rig.RightHand != null)
@@ -3356,6 +3510,10 @@ public class WeaponSetupWindow : EditorWindow
 
         if (Application.isPlaying) return;
 
+        // 원거리 재생 미리보기 (차징 · 반동)
+        if (_tab == Tab.Ranged && TickRangedPlay(dt)) { Repaint(); return; }
+        if (_tab != Tab.Ranged && _rangedPlay != RangedPlay.None) _rangedPlay = RangedPlay.None;
+
         // 무기 둥둥 미리보기 — 재생 중이 아니어도 계속 움직여 봄
         if (!_playing && FPArmRig.EditorFloatPreview && _rig != null && _rig.CurrentWeapon != null && _rig.CurrentWeapon.UseFloat)
         {
@@ -3369,6 +3527,19 @@ public class WeaponSetupWindow : EditorWindow
         if (step == null) { _playing = false; return; }
 
         _playT += dt * _playSpeed;
+
+        // 전체 재생 — 다음 타가 '이전 타 위치에서 시작'이면 게임처럼 캔슬 지점에서 넘어감
+        if (_playAll && _comboIndex + 1 < _source.ComboLength)
+        {
+            var next = _source.GetStep(_comboIndex + 1);
+            if (next != null && next.ContinueFromPrevious && _playT >= step.CancelTime)
+            {
+                _comboIndex++;
+                _playT = 0f;
+                ClearSelection();
+                step = CurrentStep;
+            }
+        }
 
         if (_playT >= step.TotalTime)
         {
@@ -3389,7 +3560,7 @@ public class WeaponSetupWindow : EditorWindow
         }
 
         _rig.SetPartParents(step.PartParents);
-        _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode);
+        _rig.ApplySwing(step.Motion, _playT / Mathf.Max(0.01f, step.TotalTime), step.HandMode, PreviewCont(step));
         SceneView.RepaintAll();
         Repaint();
     }

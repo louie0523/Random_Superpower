@@ -15,8 +15,8 @@ public class FutureAbility : AbilityBehaviour
     public int GoSkill = 0;
 
     [Header("껴안기")]
-    [Tooltip("껴안은 대상 위치 — 시전자 기준 앞 (m)")]
-    public float CarryDistance = 2f;
+    [Tooltip("껴안은 대상 위치 — 시전자 기준 앞 (m). 이미 만든 에셋은 값이 그대로라 인스펙터에서 1.5로")]
+    public float CarryDistance = 1.5f;
     [Tooltip("껴안은 대상 높이 (m)")]
     public float CarryHeight = 0f;
     [Tooltip("껴안고 출발까지 (초)")]

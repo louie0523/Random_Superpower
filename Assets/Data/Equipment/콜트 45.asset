@@ -457,6 +457,7 @@ MonoBehaviour:
       Shakes: []
       Floats: []
       LengthHint: 0.55
+    ContinueFromPrevious: 0
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
@@ -813,6 +814,7 @@ MonoBehaviour:
       Shakes: []
       Floats: []
       LengthHint: 1
+    ContinueFromPrevious: 0
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
@@ -950,7 +952,7 @@ MonoBehaviour:
   HitscanRange: 50
   TracerPrefab: {fileID: 8388733948279739780, guid: 687d5a6b442f97542afbdbd7d2b868f6, type: 3}
   ProjectileSpeed: 60
-  SpreadAngle: 1.8
+  SpreadAngle: 2.2
   AttackSpeedScale: 1
   FireSound: {fileID: 8300000, guid: b39489cde38d7474790bde0158d66df8, type: 3}
   FireVolume: 1
@@ -958,8 +960,8 @@ MonoBehaviour:
   EmptySound: {fileID: 8300000, guid: dea9acde42c37f74cbe3428ce84cd771, type: 3}
   UseRecoilPose: 1
   RecoilPose:
-    RightPos: {x: 0.9204972, y: -0.7199894, z: 1.22}
-    RightRot: {x: -26.699982, y: -90.099945, z: -65.767}
+    RightPos: {x: 0.8997555, y: -0.79563963, z: 1.22}
+    RightRot: {x: -23.165253, y: -94.67386, z: -56.598816}
     UseLeftHand: 0
     LeftPos: {x: 0.4661704, y: -0.27159327, z: 1.591503}
     LeftRot: {x: -79.144226, y: -125.415985, z: 21.638176}
@@ -1011,12 +1013,12 @@ MonoBehaviour:
         - {x: 0, y: 0, z: 0, w: 1}
         - {x: 0, y: 0, z: 0, w: 1}
         - {x: 0, y: 0, z: 0, w: 1}
-  RecoilRiseTime: 0.1
-  RecoilFallTime: 0.15
+  RecoilRiseTime: 0.05
+  RecoilFallTime: 0.2
   RecoilPoseMaxStack: 1.6
-  RecoilSwayAmount: 0.03
-  RecoilSwayVertical: 0.1
-  RecoilSwaySpeed: 1
+  RecoilSwayAmount: 0.07
+  RecoilSwayVertical: 0.2
+  RecoilSwaySpeed: 10
   StringPullDir: {x: -2.0767135e-10, y: -1, z: 0}
   StringPullDistance: 0.04484598
   StringHandOffset: {x: 0.00781762, y: 0.024513751, z: 0.014857858}

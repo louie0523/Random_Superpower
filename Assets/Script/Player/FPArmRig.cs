@@ -651,9 +651,13 @@ public class FPArmRig : MonoBehaviour
         _recoilTarget = 0f;
     }
 
+    /// <summary>마지막으로 적용한 자세 — 다음 타가 '이전 타 위치에서 시작'할 때 씀</summary>
+    public ArmPose LastPose { get; private set; }
+
     public void ApplyPose(ArmPose pose)
     {
         if (pose == null) return;
+        LastPose = pose;
 
         bool showRight = ResolveShowRightHand(pose);
         bool showLeft = ResolveShowLeftHand(pose);
@@ -882,14 +886,15 @@ public class FPArmRig : MonoBehaviour
             Camera.SetMotionFov(pose.CamFov);
     }
 
-    /// <summary>스윙 진행도 적용</summary>
-    public void ApplySwing(SwingMotion motion, float t01, HandVisibility handMode = HandVisibility.Auto)
+    /// <summary>스윙 진행도 적용 — cont: '이전 타 위치에서 시작' (없으면 null)</summary>
+    public void ApplySwing(SwingMotion motion, float t01, HandVisibility handMode = HandVisibility.Auto, MotionContinuity cont = null)
     {
         var idle = GetEffectiveIdle();
 
         if (motion == null || !motion.IsValid) { ApplyPose(idle); return; }
 
         var pose = motion.Evaluate(t01, idle);
+        cont?.Apply(pose, t01);
         pose.HandOverride = handMode;
         ApplyPose(pose);
     }

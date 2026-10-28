@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\uB098\uC640 \uD568\uAED8 \uBBF8\uB798\uB85C \uAC00\uC790!"
   m_EditorClassIdentifier: Assembly-CSharp::FutureAbility
   GoSkill: 0
-  CarryDistance: 2
+  CarryDistance: 1.5
   CarryHeight: 0
   HugDelay: 1.5
   HugMotion: {fileID: 11400000, guid: 039a7765e2009ec4283e8c1e5e88874d, type: 2}

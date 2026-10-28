@@ -137,6 +137,15 @@ public class PlayerEquipment : NetworkBehaviour
         SlotAmmo.Set(slot, max);
     }
 
+    /// <summary>슬롯 탄약을 이 값으로 (주운 총의 남은 탄)</summary>
+    public void SetAmmoAt(int slot, int ammo)
+    {
+        if (!HasStateAuthority || slot < 0 || slot >= WeaponSlots) return;
+        var w = database?.Get(WeaponIds[slot]);
+        int max = w != null && w.Class == WeaponClass.Ranged ? w.MaxAmmo : 0;
+        SlotAmmo.Set(slot, Mathf.Clamp(ammo, 0, max));
+    }
+
     public bool ConsumeAmmo()
     {
         if (!HasStateAuthority) return false;
@@ -277,18 +286,22 @@ public class PlayerEquipment : NetworkBehaviour
     // ══════════════════ 버리기 ══════════════════
 
     /// <summary>무기를 바닥에. 인챈트·처치 수가 픽업에 실림</summary>
-    public void DropWeapon(int id, int[] enchants = null, int kills = 0)
+    public void DropWeapon(int id, int[] enchants = null, int kills = 0, int ammo = -1)
     {
         if (!HasStateAuthority) return;
         if (pickupPrefab == null) return;
 
         Vector3 pos = transform.position + transform.forward * 1.5f + Vector3.up * 0.5f;
 
+
+
         var obj = Runner.Spawn(pickupPrefab, pos, Quaternion.identity);
         if (obj.TryGetComponent<Pickup>(out var pk))
         {
-            pk.InitWeapon(id, enchants, kills);
+            pk.InitWeapon(id, enchants, kills, ammo);
             pk.SetPickupDelay(1.5f);
+
+
         }
     }
 
@@ -305,11 +318,12 @@ public class PlayerEquipment : NetworkBehaviour
         // 비우기 전에 복사
         int[] carried = _enchant != null ? _enchant.ExportSlot(slot) : null;
         int kills = _enchant != null ? _enchant.GetKills(slot) : 0;
+        int ammo = SlotAmmo[slot];                      // ← 추가
 
         WeaponIds.Set(slot, 0);
         _enchant?.ClearSlot(slot);
 
-        DropWeapon(id, carried, kills);
+        DropWeapon(id, carried, kills, ammo);           // ← ammo 넘기기
     }
 
     public void DropActiveWeapon() => DropWeaponAt(ActiveWeaponSlot);
@@ -365,12 +379,13 @@ public class PlayerEquipment : NetworkBehaviour
 
         int[] carried = (old != 0 && _enchant != null) ? _enchant.ExportSlot(slot) : null;
         int kills = (old != 0 && _enchant != null) ? _enchant.GetKills(slot) : 0;
+        int oldAmmo = old != 0 ? SlotAmmo[slot] : -1;
 
         WeaponIds.Set(slot, id);
         RefillAmmo(slot);
         _enchant?.OnWeaponChanged(slot, id);
 
-        if (old != 0) DropWeapon(old, carried, kills);
+        if (old != 0) DropWeapon(old, carried, kills, oldAmmo);
     }
 
     // ══════════════════ 교체 ══════════════════

@@ -76,6 +76,8 @@ public class WeaponAnimator : MonoBehaviour
         _holdEnd = true;
     }
 
+    private MotionContinuity _cont;
+
     public void Play(ComboStep step, float speed = 1f)
     {
         BasicAttack = false;
@@ -83,6 +85,14 @@ public class WeaponAnimator : MonoBehaviour
         _blendFrom = CaptureCurrent();
         _blendTimer = blendInTime;
         _blendDuration = blendInTime;
+
+        // 이전 타 위치에서 시작 — 지금 보이는 자세(이전 타 도중)에서 이어짐. 섞기는 필요 없음
+        _cont = null;
+        if (step != null && step.ContinueFromPrevious && armRig != null && armRig.LastPose != null)
+        {
+            _cont = MotionContinuity.From(armRig.LastPose.Clone(), step.Motion);
+            if (_cont != null) { _blendTimer = 0f; _blendFrom = null; }
+        }
 
         _freezeTimer = 0f;
         _speed = Mathf.Max(0.1f, speed);
@@ -151,7 +161,7 @@ public class WeaponAnimator : MonoBehaviour
     // ── 스윙 포즈 (손/무기) ──
 
     void HandleSwingPose()
-    {
+    {   
         float dt = Time.deltaTime;
 
         // ── 모션 없음: 블렌드 아웃 중이거나 Idle ──
@@ -164,9 +174,9 @@ public class WeaponAnimator : MonoBehaviour
             armRig.SetDrawAmount(_drawAmount, dt);
             var idle = armRig.GetEffectiveIdle();
 
-            //  Debug.Log($"[Swing] draw={_drawAmount:F2} " +
-            //$"left={idle.LeftPos} right={idle.RightPos} " +
-            //$"blendTimer={_blendTimer:F2}");
+          //  Debug.Log($"[Swing] draw={_drawAmount:F2} " +
+          //$"left={idle.LeftPos} right={idle.RightPos} " +
+          //$"blendTimer={_blendTimer:F2}");
 
             if (_blendTimer > 0f && _blendFrom != null)
             {
@@ -203,12 +213,13 @@ public class WeaponAnimator : MonoBehaviour
             _step = null;
 
             armRig.ApplyPose(_blendFrom);
-            return;
+            return; 
         }
 
         var pose = _step.Motion != null && _step.Motion.IsValid
             ? _step.Motion.Evaluate(_t / _step.TotalTime, armRig.GetEffectiveIdle())
             : armRig.GetEffectiveIdle();
+        _cont?.Apply(pose, _t / Mathf.Max(0.0001f, _step.TotalTime));
 
         pose.HandOverride = _step.HandMode;
 

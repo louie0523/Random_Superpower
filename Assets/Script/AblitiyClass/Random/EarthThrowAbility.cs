@@ -1,10 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// 지구 던지기 — 스킬(F): 쓴 순간 바라본 곳(레이)을 기억 → 천장이든 뭐든 뚫고 RiseHeight m 위로 빠르게 올라감
-///   → 거기서 거대한 지구를 그곳으로 던짐 → 닿으면 반경 ExplodeRadius m 폭발, 안의 적 Damage 피해
-///   → 잠시 뒤 원래 자리로 돌아옴. (올라가 있는 동안 고스트 — 끌 수 있음)
-/// 데이터: 스킬 1개 F · 쿨 500 · 효과 타이밍 = 즉시 또는 판정 프레임 · 대상 필요 끄기
+/// 지구 던지기 — 스킬(F) 순서:
+///   ① 준비 모션 (스킬 데이터의 모션) → 효과 타이밍(모션 종료)에 바라본 곳(레이)을 기억
+///   ② 천장이든 뭐든 뚫고 RiseHeight m 위로 빠르게 올라감
+///   ③ 다 올라가면 던지기 모션(ThrowMotion) → 그 모션의 판정 프레임에 지구를 던짐
+///   ④ 닿으면 반경 ExplodeRadius m 폭발, 안의 적 Damage 피해 → 잠시 뒤 원래 자리로 (올라가 있는 동안 고스트 — 끌 수 있음)
+/// 데이터: 스킬 1개 F · 쿨 500 · 모션 = 준비 모션 · 효과 타이밍 = 모션 종료 · 대상 필요 끄기
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Earth Throw")]
 public class EarthThrowAbility : AbilityBehaviour
@@ -24,10 +26,15 @@ public class EarthThrowAbility : AbilityBehaviour
     [Tooltip("조준 레이가 맞는 것 (바닥 · 벽 · 플레이어)")]
     public LayerMask AimMask = ~0;
 
+    [Header("던지기")]
+    [Tooltip("다 올라간 뒤 재생할 던지기 모션 — 이 모션의 판정 프레임(판정 시작)에 지구가 손을 떠남. 비우면 WindUp초 뒤 바로")]
+    public AbilityMotionData ThrowMotion;
+    const int ThrowTag = 1;
+
     [Header("지구")]
     [Tooltip("지구가 날아가는 시간 (초)")]
     public float FlightTime = 2f;
-    [Tooltip("던지기 전 꼭대기에서 잠깐 (초)")]
+    [Tooltip("던지기 모션이 없을 때 — 꼭대기에서 던지기 전 잠깐 (초)")]
     public float WindUp = 0.4f;
     public float ExplodeRadius = 50f;
     [Tooltip("고정 피해")]
@@ -51,7 +58,7 @@ public class EarthThrowAbility : AbilityBehaviour
 
     const int EvRise = 0, EvFrom = 1, EvTo = 2, EvBoom = 3, EvReturn = 4;
 
-    enum Phase { None, Rise, WindUp, Fly, Wait }
+    enum Phase { None, Rise, WindUp, Throwing, Fly, Wait }
     private Phase _phase;
     private float _phaseEnd;
     private Vector3 _start, _top, _aim;
@@ -120,20 +127,28 @@ public class EarthThrowAbility : AbilityBehaviour
                 Ctx.transform.position = Vector3.MoveTowards(Ctx.transform.position, _top, RiseSpeed * dt);
                 if ((Ctx.transform.position - _top).sqrMagnitude < 0.01f)
                 {
-                    _phase = Phase.WindUp;
-                    _phaseEnd = Now + WindUp;
+                    if (ThrowMotion != null && ThrowMotion.Step != null)
+                    {
+                        _phase = Phase.Throwing;                 // 던지기 모션 → 판정 프레임에 OnChainHit
+                        _phaseEnd = Now + ThrowMotion.Step.TotalTime + 2f;     // 안전장치
+                        ChainMotion(ThrowTag);
+                    }
+                    else
+                    {
+                        _phase = Phase.WindUp;
+                        _phaseEnd = Now + WindUp;
+                    }
                 }
                 break;
 
             case Phase.WindUp:
                 Ctx.transform.position = _top;
-                if (Now < _phaseEnd) break;
-                Vector3 toAim = _aim - _top;
-                _from = _top + Vector3.up * 2f + (toAim.sqrMagnitude > 1f ? toAim.normalized : Vector3.down) * (EarthSize * 0.6f);
-                Broadcast(EvFrom, _from);
-                Broadcast(EvTo, _aim);
-                _phase = Phase.Fly;
-                _phaseEnd = Now + FlightTime;
+                if (Now >= _phaseEnd) Throw();
+                break;
+
+            case Phase.Throwing:
+                Ctx.transform.position = _top;
+                if (Now >= _phaseEnd) Throw();                   // 모션이 끊겼을 때 대비
                 break;
 
             case Phase.Fly:
@@ -149,6 +164,24 @@ public class EarthThrowAbility : AbilityBehaviour
                 if (Now >= _phaseEnd) Finish(true);
                 break;
         }
+    }
+
+    public override AbilityMotionData GetChainMotion(int tag) => tag == ThrowTag ? ThrowMotion : null;
+
+    public override void OnChainHit(int tag)
+    {
+        if (tag == ThrowTag && _phase == Phase.Throwing) Throw();
+    }
+
+    /// <summary>지구가 손을 떠남</summary>
+    void Throw()
+    {
+        Vector3 toAim = _aim - _top;
+        _from = _top + Vector3.up * 2f + (toAim.sqrMagnitude > 1f ? toAim.normalized : Vector3.down) * (EarthSize * 0.6f);
+        Broadcast(EvFrom, _from);
+        Broadcast(EvTo, _aim);
+        _phase = Phase.Fly;
+        _phaseEnd = Now + FlightTime;
     }
 
     void Explode()

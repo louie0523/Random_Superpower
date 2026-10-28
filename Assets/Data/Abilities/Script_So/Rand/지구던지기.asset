@@ -20,6 +20,7 @@ MonoBehaviour:
   AimMask:
     serializedVersion: 2
     m_Bits: 968
+  ThrowMotion: {fileID: 11400000, guid: 5b3d2803bc5e43048b25abe701edef49, type: 2}
   FlightTime: 4
   WindUp: 0.4
   ExplodeRadius: 55
