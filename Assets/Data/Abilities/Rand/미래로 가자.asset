@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c656e1b1362a3e6488a80b50c25ee7c6, type: 3}
-  m_Name: "\uB098\uC640 \uD568\uAED8 \uBBF8\uB798\uB85C \uAC00\uC790"
+  m_Name: "\uBBF8\uB798\uB85C \uAC00\uC790"
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   Id: 8020
-  DisplayName: "\uB098\uC640 \uD568\uAED8 \uBBF8\uB798\uB85C \uAC00\uC790"
+  DisplayName: "\uBBF8\uB798\uB85C \uAC00\uC790"
   Kind: 2
   Tier: 0
   Tags: 
@@ -22,7 +22,8 @@ MonoBehaviour:
   Flavor: 
   Number: 0
   Summary: "\uC0AC\uC6A9\uC2DC \uB300\uC0C1 \uD55C\uBA85\uC744 \uB370\uB824\uC640
-    \uC7A1\uACE0, '\uBBF8\uB798'\uB85C \uD5A5\uD569\uB2C8\uB2E4."
+    \uC7A1\uACE0, \uB3CC\uC9C4\uD569\uB2C8\uB2E4.\n\uBAA9\uC801\uC9C0\uAC00 \uC5B4\uB514\uC778\uC9C4
+    \uC544\uBB34\uB3C4 \uBAA8\uB985\uB2C8\uB2E4."
   UiAccent: {r: 0, g: 0.932251, b: 1, a: 1}
   UiNameColor: {r: 0, g: 0, b: 0, a: 1}
   UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}

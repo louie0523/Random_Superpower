@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0352c2f2a6452a5458f0c879dc1231ad, type: 3}
   m_Name: "\uAC74\uB9C8\uC2A4\uD130_So"
   m_EditorClassIdentifier: Assembly-CSharp::GunMasterAbility
-  StarterGun: {fileID: 11400000, guid: 87726891156f7ac4ea3a685d4f060e36, type: 2}
+  StarterGun: {fileID: 11400000, guid: 2c3c16da657f036459665625d5c6f94a, type: 2}
   RollSkill: 0
   AimSkill: 1
   UltSkill: 2

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbf944a9462173e43b1439a55c593875, type: 3}
-  m_Name: "\uD0C8\uBAA8\uBE54"
+  m_Name: "\uD0C8\uBAA8\uBE54_So"
   m_EditorClassIdentifier: Assembly-CSharp::BaldBeamAbility
   BeamSkill: 0
   ComradeAlter: {fileID: 11400000, guid: e7a105761a23af34195ed773e9674922, type: 2}

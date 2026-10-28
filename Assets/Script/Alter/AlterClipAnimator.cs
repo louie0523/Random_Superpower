@@ -273,6 +273,32 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
         return Mathf.Clamp(t, 0f, len) / Mathf.Max(0.01f, s.Speed);
     }
 
+    /// <summary>상태의 frame번 프레임이 재생 시작 후 몇 초인지 (재생 속도 반영). 상태가 없으면 -1</summary>
+    public float FrameTime(string state, int frame)
+    {
+        var s = Find(state);
+        if (s == null || s.Clip == null) return -1f;
+        float t = Mathf.Clamp(frame / Mathf.Max(1f, s.Clip.frameRate), 0f, s.Clip.length);
+        return t / Mathf.Max(0.01f, s.Speed);
+    }
+
+    /// <summary>상태 한 번 재생 길이 (초, 재생 속도 반영). 상태가 없으면 -1</summary>
+    public float StateDuration(string state)
+    {
+        var s = Find(state);
+        if (s == null || s.Clip == null) return -1f;
+        return s.Clip.length / Mathf.Max(0.01f, s.Speed);
+    }
+
+    /// <summary>모델 안의 뼈 찾기 (이름 그대로, 대소문자 무시)</summary>
+    public Transform FindBone(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return null;
+        foreach (var t in GetComponentsInChildren<Transform>(true))
+            if (string.Equals(t.name, name, System.StringComparison.OrdinalIgnoreCase)) return t;
+        return null;
+    }
+
     /// <summary>스페이스 점프가 기다릴 시간 (초) — PlayerMovement가 물어봄. 0이면 바로 뜸</summary>
     public float JumpTakeoff() => AirAnims && JumpWaitsTakeoff && isActiveAndEnabled ? EventTime(JumpState) : 0f;
 

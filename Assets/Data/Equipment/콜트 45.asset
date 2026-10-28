@@ -952,7 +952,7 @@ MonoBehaviour:
   HitscanRange: 50
   TracerPrefab: {fileID: 8388733948279739780, guid: 687d5a6b442f97542afbdbd7d2b868f6, type: 3}
   ProjectileSpeed: 60
-  SpreadAngle: 2.2
+  SpreadAngle: 1.7
   AttackSpeedScale: 1
   FireSound: {fileID: 8300000, guid: b39489cde38d7474790bde0158d66df8, type: 3}
   FireVolume: 1

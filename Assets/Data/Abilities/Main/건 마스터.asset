@@ -18,7 +18,7 @@ MonoBehaviour:
   Tier: 0
   Tags: 01000000
   ExclusiveShopItems:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: c0c1bbcde7977024dbd20fa32d536ad3, type: 2}
   Icon: {fileID: 0}
   Flavor: "\uB2F9\uC2E0\uC740 \uBAA8\uB4E0 \uCD1D\uAE30\uB958\uC758 \uB9C8\uC2A4\uD130\uC785\uB2C8\uB2E4.
     \uAC74 \uB9C8\uC2A4\uD130\uB294 \uBAA8\uB4E0 \uCD1D\uAE30\uB958\uB97C \uC778\uCCB8\uD2B8
@@ -120,6 +120,10 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 0
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0
@@ -154,6 +158,10 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 1
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 16
@@ -188,6 +196,10 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 3
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
     MaxLevel: 3
     Vars: []
     RequiredWeapon: 0

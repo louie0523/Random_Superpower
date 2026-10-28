@@ -23,8 +23,7 @@ MonoBehaviour:
   MaxLevel: 3
   Stat: 0
   ModType: 0
-  ValuePerLevel:
-  - 10
+  ValuePerLevel: []
   HealAmount: 40
   PricePerStage: 8
   AmmoRatio: 0.25

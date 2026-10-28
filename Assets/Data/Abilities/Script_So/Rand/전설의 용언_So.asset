@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4aaadaa31fe0019408becbe0b432d63d, type: 3}
-  m_Name: "\uC804\uC124\uC758 \uC6A9\uC5B8"
+  m_Name: "\uC804\uC124\uC758 \uC6A9\uC5B8_So"
   m_EditorClassIdentifier: Assembly-CSharp::DragonWordAbility
   ChantSkill: 0
   GlideSkill: 1
