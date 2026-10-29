@@ -13,6 +13,16 @@ public class ScoreboardRow : MonoBehaviour
     [Tooltip("내 줄일 때만 켜지는 강조 배경")]
     [SerializeField] private GameObject localHighlight;
 
+    [Tooltip("제단 칸 (비우면 안 보임)")]
+    [SerializeField] private TMPro.TMP_Text altarText;
+
+    public void SetAltars(int have, int need)
+    {
+        if (altarText == null) return;
+        altarText.text = need > 0 ? $"{have}/{need}" : have.ToString();
+        altarText.color = need > 0 && have >= need ? new Color(1f, 0.84f, 0.22f) : Color.white;   // 권한 얻으면 노랑
+    }
+
     public void Bind(int rank, string playerName, int kills, int assists, int deaths, int soul, bool isLocal)
     {
         if (rankText != null) rankText.text = rank.ToString();

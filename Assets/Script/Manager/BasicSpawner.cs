@@ -1,10 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// 게임 씬의 스폰 담당.
+/// - 방 모드: 대기실(RoomLauncher)에서 들어온 경우 — 그 러너를 그대로 쓰고, 참가자면 내 캐릭터 스폰 / 아니면 옵저버
+/// - 직접 모드: 게임 씬에서 바로 실행한 경우 — 예전처럼 '접속' 버튼 (테스트용)
+/// </summary>
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkObject playerPrefab;
@@ -29,12 +34,33 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private readonly List<NetworkObject> _dummies = new();
 
+    // 방 모드
+    bool _roomMode;
+    bool _roomDecided;
+
     void Awake()
     {
         if (!SceneManager.GetSceneByName("UI").isLoaded)
             SceneManager.LoadScene("UI", LoadSceneMode.Additive);
 
         SpawnPoint.GroundMask = ~LayerMask.GetMask("Player");
+    }
+
+    void Start()
+    {
+        // 대기실에서 넘어왔으면 그 러너를 이어받음
+        var r = RoomLauncher.Runner;
+        if (r != null && r.IsRunning)
+        {
+            _runner = r;
+            _runner.AddCallbacks(this);
+            _roomMode = true;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_roomMode && _runner != null) _runner.RemoveCallbacks(this);
     }
 
     async void StartGame()
@@ -62,6 +88,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     void OnGUI()
     {
+        if (_roomMode || RoomLauncher.Instance != null) return;   // 방 모드에선 버튼 없음
         if (_runner == null && GUI.Button(new Rect(20, 20, 200, 60), "접속"))
             StartGame();
     }
@@ -69,6 +96,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     void Update()
     {
         if (_runner == null || !_runner.IsRunning) return;
+
+        if (_roomMode && !_roomDecided) TryRoomSpawn();
 
         if (Input.GetKeyDown(spawnDummyKey)) SpawnDummy();
 
@@ -92,6 +121,40 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         //if (Input.GetKeyDown(KeyCode.Alpha8)) GetLocal()?.GetComponent<PlayerAlter>()?.Remove(debugAlter, true);
 
     }
+
+    // ══════════════════ 방 모드 스폰 ══════════════════
+
+    /// <summary>게임 씬이 열리고 방 상태가 '게임 중'이면 — 참가자는 캐릭터 스폰, 아니면 옵저버</summary>
+    void TryRoomSpawn()
+    {
+        var rs = RoomState.Instance;
+        if (rs == null || Time.timeSinceLevelLoad < 0.3f) return;
+        if (rs.Phase != RoomPhase.Playing) return;   // 대기실로 돌아가는 중이면 아무것도 안 함
+
+        _roomDecided = true;
+
+        if (_runner.GetPlayerObject(_runner.LocalPlayer) != null) return;
+
+        if (rs.IsInGame(_runner.LocalPlayer)) SpawnLocal(_runner, _runner.LocalPlayer);
+        else Spectator.Begin();
+    }
+
+    void SpawnLocal(NetworkRunner runner, PlayerRef player)
+    {
+        var body = playerPrefab.GetComponent<CharacterController>();
+
+        if (!SpawnPoint.TryPick(runner, player, 15f, out var pos, out var rot, body))
+        {
+            pos = SpawnPoint.GroundedPosition(
+                new Vector3(UnityEngine.Random.Range(-4f, 4f), 0f, UnityEngine.Random.Range(-4f, 4f)), body);
+            rot = Quaternion.identity;
+        }
+
+        var obj = runner.Spawn(playerPrefab, pos, rot, player);
+        runner.SetPlayerObject(player, obj);      // ★ 이게 빠지면 GetPlayerObject가 전부 null
+    }
+
+    // ══════════════════ 디버그 ══════════════════
 
     void StoneGive(int num)
     {
@@ -180,20 +243,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        if (_roomMode) return;                      // 방 모드는 TryRoomSpawn이 처리
+
         // Shared Mode에선 각자 자기 캐릭터만 스폰
         if (player != runner.LocalPlayer) return;
-
-        var body = playerPrefab.GetComponent<CharacterController>();
-
-        if (!SpawnPoint.TryPick(runner, player, 15f, out var pos, out var rot, body))
-        {
-            pos = SpawnPoint.GroundedPosition(
-                new Vector3(UnityEngine.Random.Range(-4f, 4f), 0f, UnityEngine.Random.Range(-4f, 4f)), body);
-            rot = Quaternion.identity;
-        }
-
-        var obj = runner.Spawn(playerPrefab, pos, rot, player);
-        runner.SetPlayerObject(player, obj);      // ★ 이게 빠지면 GetPlayerObject가 전부 null
+        SpawnLocal(runner, player);
     }
 
     // --- 아래는 전부 빈 스텁 ---

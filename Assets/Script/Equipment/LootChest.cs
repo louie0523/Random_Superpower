@@ -224,7 +224,7 @@ public class LootChest : NetworkBehaviour
         }
 
         if (refillTime > 0f)
-            RefillTimer = TickTimer.CreateFromSeconds(Runner, refillTime);
+            RefillTimer = TickTimer.CreateFromSeconds(Runner, RoomRules.ChestRefill(refillTime));
     }
 
     void DropOne(int index, ChestRules.TierConfig cfg)

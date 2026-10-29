@@ -126,7 +126,7 @@ public class PlayerHealth : NetworkBehaviour
         if (HasStateAuthority)
         {
             HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
-            Soul = 0;
+            Soul = RoomRules.StartSoul(0);
             IsDead = false;
             _stats.OnStatsChanged += ClampHP;
         }
@@ -192,6 +192,8 @@ public class PlayerHealth : NetworkBehaviour
         _ability?.ResetForNewRound();
 
         ResetForNewRound();
+
+        Soul = RoomRules.StartSoul(0);
     }
 
     public void ResetForNewRound()
@@ -225,6 +227,14 @@ public class PlayerHealth : NetworkBehaviour
         for (int i = _recentDamage.Count - 1; i >= 0; i--)
             if (now - _recentDamage[i].Time > assistWindow)
                 _recentDamage.RemoveAt(i);
+
+        if (!RoomRules.FallKills)
+        {
+            var cc = GetComponent<CharacterController>();
+            if (SpawnPoint.TryPick(Runner, Object.StateAuthority, 15f, out var p, out var r, cc))
+                Teleport(p, r);          // Teleport 모양이 다르면 맞춰서
+            return;
+        }
 
         if (!IsDead && transform.position.y < fallDeathY)
             Die(DeathCause.Environment, PlayerRef.None);

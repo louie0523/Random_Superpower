@@ -40,6 +40,7 @@ public class AbilityDatabase : ScriptableObject
         if (_lookup == null) BuildCache();
         if (_mainPool.Count == 0) return null;
 
+
         int i = rng != null ? rng.Next(_mainPool.Count) : Random.Range(0, _mainPool.Count);
         return _mainPool[i];
     }
@@ -79,8 +80,10 @@ public class AbilityDatabase : ScriptableObject
 
         foreach (var a in _randomPool)
         {
+            if (RoomRules.IsBanned(a.Id)) continue;
             if (a.ExcludeFromRoll) continue;
             if (a.Id == excludeId) continue;
+
 
             if (a.MaxConcurrent > 0 && inUse != null)
             {

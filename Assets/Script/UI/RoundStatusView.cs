@@ -48,7 +48,7 @@ public class RoundStatusView : MonoBehaviour
         }
         else if (goalText != null)
         {
-            goalText.text = LocUtil.Get("ui.round.goal", rm.TargetSoul, rm.GetTopSoul());
+            goalText.text = LocUtil.Get("ui.round.goal", rm.GetTopAltars(), rm.GetTopSoul());
         }
     }
 }
