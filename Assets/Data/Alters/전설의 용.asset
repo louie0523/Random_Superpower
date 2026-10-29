@@ -109,4 +109,13 @@ MonoBehaviour:
     Center: {x: 0, y: 2, z: 0}
     Size: {x: 4, y: 4, z: 4}
     Rotation: {x: 0, y: 0, z: 0}
-  Stats: []
+  Stats:
+  - Stat: 0
+    Type: 0
+    Value: 30000
+  - Stat: 1
+    Type: 0
+    Value: 50
+  - Stat: 3
+    Type: 0
+    Value: 5

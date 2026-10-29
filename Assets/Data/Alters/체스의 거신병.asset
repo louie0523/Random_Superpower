@@ -65,13 +65,16 @@ MonoBehaviour:
       Interp: 0
       Smoothness: 1
       Shakes: []
+      Floats: []
       LengthHint: 1
+    ContinueFromPrevious: 0
     HitStopDuration: 0.07
     CameraKickFov: 4
     CameraShake: 0.4
     LungeDistance: 0
     WeaponOverride: {fileID: 0}
     HideWeapon: 1
+    PartParents: 
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}
@@ -106,4 +109,10 @@ MonoBehaviour:
     Center: {x: 0, y: 2.5, z: 0.25}
     Size: {x: 4, y: 7, z: 2.5}
     Rotation: {x: 0, y: 0, z: 0}
-  Stats: []
+  Stats:
+  - Stat: 0
+    Type: 0
+    Value: 7500
+  - Stat: 1
+    Type: 0
+    Value: 40

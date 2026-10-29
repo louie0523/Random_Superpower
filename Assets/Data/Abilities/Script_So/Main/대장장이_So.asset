@@ -37,7 +37,7 @@ MonoBehaviour:
     - 100
   SmashMaxTargets:
     Values:
-    - 4
+    - 3
   SmashStun:
     Values:
     - 0.25
@@ -72,7 +72,7 @@ MonoBehaviour:
     - 7
   FurnaceMaxMul:
     Values:
-    - 3
+    - 2
   BurnChance:
     Values:
     - 0.3
