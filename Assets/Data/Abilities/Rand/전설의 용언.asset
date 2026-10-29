@@ -59,6 +59,93 @@ MonoBehaviour:
     MaxTargets: 1
     AppliesWeaponEnchants: 0
     Effects: []
+  - Name: "\uD65C\uACF5"
+    Icon: {fileID: 0}
+    Description: 
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 0
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 8
+    SoulCost: 0
+    CooldownAfterEffect: 1
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  - Name: "\uD478\uC2A4\uB85C\uB2E4"
+    Icon: {fileID: 0}
+    Description: 
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 1
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 12
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
+  - Name: "\uC885\uC5B8\uC758 \uC228\uACB0"
+    Icon: {fileID: 0}
+    Description: 
+    DetailedInfo: 
+    Tip: 
+    DevNote: 
+    Slot: 3
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    MaxLevel: 5
+    Vars: []
+    RequiredWeapon: 0
+    CooldownByLevel: []
+    Cooldown: 45
+    SoulCost: 0
+    CooldownAfterEffect: 0
+    UltimateChargeCost: 0
+    MotionData: {fileID: 0}
+    EffectTiming: 0
+    NeedsTarget: 0
+    HitMode: 0
+    Range: 6
+    HitAngle: 60
+    HitHeight: 1.5
+    MaxTargets: 1
+    AppliesWeaponEnchants: 0
+    Effects: []
   Behaviour: {fileID: 11400000, guid: 6970a978400e59f4b83cad4e1d9aa719, type: 2}
   MaxConcurrent: 1
   ExcludeFromRoll: 0

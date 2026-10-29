@@ -17,7 +17,7 @@ MonoBehaviour:
   RoarSkill: 2
   BreathSkill: 3
   Dragon:
-    Alter: {fileID: 0}
+    Alter: {fileID: 11400000, guid: 090557d3cc7a11545b3b09019aac8659, type: 2}
     Flavor: 
     Summary: 
     TextKey: 
@@ -32,21 +32,26 @@ MonoBehaviour:
   ChantLines:
   - "\uB4E4\uC5B4\uB77C, \uD558\uB298\uC774\uC5EC\u2026"
   - "\uC7A0\uB4E0 \uBE44\uB298\uC774 \uAE68\uC5B4\uB098\uB2C8\u2026"
-  - "\uBD88\uAF43\uC758 \uC774\uB984\uC744 \uBD80\uB974\uB178\uB77C\u2026"
+  - "\uAC00\uC7A5 \uC704\uB300\uD55C \uC774\uB984\uC744 \uBD80\uB974\uB178\uB77C\u2026"
   - "\uACE0\uB300\uC758 \uB0A0\uAC1C\uC5EC\u2026"
   - "\uB545\uC774 \uC6B8\uACE0 \uBC14\uB78C\uC774 \uB5A4\uB2E4\u2026"
   EventTime: 180
   KillBonus: 100
   AssistBonus: 50
   AssistWindow: 10
-  GlideTime: 5
-  GlideSpeed: 18
+  TakeOffAnim: TakeOff
+  FlyAnim: Fly
+  RoarAnim: Roar
+  BreathAnim: Breath
+  GlideSpeed: 24
+  LiftSpeed: 9
+  LiftTime: 0.6
+  TakeOffDelayFallback: 0.4
   GlideHitRadius: 2.5
   GlideDamageCoef: 80
   GlidePush: 12
   GlidePushUp: 5
   GlideStun: 1
-  GlideAnim: Glide
   RoarRange: 12
   RoarAngle: 70
   RoarHeight: 3
@@ -56,7 +61,6 @@ MonoBehaviour:
   RoarStun: 1.5
   WallSlamPct: 20
   SlamWindow: 1
-  RoarAnim: Roar
   RoarFeel:
     ShakeRadius: 20
     ShakeAmount: 0.35
@@ -67,15 +71,18 @@ MonoBehaviour:
     PitchJitter: 0.06
     Fx: {fileID: 0}
     FxLife: 2
-  BreathTime: 5
+  BreathStartFrame: 20
+  BreathEndFrame: 80
   BreathTotalDamage: 3000
   BreathTick: 0.25
   BreathRange: 14
   BreathAngle: 45
-  BreathAnim: Breath
+  BreathTimeFallback: 4
   ChantFx: {fileID: 0}
   AwakenFx: {fileID: 0}
+  MouthBone: 
+  BreathOffset: {x: 0, y: 2.5, z: 2.5}
   RoarFx: {fileID: 0}
   BreathFx: {fileID: 0}
-  BreathOffset: {x: 0, y: 2.5, z: 2.5}
   GlideHitFx: {fileID: 0}
+  TakeOffFx: {fileID: 0}
