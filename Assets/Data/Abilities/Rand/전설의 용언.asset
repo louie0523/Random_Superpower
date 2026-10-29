@@ -74,7 +74,7 @@ MonoBehaviour:
     Vars: []
     RequiredWeapon: 0
     CooldownByLevel: []
-    Cooldown: 8
+    Cooldown: 18
     SoulCost: 0
     CooldownAfterEffect: 1
     UltimateChargeCost: 0

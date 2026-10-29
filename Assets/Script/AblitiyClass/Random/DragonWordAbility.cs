@@ -18,6 +18,14 @@ using UnityEngine;
 ///   용 스킬 3개는 효과 타이밍 = 즉시 · 1인칭 모션 없어도 됨 (동작은 용 모델이 함).
 ///   랜덤 추첨: '동시에 가질 수 있는 수(MaxConcurrent)' 1 · 추첨 가중치(RollWeight) 아주 낮게
 /// </summary>
+// 변화 설정 창에서 보이는 범위 (게임 동작과 상관없음)
+[AlterGizmo("활공 부딪힘", AlterGizmoShape.Sphere, Radius = "GlideHitRadius", Up = 1f, Forward = 1.2f, Pitch = true,
+    State = "FlyAnim", Color = "#40C0FF")]
+[AlterGizmo("푸스로다", AlterGizmoShape.Cone, Range = "RoarRange", Angle = "RoarAngle", Height = "RoarHeight", Up = 1f,
+    State = "RoarAnim", Color = "#FFD040")]
+[AlterGizmo("브레스", AlterGizmoShape.Cone, Range = "BreathRange", Angle = "BreathAngle", Origin = AlterGizmoOrigin.Bone,
+    Bone = "MouthBone", Offset = "BreathOffset", Pitch = true,
+    State = "BreathAnim", StartFrame = "BreathStartFrame", EndFrame = "BreathEndFrame", Color = "#FF5020")]
 [CreateAssetMenu(menuName = "Game/Ability Behaviour/Dragon Word")]
 public class DragonWordAbility : TransformAbility
 {
@@ -63,6 +71,8 @@ public class DragonWordAbility : TransformAbility
     [Header("활공 (스킬 1)")]
     [Tooltip("활공 속도 (m/초) — 바라보는 방향으로 (위아래 포함). 다시 누르면 끝 → 쿨 시작")]
     public float GlideSpeed = 16f;
+    [Tooltip("활공 최대 시간 (초) — 지나면 자동으로 끝나고 쿨 시작. 0 = 제한 없음 (이륙 동작 시간은 안 셈)")]
+    public float GlideMaxTime = 6f;
     [Tooltip("땅에서 이륙할 때 처음 떠오르는 속도 (m/초) · 시간 (초)")]
     public float LiftSpeed = 9f, LiftTime = 0.6f;
     [Tooltip("이륙 동작이 없을 때 — 누르고 뜰 때까지 (초)")]
@@ -127,7 +137,7 @@ public class DragonWordAbility : TransformAbility
     private float _actEnd;                      // 동작 끝 (푸스로다 · 브레스)
     private float _hitAt;                       // 이륙 프레임 · 외침 프레임
     private bool _hitDone;
-    private float _liftUntil, _flyAnimAt;
+    private float _liftUntil, _flyAnimAt, _glideUntil;
     private bool _flyAnimSent;
     private float _fireOn, _fireOff, _fireNext;
     private bool _fireSent;
@@ -352,6 +362,7 @@ public class DragonWordAbility : TransformAbility
             _act = Act.Glide;
             _liftUntil = 0f;
             _flyAnimAt = Now;
+            _glideUntil = Now + GlideMaxTime;
             return;
         }
 
@@ -378,7 +389,10 @@ public class DragonWordAbility : TransformAbility
             if (Now < _hitAt) return;                     // 제자리에서 이륙 동작
             _act = Act.Glide;
             _liftUntil = Now + LiftTime;
+            _glideUntil = Now + GlideMaxTime;
         }
+
+        if (GlideMaxTime > 0f && Now >= _glideUntil) { EndAct(true); return; }      // 시간 다 됨 → 끝 + 쿨
 
         if (!_flyAnimSent && Now >= _flyAnimAt) { _flyAnimSent = true; Broadcast(EvFly, Ctx.transform.position); }
 
@@ -562,26 +576,26 @@ public class DragonWordAbility : TransformAbility
                 if (Alter != null) Alter.PlayPartState(Dragon.Alter, RoarAnim);
                 break;
             case EvRoarHit:
-            {
-                var m = Mouth();
-                Vector3 at = m != null ? m.position : pos;
-                if (RoarFx != null) Destroy(Instantiate(RoarFx, at, Ctx.transform.rotation), 3f);
-                Shockwave.Feel(at, RoarFeel, Ctx.transform);
-                break;
-            }
+                {
+                    var m = Mouth();
+                    Vector3 at = m != null ? m.position : pos;
+                    if (RoarFx != null) Destroy(Instantiate(RoarFx, at, Ctx.transform.rotation), 3f);
+                    Shockwave.Feel(at, RoarFeel, Ctx.transform);
+                    break;
+                }
 
             case EvBreath:
                 if (Alter != null) Alter.PlayPartState(Dragon.Alter, BreathAnim);
                 break;
             case EvFireOn:
-            {
-                StopFire();
-                var m = Mouth();
-                _breathFxInst = m != null
-                    ? AbilityAim.Attach(BreathFx, m, Vector3.zero, Quaternion.identity, 30f)
-                    : AbilityAim.Attach(BreathFx, Ctx.transform, BreathOffset, Quaternion.identity, 30f);
-                break;
-            }
+                {
+                    StopFire();
+                    var m = Mouth();
+                    _breathFxInst = m != null
+                        ? AbilityAim.Attach(BreathFx, m, Vector3.zero, Quaternion.identity, 30f)
+                        : AbilityAim.Attach(BreathFx, Ctx.transform, BreathOffset, Quaternion.identity, 30f);
+                    break;
+                }
             case EvFireOff:
                 StopFire();
                 break;

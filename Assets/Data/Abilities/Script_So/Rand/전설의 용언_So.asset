@@ -44,7 +44,8 @@ MonoBehaviour:
   RoarAnim: Roar
   BreathAnim: Breath
   GlideSpeed: 24
-  LiftSpeed: 9
+  GlideMaxTime: 7
+  LiftSpeed: 15
   LiftTime: 0.6
   TakeOffDelayFallback: 0.4
   GlideHitRadius: 2.5
@@ -52,7 +53,7 @@ MonoBehaviour:
   GlidePush: 12
   GlidePushUp: 5
   GlideStun: 1
-  RoarRange: 12
+  RoarRange: 16
   RoarAngle: 70
   RoarHeight: 3
   RoarDamageCoef: 60
@@ -80,7 +81,7 @@ MonoBehaviour:
   BreathTimeFallback: 4
   ChantFx: {fileID: 0}
   AwakenFx: {fileID: 0}
-  MouthBone: 
+  MouthBone: breath_socket
   BreathOffset: {x: 0, y: 2.5, z: 2.5}
   RoarFx: {fileID: 0}
   BreathFx: {fileID: 0}

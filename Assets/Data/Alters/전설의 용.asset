@@ -51,10 +51,10 @@ MonoBehaviour:
     OverrideHitShape: 1
     NoWeaponEnchants: 0
     HitMode: 0
-    Range: 4
-    HitAngle: 90
+    Range: 10
+    HitAngle: 45
     HitHeight: 2.5
-    MinRange: 0
+    MinRange: 5.5
     DamageMultiplier: 1.5
     RangeMultiplier: 1
     RadiusMultiplier: 1
@@ -106,9 +106,13 @@ MonoBehaviour:
   GroundOnlyAttack: 0
   Hitboxes:
   - Shape: 0
-    Center: {x: 0, y: 2, z: 0}
-    Size: {x: 4, y: 4, z: 4}
-    Rotation: {x: 0, y: 0, z: 0}
+    Center: {x: 0, y: 3.09, z: 1.6}
+    Size: {x: 4, y: 4, z: 8.57}
+    Rotation: {x: -46.1, y: 0, z: 0}
+  - Shape: 0
+    Center: {x: -0.29, y: 6.91, z: 5.34}
+    Size: {x: 1.5, y: 1.5, z: 2.81}
+    Rotation: {x: 26.12, y: 0, z: 0}
   Stats:
   - Stat: 0
     Type: 0
