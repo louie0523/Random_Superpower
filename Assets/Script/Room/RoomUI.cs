@@ -5,10 +5,11 @@ using Fusion;
 using UnityEngine;
 
 /// <summary>
-/// 방 목록 · 대기실 화면 (기본 모양 — 기능 먼저, 디자인 UI는 나중에 이 자리를 바꿈).
-/// RoomLauncher와 같은 오브젝트에 붙임.
+/// 방 목록 · 대기실 화면. RoomLauncher와 같은 오브젝트에 붙임.
+/// 모양: Resources/UiPrefabSet의 '방 목록 · 대기실'을 켜면 프리팹(RoomScreenView — RoomUI.View.cs),
+///       아니면 이 파일의 코드 모양(IMGUI).
 /// </summary>
-public class RoomUI : MonoBehaviour
+public partial class RoomUI : MonoBehaviour
 {
     [Tooltip("밴 목록에 보여 줄 능력들 — 컴포넌트 우클릭 '능력 목록 자동 채우기'")]
     [SerializeField] private List<AbilityData> abilities = new();
@@ -50,17 +51,24 @@ public class RoomUI : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        SetupView();
+    }
+
     void Update()
     {
+        if (_view != null) TickView();
         if (!Showing) return;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    // ══════════════════ 그리기 ══════════════════
+    // ══════════════════ 그리기 (코드 모양) ══════════════════
 
     void OnGUI()
     {
+        if (_view != null) return;      // 프리팹 모양을 쓰는 중
         if (!Showing && (L == null || Time.unscaledTime - L.MessageTime > 6f)) return;
         if (L == null || L.gameObject != gameObject) return;
 

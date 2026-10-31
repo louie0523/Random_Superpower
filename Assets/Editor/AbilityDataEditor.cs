@@ -446,6 +446,7 @@ public class AbilityDataEditor : Editor
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(el.FindPropertyRelative("PickTitle"), new GUIContent("창 제목"));
                 EditorGUILayout.PropertyField(el.FindPropertyRelative("PickIncludeSelf"), new GUIContent("나도 고를 수 있음"));
+                EditorGUILayout.PropertyField(el.FindPropertyRelative("PickViewPrefab"), new GUIContent("전용 선택 창", "비우면 기본 창"));
                 EditorGUI.indentLevel--;
             }
             _sb.Append('[').Append(slot.Label()).Append("]  ");

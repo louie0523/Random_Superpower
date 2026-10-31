@@ -88,10 +88,15 @@ public class PlayerOutline : MonoBehaviour
         _fill = new Material(fillShader) { name = "OutlineFill (instance)", hideFlags = HideFlags.HideAndDontSave };
     }
 
-    void OnEnable() => _all.Add(this);
+    void OnEnable()
+    {
+        _all.Add(this);
+        GameSettings.Changed += SetLook;       // 설정 '적 테두리 색'
+    }
 
     void OnDisable()
     {
+        GameSettings.Changed -= SetLook;
         _all.Remove(this);
         Remove();
         _mode = OutlineMode.Off;
@@ -138,7 +143,13 @@ public class PlayerOutline : MonoBehaviour
     {
         if (_fill == null) return;
         bool xray = _mode == OutlineMode.XRay;
-        _fill.SetColor(IdColor, xray ? xrayColor : color);
+        var c = xray ? xrayColor : color;
+        if (GameSettings.EnemyColor > 0)               // 설정 '적 테두리 색' — 0번(기본)이면 인스펙터 색
+        {
+            var pick = GameSettings.EnemyOutline;
+            c = new Color(pick.r, pick.g, pick.b, c.a);
+        }
+        _fill.SetColor(IdColor, c);
         _fill.SetFloat(IdWidth, xray ? xrayWidth : width);
         _fill.SetFloat(IdZTest, (float)(xray ? CompareFunction.Always : CompareFunction.LessEqual));
     }

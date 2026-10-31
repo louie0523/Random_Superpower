@@ -954,7 +954,7 @@ MonoBehaviour:
   ProjectileSpeed: 60
   SpreadAngle: 1.7
   AttackSpeedScale: 1
-  FireSound: {fileID: 8300000, guid: b39489cde38d7474790bde0158d66df8, type: 3}
+  FireSound: {fileID: 8300000, guid: c9c622b948f135b41affc58a6628df30, type: 3}
   FireVolume: 1
   FirePitchVariance: 0.08
   EmptySound: {fileID: 8300000, guid: dea9acde42c37f74cbe3428ce84cd771, type: 3}

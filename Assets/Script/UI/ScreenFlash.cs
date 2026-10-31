@@ -25,6 +25,8 @@ public class ScreenFlash : MonoBehaviour
     public static void Play(Color color, float duration)
     {
         if (!Application.isPlaying) return;
+        color.a *= GameSettings.FlashScale;          // 설정 '화면 번쩍임'
+        if (color.a <= 0.001f) return;
         if (_inst == null) Create();
 
         _inst._color = color;

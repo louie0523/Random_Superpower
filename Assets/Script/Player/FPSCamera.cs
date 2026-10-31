@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [DefaultExecutionOrder(10000)]
 public class FPSCamera : MonoBehaviour
@@ -73,10 +73,13 @@ public class FPSCamera : MonoBehaviour
     /// <summary>지속 줌 (음수 = 확대). 0이면 해제</summary>
     public void SetZoom(float fovAdd) => _zoomFov = fovAdd;
 
+    /// <summary>기본 시야각 — 설정 '시야각'(GameSettings.Fov). 인스펙터 baseFov는 안 씀</summary>
+    float BaseFov => GameSettings.Fov;
+
     void Awake()
     {
-        _targetFov = baseFov;
-        if (cam != null) cam.fieldOfView = baseFov;
+        _targetFov = BaseFov;
+        if (cam != null) cam.fieldOfView = BaseFov;
     }
 
 
@@ -139,8 +142,10 @@ public class FPSCamera : MonoBehaviour
     {
         if (UIManager.InputBlocked) return;
 
-        float mx = Input.GetAxisRaw("Mouse X") * sensitivity * 10f;
-        float my = Input.GetAxisRaw("Mouse Y") * sensitivity * 10f;
+        float sens = sensitivity * GameSettings.Sensitivity * 10f;     // 설정 감도 배율 (기본 1)
+        float mx = Input.GetAxisRaw("Mouse X") * sens;
+        float my = Input.GetAxisRaw("Mouse Y") * sens;
+        if (GameSettings.InvertY) my = -my;
 
         if (_recoilPitch > 0.01f)
         {
@@ -185,10 +190,11 @@ public class FPSCamera : MonoBehaviour
 
     void HandleBob(Vector3 moveDir, float speed01)
     {
+        float bobK = GameSettings.BobScale;      // 설정 '걸을 때 화면 출렁임'
         float freq = walkBobFreq;
-        float ampY = walkBobAmpY;
-        float ampX = walkBobAmpX;
-        float roll = walkBobRoll;
+        float ampY = walkBobAmpY * bobK;
+        float ampX = walkBobAmpX * bobK;
+        float roll = walkBobRoll * bobK;
 
 
 
@@ -235,7 +241,7 @@ public class FPSCamera : MonoBehaviour
 
         // 롤
         float stepRoll = Mathf.Cos(_bobTimer * 0.5f) * roll * speed01;
-        float targetRoll = -moveDir.x * strafeRoll + stepRoll;
+        float targetRoll = -moveDir.x * strafeRoll * bobK + stepRoll;
         _roll = Mathf.Lerp(_roll, targetRoll, Time.deltaTime * 6f);
 
         // 최종 회전
@@ -255,7 +261,7 @@ public class FPSCamera : MonoBehaviour
     void HandleFov(float speed)
     {
         float t = Mathf.Clamp01(speed / Mathf.Max(0.01f, fovMaxSpeed));
-        _targetFov = baseFov + fovMaxAdd * t + _motionFov + _zoomFov;
+        _targetFov = BaseFov + fovMaxAdd * t + _motionFov + _zoomFov;
 
         _kickFov = Mathf.Lerp(_kickFov, 0f, Time.deltaTime * 4f);
         cam.fieldOfView = Mathf.Lerp(
@@ -279,15 +285,16 @@ public class FPSCamera : MonoBehaviour
     /// <summary>피격. dirLocal은 맞은 방향(-1~1)</summary>
     public void HitReact(float intensity01, Vector2 dirLocal)
     {
-        _shakeAmount = Mathf.Max(_shakeAmount, 1.5f * intensity01);
-        _punchVel += dirLocal * hitPunchAmount * intensity01;
-        FovKick(-5f * intensity01);
+        float k = GameSettings.ShakeScale;       // 설정 '화면 흔들림'
+        _shakeAmount = Mathf.Max(_shakeAmount, 1.5f * intensity01 * k);
+        _punchVel += dirLocal * hitPunchAmount * intensity01 * k;
+        FovKick(-5f * intensity01 * k);
     }
 
     /// <summary>폭발 등 방향 없는 흔들림</summary>
     public void Shake(float amount)
     {
-        _shakeAmount = Mathf.Max(_shakeAmount, amount);
+        _shakeAmount = Mathf.Max(_shakeAmount, amount * GameSettings.ShakeScale);
     }
 
     /// <summary>총기 반동. 위로 튀고 좌우로 흔들림</summary>

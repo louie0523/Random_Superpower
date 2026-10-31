@@ -13,6 +13,8 @@ using UnityEngine.SceneManagement;
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkObject playerPrefab;
+    [Tooltip("관전자 보이스 프리팹 (Tools → 멀티 테스트 → 관전자 보이스 프리팹 만들기). 비우면 관전자는 말 못 함 (듣기 · 채팅은 됨)")]
+    [SerializeField] private NetworkObject spectatorVoicePrefab;
     private NetworkRunner _runner;
 
     [SerializeField] private float dummySpawnDistance = 5f;
@@ -136,7 +138,13 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (_runner.GetPlayerObject(_runner.LocalPlayer) != null) return;
 
         if (rs.IsInGame(_runner.LocalPlayer)) SpawnLocal(_runner, _runner.LocalPlayer);
-        else Spectator.Begin();
+        else
+        {
+            NetworkObject voice = null;
+            if (spectatorVoicePrefab != null)
+                voice = _runner.Spawn(spectatorVoicePrefab, Vector3.zero, Quaternion.identity, _runner.LocalPlayer);
+            Spectator.Begin(voice);
+        }
     }
 
     void SpawnLocal(NetworkRunner runner, PlayerRef player)

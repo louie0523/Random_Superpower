@@ -5,7 +5,6 @@ public class PlayerInteract : NetworkBehaviour
 {
     [SerializeField] private LayerMask interactMask = ~0;
     [SerializeField] private float searchRadius = 3f;
-    [SerializeField] private KeyCode interactKey = KeyCode.E;
 
     [Tooltip("홀드 요청 재전송 간격 (초). 남이 열다 떼면 이 간격으로 이어받음")]
     [SerializeField] private float sendInterval = 0.3f;
@@ -19,6 +18,9 @@ public class PlayerInteract : NetworkBehaviour
 
     public LootChest CurrentTarget => _target;
 
+    /// <summary>안내 글에 쓸 키 이름 (설정의 '상호작용' 키) — 예: "[" + KeyName + "] 열기"</summary>
+    public static string KeyName => KeyBinds.Name(GameAction.Interact);
+
     public override void Spawned()
     {
         _health = GetComponent<PlayerHealth>();
@@ -29,7 +31,7 @@ public class PlayerInteract : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        _holding = !UIManager.InputBlocked && !(_status != null && _status.IsStunned) && Input.GetKey(interactKey);
+        _holding = !UIManager.InputBlocked && !(_status != null && _status.IsStunned) && KeyBinds.Held(GameAction.Interact);
     }
 
     public override void FixedUpdateNetwork()

@@ -9,6 +9,8 @@ using UnityEngine.UI;
 /// 씬에 없으면 알아서 하나 만들어짐 — 글꼴을 지정하려면 HUD 오브젝트 등에 직접 붙이고 Font에 한글 글꼴을 넣을 것.
 ///
 /// 채팅: Enter 열기 → 입력 → Enter 보내기 · Esc 닫기 · Tab 경기/팀 전환(팀 모드일 때만)
+/// 관전자: 채팅 가능 — 관전자끼리만 보임 (SpectatorChat)
+/// 선택 창 모양: Resources/UiPrefabSet의 '대상 선택 창'을 켜면 프리팹(PlayerPickView), 아니면 아래 코드 모양
 /// </summary>
 public class CommsHud : MonoBehaviour
 {
@@ -197,17 +199,22 @@ public class CommsHud : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            if (_activePick != null) TickPickView();
             return;
         }
 
-        if (!ChatOpen && Input.GetKeyDown(KeyCode.Return) && CanOpenChat()) OpenChat();
-        if (ChatOpen && PlayerComms.Local == null) CloseChat();
+        if (!ChatOpen && KeyBinds.Down(GameAction.Chat) && CanOpenChat()) OpenChat();     // 키 = 설정 키 설정 '채팅'
+        if (ChatOpen && !CanChatAtAll) CloseChat();
     }
+
+    /// <summary>내 캐릭터가 있거나 관전 중이면 채팅 가능</summary>
+    static bool CanChatAtAll => PlayerComms.Local != null || SpectatorChat.CanSend;
 
     static bool CanOpenChat()
     {
-        if (PlayerComms.Local == null) return false;
+        if (!CanChatAtAll) return false;
         if (DevConsole.IsOpen || ClassPickPanel.IsShowing || VoiceSettingsPanel.IsOpen) return false;
+        if (SettingsWindow.IsOpen || EscMenu.IsOpen) return false;
         var ui = UIManager.Instance;
         return ui == null || !ui.AnyPanelOpen;
     }
@@ -236,8 +243,11 @@ public class CommsHud : MonoBehaviour
         // 한글은 마지막 글자가 아직 '조합 중'일 수 있음 (예: "안녕" 치고 바로 Enter → '녕'이 조합 중) → 붙여서 보냄
         string text = _input + Input.compositionString;
         if (text.Length > PlayerComms.MaxChatLength) text = text.Substring(0, PlayerComms.MaxChatLength);
-        if (!string.IsNullOrWhiteSpace(text) && PlayerComms.Local != null)
-            PlayerComms.Local.SendChat(_channel, text);
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            if (PlayerComms.Local != null) PlayerComms.Local.SendChat(_channel, text);
+            else if (SpectatorChat.CanSend) SpectatorChat.Send(text);       // 관전자끼리만
+        }
         CloseChat();
     }
 
@@ -273,7 +283,7 @@ public class CommsHud : MonoBehaviour
     void OnGUI()
     {
         Styles();
-        if (PickShowing) DrawPick();
+        if (PickShowing && _activePick == null) DrawPick();
         DrawChat();
     }
 
@@ -311,13 +321,14 @@ public class CommsHud : MonoBehaviour
                 else if (e.keyCode == KeyCode.Escape) { CloseChat(); e.Use(); }
                 else if (e.keyCode == KeyCode.Tab || e.character == '\t')
                 {
-                    if (TeamChatAvailable) _channel = _channel == ChatChannel.Match ? ChatChannel.Team : ChatChannel.Match;
+                    if (TeamChatAvailable && PlayerComms.Local != null) _channel = _channel == ChatChannel.Match ? ChatChannel.Team : ChatChannel.Match;
                     e.Use();
                 }
             }
         }
 
-        // ── 줄들 ──
+        // ── 줄들 ── (설정 '채팅창 보이기'를 끄면 열었을 때만)
+        if (!ChatOpen && !GameSettings.ChatVisible) return;
         var lines = ChatLog.Lines;
         int max = ChatOpen ? chatOpenLines : chatShownLines;
         float now = Time.unscaledTime;
@@ -362,7 +373,9 @@ public class CommsHud : MonoBehaviour
         // ── 입력 칸 ──
         float tagW = 70f * s;
         var tagRect = new Rect(x, bottom - inputH, tagW, inputH);
-        GUI.Label(tagRect, $"<color={ChannelColor(_channel)}>[{ChannelLabel(_channel)}]</color>", _tag);
+        GUI.Label(tagRect, PlayerComms.Local == null
+            ? "<color=#b8b8b8>[관전]</color>"
+            : $"<color={ChannelColor(_channel)}>[{ChannelLabel(_channel)}]</color>", _tag);
 
         var fieldRect = new Rect(x + tagW, bottom - inputH, w - tagW, inputH);
         GUI.SetNextControlName("ChatInput");
@@ -387,7 +400,9 @@ public class CommsHud : MonoBehaviour
     Action _onCancel;
     Vector2 _pickScroll;
 
-    public static void OpenPick(string title, bool includeSelf, Action<PlayerHealth> onPick, Action onCancel)
+    /// <summary>viewPrefab = 이 스킬 전용 창 (null이면 기본 창 — UiPrefabSet 또는 코드 모양)</summary>
+    public static void OpenPick(string title, bool includeSelf, Action<PlayerHealth> onPick, Action onCancel,
+                                PlayerPickView viewPrefab = null)
     {
         if (_inst == null) AutoCreate();
         if (_inst == null) { onCancel?.Invoke(); return; }
@@ -399,11 +414,83 @@ public class CommsHud : MonoBehaviour
         _inst._onPick = onPick;
         _inst._onCancel = onCancel;
         PickShowing = true;
+
+        var v = viewPrefab != null ? _inst.ViewFor(viewPrefab) : _inst.PickView();
+        if (_inst._activePick != null && _inst._activePick != v) _inst._activePick.Hide();
+        _inst._activePick = v;
+        if (v != null)
+        {
+            var self = _inst;
+            v.Show(title, h => self.ClosePick(h), () => self.ClosePick(null));
+            self._pickRefreshAt = 0f;
+            self.TickPickView();
+        }
+    }
+
+    // ── 프리팹 창 (Resources/UiPrefabSet '대상 선택 창'을 켰을 때) ──
+    PlayerPickView _pickView;          // 기본 창 (UiPrefabSet)
+    PlayerPickView _activePick;        // 지금 열린 창 (null = 코드 모양)
+    readonly Dictionary<PlayerPickView, PlayerPickView> _customPicks = new();   // 스킬 전용 창 (프리팹 → 만든 것)
+    bool _pickViewChecked;
+
+    PlayerPickView ViewFor(PlayerPickView prefab)
+    {
+        if (_customPicks.TryGetValue(prefab, out var v) && v != null) return v;
+        v = Instantiate(prefab, transform);
+        v.Hide();
+        _customPicks[prefab] = v;
+        return v;
+    }
+    float _pickRefreshAt;
+    readonly List<PlayerPickView.Entry> _pickEntries = new();
+
+    PlayerPickView PickView()
+    {
+        if (!_pickViewChecked)
+        {
+            _pickViewChecked = true;
+            var prefab = UiPrefabSet.PickPrefab;
+            if (prefab != null)
+            {
+                _pickView = Instantiate(prefab, transform);
+                _pickView.Hide();
+            }
+        }
+        return _pickView;
+    }
+
+    void TickPickView()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) { ClosePick(null); return; }
+        if (Time.unscaledTime < _pickRefreshAt) return;
+        _pickRefreshAt = Time.unscaledTime + 0.3f;       // 죽고 살아나는 것 반영
+
+        var list = TargetUtil.All(true);
+        list.Sort((a, b) => string.CompareOrdinal(TargetUtil.NameOf(a), TargetUtil.NameOf(b)));
+        var local = PlayerComms.Local != null ? PlayerComms.Local.transform.root : null;
+
+        _pickEntries.Clear();
+        foreach (var h in list)
+        {
+            bool self = local != null && h.transform.root == local;
+            if (self && !_pickSelf) continue;
+            _pickEntries.Add(new PlayerPickView.Entry
+            {
+                Target = h,
+                Name = TargetUtil.NameOf(h),
+                Self = self,
+                Dead = h.IsDead,
+            });
+        }
+        _activePick.SetEntries(_pickEntries);
     }
 
     void ClosePick(PlayerHealth picked)
     {
+        if (!PickShowing) return;
         PickShowing = false;
+        if (_activePick != null) _activePick.Hide();
+        _activePick = null;
         var pick = _onPick;
         var cancel = _onCancel;
         _onPick = null;
@@ -476,6 +563,8 @@ public static class PlayerPickPanel
 {
     public static bool IsShowing => CommsHud.PickShowing;
 
-    public static void Open(string title, bool includeSelf, Action<PlayerHealth> onPick, Action onCancel = null) =>
-        CommsHud.OpenPick(title, includeSelf, onPick, onCancel);
+    /// <summary>viewPrefab = 이 스킬 전용 창 (SkillDef.PickViewPrefab — 비우면 기본 창)</summary>
+    public static void Open(string title, bool includeSelf, Action<PlayerHealth> onPick, Action onCancel = null,
+                            PlayerPickView viewPrefab = null) =>
+        CommsHud.OpenPick(title, includeSelf, onPick, onCancel, viewPrefab);
 }

@@ -1,4 +1,4 @@
-﻿using Fusion;
+using Fusion;
 using UnityEngine;
 
 public enum PickupKind { Weapon, EnchantStone, Soul }
@@ -56,6 +56,7 @@ public class Pickup : NetworkBehaviour
     [Networked] private TickTimer ClaimTimer { get; set; }
 
     private float _nextRequestTime;
+    private float _manualUntil = -1f;      // 손으로 줍기 — 키를 누른 뒤 이 시간까지 요청
     private float _nextBlockedLog;
     private bool _granted;
     private bool _consumed;
@@ -183,6 +184,18 @@ public class Pickup : NetworkBehaviour
                     Log("범위 안이지만 받을 수 없음 (무기 슬롯 꽉 참 등)");
                 }
                 return;
+            }
+
+            // 설정 '무기 저절로 줍기'를 끄면 — 무기는 상호작용 키로 (소울 · 스톤은 그대로 저절로)
+            if (PickupKind == PickupKind.Weapon && !GameSettings.AutoPickup)
+            {
+                if (!UIManager.InputBlocked)
+                {
+                    var data = equipDatabase != null ? equipDatabase.Get(ItemId) : null;
+                    AltarHud.Prompt($"[{KeyBinds.Name(GameAction.Interact)}] 줍기 — {(data != null ? data.DisplayName : "무기")}");
+                    if (KeyBinds.Down(GameAction.Interact)) _manualUntil = Time.time + 0.8f;
+                }
+                if (Time.time > _manualUntil) return;
             }
 
             if (Time.time < _nextRequestTime) return;

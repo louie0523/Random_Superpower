@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicSpawner
   playerPrefab: {fileID: 1933714763159700364, guid: 2e88d1791f21fe64c9c1d3b2386535b9, type: 3}
+  spectatorVoicePrefab: {fileID: 2038771379863182658, guid: 615ce39c9c19dd940a2782e669b239b5, type: 3}
   dummySpawnDistance: 5
   debugAlter: {fileID: 11400000, guid: 7ba7486c6be70a744b1cc6586b2aca32, type: 2}
   StoneGet: 259

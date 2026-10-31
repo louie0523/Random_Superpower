@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174dced1ec495a4488fba50e36e09239, type: 3}
+  m_Name: UiPrefabSet
+  m_EditorClassIdentifier: Assembly-CSharp::UiPrefabSet
+  UsePlayerPick: 1
+  PlayerPick: {fileID: 3939723288787450926, guid: 01a4275cf69b38144b3829a20a79acdd, type: 3}
+  UseVoiceSettings: 1
+  VoiceSettings: {fileID: 4422587096610656688, guid: d0e53a8c2a3016b4985127f6f357132b, type: 3}
+  UseRoom: 1
+  Room: {fileID: 4216227812859976534, guid: b3f89d5123d5c294080d7bed96bf89b1, type: 3}
+  UseSettings: 1
+  Settings: {fileID: 3389524243337961089, guid: c3983ba2e0acdd940bf56aff6fefc558, type: 3}
+  UseEscMenu: 1
+  EscMenu: {fileID: 5896713368935124614, guid: 66a4b79f22924994b877772781f6d2ed, type: 3}
+  Font: {fileID: 11400000, guid: d6996bfddc8f9344b892c6bea04f98e7, type: 2}

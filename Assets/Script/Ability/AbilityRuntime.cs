@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -844,7 +844,8 @@ public class AbilityRuntime : NetworkBehaviour
                 _pickedSlot = slotIndex;
                 _pickQueued = slotIndex;
             },
-            () => { _picking = false; });
+            () => { _picking = false; },
+            skill.PickViewPrefab)   ;
         return true;
     }
 
@@ -1103,6 +1104,13 @@ public class AbilityRuntime : NetworkBehaviour
 
             case DashDirection.MoveInput:
                 {
+                    // 설정 '대시 — 보는 방향으로' (권한자 = 이 플레이어 본인 화면의 설정)
+                    if (GameSettings.DashToLook && HasInputAuthority)
+                    {
+                        Vector3 look = transform.forward;
+                        look.y = 0f;
+                        return look.sqrMagnitude > 0.0001f ? look.normalized : transform.forward;
+                    }
                     if (_movement == null) return transform.forward;
                     Vector3 local = _movement.LocalMoveDir;
                     if (local.sqrMagnitude < 0.01f) return transform.forward;

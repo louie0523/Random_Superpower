@@ -110,6 +110,7 @@ public class DamageParticleManager : MonoBehaviour
     /// <param name="targetPos">맞은 대상의 발 위치</param>
     public void Show(Vector3 targetPos, int amount, DamageNumberKind kind)
     {
+        if (!GameSettings.DamageNumbers) return;       // 설정 'HUD · 데미지 숫자'
         var cam = _cam != null ? _cam : Camera.main;
         if (cam == null) return;
         if (kind != DamageNumberKind.Miss && amount <= 0) return;

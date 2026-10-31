@@ -100,7 +100,7 @@ MonoBehaviour:
     SoulCost: 0
     CooldownAfterEffect: 0
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
+    MotionData: {fileID: 11400000, guid: 5553dd73bdbe2ad4db38aaaa06c1f22e, type: 2}
     EffectTiming: 0
     NeedsTarget: 0
     HitMode: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
     SoulCost: 0
     CooldownAfterEffect: 0
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
+    MotionData: {fileID: 11400000, guid: 332e75346ed6434409a9258e87669b3d, type: 2}
     EffectTiming: 0
     NeedsTarget: 0
     HitMode: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
     SoulCost: 0
     CooldownAfterEffect: 0
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
+    MotionData: {fileID: 11400000, guid: f6956d1eb1abd2944be6c639e87492c8, type: 2}
     EffectTiming: 0
     NeedsTarget: 0
     HitMode: 0

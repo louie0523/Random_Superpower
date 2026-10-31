@@ -203,6 +203,15 @@ public class RoomState : NetworkBehaviour
         Players.Set(i, e);
     }
 
+    /// <summary>관전자 채팅 — 관전자 화면에만 보임</summary>
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_SpectatorChat(PlayerRef from, string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return;
+        if (text.Length > 120) text = text.Substring(0, 120);
+        SpectatorChat.Receive(from, text);
+    }
+
     // ══════════════════ 방장 전용 ══════════════════
 
     public bool IsLocalHost => Object != null && Object.IsValid && HasStateAuthority;

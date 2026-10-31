@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>타격감용 시각 정지. timeScale은 건드리지 않는다 (네트워크 영향).</summary>
 public static class HitStop
@@ -14,7 +14,8 @@ public static class HitStop
 
     public static void Do(float duration)
     {
-        if (duration <= 0f) return;
+        duration *= GameSettings.HitStopScale;       // 설정 '타격 멈춤'
+        if (duration <= 0.001f) return;
         if (_local == null) return;
         _local.Freeze(duration);
     }

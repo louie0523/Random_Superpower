@@ -43,11 +43,11 @@ MonoBehaviour:
     Vars: []
     RequiredWeapon: 0
     CooldownByLevel: []
-    Cooldown: 8
+    Cooldown: 24
     SoulCost: 0
     CooldownAfterEffect: 0
     UltimateChargeCost: 0
-    MotionData: {fileID: 0}
+    MotionData: {fileID: 11400000, guid: fe25696b3585ec4458417375035a893a, type: 2}
     EffectTiming: 0
     NeedsTarget: 0
     HitMode: 0

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -41,10 +41,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TooltipView tooltip;
     public TooltipView Tooltip => tooltip;
 
-    [Header("단축키")]
-    [SerializeField] private KeyCode abilityKey = KeyCode.F1;
-    [SerializeField] private KeyCode inventoryKey = KeyCode.I;
-    [SerializeField] private KeyCode shopKey = KeyCode.B;
+    // 단축키(능력 창 · 인벤 · 상점)는 설정 > 조작에서 — KeyBinds
 
     private PlayerShop _shop;
 
@@ -70,7 +67,8 @@ public class UIManager : MonoBehaviour
         {
             var ui = Instance;
             return ui != null && ui.AnyPanelOpen || DevConsole.IsOpen || ClassPickPanel.IsShowing
-                   || CommsHud.ChatOpen || PlayerPickPanel.IsShowing || VoiceSettingsPanel.IsOpen;
+                   || CommsHud.ChatOpen || PlayerPickPanel.IsShowing || VoiceSettingsPanel.IsOpen
+                   || EscMenu.IsOpen || SettingsWindow.IsOpen;
         }
     }
 
@@ -99,11 +97,12 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (DevConsole.IsOpen || ClassPickPanel.IsShowing || CommsHud.ChatOpen || PlayerPickPanel.IsShowing || VoiceSettingsPanel.IsOpen) return;
-        if (Input.GetKeyDown(abilityKey)) ToggleAbility();
-        if (Input.GetKeyDown(inventoryKey)) ToggleInventory();
+        if (DevConsole.IsOpen || ClassPickPanel.IsShowing || CommsHud.ChatOpen || PlayerPickPanel.IsShowing || VoiceSettingsPanel.IsOpen
+            || EscMenu.IsOpen || SettingsWindow.IsOpen) return;
+        if (KeyBinds.Down(GameAction.AbilityPanel)) ToggleAbility();
+        if (KeyBinds.Down(GameAction.Inventory)) ToggleInventory();
 
-        if (Input.GetKeyDown(shopKey) && (_shop == null || _shop.CanOpenShop))
+        if (KeyBinds.Down(GameAction.Shop) && (_shop == null || _shop.CanOpenShop))
             ToggleShop();
 
         if (Input.GetKeyDown(KeyCode.Escape))

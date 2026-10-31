@@ -63,8 +63,8 @@ public class PlayerMovement : NetworkBehaviour
     public bool Grounded => _cc != null && _cc.isGrounded;
     /// <summary>공중 — 땅에서 떨어졌거나, 막 뛰어서 올라가는 중 (뛴 틱엔 isGrounded가 아직 true라서)</summary>
     public bool IsAirborne => _cc != null && (!_cc.isGrounded || _verticalVel > 0f || _jumpAt > 0f);
-    /// <summary>Space를 누르고 있는가 (내 캐릭터)</summary>
-    public bool JumpHeld => HasInputAuthority && !UIManager.InputBlocked && Input.GetKey(KeyCode.Space);
+    /// <summary>점프 키를 누르고 있는가 (내 캐릭터) — 키는 설정에서</summary>
+    public bool JumpHeld => HasInputAuthority && !UIManager.InputBlocked && KeyBinds.Held(GameAction.Jump);
     /// <summary>점프한 순간 (내 캐릭터) — 변신 모델이 점프 동작을 바로 틀게</summary>
     public event System.Action Jumped;
 
@@ -247,8 +247,9 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         bool blocked = UIManager.InputBlocked || (_status != null && (_status.IsStunned || _status.IsRooted));
-        float h = HasInputAuthority ? Input.GetAxisRaw("Horizontal") : 0f;
-        float v = HasInputAuthority ? Input.GetAxisRaw("Vertical") : 0f;
+        // 이동 키는 설정에서 (기본 WASD). 반대 키 둘 다 누르면 0
+        float h = HasInputAuthority ? KeyBinds.Axis(GameAction.MoveLeft, GameAction.MoveRight) : 0f;
+        float v = HasInputAuthority ? KeyBinds.Axis(GameAction.MoveBack, GameAction.MoveForward) : 0f;
 
         if (_status != null && (_status.IsStunned || _status.IsRooted)) { h = 0f; v = 0f; }
 
@@ -291,7 +292,7 @@ public class PlayerMovement : NetworkBehaviour
             if (!grounded || Flying || (_status != null && (_status.IsStunned || _status.IsRooted))) _jumpAt = 0f;
             else if (Runner.SimulationTime >= _jumpAt) { _jumpAt = 0f; _verticalVel = jumpPower * JumpMul(); }
         }
-        else if (HasInputAuthority && grounded && !blocked && !Flying && Input.GetKey(KeyCode.Space))
+        else if (HasInputAuthority && grounded && !blocked && !Flying && KeyBinds.Held(GameAction.Jump))
         {
             float wait = JumpWait();
             if (wait > 0.001f) _jumpAt = Runner.SimulationTime + wait;      // 준비 동작 먼저
@@ -366,10 +367,10 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.G)) _equip?.DropActiveWeapon();
+            if (KeyBinds.Down(GameAction.Drop)) _equip?.DropActiveWeapon();
 
-            for (int k = 0; k < PlayerEquipment.WeaponSlots; k++)
-                if (Input.GetKeyDown(KeyCode.Alpha1 + k)) _equip?.SwitchWeapon(k);
+            for (int k = 0; k < PlayerEquipment.WeaponSlots && k < 7; k++)      // 키 설정은 7칸까지
+                if (KeyBinds.Down(KeyBinds.WeaponSlot(k))) _equip?.SwitchWeapon(k);
 
             float wheel = Input.GetAxisRaw("Mouse ScrollWheel");
             if (wheel > 0.01f) _equip?.CycleWeapon(1);

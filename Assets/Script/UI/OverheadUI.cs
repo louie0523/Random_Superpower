@@ -102,8 +102,8 @@ public class OverheadUI : MonoBehaviour
             Vector3 world = p.H.transform.position + Vector3.up * (height + (p.A != null ? p.A.Lift : 0f));
             float dist = Vector3.Distance(camPos, world);
 
-            bool showBar = p.H.InCombat && dist <= barDistance;
-            bool showName = dist <= nameDistance;
+            bool showBar = GameSettings.OverheadBars && p.H.InCombat && dist <= barDistance;     // 설정
+            bool showName = GameSettings.OverheadNames && dist <= nameDistance;
             if (!showBar && !showName) { Show(p, false); continue; }
 
             Vector3 sp = cam.WorldToScreenPoint(world);
@@ -164,7 +164,11 @@ public class OverheadUI : MonoBehaviour
         }
         var runner = o.Runner;
         if (runner != null && o.InputAuthority != PlayerRef.None && runner.GetPlayerObject(o.InputAuthority) == o)
+        {
+            var rs = RoomState.Instance;          // 방에서 들어왔으면 방 닉네임
+            if (rs != null) return rs.NameOf(o.InputAuthority);
             return LocUtil.Get("ui.score.player", o.InputAuthority.PlayerId);
+        }
         return o.name.Replace("(Clone)", "").Trim();
     }
 

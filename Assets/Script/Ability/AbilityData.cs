@@ -164,6 +164,8 @@ public class AbilityData : ScriptableObject
         public string PickTitle = "대상 고르기";
         [Tooltip("선택 창에 나도 나옴")]
         public bool PickIncludeSelf = true;
+        [Tooltip("이 스킬 전용 선택 창 프리팹 (비우면 기본 창)")]
+        public PlayerPickView PickViewPrefab;
 
         [Header("레벨")]
         [Tooltip("최대 레벨. 1이면 강화 불가. 궁극기는 보통 3.\nEffects의 Values와 Vars의 칸 수를 이 값에 맞추세요")]

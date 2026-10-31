@@ -10,8 +10,7 @@ public class ScoreboardView : MonoBehaviour
     [Tooltip("줄들이 놓일 부모 (Vertical Layout Group)")]
     [SerializeField] private Transform rowParent;
     [SerializeField] private ScoreboardRow rowPrefab;
-    [SerializeField] private KeyCode key = KeyCode.Tab;
-    [SerializeField] private float refreshInterval = 0.25f;
+    [SerializeField] private float refreshInterval = 0.25f;     // 키 = 설정 키 설정 '순위표' (기본 Tab)
 
     struct Entry
     {
@@ -32,7 +31,8 @@ public class ScoreboardView : MonoBehaviour
 
     void Update()
     {
-        bool show = Input.GetKey(key) && !DevConsole.IsOpen && !CommsHud.ChatOpen;
+        bool show = KeyBinds.Held(GameAction.Scoreboard) && !DevConsole.IsOpen && !CommsHud.ChatOpen
+                    && !EscMenu.IsOpen && !SettingsWindow.IsOpen;
 
         if (root != null && root.activeSelf != show)
         {

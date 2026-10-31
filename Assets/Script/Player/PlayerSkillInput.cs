@@ -1,18 +1,25 @@
-﻿using UnityEngine;
+using UnityEngine;
 
+/// <summary>
+/// 스킬 키 입력 → 칸별 눌림 표시 (AbilityRuntime이 틱에서 소비).
+/// 키는 설정의 키 설정(KeyBinds)에서. 설정 '스킬 — 뗄 때 쓰기'를 켜면 키를 뗄 때 씀.
+/// </summary>
 public class PlayerSkillInput : MonoBehaviour
 {
     public bool[] Pressed = new bool[SkillSlotExt.Count];
 
-    [Header("Keys")]
-    [SerializeField] private KeyCode skill1 = KeyCode.LeftShift;
-    [SerializeField] private KeyCode skill2 = KeyCode.E;
-    [SerializeField] private KeyCode ultimate = KeyCode.Q;
-    [SerializeField] private bool skill3UseRightMouse = true;
-    [SerializeField] private KeyCode skill3Alt = KeyCode.LeftControl;
-    [SerializeField] private KeyCode randomSkill = KeyCode.F;
-    [Tooltip("두 번째 랜덤 능력 (조커)")]
-    [SerializeField] private KeyCode randomSkill2 = KeyCode.V;
+    static readonly (SkillSlot Slot, GameAction Action)[] Map =
+    {
+        (SkillSlot.Skill1, GameAction.Skill1),
+        (SkillSlot.Skill2, GameAction.Skill2),
+        (SkillSlot.Skill3, GameAction.Skill3),
+        (SkillSlot.Ultimate, GameAction.Ultimate),
+        (SkillSlot.Random, GameAction.Random),
+        (SkillSlot.Random2, GameAction.Random2),
+    };
+
+    // 뗄 때 쓰기 — 누른 게 창이 열리기 전이었는지 (창을 닫다가 떼서 나가는 것 방지)
+    readonly bool[] _armed = new bool[SkillSlotExt.Count];
 
     void Awake()
     {
@@ -22,20 +29,32 @@ public class PlayerSkillInput : MonoBehaviour
 
     void Update()
     {
-        if (UIManager.InputBlocked) return;
-
-        if (Input.GetKeyDown(skill1)) Pressed[(int)SkillSlot.Skill1] = true;
-        if (Input.GetKeyDown(skill2)) Pressed[(int)SkillSlot.Skill2] = true;
-
-        if (skill3UseRightMouse)
+        if (UIManager.InputBlocked)
         {
-            if (Input.GetMouseButtonDown(1)) Pressed[(int)SkillSlot.Skill3] = true;
+            System.Array.Clear(_armed, 0, _armed.Length);
+            return;
         }
-        else if (Input.GetKeyDown(skill3Alt)) Pressed[(int)SkillSlot.Skill3] = true;
 
-        if (Input.GetKeyDown(ultimate)) Pressed[(int)SkillSlot.Ultimate] = true;
-        if (Input.GetKeyDown(randomSkill)) Pressed[(int)SkillSlot.Random] = true;
-        if (Input.GetKeyDown(randomSkill2)) Pressed[(int)SkillSlot.Random2] = true;
+        bool onRelease = GameSettings.SkillOnRelease;
+
+        foreach (var (slot, action) in Map)
+        {
+            int i = (int)slot;
+            if (i < 0 || i >= Pressed.Length) continue;
+
+            if (!onRelease)
+            {
+                if (KeyBinds.Down(action)) Pressed[i] = true;
+                continue;
+            }
+
+            if (KeyBinds.Down(action)) _armed[i] = true;
+            if (_armed[i] && KeyBinds.Up(action))
+            {
+                _armed[i] = false;
+                Pressed[i] = true;
+            }
+        }
     }
 
     /// <summary>FixedUpdateNetwork에서 소비</summary>

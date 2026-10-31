@@ -15,6 +15,11 @@ public class PlayerAttack : NetworkBehaviour
     [SerializeField] private LayerMask ricochetMask = ~0;
     [SerializeField] private AudioSource weaponAudio;
 
+    [Header("근접 — 꾹 누르기")]
+    [Tooltip("좌클릭을 누르고 있으면 계속 공격 (콤보 1타 → 2타 → … → 마지막 타 → 1타). 원거리 · 총은 그대로")]
+    [SerializeField] private bool holdToAttack = true;
+    private bool _holding;          // 근접 — 좌클릭 누르고 있는 중 (Update에서 읽고 틱에서 씀)
+
     [Header("Debug")]
     [SerializeField] private bool drawGizmos = true;
     [SerializeField] private bool logHits = false;
@@ -95,6 +100,16 @@ public class PlayerAttack : NetworkBehaviour
     private float _armedTimer = -1f;
 
     public bool HasArmedShot => _armedTimer > 0f;
+
+    // ── 조준점 (CrosshairHud)이 읽는 것 ──
+    /// <summary>내 캐릭터의 PlayerAttack (더미 · 남은 제외)</summary>
+    public static PlayerAttack Local { get; private set; }
+    public CharacterController Body => _cc;
+    public EquipmentData CurrentWeapon => _equip != null ? _equip.GetWeapon() : null;
+    /// <summary>연사 중 쏜 발 수 (끊기면 0)</summary>
+    public int BurstShots => _shotsInBurst;
+    /// <summary>이 총의 지금 탄퍼짐 (도) — 무기 값 × 배율 + 추가</summary>
+    public float GunSpreadDeg(EquipmentData w) => (w != null ? w.SpreadAngle : 0f) * SpreadMul + SpreadAdd;
 
     /// <summary>총을 쏠 때마다 (SA). 능력이 반응용으로 구독</summary>
     public event System.Action<EquipmentData> GunFired;
@@ -202,9 +217,16 @@ public class PlayerAttack : NetworkBehaviour
             ? weaponAnim.ArmRig
             : GetComponentInChildren<FPArmRig>(true);
 
+        if (HasInputAuthority) Local = this;
+
         if (cameraRoot == null) Debug.LogError("[Attack] cameraRoot 비었음", this);
         if (fpsCamera == null) Debug.LogError("[Attack] fpsCamera 비었음", this);
         if (_stats == null) Debug.LogError("[Attack] PlayerStats 없음", this);
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        if (Local == this) Local = null;
     }
 
     /// <summary>들고 있는 무기 모델의 WeaponRig (투사체 미리보기)</summary>
@@ -227,29 +249,34 @@ public class PlayerAttack : NetworkBehaviour
         {
             _attackQueued = false;
             _releaseQueued = false;
+            _holding = false;
             return;
         }
 
         var weapon = _equip != null ? _equip.GetWeapon() : null;
         bool ranged = !ForceMelee && weapon != null && weapon.Class == WeaponClass.Ranged;
 
+        // 공격 키 = 설정 키 설정 (기본 좌클릭)
         if (!ranged)
         {
-            if (Input.GetMouseButtonDown(0)) _attackQueued = true;
+            if (KeyBinds.Down(GameAction.Attack)) _attackQueued = true;
+            _holding = holdToAttack && KeyBinds.Held(GameAction.Attack);
             return;
         }
+
+        _holding = false;
 
         if (weapon.RangedKind == RangedType.Gun)
         {
             if (weapon.FullAuto)
             {
-                if (Input.GetMouseButton(0)) _attackQueued = true;
+                if (KeyBinds.Held(GameAction.Attack)) _attackQueued = true;
             }
-            else if (Input.GetMouseButtonDown(0)) _attackQueued = true;
+            else if (KeyBinds.Down(GameAction.Attack)) _attackQueued = true;
         }
         else
         {
-            if (Input.GetMouseButtonUp(0)) _releaseQueued = true;
+            if (KeyBinds.Up(GameAction.Attack)) _releaseQueued = true;
         }
     }
 
@@ -311,7 +338,8 @@ public class PlayerAttack : NetworkBehaviour
         }
 
         // ── 근거리 ──
-        bool pressed = _attackQueued;
+        // 눌렀거나 · 누르고 있으면 → 지금 타의 판정이 끝난 뒤 다음 타 예약 (마지막 타 다음은 1타로 돌아감)
+        bool pressed = _attackQueued || _holding;
         _attackQueued = false;
 
         if (_attackTimer < 0f && _comboIndex > 0 &&
@@ -340,7 +368,7 @@ public class PlayerAttack : NetworkBehaviour
             return;
         }
 
-        if (Input.GetMouseButton(0))
+        if (KeyBinds.Held(GameAction.Attack))
         {
             if (_drawTime < 0f) _drawTime = 0f;
             _drawTime += dt * spd;        // ★ 공속만큼 빨리 참

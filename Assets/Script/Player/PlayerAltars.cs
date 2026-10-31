@@ -11,8 +11,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerAltars : NetworkBehaviour
 {
-    [Tooltip("상호작용 키 — 상자와 같은 키 권장")]
-    [SerializeField] private KeyCode interactKey = KeyCode.R;
+    // 상호작용 키 = 설정 키 설정 '상호작용' (기본 R)
+    static KeyCode interactKey => KeyBinds.Get(GameAction.Interact);
 
     [Tooltip("서브 제단 채널 시간 (초)")]
     [SerializeField] private float subChannel = 2.5f;
@@ -121,7 +121,7 @@ public class PlayerAltars : NetworkBehaviour
         var a = FindNear();
         if (a == null) return;
 
-        string key = interactKey.ToString();
+        string key = KeyBinds.Name(GameAction.Interact);
         int need = AltarRules.Needed;
 
         if (a.IsCentral)

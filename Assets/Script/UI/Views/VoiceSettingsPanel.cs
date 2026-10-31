@@ -3,6 +3,8 @@ using UnityEngine;
 /// <summary>
 /// 보이스 설정 창 (O 키 · 설정에서 바꿈) + 화면 왼쪽 아래 마이크 상태 · 말하는 사람 표시.
 /// 씬에 없으면 알아서 생김. 나중에 게임 설정 메뉴가 생기면 VoiceSettings 값을 거기서 바꾸면 됨.
+/// 창 모양: Resources/UiPrefabSet의 '보이스 설정 창'을 켜면 프리팹(VoiceSettingsView), 아니면 아래 코드 모양.
+/// 관전자도 열 수 있음 (SpectatorVoice).
 /// </summary>
 public class VoiceSettingsPanel : MonoBehaviour
 {
@@ -11,12 +13,18 @@ public class VoiceSettingsPanel : MonoBehaviour
     static VoiceSettingsPanel _inst;
     public static bool IsOpen { get; private set; }
 
-    enum Bind { None, MatchTalk, TeamTalk, MatchMute, TeamMute, Settings }
+    public enum Bind { None, MatchTalk, TeamTalk, MatchMute, TeamMute, Settings }
+
+    /// <summary>키 바꾸기 대기 중인 칸</summary>
+    public static Bind Waiting => _inst != null ? _inst._waiting : Bind.None;
+
     Bind _waiting;
     Vector2 _micScroll;
     Vector2 _pageScroll;
     GUIStyle _label, _small, _btn, _title;
     float _scale = -1f;
+    VoiceSettingsView _view;
+    bool _viewChecked;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void AutoCreate()
@@ -38,18 +46,55 @@ public class VoiceSettingsPanel : MonoBehaviour
         if (_inst == this) { _inst = null; IsOpen = false; }
     }
 
-    public static void Open() { IsOpen = true; }
+    /// <summary>프리팹 창 (안 켰으면 null)</summary>
+    VoiceSettingsView View()
+    {
+        if (!_viewChecked)
+        {
+            _viewChecked = true;
+            var prefab = UiPrefabSet.VoicePrefab;
+            if (prefab != null)
+            {
+                _view = Instantiate(prefab, transform);
+                _view.Hide();
+            }
+        }
+        return _view;
+    }
+
+    static bool HasVoice => VoiceChat.Local != null || SpectatorVoice.Local != null;
+
+    public static void Open()
+    {
+        IsOpen = true;
+        if (_inst != null)
+        {
+            var v = _inst.View();
+            if (v != null) v.Show();
+        }
+    }
+
     public static void Close()
     {
         IsOpen = false;
-        if (_inst != null) _inst._waiting = Bind.None;
+        if (_inst != null)
+        {
+            _inst._waiting = Bind.None;
+            if (_inst._view != null) _inst._view.Hide();
+        }
         VoiceSettings.Save();
         var ui = UIManager.Instance;
-        if (ui == null || !ui.AnyPanelOpen)
+        if ((ui == null || !ui.AnyPanelOpen) && !Spectator.CursorFree)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+    }
+
+    /// <summary>이 칸의 키 바꾸기 시작 — 다음에 누른 키로 (Esc 취소)</summary>
+    public static void StartBind(Bind b)
+    {
+        if (_inst != null) _inst._waiting = b;
     }
 
     void Update()
@@ -61,9 +106,15 @@ public class VoiceSettingsPanel : MonoBehaviour
             return;
         }
 
-        if (VoiceChat.Local == null) return;
+        if (!HasVoice) return;
         if (CommsHud.ChatOpen || DevConsole.IsOpen || PlayerPickPanel.IsShowing) return;
-        if (Input.GetKeyDown(VoiceSettings.SettingsKey)) Open();
+        if (SettingsWindow.IsOpen || EscMenu.IsOpen) return;
+        if (Input.GetKeyDown(VoiceSettings.SettingsKey))
+        {
+            // 보이스 전용 프리팹을 켰으면 그 창, 아니면 설정 창의 '채팅 · 보이스' 탭
+            if (UiPrefabSet.VoicePrefab != null) Open();
+            else SettingsWindow.Open("voice");
+        }
     }
 
     void Styles()
@@ -82,7 +133,31 @@ public class VoiceSettingsPanel : MonoBehaviour
     {
         Styles();
         DrawStatus();
-        if (IsOpen) DrawPanel();
+        if (!IsOpen) return;
+        if (HandleKeys()) return;
+        if (_view == null) DrawPanel();
+    }
+
+    // ── 키 바꾸기 · Esc (코드 · 프리팹 공통) ── true = 창을 닫았음
+    bool HandleKeys()
+    {
+        var e = Event.current;
+        if (e.type != EventType.KeyDown || e.keyCode == KeyCode.None) return false;
+
+        if (_waiting != Bind.None)
+        {
+            if (e.keyCode != KeyCode.Escape) SetBind(_waiting, e.keyCode);
+            _waiting = Bind.None;
+            e.Use();
+            return false;
+        }
+        if (e.keyCode == KeyCode.Escape)
+        {
+            e.Use();
+            Close();
+            return true;
+        }
+        return false;
     }
 
     // ── 왼쪽 아래: 내 마이크 · 말하는 사람 ──
@@ -90,7 +165,8 @@ public class VoiceSettingsPanel : MonoBehaviour
     void DrawStatus()
     {
         var me = VoiceChat.Local;
-        if (me == null) return;
+        var spec = SpectatorVoice.Local;
+        if (me == null && spec == null) return;
 
         float s = _scale;
         float x = 20f * s;
@@ -106,16 +182,24 @@ public class VoiceSettingsPanel : MonoBehaviour
             y -= lineH;
             Shadow(new Rect(x, y, 400f * s, lineH), $"▶ [{tag}] {TargetUtil.NameOf(v)}");
         }
+        foreach (var v in SpectatorVoice.All)
+        {
+            if (v == null || v == spec || !v.IsTalking) continue;
+            y -= lineH;
+            Shadow(new Rect(x, y, 400f * s, lineH), $"▶ [<color=#b8b8b8>관전</color>] {v.DisplayName}");
+        }
 
         // 내 상태
         string mode = VoiceSettings.Mode == MicMode.PushToTalk
             ? TargetUtil.Text("voice.mode.ptt", "누르고 말하기 ({0})", VoiceSettings.MatchTalkKey)
             : TargetUtil.Text("voice.mode.open", "열린 마이크");
-        string mm = VoiceSettings.MatchMuted ? "<color=#ff6b6b>경기 음소거</color>" : "";
-        string tm = VoiceChat.TeamAvailable && VoiceSettings.TeamMuted ? "<color=#ff6b6b>팀 음소거</color>" : "";
-        string talk = me.IsTalking ? "<color=#7dff8a>● 말하는 중</color>" : "";
-        Shadow(new Rect(x, Screen.height - 120f * s, 700f * s, lineH),
-            $"[마이크] {mode}  {mm}  {tm}  {talk}   <color=#999999>[{VoiceSettings.SettingsKey}] 설정</color>");
+        string mm = VoiceSettings.MatchMuted ? "<color=#ff6b6b>음소거</color>" : "";
+        string who = me != null ? "[마이크]" : "[관전 마이크 — 관전자끼리]";
+        string tm = me != null && VoiceChat.TeamAvailable && VoiceSettings.TeamMuted ? "<color=#ff6b6b>팀 음소거</color>" : "";
+        bool talking = me != null ? me.IsTalking : spec.IsTalking;
+        string talk = talking ? "<color=#7dff8a>● 말하는 중</color>" : "";
+        Shadow(new Rect(x, Screen.height - 120f * s, 760f * s, lineH),
+            $"{who} {mode}  {mm}  {tm}  {talk}   <color=#999999>[{VoiceSettings.SettingsKey}] 설정</color>");
     }
 
     void Shadow(Rect r, string text)
@@ -127,26 +211,11 @@ public class VoiceSettingsPanel : MonoBehaviour
         GUI.Label(r, text, _small);
     }
 
-    // ── 설정 창 ──
+    // ── 설정 창 (코드 모양) ──
 
     void DrawPanel()
     {
         float s = _scale;
-        var e = Event.current;
-
-        // 키 바꾸기 대기 중 — 다음에 누른 키로
-        if (_waiting != Bind.None && e.type == EventType.KeyDown && e.keyCode != KeyCode.None)
-        {
-            if (e.keyCode != KeyCode.Escape) SetBind(_waiting, e.keyCode);
-            _waiting = Bind.None;
-            e.Use();
-        }
-        else if (_waiting == Bind.None && e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape)
-        {
-            e.Use();
-            Close();
-            return;
-        }
 
         float w = 640f * s, h = Mathf.Min(900f * s, Screen.height - 40f);
         var rect = new Rect((Screen.width - w) * 0.5f, (Screen.height - h) * 0.5f, w, h);
@@ -214,6 +283,11 @@ public class VoiceSettingsPanel : MonoBehaviour
         {
             GUILayout.Space(8f * s);
             GUILayout.Label("<color=#aaaaaa>" + VoiceChat.Local.Diagnose() + "</color>", _small);
+        }
+        else if (SpectatorVoice.Local != null)
+        {
+            GUILayout.Space(8f * s);
+            GUILayout.Label("<color=#aaaaaa>관전자 보이스 — 관전자끼리만 들림</color>", _small);
         }
 
         GUILayout.EndScrollView();
