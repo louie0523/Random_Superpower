@@ -91,7 +91,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943886
-    m_Localized: "Vorderer {0}\xB0 Sektor"
+    m_Localized: "Vorderer Sektor {0}\xB0"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943887
@@ -536,7 +536,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5221716631072769
     m_Localized: "Kaufe +1 Fertigkeitspunkt \u2014 Du kannst jede beliebige Fertigkeit
-      im F\xE4higkeitenpanel (F1) verbessern."
+      im F\xE4higkeiten-Panel (F1) verbessern."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072770
@@ -569,8 +569,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072777
-    m_Localized: Anstatt Leben abzusaugen, werden {0}% der abgesaugten Menge in Schaden
-      umgewandelt.
+    m_Localized: "Anstatt keine Lebensenergie abziehen zu k\xF6nnen, werden {0}%
+      der abgesaugten Menge in Schaden umgewandelt."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072778
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Lebensraub {0}% des beim Treffer verursachten Schadens
+    m_Localized: Stehle {0}% des beim Treffer verursachten Schadens.
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -756,6 +756,1571 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5887265069445122
     m_Localized: Neue Runde nach {0} Sekunden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183884423168
+    m_Localized: C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171904
+    m_Localized: B
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171905
+    m_Localized: A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171906
+    m_Localized: S
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171907
+    m_Localized: Behandlung {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171908
+    m_Localized: Evolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171909
+    m_Localized: Behandlung {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171910
+    m_Localized: Verbessern {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171911
+    m_Localized: Aus Lektion 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171912
+    m_Localized: Klassenauswahl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171913
+    m_Localized: Verbleibende Zeit {0} Sekunden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171914
+    m_Localized: "\u21BB Aktualisieren ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171915
+    m_Localized: Nr. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171916
+    m_Localized: "Einzeilige Zusammenfassung nach F\xE4higkeit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171917
+    m_Localized: "Ein anderer Spieler w\xE4hlt aus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171918
+    m_Localized: '{0} Personen verbleiben'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171919
+    m_Localized: Zeit der Rache
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171920
+    m_Localized: "T\xF6te den {0}, der dich get\xF6tet hat, innerhalb von {1} Sekunden!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171921
+    m_Localized: "Rache erfolgreich! Bewegungsgeschwindigkeit \xB7 Maximale Gesundheit
+      \xB7 Angriffskraft +{0}% bis zum Tod!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171922
+    m_Localized: Todesmeldung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171923
+    m_Localized: "Herzinfarkt nach {0} \u2014 {1} Sekunden"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171924
+    m_Localized: gemeinsam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171925
+    m_Localized: Grafik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171926
+    m_Localized: Klang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171927
+    m_Localized: Betrieb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171928
+    m_Localized: Zielpunkt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171929
+    m_Localized: "Chat \xB7 Sprache"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171930
+    m_Localized: "HUD \xB7 Barrierefreiheit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171931
+    m_Localized: Sprache
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171932
+    m_Localized: "Fertigkeit \u2013 Beim Abkoppeln anwenden"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171933
+    m_Localized: "Wenn Sie es ausschalten, wird es in dem Moment verwendet, in dem
+      Sie es dr\xFCcken."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171934
+    m_Localized: "Strich \u2013 In die Richtung, in die Sie schauen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171935
+    m_Localized: "Wenn deaktiviert, bewegt es sich in Bewegungsrichtung (gilt nur
+      f\xFCr Striche in Bewegungsrichtung)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171936
+    m_Localized: Waffen automatisch aufnehmen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171937
+    m_Localized: "Wenn du es ausschaltest, hebe es mit der Interaktionstaste auf
+      (Seelen und Steine \u200B\u200Bwerden immer automatisch aufgehoben)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171938
+    m_Localized: Bildschirmmodus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171939
+    m_Localized: Wird im Editor nicht angewendet (nur im Build-Prozess)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171940
+    m_Localized: "Aufl\xF6sung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171941
+    m_Localized: Wird im Editor nicht angewendet (nur im Build-Prozess)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171942
+    m_Localized: Vertikale Synchronisation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171943
+    m_Localized: Wenn diese Option aktiviert ist, wird die FPS-Begrenzung ignoriert.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171944
+    m_Localized: FPS-Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171945
+    m_Localized: "Qualit\xE4t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171946
+    m_Localized: "Rendergr\xF6\xDFe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171947
+    m_Localized: "Durch Senken wird das Bild unsch\xE4rfer und schneller."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171948
+    m_Localized: Schatten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171949
+    m_Localized: Sichtfeld (FOV)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171950
+    m_Localized: "Vertikale Abmessungen \u2013 Standard 75"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366208
+    m_Localized: gesamte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366209
+    m_Localized: Soundeffekte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366210
+    m_Localized: Musik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366211
+    m_Localized: Stimme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366212
+    m_Localized: UI-Sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366213
+    m_Localized: Mausempfindlichkeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366214
+    m_Localized: Mausbewegung umkehren (oben/unten)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366215
+    m_Localized: "Alle Schl\xFCssel auf Standardwerte zur\xFCcksetzen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366216
+    m_Localized: Standard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366217
+    m_Localized: "Sprachtasten (Chat \xB7 Sprach-Tab) rotieren gemeinsam \xB7 Wird
+      dieselbe Taste gedr\xFCckt, werden die Tasten f\xFCr die beiden Aktionen vertauscht"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366218
+    m_Localized: Zielpunkt anzeigen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366219
+    m_Localized: Gleicher Zielpunkt bei allen Waffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366220
+    m_Localized: Farbe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366221
+    m_Localized: Gliederung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366222
+    m_Localized: Dicke des Randes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366223
+    m_Localized: "Randst\xE4rke"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366224
+    m_Localized: Mittelpunkt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366225
+    m_Localized: "Punktgr\xF6\xDFe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366226
+    m_Localized: Punktdicke
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366227
+    m_Localized: innere Linie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366228
+    m_Localized: "innere Linienl\xE4nge"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366229
+    m_Localized: Dicke der inneren Linie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366230
+    m_Localized: Innenzeilenabstand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366231
+    m_Localized: Dicke der inneren Linie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366232
+    m_Localized: "Innere Linie \u2013 breitet sich bei Bewegung aus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366233
+    m_Localized: "Innere Linie \u2013 breitet sich beim Beschuss aus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366234
+    m_Localized: "\xE4u\xDFere Linie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366235
+    m_Localized: "L\xE4nge der \xE4u\xDFeren Linie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366236
+    m_Localized: "Dicke der \xE4u\xDFeren Linie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366237
+    m_Localized: "Au\xDFenzeilenabstand"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366238
+    m_Localized: "Dicke der \xE4u\xDFeren Linie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366239
+    m_Localized: "\xC4u\xDFere Linie \u2013 breitet sich bei Bewegung aus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366240
+    m_Localized: "\xC4u\xDFere Linie \u2013 breitet sich beim Beschuss aus."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366241
+    m_Localized: eins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366242
+    m_Localized: "Kreisgr\xF6\xDFe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366243
+    m_Localized: Kreisdicke
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366244
+    m_Localized: "Kreisintensit\xE4t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366245
+    m_Localized: "Kreis \u2014 breitet sich beim Verschieben aus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366246
+    m_Localized: "Kreis \u2013 Streut sich beim Beschuss aus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366247
+    m_Localized: T-Form (ohne obere Linie)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366248
+    m_Localized: Das sich entfaltende Jahrhundert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366249
+    m_Localized: Chatfenster anzeigen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366250
+    m_Localized: "Selbst wenn Sie es ausschalten, k\xF6nnen Sie es sehen, wenn Sie
+      es mit der Eingabetaste \xF6ffnen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366251
+    m_Localized: Mikrofonmethode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366252
+    m_Localized: "Dr\xFCcken und sprechen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366253
+    m_Localized: Offenes Mikrofon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366254
+    m_Localized: Spracherkennungsempfindlichkeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366255
+    m_Localized: Je weiter links, desto empfindlicher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366256
+    m_Localized: Mikrofon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366257
+    m_Localized: Spielmikrofon stumm schalten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366258
+    m_Localized: Team-Mikrofon stummschalten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366259
+    m_Localized: "Spiellautst\xE4rke"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366260
+    m_Localized: Team Voice Size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366261
+    m_Localized: "Spiel \u2013 Presse und Sprecher"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366262
+    m_Localized: Mikrofon-Stummschalttaste im Spiel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366263
+    m_Localized: "Team \u2013 Presse und sprechen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366264
+    m_Localized: Mikrofon-Stummschalttaste des Teams
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366265
+    m_Localized: "Schnell die Spracheinstellungen \xF6ffnen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366266
+    m_Localized: "Standardeinstellung f\xFCr Sprachtasten"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366267
+    m_Localized: Standard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366268
+    m_Localized: "Zur\xFCck zu T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366269
+    m_Localized: "HUD-Gr\xF6\xDFe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366270
+    m_Localized: Schadenszahlen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366271
+    m_Localized: "Name \xFCber dem Kopf"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366272
+    m_Localized: "Gesundheitsanzeige \xFCber deinem Kopf"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366273
+    m_Localized: "Bildschirmwackeln (bei Treffer \xB7 Explosion)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366274
+    m_Localized: Bildschirm wackelt beim Gehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366275
+    m_Localized: "Reduzieren Sie die Dosis, wenn Sie zu Reise\xFCbelkeit neigen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366276
+    m_Localized: Bildschirm blinkt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366277
+    m_Localized: "Stopp dr\xFCcken"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366278
+    m_Localized: rote Randfarbe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366279
+    m_Localized: "\xC4ndern Sie die Farbe, falls sie schwer zu unterscheiden ist."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366280
+    m_Localized: von nun an
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366281
+    m_Localized: "zur\xFCck"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366282
+    m_Localized: links
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366283
+    m_Localized: Rechts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366284
+    m_Localized: Springen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366285
+    m_Localized: Basisangriff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366286
+    m_Localized: Fertigkeit 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366287
+    m_Localized: Fertigkeit 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366288
+    m_Localized: "F\xE4higkeit 3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366289
+    m_Localized: Ultimativ
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366290
+    m_Localized: "Zuf\xE4llige F\xE4higkeit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366291
+    m_Localized: "Zuf\xE4llige F\xE4higkeit 2 (Joker)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560512
+    m_Localized: "Interaktion (Altar \xB7 Truhe \xB7 Aufheben)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560513
+    m_Localized: Waffen entsorgen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560514
+    m_Localized: Waffe Nr. 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560515
+    m_Localized: Waffe Nr. 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560516
+    m_Localized: Waffe Nr. 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560517
+    m_Localized: Waffe Nr. 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560518
+    m_Localized: Waffe Nr. 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560519
+    m_Localized: Waffe Nr. 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560520
+    m_Localized: Waffe Nr. 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560521
+    m_Localized: Inventar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560522
+    m_Localized: speichern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560523
+    m_Localized: "F\xE4higkeitsfenster"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560524
+    m_Localized: Chatten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560525
+    m_Localized: Stehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560526
+    m_Localized: Linksklick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560527
+    m_Localized: Rechtsklick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560528
+    m_Localized: Klickrad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560529
+    m_Localized: Mausseite 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560530
+    m_Localized: Mausseite 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560531
+    m_Localized: Linksschaltung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560532
+    m_Localized: Rechtsschaltung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560533
+    m_Localized: Linke Strg-Taste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560534
+    m_Localized: Linke Alt-Taste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560535
+    m_Localized: Vollbildmodus (ohne Rahmen)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560536
+    m_Localized: Vollbild (exklusiv)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560537
+    m_Localized: Fenstermodus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560538
+    m_Localized: Furcht
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560539
+    m_Localized: Niedrigkeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560540
+    m_Localized: Mitte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560541
+    m_Localized: "H\xF6he"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560542
+    m_Localized: Rot (Standard)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560543
+    m_Localized: Gelb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560544
+    m_Localized: Jahong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560545
+    m_Localized: "T\xFCrkis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560546
+    m_Localized: "Wei\xDF"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560547
+    m_Localized: Abstrakt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560548
+    m_Localized: "hellgr\xFCn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560549
+    m_Localized: Gelb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560550
+    m_Localized: "T\xFCrkis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560551
+    m_Localized: Rosa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560552
+    m_Localized: Rot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560553
+    m_Localized: Schwarz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560554
+    m_Localized: Code in die Zwischenablage kopieren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560555
+    m_Localized: Paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560556
+    m_Localized: Es befindet sich kein Fadenkreuzcode in der Zwischenablage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560557
+    m_Localized: "Auf Standardeinstellungen zur\xFCcksetzen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560558
+    m_Localized: Das Gleiche sollte man auch bei anderen Waffen anwenden.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560559
+    m_Localized: "Keine Einschr\xE4nkungen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560560
+    m_Localized: Laden...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560561
+    m_Localized: Ziffernblock {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560562
+    m_Localized: Vorbereitung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560563
+    m_Localized: "Dr\xFCcken Sie die Taste\u2026 (Esc Abbrechen)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560564
+    m_Localized: (direkt)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560565
+    m_Localized: "vollst\xE4ndig!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560566
+    m_Localized: "Dr\xFCcken Sie erneut, um zur\xFCckzusetzen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560567
+    m_Localized: Systemgrundlagen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560568
+    m_Localized: Einstellung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560569
+    m_Localized: "Schlie\xDFen (Esc)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560570
+    m_Localized: "Die Sprachtaste befindet sich im Men\xFCpunkt \u201EChat \xB7 Sprache\u201C."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560571
+    m_Localized: Pistole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560572
+    m_Localized: "Bogen \xB7 Stab"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560573
+    m_Localized: "N\xE4he"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560574
+    m_Localized: "Die Option [Gleiches Fadenkreuz f\xFCr alle Waffen] ist aktiviert,
+      daher werden alle Fadenkreuze verwendet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560575
+    m_Localized: "Vorschau-Hintergrund \xE4ndern"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560576
+    m_Localized: Ausbreitungsbewegung beobachten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560577
+    m_Localized: Code kopieren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560578
+    m_Localized: "Code einf\xFCgen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560579
+    m_Localized: Mit dieser Waffe als Standardeinstellung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560580
+    m_Localized: "Das Gleiche gilt auch f\xFCr andere Waffen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560581
+    m_Localized: Speisekarte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560582
+    m_Localized: Weitermachen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560583
+    m_Localized: Einstellung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560584
+    m_Localized: Verlassen des Zimmers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560585
+    m_Localized: Spiel vorbei
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945284591616
+    m_Localized: An
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340352
+    m_Localized: Aus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340401
+    m_Localized: "V\xF6llerei"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340414
+    m_Localized: Schatten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534723
+    m_Localized: Vielseitige Inkompetenz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534725
+    m_Localized: Vielseitige Inkompetenz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534726
+    m_Localized: "\xDCberraschend gew\xF6hnlich und inkompetent."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340353
+    m_Localized: Schmied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340354
+    m_Localized: "Du bist der Schmied.\n\nDas Verzauberungslimit f\xFCr Waffen wird
+      auf 100 erh\xF6ht.\n\nDu kannst Seelenpunkte ausgeben, um die n\xE4chste Verzauberung
+      auf einen gew\xFCnschten Wert festzulegen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340355
+    m_Localized: Schmiede
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Localized: "Das Verzauberungslimit erh\xF6ht sich auf bis zu 100.\n\nDu kannst
+      den Wert der n\xE4chsten Verzauberung durch den Verbrauch von Seelen festlegen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340357
+    m_Localized: "ein gut trainierter K\xF6rper"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340358
+    m_Localized: "Ihr K\xF6rper ist f\xFCr die Arbeit mit dem Blasebalg geeignet.\n\nHP
+      + {0:all}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Localized: Zermalmen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340360
+    m_Localized: "Schwinge einen Hammer nach vorn, um {dmg:SmashCoef+SmashFlat} Schaden
+      zu verursachen und getroffene Gegner 0,25 Sekunden lang zu bet\xE4uben. Zus\xE4tzlich
+      erhalten getroffene Gegner einen Statuseffekt, der ihre R\xFCstung 5 Sekunden
+      lang um {b:ArmorBreakPct}% verringert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340362
+    m_Localized: "Explodiert Lava in einem Umkreis von {b:FurnaceRadius} m und verursacht
+      {dmg:FurnaceCoef+FurnaceFlat} Schaden.\n\nJe niedriger die Gesundheit, desto
+      st\xE4rker wird die Explosion, bis zu {b:FurnaceMaxMul} Mal. Die Chance, Verbrennungen
+      zu verursachen, betr\xE4gt {b:BurnChance:pct}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340363
+    m_Localized: Die maximale Leistung wird erreicht, wenn die HP auf 30 % reduziert
+      wird.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340364
+    m_Localized: Nachkommen des Feuers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340365
+    m_Localized: "F\xFCr {b:UltDuration} Sekunden ist dein K\xF6rper von Feuer umh\xFCllt
+      und du wechselst in den Zustand \u201ENachkomme des Feuers\u201C.\n\nGegner,
+      die dich mit Nahkampfangriffen treffen, erleiden den Effekt \u201EVerbrennen\u201C,
+      und alle Gegenstandseffekte werden um 25 % verst\xE4rkt. Au\xDFerdem wird die
+      Abklingzeit von \u201EOfen\u201C jedes Mal zur\xFCckgesetzt, wenn deine Gesundheit
+      um 15 % sinkt, z. B. bei 85 %, 70 %, 55 % usw."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Localized: Bei den Nachkommen des Feuers wird der Verbrauch von Verzauberungssteinen
+      durch die Verzauberung halbiert.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340367
+    m_Localized: Waffenmeister
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340368
+    m_Localized: "Du bist der Meister aller Schusswaffen. Ein Waffenmeister kann
+      alle Schusswaffen verzaubern und erh\xE4lt Kalibrierungen f\xFCr die Waffen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340369
+    m_Localized: Waffenverzauberung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340370
+    m_Localized: Man kann Schusswaffen verzaubern.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340371
+    m_Localized: Waffenmeister
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340372
+    m_Localized: "Mit einer Schusswaffe ausger\xFCstet, erh\xF6ht sich die Angriffsgeschwindigkeit
+      um {0}%, die Bewegungsgeschwindigkeit um {1}% und der kritische Schaden um
+      weitere {2}%.\n\nDie Standardwaffe ist eine Glock."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340373
+    m_Localized: rollen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340374
+    m_Localized: "Rolle vorw\xE4rts, um f\xFCr 1 Sekunde in den Ausweichmodus zu
+      wechseln.\n\nMunition wird um 20 % aufgef\xFCllt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Localized: "Zoome f\xFCr {b:AimTimeout} Sekunden heran und verlangsame deine
+      Bewegungsgeschwindigkeit.\n\nStattdessen verursacht die n\xE4chste Kugel beim
+      Treffer {b:AimBonusPct:all}% zus\xE4tzlichen Schaden und ist immer ein kritischer
+      Treffer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340377
+    m_Localized: Geh ins Badezimmer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340378
+    m_Localized: "Wechselt f\xFCr 12 Sekunden in den \u201ESpray\u201C-Zustand, wodurch
+      die Angriffsgeschwindigkeit um {b:UltAtkSpeedPct:all}% erh\xF6ht und 20 % Lebensraub
+      gew\xE4hrt werden. W\xE4hrend dieser Zeit erh\xF6ht sich die Streuung der Kugeln
+      beim Abfeuern um 30 %, anstatt {b:UltRicochets:all}-mal von W\xE4nden abzuprallen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340379
+    m_Localized: Todesritter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340381
+    m_Localized: Schatten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340382
+    m_Localized: "Ein zuf\xE4lliger Name wird vergeben.\n\nZus\xE4tzliche Werte und
+      Fertigkeitseffekte \xE4ndern sich je nach Name.\n\nAktueller Name: {x:nametag}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340383
+    m_Localized: "Aktueller Name: {x:nametag}\n\nZus\xE4tzliche Statistiken: {x:stats}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340385
+    m_Localized: "Wenn deine Gesundheit auf 50 % sinkt, wechselst du f\xFCr {b:GhostTime}
+      Sekunden in den 'Geist'-Status und ignorierst alle physischen Trefferzonen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340386
+    m_Localized: Schwert der Unterwelt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340387
+    m_Localized: "Sto\xDFe mit finsterer Macht nach vorn und verursache {dmg:SlashCoef+SlashFlat}
+      Schaden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340388
+    m_Localized: '{x:slash}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340389
+    m_Localized: Reiten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340390
+    m_Localized: "Reite f\xFCr {b:MountDuration} Sekunden auf einem untoten Pferd.
+      W\xE4hrend du reitest, erh\xF6ht sich deine Bewegungsgeschwindigkeit um {b:MountSpeed}
+      und der erlittene Schaden wird um {b:MountDamageReduce}% reduziert.\n\nVerwende
+      diese F\xE4higkeit erneut, w\xE4hrend du reitest, um schnell nach vorne zu
+      st\xFCrmen und {dmg:ChargeCoef} Schaden zu verursachen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340392
+    m_Localized: Duft des Todes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340393
+    m_Localized: "Mit einem verfluchten Schwert der dunklen Magie schl\xE4gt er zu,
+      um Feinden vor ihm {dmg:FinisherCoef+FinisherFlat} Waffenschaden zuzuf\xFCgen
+      und l\xF6st vor ihm eine Explosion dunkler Magie aus, die massives Gift verursacht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Localized: '{x:ult}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340395
+    m_Localized: "Vielfra\xDF"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340397
+    m_Localized: Verdauung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340398
+    m_Localized: "Vielfra\xDF"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Localized: "Bei\xDF nach vorn, um {dmg:DevourCoef+DevourFlat} Schaden zu verursachen.
+      Stirbt das getroffene Ziel innerhalb von 1 Sekunde, erh\xE4ltst du zus\xE4tzliche
+      Seelen und bereitest <b>Ausspucken</b> vor."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340403
+    m_Localized: "Stellt Gesundheit in H\xF6he von {b:DevourHealPct}% des verursachten
+      Schadens wieder her."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340404
+    m_Localized: ausspucken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340405
+    m_Localized: "Verf\xFCgbar, wenn du k\xFCrzlich einen Gegner get\xF6tet oder
+      eine Waffe mit \u201EV\xF6llerei\u201C verbraucht hast. Spuckt Erbrochenes
+      nach vorn und verursacht {dmg:SpitCoef+SpitFlat} Schaden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340406
+    m_Localized: "Der Basisschaden betr\xE4gt {dmg:SpitCoef+SpitFlat} und verursacht
+      zus\xE4tzlichen Schaden in H\xF6he von {b:InheritKillAtkPct}% der Angriffskraft
+      des Ziels, falls es sich um einen Spieler handelt, oder in H\xF6he von {b:InheritWeaponAtkPct}%,
+      falls es sich um eine Waffe handelt.\n\nKann durch zuf\xE4llige gegnerische
+      F\xE4higkeiten oder Waffenverzauberungen beeinflusst werden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340407
+    m_Localized: Aufnahme von ungesunden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340408
+    m_Localized: "Verbrauche die Waffe, die du in der Hand h\xE4ltst."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Localized: verhungerndes Monster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Localized: "Entfessele {b:MonsterCount:all} hungrige Bestien, die Gegner in
+      einem Radius von {b:MonsterRadius:all} m f\xFCr {b:UltDuration:all} Sekunden
+      automatisch bei\xDFen und einen V\xF6llerei-Angriff mit {b:MonsterPowerMul*100}%
+      Effekt verursachen.\n\nWird ein Spieler durch einen V\xF6llerei-Angriff get\xF6tet,
+      verl\xE4ngert sich die Dauer um {b:UltKillExtend} Sekunden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340412
+    m_Localized: Shidou Walker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340413
+    m_Localized: 'Du handelst stets mit deinem Schatten.
+
+
+      Nutze deinen Schatten,
+      um aggressiv, manchmal agil zu agieren und ihn auszubreiten, um das Territorium
+      zu beherrschen.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340416
+    m_Localized: Schattenwaffe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340417
+    m_Localized: "Aktiviert die Schattenwaffe f\xFCr {b:WeaponDuration:all} Sekunden.\n\nWenn
+      du mit der Waffe angreifst, greift deine Illusion nach kurzer Verz\xF6gerung
+      in dieselbe Richtung mit derselben Waffe an und verursacht {b:EchoPct:all}%
+      deiner Grundst\xE4rke als Schaden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340419
+    m_Localized: Schattenbewegung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340420
+    m_Localized: 'Tauscht die Position mit deinem Schatten, um dich an den Ort zu
+      teleportieren, den du ansiehst.
+
+
+      Du kannst dich bis zu {b:MoveRange:all}
+      m weit bewegen.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340421
+    m_Localized: Schattenhand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340422
+    m_Localized: "Hinterl\xE4sst eine <b>Schattenhand</b> an deiner Blickrichtung.
+      Befinden sich Gegner innerhalb von {b:HandRadius:all} Metern um die <b>Schattenhand</b>,
+      f\xE4hrt diese aus.\n\nBei einem Treffer verursacht sie {dmg:HandCoef+HandFlat}
+      Schaden und h\xE4lt Gegner {b:HandRoot:all} Sekunden lang fest.\n\nDu kannst
+      bis zu {b:HandMax:all} Schattenh\xE4nde gleichzeitig auf der Karte platzieren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340424
+    m_Localized: "V\xF6llige Dunkelheit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340425
+    m_Localized: "Die Umgebung wird als Schattenzone definiert, wodurch die Sichtweite
+      von Gegnern innerhalb der Zone stark reduziert wird (ausgenommen du selbst).\n\nGegner
+      au\xDFerhalb der Schattenzone k\xF6nnen nicht hineinsehen.\n\nInnerhalb der
+      Schattenzone betr\xE4gt die Abklingzeit der Schattenbewegung von Schattenl\xE4ufern
+      {b:ZoneMoveCooldown:all} Sekunden, und ihre Bewegungsgeschwindigkeit erh\xF6ht
+      sich um {b:ZoneMoveSpeedPct:all}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340426
+    m_Localized: "Der Schattenwandler kann alle Feinde innerhalb des Schattenbereichs
+      aufsp\xFCren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340427
+    m_Localized: Waffenmeister
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340428
+    m_Localized: "Du bist ein Meister der Waffen.\n\nIm Gegensatz zu anderen Spielern
+      kannst du bis zu 8 Waffen tragen.\n\nSelbst wenn du sie nicht in der Hand h\xE4ltst,
+      schweben sie neben dir und k\xE4mpfen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340429
+    m_Localized: Mugu-Lager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340431
+    m_Localized: Waffenmeister
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340433
+    m_Localized: "Die maximale Reichweite betr\xE4gt {b:OrbitRange:all} m, und Schusswaffen
+      k\xF6nnen vom Waffenmeister nicht kontrolliert werden.\n\nB\xF6gen und St\xE4be
+      haben eine Ladezeit von 100 %.\n\nSpezielle Verzauberungen auf der entsprechenden
+      Waffe haben eine Aktivierungschance von 50 %; ihre Werte und Dauer sind halbiert.
+      (Lebensraub ist nicht anwendbar.)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340435
+    m_Localized: "Die Anzahl der erhaltenen Verzauberungssteine \u200B\u200Berh\xF6ht
+      sich um das {b:StoneGain:all}-fache."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340436
+    m_Localized: Befehl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340437
+    m_Localized: "Als Waffenmeister st\xFCrmen schwebende Waffen in die Richtung,
+      in die sie zeigen, und verursachen Schaden in H\xF6he der Anzahl der Waffen
+      x {dmg:CommandCoef}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340438
+    m_Localized: Beschleunigung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340439
+    m_Localized: "F\xFCr {b:HasteDuration:all} Sekunden wird die Basisangriffszeit
+      des Waffenmeisters um {b:HasteIntervalPct:all}% reduziert und die Befehlsgeschwindigkeit
+      um 50% erh\xF6ht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340441
+    m_Localized: "Feuert als Waffenmeister alle aktuell schwebenden Waffen am anvisierten
+      Ort f\xFCr {b:DancerDuration:all} Sekunden ab.\n\nW\xE4hrend dieser Zeit wird
+      der Waffenschaden um bis zu {b:DancerCoef:all}% reduziert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340442
+    m_Localized: Joker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340444
+    m_Localized: Joker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340445
+    m_Localized: "Du hast immer 2 zuf\xE4llige F\xE4higkeiten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340446
+    m_Localized: Heiterkeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340450
+    m_Localized: "Es k\xF6nnen bis zu {b:CardMax:all} Karten gleichzeitig vorhanden
+      sein."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340453
+    m_Localized: Ersatzkarte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340454
+    m_Localized: "\xC4ndert die Abklingzeit einer der zuf\xE4lligen F\xE4higkeiten,
+      die sich aktuell in der Abklingzeit befindet, auf die einer Ersatzkartenf\xE4higkeit
+      und setzt stattdessen die Abklingzeit dieser zuf\xE4lligen F\xE4higkeit zur\xFCck."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340455
+    m_Localized: "\xDCberraschungsgeschenk"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Localized: "Beschw\xF6rt einen identischen Klon von dir mit zuf\xE4lligen F\xE4higkeiten
+      und Gegenst\xE4nden f\xFCr {b:CloneDuration:all} Sekunden.\n\nDer Klon folgt
+      standardm\xE4\xDFig dem n\xE4chsten Gegner.\n\nWenn der Klon stirbt oder du
+      die Ultimative F\xE4higkeit erneut dr\xFCckst, explodiert er und verursacht
+      {b:CloneBlastMul*100:all}% Joker-Draw-Explosionsschaden an nahen Gegnern.\n\nDer
+      Klon greift Gegner innerhalb von 10 m mit seiner aktuellen Waffe an."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Localized: Klonen reduziert den Waffenschaden um 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Localized: "L\xE4uferhoch"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340459
+    m_Localized: "Du bist sehr schnell! Aber h\xF6r niemals auf!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Localized: "Anstatt deine Geschwindigkeit deutlich zu erh\xF6hen, erleidest
+      du jedes Mal Schaden, wenn du anh\xE4ltst!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340462
+    m_Localized: Blaukrabbe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340463
+    m_Localized: "Bewegungsgeschwindigkeit und Gesundheit werden erh\xF6ht, und der
+      Nahkampfwaffenschaden steigt deutlich an, aber man kann sich nur zur Seite
+      bewegen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340464
+    m_Localized: Die Kraft der blauen Krabbe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340465
+    m_Localized: "Gesundheit und Bewegungsgeschwindigkeit erh\xF6hen sich um 60 %,
+      der Nahkampfwaffenschaden um 100 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340466
+    m_Localized: soziale Phobie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340467
+    m_Localized: "Wenn ich mich l\xE4nger als 3 Sekunden in einem Umkreis von 5 Metern
+      um jemanden aufhalte, werde ich so verlegen, dass ich explodiere!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534656
+    m_Localized: "T\xF6tet beim Tod einen zuf\xE4llig ausgew\xE4hlten Spieler."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534657
+    m_Localized: Plural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534658
+    m_Localized: "Nach deinem Tod trittst du f\xFCr 1 Minute in die \u201ERachezeit\u201C
+      ein.\n\nBesiegst du w\xE4hrend der \u201ERachezeit\u201C den Feind, der dich
+      get\xF6tet hat, erh\xE4ltst du einen sehr m\xE4chtigen Effekt!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Localized: Klappe, Klappe.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534662
+    m_Localized: "Wenn du stirbst, wirst du sofort wiederbelebt und verlierst die
+      Seele des Gegners, der dich get\xF6tet hat.\n\nZus\xE4tzlich wird die Abklingzeit
+      der F\xE4higkeiten aller Gegner um 8 Sekunden erh\xF6ht!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534663
+    m_Localized: Death Notepad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Localized: "W\xE4hle einen Spieler aus, der nach 60 Sekunden Selbstmord begehen
+      soll."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534665
+    m_Localized: Notizen machen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534666
+    m_Localized: Ich werde der Gott der Neuen Welt werden!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534667
+    m_Localized: Voodoo-Puppe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534669
+    m_Localized: Voodoo-Puppe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534670
+    m_Localized: Ich hasse dich schon lange.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534671
+    m_Localized: "Sich s\xFC\xDF geben"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534672
+    m_Localized: "Nutzt t\xF6dliche Niedlichkeit, um den vom Ziel verursachten Schaden
+      auf 0 % zu reduzieren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534673
+    m_Localized: "Sich s\xFC\xDF geben"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534674
+    m_Localized: Ppuing ppuing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534676
+    m_Localized: "Bei Benutzung teleportiert es einen Gegner innerhalb der Reichweite
+      an einen zuf\xE4lligen Ort!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534677
+    m_Localized: Wir brauchen mehr Helden.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534679
+    m_Localized: Schachriese
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534680
+    m_Localized: "Sammle 1 Bauern, wenn du einen Spieler besiegst.\n\nSammle 6 oder
+      mehr Bauern, um zum \u201ESchachkoloss\u201C zu werden.\n\n(Aktuelle Bauern:
+      {x:Bauern} / {x:Ben\xF6tigteBauern})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534681
+    m_Localized: "F\xF6rderung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Localized: "Der Bauer wird zum <b>Schachriesen</b> bef\xF6rdert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534683
+    m_Localized: Bewegungsmethode des Ritters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534685
+    m_Localized: unvermeidliche Existenz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534686
+    m_Localized: "Die Abklingzeit der Ultimativen F\xE4higkeit verringert sich um
+      40 % schneller.\n\nF\xFCnfmaliger Einsatz der Ultimativen F\xE4higkeit t\xF6tet
+      die H\xE4lfte der verbleibenden Spieler."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534687
+    m_Localized: "Die Abklingzeit der Ultimativen F\xE4higkeit verringert sich um
+      40 % schneller.\n\nF\xFCnfmaliger Einsatz der Ultimativen F\xE4higkeit t\xF6tet
+      die H\xE4lfte der verbleibenden Spieler. (Aktuell: {x:stack})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534688
+    m_Localized: Fingerschnippen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534690
+    m_Localized: Beomgols Wille
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534691
+    m_Localized: "Wenn deine Gesundheit auf 1 oder weniger sinkt, erh\xE4ltst du
+      f\xFCr kurze Zeit massive Statusboni und stirbst nicht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534692
+    m_Localized: "Wenn deine Gesundheit auf 1 oder weniger sinkt, erh\xE4ltst du
+      f\xFCr kurze Zeit massive Statusboni und stirbst nicht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534693
+    m_Localized: "Attent\xE4ter"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534695
+    m_Localized: Unsichtbarkeitsumhang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534696
+    m_Localized: "Du kannst mithilfe einer Fertigkeit entscheiden, ob du den Unsichtbarkeitsumhang
+      einsetzt.\n\nSolange du den Unsichtbarkeitsumhang tr\xE4gst, wirst du unsichtbar.
+      Dein K\xF6rper (ohne Waffen) ist also nicht sichtbar, aber der verursachte
+      Schaden wird um 50 % reduziert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534697
+    m_Localized: Sich einen Umhang anlegen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534698
+    m_Localized: Ich hoffe, niemand findet mich.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534699
+    m_Localized: ziehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Localized: Sollen wir es als Unentschieden bezeichnen?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534703
+    m_Localized: Erdwurf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Localized: "Bei der Anwendung der F\xE4higkeit erhebt man sich kurz und wirft
+      dann \u201EErde\u201C auf die Stelle, die man kurz vor der Anwendung der F\xE4higkeit
+      anvisiert hat."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534705
+    m_Localized: Erdwurf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534706
+    m_Localized: "Nachdem du einen Punkt vor dir markiert hast, steige hoch in den
+      Himmel und wirf eine <b>Erde<b> dorthin.\n\nKehre nach der Benutzung zum Ausgangspunkt
+      zur\xFCck."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534707
+    m_Localized: Haarausfallstrahl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534708
+    m_Localized: "Bei Benutzung feuert es einen Strahl nach vorne ab, um das Ziel
+      in einen \u201EKameraden\u201C zu verwandeln."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534709
+    m_Localized: Haarausfallstrahl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534711
+    m_Localized: "\u201EKameraden\u201C k\xF6nnen einander nicht schaden, und ein
+      besonderes Ereignis tritt ein, wenn alle Spieler zu \u201EKameraden\u201C werden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534713
+    m_Localized: "Bei der Benutzung zieht es ein Ziel an sich, packt es und l\xE4dt
+      sich auf.\n\nNiemand wei\xDF, wo das Ziel ist."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Localized: Lasst uns gemeinsam in die Zukunft gehen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534715
+    m_Localized: Bei der Anwendung wird ein Ziel in die Zukunft versetzt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534716
+    m_Localized: "Legend\xE4re Drachensprache"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534717
+    m_Localized: "Wenn du eine F\xE4higkeit einsetzt, rufst du die Sprache eines
+      legend\xE4ren Drachen.\n\nRufst du sie 30 Mal, verwandelst du dich in einen
+      legend\xE4ren Drachen.\n\n\xDCberlebst du 3 Minuten, gewinnst du sofort."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534718
+    m_Localized: "Legend\xE4re Drachensprache"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534720
+    m_Localized: Gleiten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534721
+    m_Localized: Fus Ro Da
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534722
+    m_Localized: Atem des Endes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534724
+    m_Localized: "Oh nein! Diese F\xE4higkeit hat keine Wirkung.\n\nVersuche, nur
+      deine eigenen F\xE4higkeiten einzusetzen!"
     m_Metadata:
       m_Items: []
   references:

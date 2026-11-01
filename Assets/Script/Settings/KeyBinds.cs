@@ -151,30 +151,39 @@ public static class KeyBinds
     public static bool Held(GameAction a) => Input.GetKey(Get(a));
     public static bool Up(GameAction a) => Input.GetKeyUp(Get(a));
 
-    /// <summary>화면에 보일 키 이름 (Mouse0 → 좌클릭 등)</summary>
-    public static string Name(KeyCode k) => k switch
+    /// <summary>화면에 보일 키 이름 (Mouse0 → 좌클릭 등). 번역 키: key.name.{KeyCode} (예: key.name.Mouse0)</summary>
+    public static string Name(KeyCode k)
     {
-        KeyCode.Mouse0 => "좌클릭",
-        KeyCode.Mouse1 => "우클릭",
-        KeyCode.Mouse2 => "휠 클릭",
-        KeyCode.Mouse3 => "마우스 옆 1",
-        KeyCode.Mouse4 => "마우스 옆 2",
-        KeyCode.Return => "Enter",
-        KeyCode.LeftShift => "왼쪽 Shift",
-        KeyCode.RightShift => "오른쪽 Shift",
-        KeyCode.LeftControl => "왼쪽 Ctrl",
-        KeyCode.LeftAlt => "왼쪽 Alt",
-        KeyCode.Space => "Space",
-        KeyCode.Escape => "Esc",
-        KeyCode.UpArrow => "↑",
-        KeyCode.DownArrow => "↓",
-        KeyCode.LeftArrow => "←",
-        KeyCode.RightArrow => "→",
-        KeyCode.BackQuote => "`",
-        >= KeyCode.Alpha0 and <= KeyCode.Alpha9 => ((int)(k - KeyCode.Alpha0)).ToString(),
-        >= KeyCode.Keypad0 and <= KeyCode.Keypad9 => "숫자패드 " + (int)(k - KeyCode.Keypad0),
-        _ => k.ToString(),
-    };
+        string ko = k switch
+        {
+            KeyCode.Mouse0 => "좌클릭",
+            KeyCode.Mouse1 => "우클릭",
+            KeyCode.Mouse2 => "휠 클릭",
+            KeyCode.Mouse3 => "마우스 옆 1",
+            KeyCode.Mouse4 => "마우스 옆 2",
+            KeyCode.LeftShift => "왼쪽 Shift",
+            KeyCode.RightShift => "오른쪽 Shift",
+            KeyCode.LeftControl => "왼쪽 Ctrl",
+            KeyCode.LeftAlt => "왼쪽 Alt",
+            _ => null,
+        };
+        if (ko != null) return SetLoc.T("key.name." + k, ko);
+
+        return k switch
+        {
+            KeyCode.Return => "Enter",
+            KeyCode.Space => "Space",
+            KeyCode.Escape => "Esc",
+            KeyCode.UpArrow => "↑",
+            KeyCode.DownArrow => "↓",
+            KeyCode.LeftArrow => "←",
+            KeyCode.RightArrow => "→",
+            KeyCode.BackQuote => "`",
+            >= KeyCode.Alpha0 and <= KeyCode.Alpha9 => ((int)(k - KeyCode.Alpha0)).ToString(),
+            >= KeyCode.Keypad0 and <= KeyCode.Keypad9 => SetLoc.F("key.name.Keypad", "숫자패드 {0}", (int)(k - KeyCode.Keypad0)),
+            _ => k.ToString(),
+        };
+    }
 
     public static string Name(GameAction a) => Name(Get(a));
 }

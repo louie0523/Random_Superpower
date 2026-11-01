@@ -39,6 +39,21 @@ public class CrosshairEditorView : MonoBehaviour
     bool _animate = true;
     float _statusUntil;
 
+    /// <summary>고정 글자 번역 키 (SettingsView가 부름 — 예전 프리팹 대비)</summary>
+    public void EnsureLoc()
+    {
+        SetLocText.Ensure(GunOption, "set.xh.kind.gun");
+        SetLocText.Ensure(BowOption, "set.xh.kind.bow");
+        SetLocText.Ensure(MeleeOption, "set.xh.kind.melee");
+        SetLocText.Ensure(SharedNote, "set.xh.shared_note");
+        SetLocText.Ensure(BackButton, "set.xh.btn.back");
+        SetLocText.Ensure(AnimateOption, "set.xh.btn.animate");
+        SetLocText.Ensure(CopyButton, "set.xh.btn.copy");
+        SetLocText.Ensure(PasteButton, "set.xh.btn.paste");
+        SetLocText.Ensure(ResetButton, "set.xh.btn.reset");
+        SetLocText.Ensure(CopyToAllButton, "set.xh.btn.copy_all");
+    }
+
     void Awake()
     {
         Kind(GunOption, CrosshairKind.Gun);
@@ -51,19 +66,19 @@ public class CrosshairEditorView : MonoBehaviour
         if (CopyButton != null) CopyButton.onClick.AddListener(() =>
         {
             GUIUtility.systemCopyBuffer = CrosshairSettings.Edit.ToCode();
-            Say("코드를 클립보드에 복사함");
+            Say(SetLoc.T("set.xh.msg.copied", "코드를 클립보드에 복사함"));
         });
         if (PasteButton != null) PasteButton.onClick.AddListener(() =>
         {
             if (CrosshairStyle.TryParse(GUIUtility.systemCopyBuffer, out var s))
             {
                 CrosshairSettings.Set(CrosshairSettings.ShareAll ? CrosshairKind.Gun : CrosshairSettings.Editing, s);
-                Say("붙여 넣음");
+                Say(SetLoc.T("set.xh.msg.pasted", "붙여 넣음"));
             }
-            else Say("클립보드에 조준점 코드가 없어");
+            else Say(SetLoc.T("set.xh.msg.no_code", "클립보드에 조준점 코드가 없어"));
         });
-        if (ResetButton != null) ResetButton.onClick.AddListener(() => { CrosshairSettings.ResetEdit(); Say("기본값으로 돌림"); });
-        if (CopyToAllButton != null) CopyToAllButton.onClick.AddListener(() => { CrosshairSettings.CopyEditToAll(); Say("다른 무기에도 똑같이 넣음"); });
+        if (ResetButton != null) ResetButton.onClick.AddListener(() => { CrosshairSettings.ResetEdit(); Say(SetLoc.T("set.xh.msg.reset", "기본값으로 돌림")); });
+        if (CopyToAllButton != null) CopyToAllButton.onClick.AddListener(() => { CrosshairSettings.CopyEditToAll(); Say(SetLoc.T("set.xh.msg.copied_all", "다른 무기에도 똑같이 넣음")); });
     }
 
     void Kind(UiOption o, CrosshairKind k)

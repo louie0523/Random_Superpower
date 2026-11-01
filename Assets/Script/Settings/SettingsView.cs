@@ -29,11 +29,19 @@ public class SettingsView : MonoBehaviour
     readonly List<SettingRow> _rows = new();
     readonly Dictionary<SettingRow, GameObject> _rowPage = new();
     string _tab;
+    readonly Dictionary<SettingsTab, string> _tabFallback = new();
+    int _locVer = -1;
 
     public string CurrentTab => _tab;
 
     void Awake()
     {
+        // 예전에 만든 프리팹에도 번역 · 글자 맞춤이 되게 (이미 있으면 건드리지 않음)
+        SetLocText.Ensure(Title, "set.ui.title");
+        SetLocText.Ensure(CloseButton, "set.ui.close");
+        if (Crosshair != null) Crosshair.EnsureLoc();
+        UiTextFit.Apply(transform);
+
         foreach (var r in GetComponentsInChildren<SettingRow>(true))
         {
             var def = SettingsRegistry.Get(r.Key);
@@ -53,6 +61,7 @@ public class SettingsView : MonoBehaviour
         {
             var id = t.Id;
             if (t.Button != null && t.Button.Button != null) t.Button.Button.onClick.AddListener(() => ShowTab(id));
+            if (t.Button != null && t.Button.Label != null) _tabFallback[t] = t.Button.Label.text;   // 번역 없을 때 보일 글자
         }
 
         if (CloseButton != null) CloseButton.onClick.AddListener(SettingsWindow.Close);
@@ -83,6 +92,16 @@ public class SettingsView : MonoBehaviour
     {
         if (Root == null || !Root.activeSelf) return;
         GameUiKit.DropButtonFocus();
+
+        // 탭 이름 번역 (set.tab.{id}) — 언어가 바뀔 때만
+        int ver = SetLoc.Version;
+        if (ver != _locVer)
+        {
+            _locVer = ver;
+            foreach (var t in Tabs)
+                if (t.Button != null && _tabFallback.TryGetValue(t, out var fb))
+                    t.Button.SetText(SetLoc.T("set.tab." + t.Id, fb));
+        }
 
         foreach (var r in _rows)
         {

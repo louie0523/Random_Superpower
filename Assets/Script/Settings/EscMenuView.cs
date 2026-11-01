@@ -15,6 +15,14 @@ public class EscMenuView : MonoBehaviour
 
     void Awake()
     {
+        // 예전에 만든 프리팹에도 번역 · 글자 맞춤이 되게
+        SetLocText.Ensure(Title, "set.esc.title");
+        SetLocText.Ensure(ContinueButton, "set.esc.continue");
+        SetLocText.Ensure(SettingsButton, "set.esc.settings");
+        SetLocText.Ensure(LeaveButton, "set.esc.leave");
+        SetLocText.Ensure(QuitButton, "set.esc.quit");
+        UiTextFit.Apply(transform);
+
         if (ContinueButton != null) ContinueButton.onClick.AddListener(EscMenu.Close);
         if (SettingsButton != null) SettingsButton.onClick.AddListener(() => SettingsWindow.Open());
         if (LeaveButton != null) LeaveButton.onClick.AddListener(EscMenu.LeaveRoom);

@@ -79,12 +79,14 @@ public class SettingRow : MonoBehaviour
         if (gameObject.activeSelf != visible) gameObject.SetActive(visible);
         if (!visible) return;
 
-        GameUiKit.Set(Label, Def.Pending ? $"{Def.Label}  <size=70%><color=#9a9aa5>(준비 중)</color></size>" : Def.Label);
+        string label = Def.LabelText;
+        GameUiKit.Set(Label, Def.Pending ? $"{label}  <size=70%><color=#9a9aa5>({SetLoc.T("set.ui.pending", "준비 중")})</color></size>" : label);
         if (Note != null)
         {
-            bool has = !string.IsNullOrEmpty(Def.Note);
+            string note = Def.NoteText;
+            bool has = !string.IsNullOrEmpty(note);
             GameUiKit.Active(Note, has);
-            if (has) GameUiKit.Set(Note, Def.Note);
+            if (has) GameUiKit.Set(Note, note);
         }
 
         switch (Def.Kind)
@@ -94,14 +96,14 @@ public class SettingRow : MonoBehaviour
                 {
                     bool on = Def.GetB();
                     Toggle.SetOn(on);
-                    Toggle.SetText(on ? "켜짐" : "꺼짐");
+                    Toggle.SetText(on ? SetLoc.On : SetLoc.Off);
                 }
                 break;
             case SettingKind.Slider:
                 if (Slider != null) Slider.SetValueWithoutNotify(Def.GetF());
                 break;
             case SettingKind.Key:
-                GameUiKit.Set(KeyLabel, SettingsWindow.WaitingFor == Def ? "키를 누르세요… (Esc 취소)" : KeyBinds.Name(Def.GetK()));
+                GameUiKit.Set(KeyLabel, SettingsWindow.WaitingFor == Def ? SetLoc.T("set.ui.press_key", "키를 누르세요… (Esc 취소)") : KeyBinds.Name(Def.GetK()));
                 break;
             case SettingKind.Action:
                 GameUiKit.Set(KeyLabel, Def.ButtonLabel());

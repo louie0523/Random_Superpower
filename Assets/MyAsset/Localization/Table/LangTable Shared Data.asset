@@ -495,6 +495,838 @@ MonoBehaviour:
     m_Key: ui.round.restart_in
     m_Metadata:
       m_Items: []
+  - m_Id: 15217183884423168
+    m_Key: ui.item.grade.C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171904
+    m_Key: ui.item.grade.B
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171905
+    m_Key: ui.item.grade.A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171906
+    m_Key: ui.item.grade.S
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171907
+    m_Key: ui.item.kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171908
+    m_Key: ui.item.upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171909
+    m_Key: ui.item.upgrade_kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171910
+    m_Key: ui.item.upgrade_stage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171911
+    m_Key: ui.item.upgrade_reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171912
+    m_Key: ui.classpick.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171913
+    m_Key: ui.classpick.timer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171914
+    m_Key: ui.classpick.reroll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171915
+    m_Key: ui.ability.number
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171916
+    m_Key: ability.{Id}.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171917
+    m_Key: ui.classpick.waiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171918
+    m_Key: ui.classpick.waiting_count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171919
+    m_Key: hud.revenge.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171920
+    m_Key: hud.revenge.left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171921
+    m_Key: hud.revenge.done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171922
+    m_Key: hud.deathnote.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171923
+    m_Key: hud.deathnote.left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171924
+    m_Key: set.tab.general
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171925
+    m_Key: set.tab.graphics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171926
+    m_Key: set.tab.audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171927
+    m_Key: set.tab.controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171928
+    m_Key: set.tab.crosshair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171929
+    m_Key: set.tab.voice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171930
+    m_Key: set.tab.hud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171931
+    m_Key: set.lang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171932
+    m_Key: set.game.skillRelease
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171933
+    m_Key: set.game.skillRelease.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171934
+    m_Key: set.game.dashLook
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171935
+    m_Key: set.game.dashLook.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171936
+    m_Key: set.game.autoPickup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171937
+    m_Key: set.game.autoPickup.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171938
+    m_Key: set.gfx.window
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171939
+    m_Key: set.gfx.window.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171940
+    m_Key: set.gfx.resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171941
+    m_Key: set.gfx.resolution.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171942
+    m_Key: set.gfx.vsync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171943
+    m_Key: set.gfx.vsync.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171944
+    m_Key: set.gfx.fps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171945
+    m_Key: set.gfx.quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171946
+    m_Key: set.gfx.scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171947
+    m_Key: set.gfx.scale.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171948
+    m_Key: set.gfx.shadows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171949
+    m_Key: set.gfx.fov
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171950
+    m_Key: set.gfx.fov.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366208
+    m_Key: set.audio.master
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366209
+    m_Key: set.audio.sfx
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366210
+    m_Key: set.audio.music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366211
+    m_Key: set.audio.voice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366212
+    m_Key: set.audio.ui
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366213
+    m_Key: set.ctl.sens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366214
+    m_Key: set.ctl.invertY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366215
+    m_Key: set.key.reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366216
+    m_Key: set.key.reset.btn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366217
+    m_Key: set.key.reset.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366218
+    m_Key: set.xh.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366219
+    m_Key: set.xh.share
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366220
+    m_Key: set.xh.color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366221
+    m_Key: set.xh.outline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366222
+    m_Key: set.xh.outlineOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366223
+    m_Key: set.xh.outlineThick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366224
+    m_Key: set.xh.dot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366225
+    m_Key: set.xh.dotSize
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366226
+    m_Key: set.xh.dotOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366227
+    m_Key: set.xh.inner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366228
+    m_Key: set.xh.innerLen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366229
+    m_Key: set.xh.innerThick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366230
+    m_Key: set.xh.innerOffset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366231
+    m_Key: set.xh.innerOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366232
+    m_Key: set.xh.innerMove
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366233
+    m_Key: set.xh.innerFire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366234
+    m_Key: set.xh.outer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366235
+    m_Key: set.xh.outerLen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366236
+    m_Key: set.xh.outerThick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366237
+    m_Key: set.xh.outerOffset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366238
+    m_Key: set.xh.outerOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366239
+    m_Key: set.xh.outerMove
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366240
+    m_Key: set.xh.outerFire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366241
+    m_Key: set.xh.circle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366242
+    m_Key: set.xh.circleRadius
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366243
+    m_Key: set.xh.circleThick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366244
+    m_Key: set.xh.circleOpacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366245
+    m_Key: set.xh.circleMove
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366246
+    m_Key: set.xh.circleFire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366247
+    m_Key: set.xh.tstyle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366248
+    m_Key: set.xh.error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366249
+    m_Key: set.chat.visible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366250
+    m_Key: set.chat.visible.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366251
+    m_Key: set.voice.mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366252
+    m_Key: set.voice.mode.opt0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366253
+    m_Key: set.voice.mode.opt1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366254
+    m_Key: set.voice.vad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366255
+    m_Key: set.voice.vad.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366256
+    m_Key: set.voice.mic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366257
+    m_Key: set.voice.matchMute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366258
+    m_Key: set.voice.teamMute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366259
+    m_Key: set.voice.matchVol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366260
+    m_Key: set.voice.teamVol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366261
+    m_Key: set.voice.key.matchTalk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366262
+    m_Key: set.voice.key.matchMute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366263
+    m_Key: set.voice.key.teamTalk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366264
+    m_Key: set.voice.key.teamMute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366265
+    m_Key: set.voice.key.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366266
+    m_Key: set.voice.key.reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366267
+    m_Key: set.voice.key.reset.btn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366268
+    m_Key: set.voice.key.reset.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366269
+    m_Key: set.hud.scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366270
+    m_Key: set.hud.dmg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366271
+    m_Key: set.hud.names
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366272
+    m_Key: set.hud.bars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366273
+    m_Key: set.acc.shake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366274
+    m_Key: set.acc.bob
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366275
+    m_Key: set.acc.bob.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366276
+    m_Key: set.acc.flash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366277
+    m_Key: set.acc.hitstop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366278
+    m_Key: set.acc.enemyColor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366279
+    m_Key: set.acc.enemyColor.note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366280
+    m_Key: set.key.MoveForward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366281
+    m_Key: set.key.MoveBack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366282
+    m_Key: set.key.MoveLeft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366283
+    m_Key: set.key.MoveRight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366284
+    m_Key: set.key.Jump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366285
+    m_Key: set.key.Attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366286
+    m_Key: set.key.Skill1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366287
+    m_Key: set.key.Skill2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366288
+    m_Key: set.key.Skill3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366289
+    m_Key: set.key.Ultimate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366290
+    m_Key: set.key.Random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366291
+    m_Key: set.key.Random2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560512
+    m_Key: set.key.Interact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560513
+    m_Key: set.key.Drop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560514
+    m_Key: set.key.Weapon1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560515
+    m_Key: set.key.Weapon2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560516
+    m_Key: set.key.Weapon3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560517
+    m_Key: set.key.Weapon4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560518
+    m_Key: set.key.Weapon5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560519
+    m_Key: set.key.Weapon6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560520
+    m_Key: set.key.Weapon7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560521
+    m_Key: set.key.Inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560522
+    m_Key: set.key.Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560523
+    m_Key: set.key.AbilityPanel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560524
+    m_Key: set.key.Chat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560525
+    m_Key: set.key.Scoreboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560526
+    m_Key: key.name.Mouse0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560527
+    m_Key: key.name.Mouse1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560528
+    m_Key: key.name.Mouse2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560529
+    m_Key: key.name.Mouse3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560530
+    m_Key: key.name.Mouse4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560531
+    m_Key: key.name.LeftShift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560532
+    m_Key: key.name.RightShift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560533
+    m_Key: key.name.LeftControl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560534
+    m_Key: key.name.LeftAlt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560535
+    m_Key: set.gfx.window.opt0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560536
+    m_Key: set.gfx.window.opt1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560537
+    m_Key: set.gfx.window.opt2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560538
+    m_Key: set.gfx.shadows.opt0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560539
+    m_Key: set.gfx.shadows.opt1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560540
+    m_Key: set.gfx.shadows.opt2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560541
+    m_Key: set.gfx.shadows.opt3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560542
+    m_Key: set.acc.enemyColor.opt0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560543
+    m_Key: set.acc.enemyColor.opt1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560544
+    m_Key: set.acc.enemyColor.opt2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560545
+    m_Key: set.acc.enemyColor.opt3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560546
+    m_Key: set.xh.color.opt0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560547
+    m_Key: set.xh.color.opt1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560548
+    m_Key: set.xh.color.opt2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560549
+    m_Key: set.xh.color.opt3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560550
+    m_Key: set.xh.color.opt4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560551
+    m_Key: set.xh.color.opt5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560552
+    m_Key: set.xh.color.opt6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560553
+    m_Key: set.xh.color.opt7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560554
+    m_Key: set.xh.msg.copied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560555
+    m_Key: set.xh.msg.pasted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560556
+    m_Key: set.xh.msg.no_code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560557
+    m_Key: set.xh.msg.reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560558
+    m_Key: set.xh.msg.copied_all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560559
+    m_Key: set.gfx.fps.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560560
+    m_Key: set.ui.loading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560561
+    m_Key: key.name.Keypad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560562
+    m_Key: set.ui.pending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560563
+    m_Key: set.ui.press_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560564
+    m_Key: set.ui.custom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560565
+    m_Key: set.ui.done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560566
+    m_Key: set.ui.confirm_reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560567
+    m_Key: set.voice.mic.default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560568
+    m_Key: set.ui.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560569
+    m_Key: set.ui.close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560570
+    m_Key: set.ui.voice_keys_note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560571
+    m_Key: set.xh.kind.gun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560572
+    m_Key: set.xh.kind.bow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560573
+    m_Key: set.xh.kind.melee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560574
+    m_Key: set.xh.shared_note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560575
+    m_Key: set.xh.btn.back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560576
+    m_Key: set.xh.btn.animate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560577
+    m_Key: set.xh.btn.copy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560578
+    m_Key: set.xh.btn.paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560579
+    m_Key: set.xh.btn.reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560580
+    m_Key: set.xh.btn.copy_all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560581
+    m_Key: set.esc.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560582
+    m_Key: set.esc.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560583
+    m_Key: set.esc.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560584
+    m_Key: set.esc.leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560585
+    m_Key: set.esc.quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945284591616
+    m_Key: set.ui.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340352
+    m_Key: set.ui.off
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:
@@ -609,6 +1441,754 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3004699714891782
     m_Key: ability.6001.skill.1.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340353
+    m_Key: ability.6002.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340354
+    m_Key: ability.6002.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340355
+    m_Key: ability.6002.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Key: ability.6002.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340357
+    m_Key: ability.6002.passive.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340358
+    m_Key: ability.6002.passive.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Key: ability.6002.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340360
+    m_Key: ability.6002.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340361
+    m_Key: ability.6002.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340362
+    m_Key: ability.6002.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340363
+    m_Key: ability.6002.skill.1.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340364
+    m_Key: ability.6002.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340365
+    m_Key: ability.6002.skill.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Key: ability.6002.skill.2.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340367
+    m_Key: ability.6003.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340368
+    m_Key: ability.6003.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340369
+    m_Key: ability.6003.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340370
+    m_Key: ability.6003.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340371
+    m_Key: ability.6003.passive.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340372
+    m_Key: ability.6003.passive.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340373
+    m_Key: ability.6003.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340374
+    m_Key: ability.6003.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340375
+    m_Key: ability.6003.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Key: ability.6003.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340377
+    m_Key: ability.6003.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340378
+    m_Key: ability.6003.skill.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340379
+    m_Key: ability.6004.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340380
+    m_Key: ability.6004.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340381
+    m_Key: ability.6004.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340382
+    m_Key: ability.6004.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340383
+    m_Key: ability.6004.passive.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340384
+    m_Key: ability.6004.passive.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340385
+    m_Key: ability.6004.passive.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340386
+    m_Key: ability.6004.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340387
+    m_Key: ability.6004.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340388
+    m_Key: ability.6004.skill.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340389
+    m_Key: ability.6004.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340390
+    m_Key: ability.6004.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340391
+    m_Key: ability.6004.skill.1.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340392
+    m_Key: ability.6004.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340393
+    m_Key: ability.6004.skill.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Key: ability.6004.skill.2.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340395
+    m_Key: ability.6005.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340396
+    m_Key: ability.6005.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340397
+    m_Key: ability.6005.charge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340398
+    m_Key: ability.6005.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340399
+    m_Key: ability.6005.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340400
+    m_Key: ability.6005.passive.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340401
+    m_Key: ability.6005.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Key: ability.6005.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340403
+    m_Key: ability.6005.skill.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340404
+    m_Key: ability.6005.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340405
+    m_Key: ability.6005.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340406
+    m_Key: ability.6005.skill.1.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340407
+    m_Key: ability.6005.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340408
+    m_Key: ability.6005.skill.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Key: ability.6005.skill.3.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Key: ability.6005.skill.3.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340411
+    m_Key: ability.6005.skill.3.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340412
+    m_Key: ability.6006.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340413
+    m_Key: ability.6006.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340414
+    m_Key: ability.6006.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Key: ability.6006.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340416
+    m_Key: ability.6006.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340417
+    m_Key: ability.6006.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340418
+    m_Key: ability.6006.skill.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340419
+    m_Key: ability.6006.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340420
+    m_Key: ability.6006.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340421
+    m_Key: ability.6006.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340422
+    m_Key: ability.6006.skill.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Key: ability.6006.skill.2.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340424
+    m_Key: ability.6006.skill.3.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340425
+    m_Key: ability.6006.skill.3.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340426
+    m_Key: ability.6006.skill.3.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340427
+    m_Key: ability.6007.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340428
+    m_Key: ability.6007.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340429
+    m_Key: ability.6007.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340430
+    m_Key: ability.6007.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340431
+    m_Key: ability.6007.passive.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340432
+    m_Key: ability.6007.passive.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340433
+    m_Key: ability.6007.passive.1.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340434
+    m_Key: ability.6007.passive.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340435
+    m_Key: ability.6007.passive.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340436
+    m_Key: ability.6007.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340437
+    m_Key: ability.6007.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340438
+    m_Key: ability.6007.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340439
+    m_Key: ability.6007.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340440
+    m_Key: ability.6007.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340441
+    m_Key: ability.6007.skill.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340442
+    m_Key: ability.6008.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340443
+    m_Key: ability.6008.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340444
+    m_Key: ability.6008.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340445
+    m_Key: ability.6008.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340446
+    m_Key: ability.6008.passive.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Key: ability.6008.passive.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340448
+    m_Key: ability.6008.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340449
+    m_Key: ability.6008.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340450
+    m_Key: ability.6008.skill.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340451
+    m_Key: ability.6008.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340452
+    m_Key: ability.6008.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340453
+    m_Key: ability.6008.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340454
+    m_Key: ability.6008.skill.2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340455
+    m_Key: ability.6008.skill.3.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Key: ability.6008.skill.3.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Key: ability.6008.skill.3.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Key: ability.8001.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340459
+    m_Key: ability.8001.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340460
+    m_Key: ability.8001.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Key: ability.8001.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340462
+    m_Key: ability.8002.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340463
+    m_Key: ability.8002.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340464
+    m_Key: ability.8002.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340465
+    m_Key: ability.8002.passive.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340466
+    m_Key: ability.8003.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340467
+    m_Key: ability.8003.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340468
+    m_Key: ability.8004.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534656
+    m_Key: ability.8004.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534657
+    m_Key: ability.8005.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534658
+    m_Key: ability.8005.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534659
+    m_Key: ability.8006.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Key: ability.8006.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534661
+    m_Key: ability.8007.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534662
+    m_Key: ability.8007.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534663
+    m_Key: ability.8008.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Key: ability.8008.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534665
+    m_Key: ability.8008.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534666
+    m_Key: ability.8008.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534667
+    m_Key: ability.8009.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534668
+    m_Key: ability.8009.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534669
+    m_Key: ability.8009.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534670
+    m_Key: ability.8009.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534671
+    m_Key: ability.8010.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534672
+    m_Key: ability.8010.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534673
+    m_Key: ability.8010.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534674
+    m_Key: ability.8010.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534675
+    m_Key: ability.8011.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534676
+    m_Key: ability.8011.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534677
+    m_Key: ability.8011.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534678
+    m_Key: ability.8011.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534679
+    m_Key: ability.8012.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534680
+    m_Key: ability.8012.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534681
+    m_Key: ability.8012.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Key: ability.8012.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534683
+    m_Key: ability.8012.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534684
+    m_Key: ability.8012.skill.1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534685
+    m_Key: ability.8013.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534686
+    m_Key: ability.8013.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534687
+    m_Key: ability.8013.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534688
+    m_Key: ability.8013.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534689
+    m_Key: ability.8013.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534690
+    m_Key: ability.8014.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534691
+    m_Key: ability.8014.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534692
+    m_Key: ability.8014.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534693
+    m_Key: ability.8015.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534694
+    m_Key: ability.8015.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534695
+    m_Key: ability.8016.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534696
+    m_Key: ability.8016.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534697
+    m_Key: ability.8016.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534698
+    m_Key: ability.8016.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534699
+    m_Key: ability.8017.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534700
+    m_Key: ability.8017.flavor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Key: ability.8017.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534702
+    m_Key: ability.8017.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534703
+    m_Key: ability.8018.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Key: ability.8018.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534705
+    m_Key: ability.8018.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534706
+    m_Key: ability.8018.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534707
+    m_Key: ability.8019.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534708
+    m_Key: ability.8019.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534709
+    m_Key: ability.8019.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534710
+    m_Key: ability.8019.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534711
+    m_Key: ability.8019.skill.0.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534712
+    m_Key: ability.8020.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534713
+    m_Key: ability.8020.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Key: ability.8020.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534715
+    m_Key: ability.8020.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534716
+    m_Key: ability.8021.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534717
+    m_Key: ability.8021.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534718
+    m_Key: ability.8021.skill.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534719
+    m_Key: ability.8021.skill.0.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534720
+    m_Key: ability.8021.skill.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534721
+    m_Key: ability.8021.skill.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534722
+    m_Key: ability.8021.skill.3.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534723
+    m_Key: ability.8999.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534724
+    m_Key: ability.8999.summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534725
+    m_Key: ability.8999.passive.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534726
+    m_Key: ability.8999.passive.0.desc
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267075

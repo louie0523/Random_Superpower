@@ -51,20 +51,27 @@ public class SettingDef
     public string ButtonText;
     /// <summary>버튼 글자가 바뀌는 경우 (예: 한 번 더 누르면 초기화) — 있으면 ButtonText 대신</summary>
     public Func<string> ButtonTextF;
-    public string ButtonLabel() => ButtonTextF != null ? ButtonTextF() : ButtonText ?? "";
+    public string ButtonLabel() => ButtonTextF != null ? ButtonTextF() : SetLoc.T($"set.{Key}.btn", ButtonText ?? "");
+
+    // ── 번역 (LangTable에 키가 없으면 위의 한국어 그대로) ──
+    /// <summary>고르기 칸 글자를 set.{키}.opt{번호}로 번역할지 — 해상도 · 마이크처럼 PC마다 다른 목록은 false</summary>
+    public bool LocOptions = true;
+    public string LabelText => SetLoc.T($"set.{Key}", Label);
+    public string NoteText => string.IsNullOrEmpty(Note) ? null : SetLoc.T($"set.{Key}.note", Note);
+    public string OptionText(string[] o, int i) => LocOptions ? SetLoc.T($"set.{Key}.opt{i}", o[i]) : o[i];
 
     public string ValueText()
     {
         switch (Kind)
         {
-            case SettingKind.Toggle: return GetB() ? "켜짐" : "꺼짐";
+            case SettingKind.Toggle: return GetB() ? SetLoc.On : SetLoc.Off;
             case SettingKind.Slider:
                 float v = GetF();
                 return Format != null ? Format(v) : (Whole ? $"{Mathf.RoundToInt(v)}" : $"{v:0.00}");
             case SettingKind.Choice:
                 var o = Options();
                 int i = GetI();
-                return o != null && i >= 0 && i < o.Length ? o[i] : "(직접)";
+                return o != null && i >= 0 && i < o.Length ? OptionText(o, i) : SetLoc.T("set.ui.custom", "(직접)");
             case SettingKind.Key: return KeyBinds.Name(GetK());
             case SettingKind.Action: return ButtonLabel();
         }
@@ -108,7 +115,8 @@ public static class SettingsRegistry
         _all = new List<SettingDef>();
 
         // ══════════ 일반 ══════════
-        Choice("lang", "general", "언어", () => LanguageOptions.Names, () => LanguageOptions.Index, i => LanguageOptions.Index = i);
+        Choice("lang", "general", "언어", () => LanguageOptions.Names, () => LanguageOptions.Index, i => LanguageOptions.Index = i)
+            .LocOptions = false;     // 언어 이름은 그 언어 글자 그대로
         Toggle("game.skillRelease", "general", "스킬 — 뗄 때 쓰기", () => GameSettings.SkillOnRelease, b => GameSettings.SkillOnRelease = b,
                "끄면 누르는 순간 씀");
         Toggle("game.dashLook", "general", "대시 — 보는 방향으로", () => GameSettings.DashToLook, b => GameSettings.DashToLook = b,
@@ -120,11 +128,13 @@ public static class SettingsRegistry
         Choice("gfx.window", "graphics", "화면 모드", () => GraphicsOptions.WindowNames, () => GraphicsOptions.Window, i => GraphicsOptions.Window = i,
                "에디터에선 적용 안 됨 (빌드에서만)");
         Choice("gfx.resolution", "graphics", "해상도", () => GraphicsOptions.ResolutionNames, () => GraphicsOptions.ResolutionIndex, i => GraphicsOptions.ResolutionIndex = i,
-               "에디터에선 적용 안 됨 (빌드에서만)");
+               "에디터에선 적용 안 됨 (빌드에서만)").LocOptions = false;
         Toggle("gfx.vsync", "graphics", "수직 동기", () => GraphicsOptions.VSync, b => GraphicsOptions.VSync = b, "켜면 FPS 제한은 무시됨");
-        Choice("gfx.fps", "graphics", "FPS 제한", () => GraphicsOptions.FpsNames, () => GraphicsOptions.FpsIndex, i => GraphicsOptions.FpsIndex = i)
-            .Visible = () => !GraphicsOptions.VSync;
-        Choice("gfx.quality", "graphics", "품질", () => QualitySettings.names, () => GraphicsOptions.Quality, i => GraphicsOptions.Quality = i);
+        var fps = Choice("gfx.fps", "graphics", "FPS 제한", () => GraphicsOptions.FpsNames, () => GraphicsOptions.FpsIndex, i => GraphicsOptions.FpsIndex = i);
+        fps.Visible = () => !GraphicsOptions.VSync;
+        fps.LocOptions = false;      // 숫자 — '제한 없음'만 GraphicsOptions에서 번역
+        Choice("gfx.quality", "graphics", "품질", () => QualitySettings.names, () => GraphicsOptions.Quality, i => GraphicsOptions.Quality = i)
+            .LocOptions = false;     // 품질 이름은 Project Settings > Quality 이름 그대로
         Slider("gfx.scale", "graphics", "렌더 스케일", () => GraphicsOptions.RenderScale, v => GraphicsOptions.RenderScale = v, 0.5f, 1f, Pct,
                note: "낮추면 흐려지고 빨라짐");
         Choice("gfx.shadows", "graphics", "그림자", () => GraphicsOptions.ShadowNames, () => GraphicsOptions.Shadows, i => GraphicsOptions.Shadows = i);
@@ -197,7 +207,7 @@ public static class SettingsRegistry
                () => (int)VoiceSettings.Mode, i => VoiceSettings.Mode = (MicMode)i);
         Slider("voice.vad", "voice", "목소리 감지 민감도", () => VoiceSettings.OpenMicThreshold, v => VoiceSettings.OpenMicThreshold = v,
                0.001f, 0.1f, v => $"{v:0.000}", note: "왼쪽일수록 예민").Visible = () => VoiceSettings.Mode == MicMode.OpenMic;
-        Choice("voice.mic", "voice", "마이크", MicNames, MicIndex, SetMic);
+        Choice("voice.mic", "voice", "마이크", MicNames, MicIndex, SetMic).LocOptions = false;   // 장치 이름
         Toggle("voice.matchMute", "voice", "경기 마이크 음소거", () => VoiceSettings.MatchMuted, b => VoiceSettings.MatchMuted = b);
         Toggle("voice.teamMute", "voice", "팀 마이크 음소거", () => VoiceSettings.TeamMuted, b => VoiceSettings.TeamMuted = b)
             .Visible = () => VoiceChat.TeamAvailable;
@@ -271,9 +281,9 @@ public static class SettingsRegistry
             ButtonTextF = () =>
             {
                 float t = Time.unscaledTime;
-                if (t < doneUntil) return "완료!";
-                if (t < armedUntil) return "한 번 더 누르면 초기화";
-                return button;
+                if (t < doneUntil) return SetLoc.T("set.ui.done", "완료!");
+                if (t < armedUntil) return SetLoc.T("set.ui.confirm_reset", "한 번 더 누르면 초기화");
+                return SetLoc.T($"set.{key}.btn", button);
             },
             Run = () =>
             {
@@ -313,7 +323,7 @@ public static class SettingsRegistry
     {
         var d = UnityEngine.Microphone.devices;
         var r = new string[d.Length + 1];
-        r[0] = "시스템 기본";
+        r[0] = SetLoc.T("set.voice.mic.default", "시스템 기본");
         Array.Copy(d, 0, r, 1, d.Length);
         return r;
     }

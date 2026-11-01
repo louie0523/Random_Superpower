@@ -579,7 +579,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072777
-    m_Localized: Instead of being able to drain life, convert {0}% of the drained
+    m_Localized: Instead of being unable to drain life, convert {0}% of the drained
       amount into damage.
     m_Metadata:
       m_Items: []
@@ -692,7 +692,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Lifesteal {0}% of damage dealt on hit
+    m_Localized: Steal {0}% of damage dealt on hit
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -763,6 +763,1685 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5887265069445122
     m_Localized: New round after {0} seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183884423168
+    m_Localized: C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171904
+    m_Localized: B
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171905
+    m_Localized: A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171906
+    m_Localized: S
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171907
+    m_Localized: Treatment {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171908
+    m_Localized: evolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171909
+    m_Localized: Treatment {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171910
+    m_Localized: Enhance {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171911
+    m_Localized: From Lesson 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171912
+    m_Localized: Class selection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171913
+    m_Localized: Time remaining {0} seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171914
+    m_Localized: "\u21BB Refresh ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171915
+    m_Localized: NO. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171916
+    m_Localized: One-line summary by ability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171917
+    m_Localized: Another player is choosing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171918
+    m_Localized: '{0} people remaining'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171919
+    m_Localized: Revenge time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171920
+    m_Localized: Kill the {0} that killed you within {1} seconds!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171921
+    m_Localized: "Revenge successful! Movement Speed \u200B\u200B\xB7 Max Health
+      \xB7 Attack Power +{0}% until death!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171922
+    m_Localized: Death Note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171923
+    m_Localized: "Heart attack after {0} \u2014 {1} seconds"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171924
+    m_Localized: common
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171925
+    m_Localized: graphics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171926
+    m_Localized: sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171927
+    m_Localized: operation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171928
+    m_Localized: Aiming point
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171929
+    m_Localized: "Chat \xB7 Voice"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171930
+    m_Localized: "HUD \xB7 Accessibility"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171931
+    m_Localized: language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171932
+    m_Localized: "Skill \u2014 Use when detaching"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171933
+    m_Localized: If you turn it off, it uses the moment you press it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171934
+    m_Localized: "Dash \u2014 In the direction you are looking"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171935
+    m_Localized: If turned off, it moves in the direction of movement (only applies
+      to dash in the direction of movement)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171936
+    m_Localized: Pick up weapons automatically
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171937
+    m_Localized: If you turn it off, pick it up with the interaction key (Souls and
+      Stones always pick up automatically)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171938
+    m_Localized: Screen mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171939
+    m_Localized: Not applied in editor (only in build)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171940
+    m_Localized: resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171941
+    m_Localized: Not applied in editor (only in build)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171942
+    m_Localized: Vertical synchronization
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171943
+    m_Localized: If turned on, the FPS limit is ignored.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171944
+    m_Localized: FPS limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171945
+    m_Localized: quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171946
+    m_Localized: Render scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171947
+    m_Localized: Lowering it makes it blurry and faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171948
+    m_Localized: shadow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171949
+    m_Localized: Field of View (FOV)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171950
+    m_Localized: "Vertical Dimensions \u2014 Default 75"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366208
+    m_Localized: entire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366209
+    m_Localized: sound effects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366210
+    m_Localized: music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366211
+    m_Localized: Voice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366212
+    m_Localized: UI sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366213
+    m_Localized: Mouse sensitivity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366214
+    m_Localized: Invert mouse up and down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366215
+    m_Localized: Set all keys to default values
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366216
+    m_Localized: default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366217
+    m_Localized: "Voice keys (Chat \xB7 Voice Tab) rotate together \xB7 If the same
+      key is entered, the keys for the two actions are swapped"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366218
+    m_Localized: Show aiming point
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366219
+    m_Localized: Same aiming point on all weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366220
+    m_Localized: color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366221
+    m_Localized: outline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366222
+    m_Localized: Thickness of the border
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366223
+    m_Localized: Border thickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366224
+    m_Localized: middle dot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366225
+    m_Localized: Dot size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366226
+    m_Localized: Dot thickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366227
+    m_Localized: inner line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366228
+    m_Localized: inner line length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366229
+    m_Localized: inner line thickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366230
+    m_Localized: Inner line spacing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366231
+    m_Localized: Inner line thickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366232
+    m_Localized: "Inner line \u2014 spreads when moved"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366233
+    m_Localized: "Inner line \u2014 spreads when shot"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366234
+    m_Localized: outer line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366235
+    m_Localized: Outer line length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366236
+    m_Localized: Outer line thickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366237
+    m_Localized: Outer line spacing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366238
+    m_Localized: Outer line thickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366239
+    m_Localized: "Outer line \u2014 spreads when moved"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366240
+    m_Localized: "Outer line \u2014 spreads when shot"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366241
+    m_Localized: one
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366242
+    m_Localized: Circle size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366243
+    m_Localized: Circle thickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366244
+    m_Localized: Circle intensity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366245
+    m_Localized: "Circle \u2014 spreads when moved"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366246
+    m_Localized: "Circle \u2014 Spreads when shot"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366247
+    m_Localized: T-shape (no top line)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366248
+    m_Localized: The unfolding century
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366249
+    m_Localized: Show chat window
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366250
+    m_Localized: Even if you turn it off, you can see it if you open it with Enter.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366251
+    m_Localized: Microphone method
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366252
+    m_Localized: Press and speak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366253
+    m_Localized: Open Microphone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366254
+    m_Localized: Voice detection sensitivity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366255
+    m_Localized: The further to the left, the more sensitive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366256
+    m_Localized: mike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366257
+    m_Localized: Mute game microphone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366258
+    m_Localized: Team microphone mute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366259
+    m_Localized: Game voice size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366260
+    m_Localized: Team Voice Size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366261
+    m_Localized: "Game \u2014 Press and speak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366262
+    m_Localized: Game microphone mute key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366263
+    m_Localized: "Team \u2014 Press and speak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366264
+    m_Localized: Team microphone mute key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366265
+    m_Localized: Open Voice Settings Quickly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366266
+    m_Localized: Voice Key default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366267
+    m_Localized: default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366268
+    m_Localized: "Return to T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366269
+    m_Localized: HUD size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366270
+    m_Localized: Damage numbers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366271
+    m_Localized: Name above the head
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366272
+    m_Localized: Health bar above your head
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366273
+    m_Localized: "Screen shaking (when hit \xB7 explosion)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366274
+    m_Localized: Screen jiggling when walking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366275
+    m_Localized: Reduce if you get motion sickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366276
+    m_Localized: Screen flashing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366277
+    m_Localized: Hit Stop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366278
+    m_Localized: red border color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366279
+    m_Localized: Change if it is difficult to distinguish colors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366280
+    m_Localized: from now on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366281
+    m_Localized: back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366282
+    m_Localized: left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366283
+    m_Localized: right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366284
+    m_Localized: Jump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366285
+    m_Localized: Basic attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366286
+    m_Localized: Skill 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366287
+    m_Localized: Skill 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366288
+    m_Localized: Skill 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366289
+    m_Localized: Ultimate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366290
+    m_Localized: Random ability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366291
+    m_Localized: Random Ability 2 (Joker)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560512
+    m_Localized: "Interaction (Altar \xB7 Chest \xB7 Picking up)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560513
+    m_Localized: Discard weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560514
+    m_Localized: Weapon No. 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560515
+    m_Localized: Weapon No. 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560516
+    m_Localized: Weapon No. 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560517
+    m_Localized: Weapon No. 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560518
+    m_Localized: Weapon No. 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560519
+    m_Localized: Weapon No. 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560520
+    m_Localized: Weapon No. 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560521
+    m_Localized: Inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560522
+    m_Localized: store
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560523
+    m_Localized: Ability Window
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560524
+    m_Localized: Chatting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560525
+    m_Localized: standing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560526
+    m_Localized: Left click
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560527
+    m_Localized: Right-click
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560528
+    m_Localized: Wheel click
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560529
+    m_Localized: Mouse side 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560530
+    m_Localized: Mouse side 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560531
+    m_Localized: Left Shift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560532
+    m_Localized: Right Shift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560533
+    m_Localized: Left Ctrl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560534
+    m_Localized: Left Alt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560535
+    m_Localized: Full screen (no border)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560536
+    m_Localized: Full screen (exclusive)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560537
+    m_Localized: Window mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560538
+    m_Localized: Fear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560539
+    m_Localized: lowness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560540
+    m_Localized: middle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560541
+    m_Localized: height
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560542
+    m_Localized: Red (default)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560543
+    m_Localized: yellow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560544
+    m_Localized: Jahong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560545
+    m_Localized: Teal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560546
+    m_Localized: white
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560547
+    m_Localized: abstract
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560548
+    m_Localized: light green
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560549
+    m_Localized: yellow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560550
+    m_Localized: Teal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560551
+    m_Localized: pink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560552
+    m_Localized: red
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560553
+    m_Localized: black
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560554
+    m_Localized: Copy code to clipboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560555
+    m_Localized: Paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560556
+    m_Localized: There is no crosshair code on the clipboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560557
+    m_Localized: Reset to default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560558
+    m_Localized: Put the same into other weapons as well.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560559
+    m_Localized: No restrictions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560560
+    m_Localized: Loading...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560561
+    m_Localized: Number pad {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560562
+    m_Localized: preparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560563
+    m_Localized: "Press the key\u2026 (Esc Cancel)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560564
+    m_Localized: (directly)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560565
+    m_Localized: complete!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560566
+    m_Localized: Press one more time to reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560567
+    m_Localized: System Basics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560568
+    m_Localized: setting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560569
+    m_Localized: Close (Esc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560570
+    m_Localized: "The voice key is in the 'Chat \xB7 Voice' tab."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560571
+    m_Localized: gun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560572
+    m_Localized: "Bow \xB7 Staff"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560573
+    m_Localized: vicinity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560574
+    m_Localized: '[Same crosshair on all weapons] is enabled, so all crosshairs are
+      used.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560575
+    m_Localized: Change preview background
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560576
+    m_Localized: View spreading movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560577
+    m_Localized: Copy code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560578
+    m_Localized: Paste code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560579
+    m_Localized: With this weapon as the default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560580
+    m_Localized: The same applies to other weapons.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560581
+    m_Localized: menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560582
+    m_Localized: Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560583
+    m_Localized: setting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560584
+    m_Localized: Exiting the room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560585
+    m_Localized: Game over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945284591616
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340352
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534723
+    m_Localized: Versatile incompetence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534725
+    m_Localized: Versatile incompetence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534726
+    m_Localized: Surprisingly ordinary and incompetent.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340353
+    m_Localized: blacksmith
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340354
+    m_Localized: 'You are the blacksmith.
+
+
+      The enchantment limit for weapon
+      items increases to 100.
+
+
+      You can spend Soul to set the next enchantment
+      to a desired value.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Localized: 'The enchantment limit increases up to 100.
+
+
+      You can specify
+      the value of the next enchantment by consuming Soul.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340357
+    m_Localized: a well-trained body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340358
+    m_Localized: 'Your body is suitable for bellows work.
+
+
+      HP + {0:all}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Localized: Crushing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340360
+    m_Localized: Swing a hammer forward to deal {dmg:SmashCoef+SmashFlat} damage,
+      and stun enemies hit for 0.25 seconds. Additionally, enemies hit gain a status
+      effect that reduces their armor by {b:ArmorBreakPct}% for 5 seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340361
+    m_Localized: blast furnace eruption
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340363
+    m_Localized: It reaches maximum power when HP is reduced to 30%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340364
+    m_Localized: Descendants of Fire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340365
+    m_Localized: 'For {b:UltDuration} seconds, your body is enveloped in fire, and
+      you enter the Descendant of Fire state.
+
+
+      Enemies who strike you with
+      melee attacks gain the Burn effect, and all item effects are increased by 25%.
+      Additionally, the cooldown of Furnace is reset every time your health drops
+      by 15%, such as at 85%, 70%, 55%, etc.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Localized: Among Descendants of Fire, the consumption of Enchant Stones due
+      to Enchant is reduced by half.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340367
+    m_Localized: Gun Master
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340369
+    m_Localized: Gun enchantment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340370
+    m_Localized: You can enchant firearms.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340372
+    m_Localized: "When equipped with a firearm, Attack Speed \u200B\u200Bincreases
+      by {0}%, Movement Speed \u200B\u200Bby {1}, and Critical Damage increases by
+      an additional {2}%.\n\nThe default weapon becomes 'Glock'."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340373
+    m_Localized: roll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340374
+    m_Localized: 'Roll forward to enter Evasion for 1 second.
+
+
+      Replenish ammo
+      by 20%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340375
+    m_Localized: precision shooting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Localized: 'Zoom in for {b:AimTimeout} seconds and slow your movement speed.
+
+
+      Instead,
+      the next bullet deals {b:AimBonusPct:all}% additional damage upon hitting and
+      always hits as a critical strike.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340377
+    m_Localized: Go into the bathroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340378
+    m_Localized: "Enter 'Spray' state for 12 seconds, increasing attack speed by
+      {b:UltAtkSpeedPct:all}% and gaining 20% \u200B\u200Blifesteal. During the duration,
+      when firing weapons, bullet spread increases by 30% instead of ricocheting
+      {b:UltRicochets:all} times against walls."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340379
+    m_Localized: Death Knight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340380
+    m_Localized: 'You are someone who died long ago but has returned for some reason.
+
+
+      A
+      Death Knight''s abilities change according to the ''name'' assigned to them.
+
+
+      You
+      might have been just a peasant, or you might have been a great one.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340383
+    m_Localized: 'Current Name : {x:nametag}
+
+
+      Additional Stats : {x:stats}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340384
+    m_Localized: The body of the deceased
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340385
+    m_Localized: When your health reaches 50%, you enter 'Ghost' status for {b:GhostTime}
+      seconds and ignore all physical hitboxes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340386
+    m_Localized: Sword of the Underworld
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340387
+    m_Localized: Slash forward with evil power, dealing {dmg:SlashCoef+SlashFlat}
+      damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340388
+    m_Localized: '{x:slash}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340389
+    m_Localized: riding
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340390
+    m_Localized: 'Mount an undead horse for {b:MountDuration} seconds. While mounted,
+      your movement speed increases by {b:MountSpeed} and damage taken is reduced
+      by {b:MountDamageReduce}%.
+
+
+      Reuse while mounted to quickly dash forward,
+      dealing {dmg:ChargeCoef} damage.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340391
+    m_Localized: '{x:mount}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Localized: '{x:ult}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340395
+    m_Localized: glutton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340396
+    m_Localized: 'You are hungry.
+
+
+      And you have a stomach that can swallow
+      anything.
+
+
+      You can swallow anything and become a massive being.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340397
+    m_Localized: digestion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340398
+    m_Localized: glutton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340399
+    m_Localized: 'Eat a weapon to permanently gain {b:AbsorbRatio:pct}% of your ability
+      points.
+
+
+      {x:digest}
+
+
+      {x:absorbed}
+
+
+      {x:specials}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340400
+    m_Localized: "You gain based on Weapon Base Stat \xD7 Absorb Ratio {b:AbsorbRatio*100:all}%
+      \xD7 Grade Multiplier.\n\nYou can gain up to {b:AbsorbEnchants*100:all}% of
+      Enchantment Effects, and consuming special weapons grants a permanent special
+      effect.\n\nDigestion time is reduced by up to {b:DigestMul*100}% depending
+      on the skill level."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Localized: Bite forward to deal {dmg:DevourCoef+DevourFlat} damage. If the
+      damaged target dies within 1 second, gain additional souls and prepare <b>Spit
+      Out</b>.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340403
+    m_Localized: Recovers health equal to {b:DevourHealPct}% of the damage dealt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340406
+    m_Localized: 'Base damage is {dmg:SpitCoef+SpitFlat}, and deals additional damage
+      equal to {b:InheritKillAtkPct}% of the target''s attack power if the target
+      is a player, or {b:InheritWeaponAtkPct}% if the target is a weapon.
+
+
+      May
+      be affected by random enemy abilities or weapon enchantments.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340407
+    m_Localized: Ingestion of the unhealthy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340408
+    m_Localized: Consume the weapon held in your hand.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Localized: starving monster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Localized: 'Unleash {b:MonsterCount:all} hungry beasts to automatically bite
+      enemies within a radius of {b:MonsterRadius:all}m for {b:UltDuration:all} seconds,
+      dealing a Gluttony attack with {b:MonsterPowerMul*100}% effect.
+
+
+      If
+      you kill a player with a Gluttony attack, the duration increases by {b:UltKillExtend}
+      seconds.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340411
+    m_Localized: "The Monster has a 3-second attack cooldown per target and deals
+      {b:MonsterLowHpBonus:all}% additional damage to targets with 30% or less health.\n\nDuring
+      the duration, Attack Power, Attack Speed, and Movement Speed \u200B\u200Bare
+      slightly increased."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340412
+    m_Localized: Shidou Walker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Localized: 'A shadow follows the Shadow Walker.
+
+
+      When not in combat,
+      charge <b>Darkness</b> over {b:DarkChargeTime:all} seconds.
+
+
+      When attacking
+      an enemy, if <b>Darkness</b> is charged, blind the target for {b:BlindTime:all}
+      seconds.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340417
+    m_Localized: 'Activates Shadow Weapon for {b:WeaponDuration:all} seconds.
+
+
+      When
+      attacking with the weapon, your illusion attacks in the same direction with
+      the same weapon after a short delay, dealing {b:EchoPct:all}% of your base
+      power as damage.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340418
+    m_Localized: Enemies damaged by Shadow Weapons are slowed by 10% for 1 second.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340419
+    m_Localized: Shadow movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340421
+    m_Localized: Shadow Hand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340422
+    m_Localized: 'Leaves a <b>Shadow Hand</b> where you are looking. If there are
+      enemies within {b:HandRadius:all}m of the <b>Shadow Hand</b>, the hand extends
+      outward.
+
+
+      On hit, it deals {dmg:HandCoef+HandFlat} damage and roots
+      for {b:HandRoot:all} seconds.
+
+
+      You can leave up to {b:HandMax:all} Shadow
+      Hands on the map at once.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Localized: An enemy bound by a <b>shadow hand</b> within {b:HandImmune:all}
+      seconds cannot be bound by another <b>shadow hand</b>.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340426
+    m_Localized: The Shadow Walker can locate all enemies within the shadow area.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340427
+    m_Localized: Master of Weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340428
+    m_Localized: 'You are a Master of Weapons.
+
+
+      Unlike other players, you
+      can carry up to 8 weapons.
+
+
+      Even when you are not holding them, weapons
+      float beside you and fight.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340429
+    m_Localized: Mugu storage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340430
+    m_Localized: The maximum number of weapons you can carry increases to {b:SlotCount:all}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340431
+    m_Localized: Master of Weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340432
+    m_Localized: 'Weapons other than the one currently equipped float beside you.
+
+
+      During
+      combat, attack in the direction of the last enemy the player struck every {b:OrbitInterval:all}
+      seconds, proportional to the weapon''s attack speed, dealing damage equal to
+      {b:OrbitCoef:all} + {b:WeaponAtkPct:all}% of weapon damage.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340433
+    m_Localized: "The maximum range is {b:OrbitRange:all}m, and firearms cannot be
+      controlled by the Master of Weapons.\n\nBows and staffs are based on a 100%
+      charge time.\n\nSpecial enchantments on the corresponding weapon have a 50%
+      chance of activating, and their values \u200B\u200Band duration are also halved.
+      (Lifesteal does not apply.)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340434
+    m_Localized: collector
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340435
+    m_Localized: The amount of Enchant Stones obtained increases by {b:StoneGain:all}
+      times.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340436
+    m_Localized: command
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340437
+    m_Localized: As Master of Weapons, floating weapons rush in the direction they
+      are facing, dealing damage equal to the number of weapons X {dmg:CommandCoef}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340439
+    m_Localized: For {b:HasteDuration:all} seconds, the base attack time of Weapon
+      Master is reduced by {b:HasteIntervalPct:all}% and command speed is increased
+      by 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340440
+    m_Localized: dancer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340441
+    m_Localized: 'Fires all weapons currently floating as Weapon Master at the location
+      you are looking for for {b:DancerDuration:all} seconds.
+
+
+      During this
+      time, the damage of the weapons is reduced by up to {b:DancerCoef:all}%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340443
+    m_Localized: 'You are the Joker of the game.
+
+
+      You always create major
+      variables and possess unpredictable abilities.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340446
+    m_Localized: mirth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Localized: Soul gain becomes {b:SoulGain:all} times.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340448
+    m_Localized: Joker Draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340449
+    m_Localized: Teleports backward, leaving a Joker card at your original location.
+      If stepped on, the card explodes after a short delay, dealing {dmg:BlastCoef+BlastFlat}
+      damage and applying {b:BlastSlowPct:all}% slow for 2 seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340450
+    m_Localized: There can be up to {b:CardMax:all} cards at a time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340451
+    m_Localized: One Card!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340452
+    m_Localized: Adds {b:OneCardSeconds:all} seconds to the cooldown of all normal
+      skills (excluding ultimate and random abilities) for all enemies within {b:OneCardRadius:all}m
+      of them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340453
+    m_Localized: Substitute card
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Localized: 'Summons an identical clone of yourself with random abilities and
+      items forward for {b:CloneDuration:all} seconds.
+
+
+      The clone follows
+      the nearest enemy by default.
+
+
+      When the clone dies or you press the
+      Ultimate key again, it explodes, dealing {b:CloneBlastMul*100:all}% Joker Draw
+      explosion damage to nearby enemies.
+
+
+      The clone attacks enemies within
+      10m with its current weapon.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Localized: Clone reduces weapon damage by 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Localized: Runner's High
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340459
+    m_Localized: You are very fast! But never stop!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340460
+    m_Localized: Runner's Qualities
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Localized: Instead of increasing your speed significantly, you take damage
+      whenever you stop!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340463
+    m_Localized: Movement speed and health increase, and melee weapon damage increases
+      significantly, but you can only move to the sides.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340464
+    m_Localized: The power of the blue crab
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340465
+    m_Localized: Health and movement speed increase by 60%, and melee weapon damage
+      increases by 100%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340466
+    m_Localized: social phobia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340467
+    m_Localized: If I am within 5 meters of someone for more than 3 seconds, I get
+      so embarrassed I explode!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340468
+    m_Localized: Even if I have to go...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534656
+    m_Localized: Kills one random player upon death.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534657
+    m_Localized: plural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534658
+    m_Localized: 'Upon death, you enter ''Revenge Time'' for 1 minute.
+
+
+      During
+      ''Revenge Time'', if you defeat the enemy who killed you, you gain a very powerful
+      effect!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534659
+    m_Localized: fish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Localized: Flap flap.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534661
+    m_Localized: Death Regression
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534662
+    m_Localized: 'Upon death, you revive immediately on the spot and reduce the Soul
+      of the enemy who killed you.
+
+
+      Additionally, increase the skill cooldown
+      of all enemies by 8 seconds!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Localized: Select one player to have them commit suicide after 60 seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534665
+    m_Localized: Note-taking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534668
+    m_Localized: Select one player and inflict the 'Curse' status on them for 20
+      seconds, preventing them from communicating. Additionally, they receive a 'Seal'
+      effect for up to 999 seconds while alive.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534670
+    m_Localized: I've hated you for a long time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534671
+    m_Localized: Acting cute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534673
+    m_Localized: Acting cute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534674
+    m_Localized: Ppuing ppuing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534675
+    m_Localized: Storm of Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534678
+    m_Localized: Sends one target into a storm of time and space.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534679
+    m_Localized: Chess's giant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534680
+    m_Localized: 'Collect 1 ''Pawn'' upon defeating a player.
+
+
+      Collect 6 or
+      more Pawns to become a ''Chess Colossus''.
+
+
+      (Current Pawns {x:pawns}
+      / {x:pawnsneed} )'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Localized: The pawn is promoted to become a <b>chess giant</b>.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534683
+    m_Localized: Knight's movement method
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534684
+    m_Localized: Jump forward twice with the Knight's movement, and reuse within
+      3 seconds to jump diagonally to the left/right.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534687
+    m_Localized: 'Ultimate cooldown decreases 40% faster.
+
+
+      Using Ultimate
+      5 times kills half of the living players. ( Current : {x:stack})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534689
+    m_Localized: 50% of all life....
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534690
+    m_Localized: Beomgol's Will
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534691
+    m_Localized: When your health drops to 1 or less, you gain massive stats for
+      a short time and do not die.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534692
+    m_Localized: When your health drops to 1 or less, you gain massive stats for
+      a short time and do not die.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534693
+    m_Localized: assassin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534694
+    m_Localized: 'Damage dealt to targets when they are not looking at you increases
+      by 100%.
+
+
+      Becomes invisible for 3 seconds when used.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534695
+    m_Localized: Invisible cloak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534696
+    m_Localized: 'You can decide whether to use the Cloak of Invisibility by using
+      a skill.
+
+
+      While using the Cloak of Invisibility, you become ''Invisible'',
+      so your body (excluding weapons) is invisible, but damage dealt is reduced
+      by 50%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534697
+    m_Localized: Putting on a cloak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534698
+    m_Localized: I hope no one finds me.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534700
+    m_Localized: Select one target within range, and there is a 50% chance that your
+      Soul amount will become equal to that of the target.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Localized: Shall we call it a draw..?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534702
+    m_Localized: Make a bet with the target you are looking at, and there is a 50%
+      chance that your soul will be identical to the target's.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534703
+    m_Localized: Earth throw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Localized: When used, you rise briefly, then throw 'Earth' at the spot you
+      were looking at just before using the skill.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534705
+    m_Localized: Earth throw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534706
+    m_Localized: 'After designating a spot in front, ascend high into the sky and
+      throw a <b>Earth<b> at that location.
+
+
+      Return to the casting location
+      after use.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534707
+    m_Localized: Hair loss beam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534708
+    m_Localized: When used, it fires a beam forward to turn the target into a 'comrade'.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534709
+    m_Localized: Hair loss beam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534710
+    m_Localized: Make the target a 'comrade'.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534711
+    m_Localized: '''Comrades'' cannot harm each other, and a special event occurs
+      when all players become ''Comrades''.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534712
+    m_Localized: Let's go to the future
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534713
+    m_Localized: 'When used, it pulls one target, grabs them, and charges.
+
+
+      No
+      one knows where the destination is.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Localized: Let's go to the future together!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534715
+    m_Localized: When used, it takes one target to the future.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534716
+    m_Localized: Legendary Dragon Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534717
+    m_Localized: 'When using a skill, you shout a Legendary Dragon Language.
+
+
+      If
+      you shout it 30 times, you become a Legendary Dragon.
+
+
+      If you survive
+      for 3 minutes, you win immediately.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534718
+    m_Localized: Legendary Dragon Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534719
+    m_Localized: His name is..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534720
+    m_Localized: gliding
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534721
+    m_Localized: Fus Ro Da
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534722
+    m_Localized: Breath of the End
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534724
+    m_Localized: 'Oh no! This ability has no effect.
+
+
+      Try using only your
+      own abilities!'
     m_Metadata:
       m_Items: []
   references:

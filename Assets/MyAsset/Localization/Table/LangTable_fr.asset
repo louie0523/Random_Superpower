@@ -573,8 +573,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072777
-    m_Localized: "Au lieu de pouvoir drainer la vie, convertissez {0}% de la quantit\xE9
-      drain\xE9e en d\xE9g\xE2ts."
+    m_Localized: "Au lieu d'\xEAtre incapable de drainer la vie, convertissez {0}%
+      de la quantit\xE9 drain\xE9e en d\xE9g\xE2ts."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072778
@@ -688,7 +688,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: "Vol de vie {0}% des d\xE9g\xE2ts inflig\xE9s lors d'un coup"
+    m_Localized: "Voler {0}% des d\xE9g\xE2ts inflig\xE9s lors d'un coup"
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -761,6 +761,1549 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5887265069445122
     m_Localized: Nouvelle manche dans {0} secondes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183884423168
+    m_Localized: C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171904
+    m_Localized: B
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171905
+    m_Localized: A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171906
+    m_Localized: S
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171907
+    m_Localized: Traitement {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171908
+    m_Localized: "\xE9volution"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171909
+    m_Localized: Traitement {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171910
+    m_Localized: "Am\xE9liorer {0}/{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171911
+    m_Localized: "De la le\xE7on 0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171912
+    m_Localized: "S\xE9lection de classe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171913
+    m_Localized: Temps restant {0} secondes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171914
+    m_Localized: "\u21BB Actualiser ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171915
+    m_Localized: NON. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171916
+    m_Localized: "R\xE9sum\xE9 en une ligne par capacit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171917
+    m_Localized: Un autre joueur choisit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171918
+    m_Localized: '{0} personnes restantes'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171919
+    m_Localized: L'heure de la vengeance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171920
+    m_Localized: "Tuez le {0} qui vous a tu\xE9 en {1} secondes !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171921
+    m_Localized: "Vengeance r\xE9ussie ! Vitesse de d\xE9placement \xB7 Sant\xE9
+      maximale \xB7 Puissance d'attaque +{0}% jusqu'\xE0 la mort !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171922
+    m_Localized: Menace de mort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171923
+    m_Localized: "Crise cardiaque apr\xE8s {0} \u2014 {1} secondes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171924
+    m_Localized: commun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171925
+    m_Localized: graphique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171926
+    m_Localized: son
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171927
+    m_Localized: "op\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171928
+    m_Localized: "Point de vis\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171929
+    m_Localized: "Chat \xB7 Voix"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171930
+    m_Localized: "HUD \xB7 Accessibilit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171931
+    m_Localized: langue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171932
+    m_Localized: "Comp\xE9tence \u2014 \xC0 utiliser lors du d\xE9tachement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171933
+    m_Localized: "Si vous l'\xE9teignez, il s'utilise d\xE8s que vous appuyez dessus."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171934
+    m_Localized: "Tirer \u2014 Dans la direction o\xF9 vous regardez"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171935
+    m_Localized: "S'il est d\xE9sactiv\xE9, il se d\xE9place dans le sens du mouvement
+      (s'applique uniquement au d\xE9placement rapide dans le sens du mouvement)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171936
+    m_Localized: Ramassez les armes automatiquement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171937
+    m_Localized: "Si vous l'\xE9teignez, ramassez-le avec la touche d'interaction
+      (les \xE2mes et les pierres sont toujours ramass\xE9es automatiquement)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171938
+    m_Localized: "Mode \xE9cran"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171939
+    m_Localized: "Non appliqu\xE9 dans l'\xE9diteur (uniquement dans la compilation)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171940
+    m_Localized: "r\xE9solution"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171941
+    m_Localized: "Non appliqu\xE9 dans l'\xE9diteur (uniquement dans la compilation)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171942
+    m_Localized: Synchronisation verticale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171943
+    m_Localized: "Si cette option est activ\xE9e, la limite de FPS est ignor\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171944
+    m_Localized: Limite FPS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171945
+    m_Localized: "qualit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171946
+    m_Localized: "\xC9chelle de rendu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171947
+    m_Localized: En baissant la vitesse, l'image devient floue et plus rapide.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171948
+    m_Localized: ombre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171949
+    m_Localized: Champ de vision (FOV)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171950
+    m_Localized: "Dimensions verticales \u2014 Valeur par d\xE9faut\_: 75"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366208
+    m_Localized: entier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366209
+    m_Localized: bruitage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366210
+    m_Localized: musique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366211
+    m_Localized: Voix
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366212
+    m_Localized: Son de l'interface utilisateur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366213
+    m_Localized: "Sensibilit\xE9 de la souris"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366214
+    m_Localized: Inverser la souris haut et bas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366215
+    m_Localized: "R\xE9initialisez toutes les cl\xE9s \xE0 leurs valeurs par d\xE9faut."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366216
+    m_Localized: "d\xE9faut"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366217
+    m_Localized: "Les touches vocales (Chat \xB7 Onglet vocal) alternent. Si la m\xEAme
+      touche est enfonc\xE9e, les touches des deux actions sont invers\xE9es."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366218
+    m_Localized: "Afficher le point de vis\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366219
+    m_Localized: "M\xEAme point de vis\xE9e sur toutes les armes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366220
+    m_Localized: couleur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366221
+    m_Localized: contour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366222
+    m_Localized: "\xC9paisseur de la bordure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366223
+    m_Localized: "\xE9paisseur de bordure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366224
+    m_Localized: point du milieu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366225
+    m_Localized: Taille du point
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366226
+    m_Localized: "\xC9paisseur du point"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366227
+    m_Localized: "ligne int\xE9rieure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366228
+    m_Localized: "longueur de la ligne int\xE9rieure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366229
+    m_Localized: "\xE9paisseur de la ligne int\xE9rieure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366230
+    m_Localized: "espacement des lignes int\xE9rieures"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366231
+    m_Localized: "\xE9paisseur de la ligne int\xE9rieure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366232
+    m_Localized: "Ligne int\xE9rieure \u2014 s'\xE9tend lorsqu'elle est d\xE9plac\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366233
+    m_Localized: "Ligne int\xE9rieure \u2014 s'\xE9tend lorsqu'elle est tir\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366234
+    m_Localized: "ligne ext\xE9rieure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366235
+    m_Localized: "Longueur de la ligne ext\xE9rieure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366236
+    m_Localized: "\xC9paisseur du contour ext\xE9rieur"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366237
+    m_Localized: "Espacement des lignes ext\xE9rieures"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366238
+    m_Localized: "\xC9paisseur du contour ext\xE9rieur"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366239
+    m_Localized: "Ligne ext\xE9rieure \u2014 s'\xE9tend lorsqu'elle est d\xE9plac\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366240
+    m_Localized: "Ligne ext\xE9rieure \u2014 s'\xE9tend lorsqu'elle est tir\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366241
+    m_Localized: un
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366242
+    m_Localized: Taille du cercle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366243
+    m_Localized: "\xC9paisseur du cercle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366244
+    m_Localized: "Intensit\xE9 du cercle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366245
+    m_Localized: "Cercle \u2014 s'\xE9tend lorsqu'il est d\xE9plac\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366246
+    m_Localized: "Cercle \u2014 S'\xE9tend lorsqu'on tire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366247
+    m_Localized: "En forme de T (sans ligne sup\xE9rieure)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366248
+    m_Localized: "Le si\xE8cle qui se d\xE9roule"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366249
+    m_Localized: "Afficher la fen\xEAtre de discussion"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366250
+    m_Localized: "M\xEAme si vous l'\xE9teignez, vous pouvez le voir si vous l'ouvrez
+      avec la touche Entr\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366251
+    m_Localized: "M\xE9thode du microphone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366252
+    m_Localized: Appuyez et parlez
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366253
+    m_Localized: Microphone ouvert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366254
+    m_Localized: "sensibilit\xE9 de d\xE9tection vocale"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366255
+    m_Localized: "Plus on se d\xE9place vers la gauche, plus la sensibilit\xE9 est
+      \xE9lev\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366256
+    m_Localized: micro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366257
+    m_Localized: Couper le micro du jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366258
+    m_Localized: "Coupure du micro de l'\xE9quipe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366259
+    m_Localized: taille de la voix du jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366260
+    m_Localized: "Taille de la voix de l'\xE9quipe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366261
+    m_Localized: "Jeu \u2014 Appuyez et parlez"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366262
+    m_Localized: touche de sourdine du microphone de jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366263
+    m_Localized: "\xC9quipe \u2014 Presse et prise de parole"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366264
+    m_Localized: "touche de coupure du micro de l'\xE9quipe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366265
+    m_Localized: "Ouvrir rapidement les param\xE8tres vocaux"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366266
+    m_Localized: "Touche vocale par d\xE9faut"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366267
+    m_Localized: "d\xE9faut"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366268
+    m_Localized: "Retour \xE0 T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366269
+    m_Localized: Taille du HUD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366270
+    m_Localized: chiffres des dommages
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366271
+    m_Localized: "Nom au-dessus de la t\xEAte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366272
+    m_Localized: "Barre de sant\xE9 au-dessus de votre t\xEAte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366273
+    m_Localized: "Secousses de l'\xE9cran (lorsqu'il est touch\xE9 ou qu'il y a une
+      explosion)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366274
+    m_Localized: "L'\xE9cran tremble lorsqu'on marche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366275
+    m_Localized: "R\xE9duisez la dose si vous \xEAtes sujet au mal des transports."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366276
+    m_Localized: "\xC9cran clignotant"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366277
+    m_Localized: "Appuyez sur Arr\xEAter"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366278
+    m_Localized: bordure rouge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366279
+    m_Localized: "Changez si les couleurs sont difficiles \xE0 distinguer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366280
+    m_Localized: "d\xE9sormais"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366281
+    m_Localized: dos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366282
+    m_Localized: gauche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366283
+    m_Localized: droite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366284
+    m_Localized: Saut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366285
+    m_Localized: Attaque de base
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366286
+    m_Localized: "Comp\xE9tence 1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366287
+    m_Localized: "Comp\xE9tence 2"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366288
+    m_Localized: "Comp\xE9tence 3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366289
+    m_Localized: Ultime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366290
+    m_Localized: "Capacit\xE9 al\xE9atoire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366291
+    m_Localized: "Capacit\xE9 al\xE9atoire 2 (Joker)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560512
+    m_Localized: "Interaction (Autel \xB7 Coffre \xB7 Ramassage)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560513
+    m_Localized: Jetez les armes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560514
+    m_Localized: "Arme n\xB0 1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560515
+    m_Localized: "Arme n\xB0 2"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560516
+    m_Localized: "Arme n\xB0 3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560517
+    m_Localized: "Arme n\xB0 4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560518
+    m_Localized: "Arme n\xB0 5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560519
+    m_Localized: "Arme n\xB0 6"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560520
+    m_Localized: "Arme n\xB0 7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560521
+    m_Localized: Inventaire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560522
+    m_Localized: magasin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560523
+    m_Localized: "Fen\xEAtre de capacit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560524
+    m_Localized: Bavardage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560525
+    m_Localized: debout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560526
+    m_Localized: clic gauche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560527
+    m_Localized: clic droit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560528
+    m_Localized: Clic de la molette
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560529
+    m_Localized: "C\xF4t\xE9 souris 1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560530
+    m_Localized: "C\xF4t\xE9 souris 2"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560531
+    m_Localized: "D\xE9calage \xE0 gauche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560532
+    m_Localized: "Changement de vitesse \xE0 droite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560533
+    m_Localized: Ctrl gauche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560534
+    m_Localized: Alt gauche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560535
+    m_Localized: "Plein \xE9cran (sans bordure)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560536
+    m_Localized: "Plein \xE9cran (exclusif)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560537
+    m_Localized: "Mode fen\xEAtr\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560538
+    m_Localized: Peur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560539
+    m_Localized: "modicit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560540
+    m_Localized: milieu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560541
+    m_Localized: hauteur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560542
+    m_Localized: "Rouge (par d\xE9faut)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560543
+    m_Localized: jaune
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560544
+    m_Localized: Jahong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560545
+    m_Localized: Sarcelle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560546
+    m_Localized: blanc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560547
+    m_Localized: abstrait
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560548
+    m_Localized: vert clair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560549
+    m_Localized: jaune
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560550
+    m_Localized: Sarcelle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560551
+    m_Localized: rose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560552
+    m_Localized: rouge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560553
+    m_Localized: noir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560554
+    m_Localized: Copier le code dans le presse-papiers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560555
+    m_Localized: Coller
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560556
+    m_Localized: "Il n'y a pas de code de r\xE9ticule dans le presse-papiers."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560557
+    m_Localized: "R\xE9initialiser par d\xE9faut"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560558
+    m_Localized: "Appliquez la m\xEAme m\xE9thode aux autres armes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560559
+    m_Localized: Aucune restriction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560560
+    m_Localized: Chargement...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560561
+    m_Localized: "Pav\xE9 num\xE9rique {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560562
+    m_Localized: "se pr\xE9parer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560563
+    m_Localized: "Appuyez sur la touche\u2026 (\xC9chap Annuler)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560564
+    m_Localized: (directement)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560565
+    m_Localized: complet!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560566
+    m_Localized: "Appuyez une nouvelle fois pour r\xE9initialiser"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560567
+    m_Localized: "Notions de base du syst\xE8me"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560568
+    m_Localized: "param\xE8tre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560569
+    m_Localized: "Fermer (\xC9chap)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560570
+    m_Localized: "La touche vocale se trouve dans l'onglet \xAB\_Chat \xB7 Voix\_\xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560571
+    m_Localized: pistolet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560572
+    m_Localized: "Arc \xB7 B\xE2ton"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560573
+    m_Localized: environs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560574
+    m_Localized: "L'option [M\xEAme r\xE9ticule sur toutes les armes] est activ\xE9e,
+      donc tous les r\xE9ticules sont utilis\xE9s."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560575
+    m_Localized: "Modifier l'arri\xE8re-plan de pr\xE9visualisation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560576
+    m_Localized: Mouvement de propagation de la vue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560577
+    m_Localized: Copier le code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560578
+    m_Localized: Coller le code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560579
+    m_Localized: "Avec cette arme comme arme par d\xE9faut"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560580
+    m_Localized: "Il en va de m\xEAme pour les autres armes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560581
+    m_Localized: menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560582
+    m_Localized: Continuer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560583
+    m_Localized: "param\xE8tre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560584
+    m_Localized: "Sortie de la pi\xE8ce"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560585
+    m_Localized: "Jeu termin\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945284591616
+    m_Localized: Sur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340352
+    m_Localized: "D\xE9sactiv\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340401
+    m_Localized: Gourmandise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340414
+    m_Localized: ombre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340452
+    m_Localized: "Ajoute {b:OneCardSeconds:all} secondes au temps de recharge de
+      toutes les comp\xE9tences normales (\xE0 l'exclusion des comp\xE9tences ultimes
+      et al\xE9atoires) pour tous les ennemis situ\xE9s \xE0 {b:OneCardRadius:all}m
+      d'eux."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534685
+    m_Localized: "existence in\xE9vitable"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534723
+    m_Localized: "Incomp\xE9tence polyvalente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534725
+    m_Localized: "Incomp\xE9tence polyvalente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534726
+    m_Localized: "\xC9tonnamment ordinaire et incomp\xE9tent."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Localized: "La limite d'enchantement passe \xE0 100.\n\nVous pouvez sp\xE9cifier
+      la valeur du prochain enchantement en consommant une \xE2me."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Localized: "\xC9crasement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340361
+    m_Localized: "\xE9ruption du haut fourneau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340362
+    m_Localized: "Projette de la lave dans un rayon de {b:FurnaceRadius} m, infligeant
+      {dmg:FurnaceCoef+FurnaceFlat} points de d\xE9g\xE2ts.\n\nPlus les points de
+      vie de l'ennemi sont bas, plus la lave est puissante, jusqu'\xE0 {b:FurnaceMaxMul}
+      fois, et a {b:BurnChance:pct} % de chances d'infliger des br\xFBlures."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340363
+    m_Localized: "Elle atteint sa puissance maximale lorsque la puissance utile est
+      r\xE9duite \xE0 30 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340364
+    m_Localized: Descendants du feu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340365
+    m_Localized: "Pendant {b:UltDuration} secondes, votre corps est envelopp\xE9
+      de flammes et vous entrez dans l'\xE9tat de Descendant du Feu.\n\nLes ennemis
+      qui vous frappent au corps \xE0 corps subissent l'effet Br\xFBlure, et tous
+      les effets des objets sont augment\xE9s de 25 %. De plus, le temps de recharge
+      de Fournaise est r\xE9initialis\xE9 \xE0 chaque fois que votre sant\xE9 diminue
+      de 15 %, par exemple \xE0 85 %, 70 %, 55 %, etc."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Localized: "Chez les Descendants du Feu, la consommation de Pierres d'Enchantement
+      due \xE0 l'Enchantement est r\xE9duite de moiti\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340368
+    m_Localized: "Vous \xEAtes le Ma\xEEtre de toutes les armes \xE0 feu. Un Ma\xEEtre
+      des armes peut enchanter toutes les armes \xE0 feu et re\xE7oit des calibrations
+      pour celles-ci."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340371
+    m_Localized: "Ma\xEEtre des armes \xE0 feu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340372
+    m_Localized: "Lorsqu'il est \xE9quip\xE9 d'une arme \xE0 feu, la vitesse d'attaque
+      augmente de {0} %, la vitesse de d\xE9placement de {1} et les d\xE9g\xE2ts
+      critiques augmentent de {2} % suppl\xE9mentaires.\n\nL'arme par d\xE9faut devient
+      le Glock."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340373
+    m_Localized: rouler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340374
+    m_Localized: "Roulez vers l'avant pour effectuer une esquive pendant 1 seconde.\n\nR\xE9cup\xE9rez
+      20 % de vos munitions."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340375
+    m_Localized: "tir de pr\xE9cision"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Localized: "Effectuez un zoom pendant {b:AimTimeout} secondes et ralentissez
+      votre vitesse de d\xE9placement.\n\nEn revanche, la prochaine balle inflige
+      {b:AimBonusPct:all}% de d\xE9g\xE2ts suppl\xE9mentaires \xE0 l'impact et inflige
+      syst\xE9matiquement un coup critique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340377
+    m_Localized: Allez dans la salle de bain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340378
+    m_Localized: "Passez en mode \xAB\_Spray\_\xBB pendant 12 secondes, augmentant
+      votre vitesse d'attaque de {b:UltAtkSpeedPct:all}% et vous octroyant 20\_%
+      de vol de vie. Pendant cette dur\xE9e, la dispersion des balles lors des tirs
+      augmente de 30\_% au lieu de ricocher {b:UltRicochets:all} fois contre les
+      murs."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340379
+    m_Localized: Chevalier de la mort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340380
+    m_Localized: "Vous \xEAtes quelqu'un qui est mort il y a longtemps et qui est
+      revenu pour une raison inconnue.\n\nLes capacit\xE9s d'un chevalier de la mort
+      varient selon le \xAB\_nom\_\xBB qui lui est attribu\xE9.\n\nVous \xE9tiez
+      peut-\xEAtre un simple paysan, ou peut-\xEAtre un grand."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340381
+    m_Localized: ombre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340383
+    m_Localized: "Nom actuel\_: {x:nametag}\n\nStatistiques suppl\xE9mentaires\_:
+      {x:stats}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340384
+    m_Localized: "Le corps du d\xE9funt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340386
+    m_Localized: "L'\xC9p\xE9e des Enfers"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340387
+    m_Localized: "Frappe en avant avec une puissance mal\xE9fique, infligeant {dmg:SlashCoef+SlashFlat}
+      d\xE9g\xE2ts."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340388
+    m_Localized: '{x:slash}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340389
+    m_Localized: "\xE9quitation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340391
+    m_Localized: '{x:montage}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340392
+    m_Localized: Le parfum de la mort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340393
+    m_Localized: "Maniant une \xE9p\xE9e maudite de magie noire, frappez pour infliger
+      {dmg:FinisherCoef+FinisherFlat} d\xE9g\xE2ts d'arme aux ennemis devant vous,
+      et d\xE9clenchez une explosion de magie noire devant vous pour infliger un
+      poison massif."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Localized: '{x:ult}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340396
+    m_Localized: "Tu as faim.\n\nEt tu as un estomac capable d'engloutir n'importe
+      quoi.\n\nTu peux tout avaler et devenir un \xEAtre gigantesque."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340397
+    m_Localized: digestion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340399
+    m_Localized: "Consommer une arme permet de gagner d\xE9finitivement {b:AbsorbRatio:pct}%
+      de vos points de comp\xE9tence.\n\n{x:digest}\n\n{x:absorbed}\n\n{x:specials}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340400
+    m_Localized: "Vous obtenez un bonus calcul\xE9 selon la statistique de base de
+      l'arme \xD7 le taux d'absorption {b:AbsorbRatio*100:all}% \xD7 le multiplicateur
+      de niveau.\n\nVous pouvez obtenir jusqu'\xE0 {b:AbsorbEnchants*100:all}% des
+      effets d'enchantement, et la consommation d'armes sp\xE9ciales conf\xE8re un
+      effet sp\xE9cial permanent.\n\nLe temps de digestion est r\xE9duit jusqu'\xE0
+      {b:DigestMul*100}% selon le niveau de comp\xE9tence."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Localized: "Mordez en avant pour infliger {dmg:DevourCoef+DevourFlat} d\xE9g\xE2ts.
+      Si la cible touch\xE9e meurt dans la seconde qui suit, gagnez des \xE2mes suppl\xE9mentaires
+      et pr\xE9parez <b>Cracher</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340404
+    m_Localized: cracher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340405
+    m_Localized: "Disponible apr\xE8s avoir r\xE9cemment tu\xE9 un ennemi ou consomm\xE9
+      une arme avec \xAB\_Gourmandise\_\xBB. Crache du vomi vers l'avant, infligeant
+      {dmg:SpitCoef+SpitFlat} d\xE9g\xE2ts."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340406
+    m_Localized: "Les d\xE9g\xE2ts de base sont de {dmg:SpitCoef+SpitFlat}, auxquels
+      s'ajoutent des d\xE9g\xE2ts \xE9quivalents \xE0 {b:InheritKillAtkPct}% de la
+      puissance d'attaque de la cible si celle-ci est un joueur, ou \xE0 {b:InheritWeaponAtkPct}%
+      si la cible est une arme.\n\nPeut \xEAtre affect\xE9 par des capacit\xE9s ennemies
+      al\xE9atoires ou des enchantements d'arme."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340407
+    m_Localized: Ingestion de substances nocives
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340408
+    m_Localized: "Consommez l'arme que vous tenez \xE0 la main."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Localized: "monstre affam\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Localized: "D\xE9cha\xEEnez {b:MonsterCount:all} b\xEAtes affam\xE9es qui mordent
+      automatiquement les ennemis dans un rayon de {b:MonsterRadius:all} m pendant
+      {b:UltDuration:all} secondes, infligeant une attaque Gloutonnerie d'une puissance
+      de {b:MonsterPowerMul*100} %.\n\nSi vous tuez un joueur avec une attaque Gloutonnerie,
+      la dur\xE9e est prolong\xE9e de {b:UltKillExtend} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340411
+    m_Localized: "Le monstre a un temps de recharge de 3 secondes par cible et inflige
+      {b:MonsterLowHpBonus:all}% de d\xE9g\xE2ts suppl\xE9mentaires aux cibles ayant
+      30 % de points de vie ou moins.\n\nPendant la dur\xE9e de l'effet, la puissance
+      d'attaque, la vitesse d'attaque et la vitesse de d\xE9placement sont l\xE9g\xE8rement
+      augment\xE9es."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340412
+    m_Localized: Shidou Walker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340413
+    m_Localized: "Tu agis toujours avec ton ombre.\n\nUtilise ton ombre pour agir
+      avec audace, parfois avec agilit\xE9, et d\xE9ploie-la pour dominer le territoire."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Localized: "Une ombre suit le Marcheur de l'Ombre.\n\nHors combat, chargez
+      <b>T\xE9n\xE8bres</b> pendant {b:DarkChargeTime:all} secondes.\n\nLors d'une
+      attaque, si <b>T\xE9n\xE8bres</b> est charg\xE9, aveuglez la cible pendant
+      {b:BlindTime:all} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340416
+    m_Localized: Arme de l'Ombre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340417
+    m_Localized: "Active Arme de l'Ombre pendant {b:WeaponDuration:all} secondes.\n\nLorsque
+      vous attaquez avec cette arme, votre illusion riposte dans la m\xEAme direction
+      avec la m\xEAme arme apr\xE8s un court d\xE9lai, infligeant des d\xE9g\xE2ts
+      \xE9quivalents \xE0 {b:EchoPct:all}% de votre puissance de base."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340418
+    m_Localized: "Les ennemis touch\xE9s par les armes de l'ombre sont ralentis de
+      10 % pendant 1 seconde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Localized: "Un ennemi li\xE9 par une <b>main de l'ombre</b> dans un d\xE9lai
+      de {b:HandImmune:all} secondes ne peut pas \xEAtre li\xE9 par une autre <b>main
+      de l'ombre</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340424
+    m_Localized: "L'obscurit\xE9 totale"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340425
+    m_Localized: "D\xE9signe la zone environnante comme une <b>Zone d'Ombre</b>,
+      r\xE9duisant consid\xE9rablement le champ de vision des ennemis \xE0 l'int\xE9rieur
+      de cette zone, \xE0 l'exception du v\xF4tre.\n\nLes ennemis situ\xE9s hors
+      de la Zone d'Ombre ne peuvent pas voir \xE0 l'int\xE9rieur.\n\n\xC0 l'int\xE9rieur
+      de la Zone d'Ombre, le temps de recharge du D\xE9placement de l'Ombre des Marcheurs
+      de l'Ombre passe \xE0 {b:ZoneMoveCooldown:all} secondes, et leur vitesse de
+      d\xE9placement augmente de {b:ZoneMoveSpeedPct:all} %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340427
+    m_Localized: "Ma\xEEtre des armes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340429
+    m_Localized: stockage de Mugu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340430
+    m_Localized: "Le nombre maximal d'armes que vous pouvez transporter passe \xE0
+      {b:SlotCount:all}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340431
+    m_Localized: "Ma\xEEtre des armes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340432
+    m_Localized: "Les armes autres que celle \xE9quip\xE9e flottent \xE0 vos c\xF4t\xE9s.\n\nEn
+      combat, attaquez en direction du dernier ennemi touch\xE9 toutes les {b:OrbitInterval:all}
+      secondes, proportionnellement \xE0 la vitesse d'attaque de l'arme, infligeant
+      des d\xE9g\xE2ts \xE9gaux \xE0 {b:OrbitCoef:all} + {b:WeaponAtkPct:all} % des
+      d\xE9g\xE2ts de l'arme."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340434
+    m_Localized: collectionneur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340435
+    m_Localized: "La quantit\xE9 de pierres d'enchantement obtenues augmente de {b:StoneGain:all}
+      fois."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340436
+    m_Localized: commande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340438
+    m_Localized: "acc\xE9l\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340440
+    m_Localized: danseur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340441
+    m_Localized: "Tire avec toutes les armes actuellement en mouvement en tant que
+      Ma\xEEtre d'armes \xE0 l'endroit recherch\xE9 pendant {b:DancerDuration:all}
+      secondes.\n\nDurant cette dur\xE9e, les d\xE9g\xE2ts des armes sont r\xE9duits
+      jusqu'\xE0 {b:DancerCoef:all}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340443
+    m_Localized: "Vous \xEAtes le joker du jeu.\n\nVous cr\xE9ez toujours des \xE9l\xE9ments
+      impr\xE9vus majeurs et poss\xE9dez des capacit\xE9s impr\xE9visibles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340445
+    m_Localized: "Vous disposez toujours de 2 capacit\xE9s al\xE9atoires."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Localized: "Le gain d'\xE2me devient {b:SoulGain:all} fois."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340448
+    m_Localized: Tirage du Joker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340449
+    m_Localized: "T\xE9l\xE9porte en arri\xE8re, laissant une carte Joker \xE0 son
+      emplacement d'origine. Si on marche dessus, la carte explose apr\xE8s un court
+      d\xE9lai, infligeant {dmg:BlastCoef+BlastFlat} d\xE9g\xE2ts et appliquant un
+      ralentissement de {b:BlastSlowPct:all}% pendant 2 secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340450
+    m_Localized: "Il peut y avoir jusqu'\xE0 {b:CardMax:all} cartes \xE0 la fois."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340451
+    m_Localized: Une seule carte !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340454
+    m_Localized: "Modifie le temps de recharge de l'une des capacit\xE9s al\xE9atoires
+      actuellement en recharge pour le remplacer par celui d'une comp\xE9tence de
+      carte de substitution, et r\xE9initialise \xE0 la place le temps de recharge
+      de cette capacit\xE9 al\xE9atoire."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340455
+    m_Localized: cadeau surprise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Localized: "Invoque un clone identique de vous-m\xEAme, dot\xE9 de capacit\xE9s
+      et d'objets al\xE9atoires, pendant {b:CloneDuration:all} secondes.\n\nLe clone
+      suit l'ennemi le plus proche par d\xE9faut.\n\nLorsque le clone meurt ou que
+      vous appuyez \xE0 nouveau sur la touche Ultime, il explose, infligeant {b:CloneBlastMul*100:all}%
+      des d\xE9g\xE2ts d'explosion de Joker Draw aux ennemis proches.\n\nLe clone
+      attaque les ennemis \xE0 moins de 10 m avec son arme actuelle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Localized: "Le clone r\xE9duit les d\xE9g\xE2ts des armes de 50 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Localized: L'euphorie du coureur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340459
+    m_Localized: "Vous \xEAtes tr\xE8s rapide ! Mais n'arr\xEAtez jamais !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340460
+    m_Localized: "Qualit\xE9s du coureur"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Localized: "Au lieu d'augmenter significativement votre vitesse, vous subissez
+      des d\xE9g\xE2ts \xE0 chaque arr\xEAt !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340462
+    m_Localized: crabe bleu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340463
+    m_Localized: "La vitesse de d\xE9placement et la sant\xE9 augmentent, et les
+      d\xE9g\xE2ts des armes de m\xEAl\xE9e augmentent consid\xE9rablement, mais
+      vous ne pouvez vous d\xE9placer que lat\xE9ralement."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340465
+    m_Localized: "La sant\xE9 et la vitesse de d\xE9placement augmentent de 60 %,
+      et les d\xE9g\xE2ts des armes de m\xEAl\xE9e augmentent de 100 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340467
+    m_Localized: "Si je me trouve \xE0 moins de 5 m\xE8tres de quelqu'un pendant
+      plus de 3 secondes, je suis tellement g\xEAn\xE9e que j'explose !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340468
+    m_Localized: "M\xEAme si je dois y aller..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534658
+    m_Localized: "\xC0 votre mort, vous entrez dans la \xAB\_Temps de la Vengeance\_\xBB
+      pendant 1 minute.\n\nDurant ce \xAB\_Temps de la Vengeance\_\xBB, si vous vainquez
+      l'ennemi qui vous a tu\xE9, vous obtenez un effet tr\xE8s puissant\_!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534659
+    m_Localized: poisson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Localized: Flap flap.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534661
+    m_Localized: "R\xE9gression de la mort"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534662
+    m_Localized: "\xC0 votre mort, vous ressuscitez instantan\xE9ment et r\xE9duisez
+      l'\xE2me de l'ennemi qui vous a tu\xE9.\n\nDe plus, augmentez le temps de recharge
+      des comp\xE9tences de tous les ennemis de 8 secondes\_!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534663
+    m_Localized: Bloc-notes de la mort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Localized: "S\xE9lectionnez un joueur qui se suicidera apr\xE8s 60 secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534666
+    m_Localized: Je vais devenir le Dieu du Nouveau Monde !!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534667
+    m_Localized: "poup\xE9e vaudou"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534668
+    m_Localized: "S\xE9lectionnez un joueur et infligez-lui l'\xE9tat \xAB\_Mal\xE9diction\_\xBB
+      pendant 20 secondes, l'emp\xEAchant de communiquer. De plus, il subira un effet
+      \xAB\_Sceau\_\xBB pendant 999 secondes maximum tant qu'il est en vie."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534669
+    m_Localized: "poup\xE9e vaudou"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534670
+    m_Localized: "Je te d\xE9teste depuis longtemps."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534672
+    m_Localized: "Utilise une mignonnerie mortelle pour r\xE9duire les d\xE9g\xE2ts
+      inflig\xE9s par la cible \xE0 0 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534674
+    m_Localized: Ppuing ppuing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534675
+    m_Localized: "Temp\xEAte du temps"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534676
+    m_Localized: "Lorsqu'elle est utilis\xE9e, elle t\xE9l\xE9porte un ennemi \xE0
+      port\xE9e vers un emplacement al\xE9atoire !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534677
+    m_Localized: "Nous avons besoin de plus de h\xE9ros"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534678
+    m_Localized: "Envoie une cible dans une temp\xEAte de temps et d'espace."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534680
+    m_Localized: "R\xE9cup\xE9rez 1 pion apr\xE8s avoir vaincu un joueur.\n\nCollectionnez
+      6 pions ou plus pour devenir un colosse des \xE9checs.\n\n(Pions actuels\_:
+      {x:pawns} / {x:pawnsneed})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534681
+    m_Localized: Promotion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Localized: "Le pion est promu au rang de <b>g\xE9ant des \xE9checs</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534683
+    m_Localized: "m\xE9thode de d\xE9placement du chevalier"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534684
+    m_Localized: "Effectuez deux sauts en avant avec le mouvement du Chevalier, et
+      r\xE9utilisez-le dans les 3 secondes pour sauter en diagonale \xE0 gauche/droite."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534686
+    m_Localized: "Le temps de recharge de la capacit\xE9 ultime diminue 40 % plus
+      vite.\n\nUtiliser la capacit\xE9 ultime 5 fois \xE9limine la moiti\xE9 des
+      joueurs encore en vie."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534688
+    m_Localized: Claquement de doigts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534689
+    m_Localized: 50 % de toute vie...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534690
+    m_Localized: Le testament de Beomgol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534691
+    m_Localized: "Lorsque votre sant\xE9 tombe \xE0 1 ou moins, vous gagnez des bonus
+      de statistiques consid\xE9rables pendant une courte p\xE9riode et vous ne mourez
+      pas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534692
+    m_Localized: "Lorsque votre sant\xE9 tombe \xE0 1 ou moins, vous gagnez des bonus
+      de statistiques consid\xE9rables pendant une courte p\xE9riode et vous ne mourez
+      pas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534693
+    m_Localized: assassin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534694
+    m_Localized: "Les d\xE9g\xE2ts inflig\xE9s aux cibles qui ne vous regardent pas
+      sont augment\xE9s de 100 %.\n\nDevient invisible pendant 3 secondes apr\xE8s
+      utilisation."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534695
+    m_Localized: cape invisible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534699
+    m_Localized: dessiner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534700
+    m_Localized: "S\xE9lectionnez une cible \xE0 port\xE9e, et il y a 50 % de chances
+      que votre quantit\xE9 d'\xE2me devienne \xE9gale \xE0 celle de la cible."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Localized: "On peut d\xE9clarer match nul ?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534702
+    m_Localized: "Faites un pari avec la cible que vous avez en ligne de mire, et
+      il y a 50 % de chances que votre \xE2me soit identique \xE0 celle de la cible."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534703
+    m_Localized: Jet de la Terre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Localized: "Lorsque vous utilisez cette comp\xE9tence, vous vous levez bri\xE8vement,
+      puis vous lancez \xAB Terre \xBB \xE0 l'endroit que vous regardiez juste avant
+      de l'utiliser."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534705
+    m_Localized: Jet de la Terre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534707
+    m_Localized: faisceau de perte de cheveux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534708
+    m_Localized: "Lorsqu'il est utilis\xE9, il projette un rayon vers l'avant pour
+      transformer la cible en \xAB camarade \xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534709
+    m_Localized: faisceau de perte de cheveux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534710
+    m_Localized: "Faites de la cible un \xAB camarade \xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534711
+    m_Localized: "Les \xAB Camarades \xBB ne peuvent pas se nuire mutuellement, et
+      un \xE9v\xE9nement sp\xE9cial se produit lorsque tous les joueurs deviennent
+      des \xAB Camarades \xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534712
+    m_Localized: Allons vers le futur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534713
+    m_Localized: "Lorsqu'il est utilis\xE9, il attire une cible, la saisit et charge.\n\nOn
+      ignore o\xF9 elle se trouve."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Localized: Allons ensemble vers l'avenir !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534716
+    m_Localized: "Langue des dragons l\xE9gendaires"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534718
+    m_Localized: "Langue des dragons l\xE9gendaires"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534719
+    m_Localized: Son nom est...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534721
+    m_Localized: Fus Ro Da
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534722
+    m_Localized: Souffle de la fin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534724
+    m_Localized: 'Oh non ! Ce pouvoir est sans effet.
+
+
+      Essayez d''utiliser
+      uniquement vos propres pouvoirs !'
     m_Metadata:
       m_Items: []
   references:

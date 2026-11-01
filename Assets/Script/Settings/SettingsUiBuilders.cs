@@ -30,7 +30,9 @@ public static class SettingsUiBuilders
         v.Title = K.Text("Title", top.transform, font, 40f, K.Ink, TextAlignmentOptions.MidlineLeft, true);
         K.Size(v.Title, -1f, -1f, 1f);
         v.Title.text = "설정";
-        v.CloseButton = K.Btn("Close", top.transform, font, "닫기 (Esc)", K.Yellow, 22f, out _);
+        SetLocText.Add(v.Title, "set.ui.title");
+        v.CloseButton = K.Btn("Close", top.transform, font, "닫기 (Esc)", K.Yellow, 22f, out var closeLabel);
+        SetLocText.Add(closeLabel, "set.ui.close");
         K.Size(v.CloseButton, 180f);
 
         // 몸통: 탭 · 페이지
@@ -67,6 +69,7 @@ public static class SettingsUiBuilders
             if (id == "controls")
             {
                 var n = K.Note(content, font, "보이스 키는 '채팅 · 보이스' 탭", 18f);
+                SetLocText.Add(n, "set.ui.voice_keys_note");
                 K.Size(n, -1f, 30f);
             }
 
@@ -170,13 +173,17 @@ public static class SettingsUiBuilders
         var kinds = K.Row("Kinds", g.transform, 58f, 10f);
         kinds.childForceExpandWidth = true;
         v.GunOption = K.Option("Gun", kinds.transform, font, "총", false, 52f);
+        SetLocText.Add(v.GunOption.Label, "set.xh.kind.gun");
         K.Size(v.GunOption, -1f, -1f, 1f);
         v.BowOption = K.Option("Bow", kinds.transform, font, "활 · 지팡이", false, 52f);
+        SetLocText.Add(v.BowOption.Label, "set.xh.kind.bow");
         K.Size(v.BowOption, -1f, -1f, 1f);
         v.MeleeOption = K.Option("Melee", kinds.transform, font, "근접", false, 52f);
+        SetLocText.Add(v.MeleeOption.Label, "set.xh.kind.melee");
         K.Size(v.MeleeOption, -1f, -1f, 1f);
 
-        v.SharedNote = K.Note(g.transform, font, "'모든 무기에 같은 조준점'이 켜져 있어서 총 조준점을 모두 씀", 18f);
+        v.SharedNote = K.Note(g.transform, font, "[모든 무기에 같은 조준점]이 켜져 있어서 총 조준점을 모두 씀", 18f);
+        SetLocText.Add(v.SharedNote, "set.xh.shared_note");
         K.Size(v.SharedNote, -1f, 26f);
 
         var pv = K.Row("PreviewRow", g.transform, 310f, 16f);
@@ -192,16 +199,22 @@ public static class SettingsUiBuilders
 
         var btns = K.Group("Buttons", pv.transform, 8f);
         K.Size(btns, -1f, -1f, 1f);
-        v.BackButton = K.Btn("Back", btns.transform, font, "미리보기 배경 바꾸기", Color.white, 20f, out _);
+        v.BackButton = K.Btn("Back", btns.transform, font, "미리보기 배경 바꾸기", Color.white, 20f, out var lBack);
+        SetLocText.Add(lBack, "set.xh.btn.back");
         K.Size(v.BackButton, -1f, 42f);
         v.AnimateOption = K.Option("Animate", btns.transform, font, "벌어짐 움직임 보기", true, 42f, 20f);
-        v.CopyButton = K.Btn("Copy", btns.transform, font, "코드 복사", K.Yellow, 20f, out _);
+        SetLocText.Add(v.AnimateOption.Label, "set.xh.btn.animate");
+        v.CopyButton = K.Btn("Copy", btns.transform, font, "코드 복사", K.Yellow, 20f, out var lCopy);
+        SetLocText.Add(lCopy, "set.xh.btn.copy");
         K.Size(v.CopyButton, -1f, 42f);
-        v.PasteButton = K.Btn("Paste", btns.transform, font, "코드 붙여넣기", Color.white, 20f, out _);
+        v.PasteButton = K.Btn("Paste", btns.transform, font, "코드 붙여넣기", Color.white, 20f, out var lPaste);
+        SetLocText.Add(lPaste, "set.xh.btn.paste");
         K.Size(v.PasteButton, -1f, 42f);
-        v.ResetButton = K.Btn("Reset", btns.transform, font, "이 무기 기본값으로", Color.white, 20f, out _);
+        v.ResetButton = K.Btn("Reset", btns.transform, font, "이 무기 기본값으로", Color.white, 20f, out var lReset);
+        SetLocText.Add(lReset, "set.xh.btn.reset");
         K.Size(v.ResetButton, -1f, 42f);
-        v.CopyToAllButton = K.Btn("CopyAll", btns.transform, font, "다른 무기에도 똑같이", Color.white, 20f, out _);
+        v.CopyToAllButton = K.Btn("CopyAll", btns.transform, font, "다른 무기에도 똑같이", Color.white, 20f, out var lAll);
+        SetLocText.Add(lAll, "set.xh.btn.copy_all");
         K.Size(v.CopyToAllButton, -1f, 42f);
 
         v.Status = K.Text("Status", g.transform, font, 19f, K.Muted, TextAlignmentOptions.MidlineLeft);
@@ -221,17 +234,19 @@ public static class SettingsUiBuilders
 
         K.Window("Window", root, 480f, 540f, out var c, 30, 16f);
         v.Title = K.Header(c, font, "메뉴");
+        SetLocText.Add(v.Title, "set.esc.title");
 
-        v.ContinueButton = Big(c, font, "Continue", "계속하기", K.Yellow, K.Ink);
-        v.SettingsButton = Big(c, font, "Settings", "설정", Color.white, K.Ink);
-        v.LeaveButton = Big(c, font, "Leave", "방 나가기", K.Red, Color.white);
-        v.QuitButton = Big(c, font, "Quit", "게임 종료", Color.white, K.Ink);
+        v.ContinueButton = Big(c, font, "Continue", "계속하기", K.Yellow, K.Ink, "set.esc.continue");
+        v.SettingsButton = Big(c, font, "Settings", "설정", Color.white, K.Ink, "set.esc.settings");
+        v.LeaveButton = Big(c, font, "Leave", "방 나가기", K.Red, Color.white, "set.esc.leave");
+        v.QuitButton = Big(c, font, "Quit", "게임 종료", Color.white, K.Ink, "set.esc.quit");
         return v;
     }
 
-    static Button Big(Transform parent, TMP_FontAsset font, string name, string label, Color face, Color text)
+    static Button Big(Transform parent, TMP_FontAsset font, string name, string label, Color face, Color text, string locKey)
     {
-        var b = K.Btn(name, parent, font, label, face, 26f, out _, text);
+        var b = K.Btn(name, parent, font, label, face, 26f, out var t, text);
+        SetLocText.Add(t, locKey);
         K.Size(b, -1f, 70f);
         return b;
     }

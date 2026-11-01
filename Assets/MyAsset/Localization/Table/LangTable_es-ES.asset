@@ -564,12 +564,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072776
-    m_Localized: "Inflige un da\xF1o adicional del {0}% de la salud m\xE1xima del
-      objetivo al golpear."
+    m_Localized: "Inflige {0}% de la salud m\xE1xima del objetivo como da\xF1o adicional
+      al golpear."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072777
-    m_Localized: "En lugar de poder drenar vida, convierte el {0}% de la cantidad
+    m_Localized: "En lugar de no poder drenar vida, convierte el {0}% de la cantidad
       drenada en da\xF1o."
     m_Metadata:
       m_Items: []
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: "Robo de vida {0}% del da\xF1o infligido al golpear"
+    m_Localized: "Roba el {0}% del da\xF1o infligido al golpear."
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -757,6 +757,1530 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5887265069445122
     m_Localized: "Nueva ronda despu\xE9s de {0} segundos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183884423168
+    m_Localized: C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171904
+    m_Localized: B
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171905
+    m_Localized: A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171906
+    m_Localized: S
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171907
+    m_Localized: Tratamiento {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171908
+    m_Localized: "evoluci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171909
+    m_Localized: Tratamiento {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171910
+    m_Localized: Mejorar {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171911
+    m_Localized: "De la Lecci\xF3n 0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171912
+    m_Localized: "Selecci\xF3n de clase"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171913
+    m_Localized: Tiempo restante {0} segundos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171914
+    m_Localized: "\u21BB Actualizar ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171915
+    m_Localized: NO. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171916
+    m_Localized: "Resumen de una l\xEDnea por habilidad"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171917
+    m_Localized: "Otro jugador est\xE1 eligiendo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171918
+    m_Localized: Quedan {0} personas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171919
+    m_Localized: Hora de la venganza
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171920
+    m_Localized: "\xA1Mata al {0} que te mat\xF3 en {1} segundos!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171921
+    m_Localized: "\xA1Venganza consumada! Velocidad de movimiento \xB7 Salud m\xE1xima
+      \xB7 Poder de ataque +{0}% \xA1hasta la muerte!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171922
+    m_Localized: Aviso de muerte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171923
+    m_Localized: "Ataque card\xEDaco despu\xE9s de {0} \u2014 {1} segundos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171924
+    m_Localized: "com\xFAn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171925
+    m_Localized: "gr\xE1ficos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171926
+    m_Localized: sonido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171927
+    m_Localized: "operaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171928
+    m_Localized: Punto de mira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171929
+    m_Localized: "Chat \xB7 Voz"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171930
+    m_Localized: "HUD \xB7 Accesibilidad"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171931
+    m_Localized: idioma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171932
+    m_Localized: 'Habilidad: usar al desacoplar'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171933
+    m_Localized: Si lo apagas, se activa en el momento en que lo pulsas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171934
+    m_Localized: "Dash \u2014 En la direcci\xF3n en la que est\xE1s mirando"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171935
+    m_Localized: "Si est\xE1 desactivado, se mueve en la direcci\xF3n del movimiento
+      (solo se aplica al dash en la direcci\xF3n del movimiento)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171936
+    m_Localized: "Recoger armas autom\xE1ticamente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171937
+    m_Localized: "Si lo apagas, rec\xF3gelo con la tecla de interacci\xF3n (las Almas
+      y Piedras siempre se recogen autom\xE1ticamente)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171938
+    m_Localized: Modo de pantalla
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171939
+    m_Localized: "No se aplica en el editor (solo en la compilaci\xF3n)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171940
+    m_Localized: "resoluci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171941
+    m_Localized: "No se aplica en el editor (solo en la compilaci\xF3n)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171942
+    m_Localized: "sincronizaci\xF3n vertical"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171943
+    m_Localized: "Si est\xE1 activada, se ignora el l\xEDmite de FPS."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171944
+    m_Localized: "l\xEDmite de FPS"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171945
+    m_Localized: calidad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171946
+    m_Localized: Escala de renderizado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171947
+    m_Localized: "Bajarlo hace que se vea borroso y m\xE1s r\xE1pido."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171948
+    m_Localized: sombra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171949
+    m_Localized: "Campo de visi\xF3n (FOV)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171950
+    m_Localized: 'Dimensiones verticales: valor predeterminado 75'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366208
+    m_Localized: completo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366209
+    m_Localized: efectos sonoros
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366210
+    m_Localized: "m\xFAsica"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366211
+    m_Localized: Voz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366212
+    m_Localized: Sonido de la interfaz de usuario
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366213
+    m_Localized: "Sensibilidad del rat\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366214
+    m_Localized: "Invertir el rat\xF3n hacia arriba y hacia abajo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366215
+    m_Localized: Establecer todas las claves a valores predeterminados.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366216
+    m_Localized: por defecto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366217
+    m_Localized: "Las teclas de voz (Chat \xB7 Pesta\xF1a Voz) giran juntas \xB7
+      Si se pulsa la misma tecla, las teclas para las dos acciones se intercambian."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366218
+    m_Localized: Mostrar punto de mira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366219
+    m_Localized: Mismo punto de mira en todas las armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366220
+    m_Localized: color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366221
+    m_Localized: describir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366222
+    m_Localized: Grosor del borde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366223
+    m_Localized: Grosor del borde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366224
+    m_Localized: punto medio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366225
+    m_Localized: "Tama\xF1o del punto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366226
+    m_Localized: Grosor del punto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366227
+    m_Localized: "l\xEDnea interior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366228
+    m_Localized: "longitud de la l\xEDnea interior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366229
+    m_Localized: "grosor de la l\xEDnea interior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366230
+    m_Localized: "espaciado entre l\xEDneas interiores"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366231
+    m_Localized: "Grosor de la l\xEDnea interior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366232
+    m_Localized: "L\xEDnea interior: se extiende al moverse."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366233
+    m_Localized: "L\xEDnea interior: se expande al disparar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366234
+    m_Localized: "l\xEDnea exterior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366235
+    m_Localized: "Longitud de la l\xEDnea exterior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366236
+    m_Localized: "Grosor de la l\xEDnea exterior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366237
+    m_Localized: "Espaciado de l\xEDnea exterior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366238
+    m_Localized: "Grosor de la l\xEDnea exterior"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366239
+    m_Localized: "L\xEDnea exterior: se expande al moverse."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366240
+    m_Localized: "L\xEDnea exterior: se expande al disparar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366241
+    m_Localized: uno
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366242
+    m_Localized: "Tama\xF1o del c\xEDrculo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366243
+    m_Localized: "Grosor del c\xEDrculo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366244
+    m_Localized: "Intensidad del c\xEDrculo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366245
+    m_Localized: "C\xEDrculo: se expande al moverse"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366246
+    m_Localized: "C\xEDrculo: se expande al disparar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366247
+    m_Localized: "Forma de T (sin l\xEDnea superior)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366248
+    m_Localized: El siglo que se despliega
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366249
+    m_Localized: Mostrar ventana de chat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366250
+    m_Localized: "Aunque lo apagues, podr\xE1s verlo si lo abres con la tecla Enter."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366251
+    m_Localized: "M\xE9todo del micr\xF3fono"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366252
+    m_Localized: Prensa y habla
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366253
+    m_Localized: "Micr\xF3fono abierto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366254
+    m_Localized: "Sensibilidad de detecci\xF3n de voz"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366255
+    m_Localized: "Cuanto m\xE1s a la izquierda, m\xE1s sensible"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366256
+    m_Localized: micro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366257
+    m_Localized: "Silenciar el micr\xF3fono del juego"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366258
+    m_Localized: "Silenciar el micr\xF3fono del equipo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366259
+    m_Localized: "Tama\xF1o de voz del juego"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366260
+    m_Localized: "Tama\xF1o de la voz del equipo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366261
+    m_Localized: 'Juego: Prensa y habla'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366262
+    m_Localized: "Tecla de silencio del micr\xF3fono del juego"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366263
+    m_Localized: "Equipo \u2014 Prensa y oratoria"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366264
+    m_Localized: "Tecla de silencio del micr\xF3fono del equipo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366265
+    m_Localized: "Abrir r\xE1pidamente la configuraci\xF3n de voz"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366266
+    m_Localized: Tecla de voz predeterminada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366267
+    m_Localized: por defecto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366268
+    m_Localized: "Regresar a T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366269
+    m_Localized: "Tama\xF1o de la interfaz de usuario"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366270
+    m_Localized: "N\xFAmeros de da\xF1os"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366271
+    m_Localized: Nombre encima de la cabeza
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366272
+    m_Localized: Barra de salud sobre tu cabeza
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366273
+    m_Localized: "La pantalla tiembla (al golpearse \xB7 explosi\xF3n)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366274
+    m_Localized: La pantalla tiembla al caminar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366275
+    m_Localized: Reduzca la dosis si se marea con facilidad.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366276
+    m_Localized: Pantalla parpadeante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366277
+    m_Localized: Pulsar Detener
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366278
+    m_Localized: color del borde rojo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366279
+    m_Localized: "Cambie si es dif\xEDcil distinguir los colores."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366280
+    m_Localized: "de aqu\xED en adelante"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366281
+    m_Localized: "atr\xE1s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366282
+    m_Localized: izquierda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366283
+    m_Localized: bien
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366284
+    m_Localized: Saltar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366285
+    m_Localized: "Ataque b\xE1sico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366286
+    m_Localized: Habilidad 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366287
+    m_Localized: Habilidad 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366288
+    m_Localized: Habilidad 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366289
+    m_Localized: "\xDAltimo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366290
+    m_Localized: Habilidad aleatoria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366291
+    m_Localized: "Habilidad aleatoria 2 (Comod\xEDn)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560512
+    m_Localized: "Interacci\xF3n (Altar \xB7 Cofre \xB7 Recoger)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560513
+    m_Localized: Desechar las armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560514
+    m_Localized: "Arma n\xBA 1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560515
+    m_Localized: "Arma n\xBA 2"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560516
+    m_Localized: "Arma n\xFAmero 3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560517
+    m_Localized: "Arma n\xFAmero 4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560518
+    m_Localized: "Arma n\xFAmero 5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560519
+    m_Localized: "Arma n\xFAmero 6"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560520
+    m_Localized: "Arma n\xBA 7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560521
+    m_Localized: Inventario
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560522
+    m_Localized: almacenar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560523
+    m_Localized: Ventana de habilidades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560524
+    m_Localized: Charlar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560525
+    m_Localized: de pie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560526
+    m_Localized: Clic izquierdo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560527
+    m_Localized: clic derecho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560528
+    m_Localized: Clic de la rueda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560529
+    m_Localized: "Lado 1 del rat\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560530
+    m_Localized: "Lado 2 del rat\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560531
+    m_Localized: Desplazamiento a la izquierda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560532
+    m_Localized: Cambio a la derecha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560533
+    m_Localized: Ctrl izquierdo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560534
+    m_Localized: Alt izquierda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560535
+    m_Localized: Pantalla completa (sin bordes)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560536
+    m_Localized: Pantalla completa (exclusiva)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560537
+    m_Localized: Modo ventana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560538
+    m_Localized: Miedo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560539
+    m_Localized: llanura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560540
+    m_Localized: medio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560541
+    m_Localized: altura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560542
+    m_Localized: Rojo (predeterminado)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560543
+    m_Localized: amarillo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560544
+    m_Localized: Jahong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560545
+    m_Localized: Verde azulado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560546
+    m_Localized: blanco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560547
+    m_Localized: abstracto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560548
+    m_Localized: verde claro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560549
+    m_Localized: amarillo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560550
+    m_Localized: Verde azulado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560551
+    m_Localized: rosa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560552
+    m_Localized: rojo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560553
+    m_Localized: negro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560554
+    m_Localized: "Copiar c\xF3digo al portapapeles"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560555
+    m_Localized: Pasta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560556
+    m_Localized: "No hay ning\xFAn c\xF3digo de mira en el portapapeles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560557
+    m_Localized: Restablecer a valores predeterminados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560558
+    m_Localized: Haz lo mismo con otras armas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560559
+    m_Localized: Sin restricciones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560560
+    m_Localized: Cargando...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560561
+    m_Localized: "Teclado num\xE9rico {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560562
+    m_Localized: preparante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560563
+    m_Localized: "Pulsa la tecla\u2026 (Esc Cancelar)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560564
+    m_Localized: (directamente)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560565
+    m_Localized: "\xA1completo!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560566
+    m_Localized: "Pulsa una vez m\xE1s para reiniciar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560567
+    m_Localized: "Conceptos b\xE1sicos del sistema"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560568
+    m_Localized: "configuraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560569
+    m_Localized: Cerrar (Esc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560570
+    m_Localized: "La tecla de voz se encuentra en la pesta\xF1a 'Chat \xB7 Voz'."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560571
+    m_Localized: pistola
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560572
+    m_Localized: "Arco \xB7 Personal"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560573
+    m_Localized: vecindad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560574
+    m_Localized: "La opci\xF3n [Misma mira en todas las armas] est\xE1 activada,
+      por lo que se utilizan todas las miras."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560575
+    m_Localized: Cambiar el fondo de la vista previa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560576
+    m_Localized: "Ver movimiento de propagaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560577
+    m_Localized: "Copiar c\xF3digo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560578
+    m_Localized: "Pegar c\xF3digo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560579
+    m_Localized: Con esta arma como predeterminada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560580
+    m_Localized: Lo mismo se aplica a otras armas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560581
+    m_Localized: "men\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560582
+    m_Localized: Continuar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560583
+    m_Localized: "configuraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560584
+    m_Localized: "Saliendo de la habitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560585
+    m_Localized: Juego terminado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945284591616
+    m_Localized: En
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340352
+    m_Localized: Apagado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340401
+    m_Localized: "Glotoner\xEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340414
+    m_Localized: sombra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340425
+    m_Localized: "Designa la zona circundante como una <b>Zona de Sombras</b>, reduciendo
+      considerablemente el rango de visibilidad de los enemigos dentro de la zona,
+      excepto t\xFA mismo.\n\nLos enemigos fuera de la Zona de Sombras no pueden
+      ver dentro.\n\nDentro de la Zona de Sombras, el tiempo de reutilizaci\xF3n
+      de Movimiento Sombr\xEDo de los Caminantes de las Sombras se reduce a {b:ZoneMoveCooldown:all}
+      segundos, y su velocidad de movimiento aumenta en un {b:ZoneMoveSpeedPct:all}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340445
+    m_Localized: Siempre tienes 2 habilidades aleatorias.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534672
+    m_Localized: "Utiliza una ternura letal para reducir el da\xF1o infligido por
+      el objetivo al 0%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534723
+    m_Localized: "Incompetencia vers\xE1til"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534725
+    m_Localized: "Incompetencia vers\xE1til"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534726
+    m_Localized: "Sorprendentemente com\xFAn e incompetente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Localized: "El l\xEDmite de encantamientos aumenta hasta 100.\n\nPuedes especificar
+      el valor del siguiente encantamiento consumiendo Alma."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340357
+    m_Localized: un cuerpo bien entrenado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Localized: Aplastante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340361
+    m_Localized: "erupci\xF3n del alto horno"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340362
+    m_Localized: "Explota lava en un radio de {b:FurnaceRadius} metros, infligiendo
+      {dmg:FurnaceCoef+FurnaceFlat} de da\xF1o.\n\nCuanto menor sea la salud, m\xE1s
+      fuerte se vuelve, hasta {b:FurnaceMaxMul} veces, y tiene una probabilidad de
+      {b:BurnChance:pct}% de infligir quemaduras."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340363
+    m_Localized: "Alcanza su m\xE1xima potencia cuando la potencia se reduce al 30%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340365
+    m_Localized: "Durante {b:UltDuration} segundos, tu cuerpo se envuelve en llamas
+      y entras en el estado Descendiente del Fuego.\n\nLos enemigos que te ataquen
+      cuerpo a cuerpo sufren el efecto de Quemadura, y todos los efectos de los objetos
+      aumentan un 25 %. Adem\xE1s, el tiempo de reutilizaci\xF3n de Horno se reinicia
+      cada vez que tu salud disminuye un 15 %, por ejemplo, al 85 %, 70 %, 55 %,
+      etc."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Localized: Entre los Descendientes del Fuego, el consumo de Piedras de Encantamiento
+      debido al Encantamiento se reduce a la mitad.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340367
+    m_Localized: Maestro de armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340368
+    m_Localized: Eres el Maestro de Todas las Armas de Fuego. Un Maestro de Armas
+      puede encantar todas las armas de fuego y recibe calibraciones para las mismas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340370
+    m_Localized: Puedes encantar armas de fuego.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340371
+    m_Localized: Maestro de armas de fuego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340372
+    m_Localized: "Al equipar un arma de fuego, la velocidad de ataque aumenta un
+      {0}%, la velocidad de movimiento un {1}% y el da\xF1o cr\xEDtico un {2}% adicional.\n\nEl
+      arma predeterminada pasa a ser la Glock."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340373
+    m_Localized: rollo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340375
+    m_Localized: "tiro de precisi\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Localized: "Ac\xE9rcate durante {b:AimTimeout} segundos y reduce tu velocidad
+      de movimiento.\n\nEn cambio, la siguiente bala inflige un {b:AimBonusPct:all}%
+      de da\xF1o adicional al impactar y siempre es un golpe cr\xEDtico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340378
+    m_Localized: "Entra en estado 'Spray' durante 12 segundos, aumentando la velocidad
+      de ataque en un {b:UltAtkSpeedPct:all}% y obteniendo un 20% de robo de vida.
+      Durante la duraci\xF3n, al disparar armas, la dispersi\xF3n de las balas aumenta
+      en un 30% en lugar de rebotar {b:UltRicochets:all} veces contra las paredes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340380
+    m_Localized: "Eres alguien que muri\xF3 hace mucho tiempo, pero que ha regresado
+      por alguna raz\xF3n.\n\nLas habilidades de un Caballero de la Muerte cambian
+      seg\xFAn el \"nombre\" que se le asigne.\n\nPuedes haber sido un simple campesino,
+      o puede que hayas sido un gran guerrero."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340381
+    m_Localized: sombra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340384
+    m_Localized: El cuerpo del fallecido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340385
+    m_Localized: "Cuando tu salud llega al 50%, entras en estado de 'Fantasma' durante
+      {b:GhostTime} segundos e ignoras todas las cajas de impacto f\xEDsicas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340387
+    m_Localized: "Ataca hacia adelante con poder maligno, infligiendo {dmg:SlashCoef+SlashFlat}
+      de da\xF1o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340389
+    m_Localized: "equitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340391
+    m_Localized: '{x:montaje}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340392
+    m_Localized: El aroma de la muerte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340393
+    m_Localized: "Empu\xF1ando una espada maldita de magia oscura, golpea hacia abajo
+      para infligir {dmg:FinisherCoef+FinisherFlat} de da\xF1o de arma a los enemigos
+      que tengas delante, y activa una explosi\xF3n de magia oscura delante para
+      infligir un veneno masivo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Localized: '{x:ult}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340396
+    m_Localized: "Tienes hambre.\n\nY tienes un est\xF3mago que puede tragarse cualquier
+      cosa.\n\nPuedes tragarte cualquier cosa y convertirte en un ser gigantesco."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340399
+    m_Localized: 'Come un arma para obtener permanentemente un {b:AbsorbRatio:pct}%
+      de tus puntos de habilidad.
+
+
+      {x:digest}
+
+
+      {x:absorbed}
+
+
+      {x:specials}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340400
+    m_Localized: "Obtienes beneficios seg\xFAn la estad\xEDstica base del arma \xD7
+      \xCDndice de absorci\xF3n {b:AbsorbRatio*100:all}% \xD7 Multiplicador de grado.\n\nPuedes
+      obtener hasta {b:AbsorbEnchants*100:all}% de efectos de encantamiento, y consumir
+      armas especiales otorga un efecto especial permanente.\n\nEl tiempo de digesti\xF3n
+      se reduce hasta en {b:DigestMul*100}% dependiendo del nivel de habilidad."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Localized: "Muerde hacia adelante para infligir {dmg:DevourCoef+DevourFlat}
+      de da\xF1o. Si el objetivo da\xF1ado muere en 1 segundo, gana almas adicionales
+      y prepara <b>Escupir</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340404
+    m_Localized: escupiendo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340405
+    m_Localized: "Disponible cuando hayas matado recientemente a un enemigo o consumido
+      un arma con 'Gula'. Escupe v\xF3mito hacia adelante, infligiendo {dmg:SpitCoef+SpitFlat}
+      de da\xF1o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340406
+    m_Localized: "El da\xF1o base es {dmg:SpitCoef+SpitFlat}, y causa da\xF1o adicional
+      equivalente al {b:InheritKillAtkPct}% del poder de ataque del objetivo si este
+      es un jugador, o al {b:InheritWeaponAtkPct}% si el objetivo es un arma.\n\nPuede
+      verse afectado por habilidades aleatorias de los enemigos o encantamientos
+      de armas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340407
+    m_Localized: "Ingesti\xF3n de sustancias nocivas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340408
+    m_Localized: Consume el arma que tienes en la mano.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Localized: monstruo hambriento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Localized: "Desata {b:MonsterCount:all} bestias hambrientas que morder\xE1n
+      autom\xE1ticamente a los enemigos en un radio de {b:MonsterRadius:all} metros
+      durante {b:UltDuration:all} segundos, infligiendo un ataque de Gula con un
+      efecto del {b:MonsterPowerMul*100}%.\n\nSi eliminas a un jugador con un ataque
+      de Gula, la duraci\xF3n aumenta en {b:UltKillExtend} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340411
+    m_Localized: "El monstruo tiene un tiempo de reutilizaci\xF3n de ataque de 3
+      segundos por objetivo e inflige un {b:MonsterLowHpBonus:all}% de da\xF1o adicional
+      a los objetivos con un 30% o menos de salud.\n\nDurante su duraci\xF3n, el
+      poder de ataque, la velocidad de ataque y la velocidad de movimiento aumentan
+      ligeramente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340412
+    m_Localized: Shidou Walker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Localized: "Una sombra sigue al Caminante de las Sombras.\n\nCuando no est\xE1
+      en combate, carga <b>Oscuridad</b> durante {b:DarkChargeTime:all} segundos.\n\nAl
+      atacar a un enemigo, si <b>Oscuridad</b> est\xE1 cargada, ciega al objetivo
+      durante {b:BlindTime:all} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340416
+    m_Localized: Arma de las Sombras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340417
+    m_Localized: "Activa Arma Sombr\xEDa durante {b:WeaponDuration:all} segundos.\n\nAl
+      atacar con el arma, tu ilusi\xF3n ataca en la misma direcci\xF3n con la misma
+      arma tras un breve lapso, infligiendo un da\xF1o equivalente al {b:EchoPct:all}%
+      de tu poder base."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340418
+    m_Localized: "Los enemigos da\xF1ados por Armas de Sombra se ven ralentizados
+      un 10% durante 1 segundo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340419
+    m_Localized: Movimiento de sombras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Localized: Un enemigo atado por una <b>mano de sombra</b> dentro de {b:HandImmune:all}
+      segundos no puede ser atado por otra <b>mano de sombra</b>.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340424
+    m_Localized: Oscuridad total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340429
+    m_Localized: Almacenamiento Mugu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340430
+    m_Localized: "El n\xFAmero m\xE1ximo de armas que puedes llevar aumenta a {b:SlotCount:all}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340432
+    m_Localized: "Las dem\xE1s armas, adem\xE1s de la que llevas equipada, flotan
+      a tu lado.\n\nDurante el combate, ataca en direcci\xF3n al \xFAltimo enemigo
+      que golpeaste cada {b:OrbitInterval:all} segundos, proporcionalmente a la velocidad
+      de ataque del arma, infligiendo un da\xF1o equivalente a {b:OrbitCoef:all}
+      + {b:WeaponAtkPct:all}% del da\xF1o del arma."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340434
+    m_Localized: coleccionista
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340435
+    m_Localized: La cantidad de Piedras de Encantamiento obtenidas aumenta en {b:StoneGain:all}
+      veces.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340436
+    m_Localized: dominio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340437
+    m_Localized: "Como Maestro de Armas, las armas flotantes se precipitan en la
+      direcci\xF3n en la que apuntan, infligiendo un da\xF1o igual al n\xFAmero de
+      armas X {dmg:CommandCoef}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340438
+    m_Localized: "aceleraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340440
+    m_Localized: "bailar\xEDn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340441
+    m_Localized: "Dispara todas las armas que flotan actualmente como Maestro de
+      Armas hacia la ubicaci\xF3n que buscas durante {b:DancerDuration:all} segundos.\n\nDurante
+      este tiempo, el da\xF1o de las armas se reduce hasta en un {b:DancerCoef:all}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340443
+    m_Localized: "Eres el comod\xEDn del juego.\n\nSiempre creas variables importantes
+      y posees habilidades impredecibles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340446
+    m_Localized: "alegr\xEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Localized: La ganancia de alma se convierte en {b:SoulGain:all} veces.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340448
+    m_Localized: "Sorteo del comod\xEDn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340449
+    m_Localized: "Te teletransportas hacia atr\xE1s, dejando una carta Joker en tu
+      ubicaci\xF3n original. Si la pisas, la carta explota tras un breve retraso,
+      infligiendo {dmg:BlastCoef+BlastFlat} de da\xF1o y aplicando una ralentizaci\xF3n
+      de {b:BlastSlowPct:all}% durante 2 segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340450
+    m_Localized: Puede haber hasta {b:CardMax:all} tarjetas a la vez.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340451
+    m_Localized: "\xA1Una tarjeta!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340452
+    m_Localized: "Agrega {b:OneCardSeconds:all} segundos al tiempo de reutilizaci\xF3n
+      de todas las habilidades normales (excluyendo las habilidades definitivas y
+      aleatorias) para todos los enemigos dentro de un radio de {b:OneCardRadius:all}
+      m de ellos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340454
+    m_Localized: "Cambia el tiempo de reutilizaci\xF3n de una de las habilidades
+      aleatorias que actualmente est\xE1n en tiempo de reutilizaci\xF3n por el de
+      una habilidad de carta sustituta, y en su lugar restablece el tiempo de reutilizaci\xF3n
+      de esa habilidad aleatoria."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340455
+    m_Localized: regalo sorpresa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Localized: "Invoca un clon id\xE9ntico a ti mismo con habilidades y objetos
+      aleatorios que se proyectan hacia adelante durante {b:CloneDuration:all} segundos.\n\nEl
+      clon sigue al enemigo m\xE1s cercano por defecto.\n\nCuando el clon muere o
+      vuelves a pulsar la tecla de Habilidad Definitiva, explota, infligiendo un
+      da\xF1o de explosi\xF3n equivalente al {b:CloneBlastMul*100:all}% de Joker
+      Draw a los enemigos cercanos.\n\nEl clon ataca a los enemigos en un radio de
+      10 m con su arma actual."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Localized: "El clon reduce el da\xF1o de las armas en un 50%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Localized: Euforia del corredor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340459
+    m_Localized: "\xA1Eres muy r\xE1pido! \xA1Pero nunca te detengas!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340460
+    m_Localized: Cualidades del corredor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Localized: "En lugar de aumentar tu velocidad significativamente, \xA1recibes
+      da\xF1o cada vez que te detienes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340462
+    m_Localized: cangrejo azul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340463
+    m_Localized: "La velocidad de movimiento y la salud aumentan, y el da\xF1o de
+      las armas cuerpo a cuerpo aumenta significativamente, pero solo puedes moverte
+      hacia los lados."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340465
+    m_Localized: "La salud y la velocidad de movimiento aumentan un 60%, y el da\xF1o
+      de las armas cuerpo a cuerpo aumenta un 100%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340467
+    m_Localized: "Si estoy a menos de 5 metros de alguien durante m\xE1s de 3 segundos,
+      \xA1me da tanta verg\xFCenza que exploto!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340468
+    m_Localized: Aunque tenga que irme...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534658
+    m_Localized: "Al morir, entras en el \xABTiempo de Venganza\xBB durante 1 minuto.\n\nDurante
+      el \xABTiempo de Venganza\xBB, si derrotas al enemigo que te mat\xF3, \xA1obtienes
+      un efecto muy poderoso!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534659
+    m_Localized: pez
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Localized: Solapa, solapa.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534661
+    m_Localized: "Regresi\xF3n de la muerte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534662
+    m_Localized: "Al morir, revives inmediatamente en el lugar y reduces el alma
+      del enemigo que te mat\xF3.\n\nAdem\xE1s, \xA1aumenta el tiempo de reutilizaci\xF3n
+      de las habilidades de todos los enemigos en 8 segundos!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534663
+    m_Localized: Bloc de notas de la muerte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Localized: "Selecciona a un jugador para que se suicide despu\xE9s de 60 segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534666
+    m_Localized: "\xA1Me voy a convertir en el Dios del Nuevo Mundo!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534668
+    m_Localized: "Selecciona a un jugador e infl\xEDgele el estado \"Maldici\xF3n\"
+      durante 20 segundos, impidi\xE9ndole comunicarse. Adem\xE1s, mientras est\xE9
+      con vida, recibir\xE1 un efecto de \"Sello\" que durar\xE1 hasta 999 segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534670
+    m_Localized: Te he odiado durante mucho tiempo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534674
+    m_Localized: Puing puing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534675
+    m_Localized: Tormenta del tiempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534676
+    m_Localized: "\xA1Al usarse, teletransporta a un enemigo que se encuentre dentro
+      del alcance a una ubicaci\xF3n aleatoria!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534677
+    m_Localized: "Necesitamos m\xE1s h\xE9roes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534678
+    m_Localized: "Env\xEDa a un objetivo a una tormenta de tiempo y espacio."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534679
+    m_Localized: El gigante del ajedrez
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534680
+    m_Localized: "Consigue 1 pe\xF3n al derrotar a un jugador.\n\nConsigue 6 o m\xE1s
+      peones para convertirte en un coloso del ajedrez.\n\n(Peones actuales: {x:pawns}
+      / {x:pawnsneed})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534681
+    m_Localized: "Promoci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Localized: "El pe\xF3n asciende para convertirse en un <b>gigante del ajedrez</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534683
+    m_Localized: "M\xE9todo de movimiento del caballo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534684
+    m_Localized: Salta hacia adelante dos veces con el movimiento del Caballero y
+      vuelve a usarlo en 3 segundos para saltar en diagonal hacia la izquierda o
+      la derecha.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534685
+    m_Localized: existencia inevitable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534686
+    m_Localized: "El tiempo de reutilizaci\xF3n de la habilidad definitiva disminuye
+      un 40 % m\xE1s r\xE1pido.\n\nUsar la habilidad definitiva 5 veces elimina a
+      la mitad de los jugadores vivos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534688
+    m_Localized: Chasquido de dedos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534689
+    m_Localized: El 50% de toda la vida....
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534690
+    m_Localized: La voluntad de Beomgol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534691
+    m_Localized: "Cuando tu salud baja a 1 o menos, obtienes estad\xEDsticas enormes
+      durante un breve per\xEDodo de tiempo y no mueres."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534692
+    m_Localized: "Cuando tu salud baja a 1 o menos, obtienes estad\xEDsticas enormes
+      durante un breve per\xEDodo de tiempo y no mueres."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534693
+    m_Localized: asesino
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534694
+    m_Localized: "El da\xF1o infligido a los objetivos cuando no te est\xE1n mirando
+      aumenta un 100 %.\n\nTe vuelves invisible durante 3 segundos al usarlo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534695
+    m_Localized: Capa invisible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534696
+    m_Localized: "Puedes decidir si usar la Capa de Invisibilidad mediante una habilidad.\n\nMientras
+      usas la Capa de Invisibilidad, te vuelves invisible; tu cuerpo (excepto las
+      armas) es invisible, pero el da\xF1o que recibes se reduce en un 50 %."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534698
+    m_Localized: Espero que nadie me encuentre.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534700
+    m_Localized: Selecciona un objetivo dentro del alcance y hay un 50% de probabilidad
+      de que tu cantidad de Almas sea igual a la del objetivo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Localized: "\xBFLo consideramos un empate...?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534702
+    m_Localized: "Haz una apuesta con la persona que est\xE1s observando y hay un
+      50% de probabilidades de que tu alma sea id\xE9ntica a la de esa persona."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534703
+    m_Localized: Lanzamiento de tierra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Localized: Al usarla, te elevas brevemente y luego lanzas "Tierra" al punto
+      que estabas mirando justo antes de usar la habilidad.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534705
+    m_Localized: Lanzamiento de tierra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534706
+    m_Localized: "Tras designar un punto frente a ti, asciende alto en el cielo y
+      lanza una <b>Tierra<b> hacia ese lugar.\n\nRegresa al punto de lanzamiento
+      despu\xE9s de usarla."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534707
+    m_Localized: "rayo de p\xE9rdida de cabello"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534709
+    m_Localized: "rayo de p\xE9rdida de cabello"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534710
+    m_Localized: Convierte al objetivo en un "camarada".
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534711
+    m_Localized: "Los \"camaradas\" no pueden hacerse da\xF1o entre s\xED, y se produce
+      un evento especial cuando todos los jugadores se convierten en \"camaradas\"."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534712
+    m_Localized: Vamos al futuro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534713
+    m_Localized: "Al usarse, atrae a un objetivo, lo agarra y carga.\n\nNadie sabe
+      cu\xE1l es el destino."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Localized: "\xA1Avancemos juntos hacia el futuro!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534716
+    m_Localized: Lenguaje de dragones legendarios
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534718
+    m_Localized: Lenguaje de dragones legendarios
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534719
+    m_Localized: Su nombre es...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534720
+    m_Localized: deslizamiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534721
+    m_Localized: Fus Ro Da
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534722
+    m_Localized: Aliento del Fin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534724
+    m_Localized: "\xA1Oh no! Esta habilidad no tiene efecto.\n\n\xA1Intenta usar
+      solo tus propias habilidades!"
     m_Metadata:
       m_Items: []
   references:

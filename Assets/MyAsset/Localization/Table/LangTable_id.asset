@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
@@ -553,7 +553,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072770
-    m_Localized: Menghapus semua pesona senjata saat ini (Jiwa +{0} per level)
+    m_Localized: Menghapus semua pesona senjata saat ini (Soul +{0} per level)
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072771
@@ -582,8 +582,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072777
-    m_Localized: Alih-alih dapat menguras nyawa, ubah {0}% dari jumlah yang dikuras
-      menjadi kerusakan.
+    m_Localized: Alih-alih tidak dapat menyerap nyawa, ubah {0}% dari jumlah yang
+      diserap menjadi kerusakan.
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072778
@@ -696,7 +696,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Lifesteal {0}% dari damage yang diberikan saat mengenai target
+    m_Localized: Mencuri {0}% dari kerusakan yang ditimbulkan saat mengenai target
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -769,6 +769,1692 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5887265069445122
     m_Localized: Putaran baru setelah {0} detik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183884423168
+    m_Localized: C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171904
+    m_Localized: B
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171905
+    m_Localized: A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171906
+    m_Localized: S
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171907
+    m_Localized: Perawatan {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171908
+    m_Localized: evolusi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171909
+    m_Localized: Perawatan {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171910
+    m_Localized: Tingkatkan 0/1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171911
+    m_Localized: Dari Pelajaran 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171912
+    m_Localized: Pemilihan kelas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171913
+    m_Localized: Waktu tersisa {0} detik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171914
+    m_Localized: "\u21BB Segarkan ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171915
+    m_Localized: NO. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171916
+    m_Localized: Ringkasan satu baris berdasarkan kemampuan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171917
+    m_Localized: Pemain lain sedang memilih
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171918
+    m_Localized: '{0} orang tersisa'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171919
+    m_Localized: Waktunya balas dendam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171920
+    m_Localized: Bunuh {0} yang membunuhmu dalam {1} detik!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171921
+    m_Localized: "Balas dendam berhasil! Kecepatan Gerak \u200B\u200B\xB7 Kesehatan
+      Maksimum \xB7 Kekuatan Serangan +{0}% sampai mati!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171922
+    m_Localized: Death Note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171923
+    m_Localized: "Serangan jantung setelah {0} \u2014 {1} detik"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171924
+    m_Localized: umum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171925
+    m_Localized: grafis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171926
+    m_Localized: suara
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171927
+    m_Localized: operasi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171928
+    m_Localized: Titik bidik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171929
+    m_Localized: "Obrolan \xB7 Suara"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171930
+    m_Localized: "HUD \xB7 Aksesibilitas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171931
+    m_Localized: bahasa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171932
+    m_Localized: "Keterampilan \u2014 Gunakan saat melepaskan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171933
+    m_Localized: Jika Anda mematikannya, alat ini akan menggunakan momen saat Anda
+      menekannya.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171934
+    m_Localized: "Garis putus-putus \u2014 Ke arah yang Anda lihat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171935
+    m_Localized: Jika dimatikan, ia bergerak searah dengan pergerakan (hanya berlaku
+      untuk gerakan cepat searah dengan pergerakan)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171936
+    m_Localized: Mengambil senjata secara otomatis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171937
+    m_Localized: Jika Anda mematikannya, ambil kembali dengan tombol interaksi (Jiwa
+      dan Batu selalu diambil secara otomatis)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171938
+    m_Localized: Mode layar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171939
+    m_Localized: Tidak diterapkan di editor (hanya di build)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171940
+    m_Localized: resolusi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171941
+    m_Localized: Tidak diterapkan di editor (hanya di build)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171942
+    m_Localized: Sinkronisasi vertikal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171943
+    m_Localized: Jika diaktifkan, batasan FPS akan diabaikan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171944
+    m_Localized: Batas FPS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171945
+    m_Localized: kualitas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171946
+    m_Localized: Skala rendering
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171947
+    m_Localized: Menurunkan nilainya membuat gambar menjadi buram dan lebih cepat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171948
+    m_Localized: bayangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171949
+    m_Localized: Bidang Pandang (FOV)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183922171950
+    m_Localized: "Dimensi Vertikal \u2014 Standar 75"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366208
+    m_Localized: seluruh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366209
+    m_Localized: efek suara
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366210
+    m_Localized: musik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366211
+    m_Localized: Suara
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366212
+    m_Localized: Suara UI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366213
+    m_Localized: Sensitivitas tikus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366214
+    m_Localized: Balikkan arah mouse ke atas dan ke bawah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366215
+    m_Localized: Atur semua kunci ke nilai default.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366216
+    m_Localized: bawaan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366217
+    m_Localized: "Tombol suara (Obrolan \xB7 Tab Suara) berputar bersamaan \xB7 Jika
+      tombol yang sama ditekan, tombol untuk kedua tindakan tersebut akan ditukar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366218
+    m_Localized: Tunjukkan titik bidik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366219
+    m_Localized: Titik bidik yang sama pada semua senjata.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366220
+    m_Localized: warna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366221
+    m_Localized: garis besar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366222
+    m_Localized: Ketebalan batas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366223
+    m_Localized: Ketebalan batas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366224
+    m_Localized: titik tengah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366225
+    m_Localized: Ukuran titik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366226
+    m_Localized: Ketebalan titik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366227
+    m_Localized: garis dalam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366228
+    m_Localized: panjang garis dalam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366229
+    m_Localized: ketebalan garis dalam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366230
+    m_Localized: Jarak antar baris dalam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366231
+    m_Localized: Ketebalan garis dalam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366232
+    m_Localized: "Garis dalam \u2014 melebar saat digerakkan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366233
+    m_Localized: "Garis dalam \u2014 melebar saat ditembak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366234
+    m_Localized: garis luar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366235
+    m_Localized: Panjang garis luar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366236
+    m_Localized: Ketebalan garis luar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366237
+    m_Localized: Jarak antar baris terluar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366238
+    m_Localized: Ketebalan garis luar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366239
+    m_Localized: "Garis luar \u2014 melebar saat digerakkan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366240
+    m_Localized: "Garis luar \u2014 melebar saat ditembak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366241
+    m_Localized: satu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366242
+    m_Localized: Ukuran lingkaran
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366243
+    m_Localized: Ketebalan lingkaran
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366244
+    m_Localized: Intensitas lingkaran
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366245
+    m_Localized: "Lingkaran \u2014 melebar saat digerakkan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366246
+    m_Localized: "Lingkaran \u2014 Menyebar saat ditembak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366247
+    m_Localized: Bentuk T (tanpa garis atas)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366248
+    m_Localized: Abad yang sedang berlangsung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366249
+    m_Localized: Tampilkan jendela obrolan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366250
+    m_Localized: Meskipun Anda mematikannya, Anda tetap dapat melihatnya jika Anda
+      membukanya dengan menekan Enter.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366251
+    m_Localized: Metode mikrofon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366252
+    m_Localized: Tekan dan bicara
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366253
+    m_Localized: Mikrofon Terbuka
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366254
+    m_Localized: Sensitivitas deteksi suara
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366255
+    m_Localized: Semakin ke kiri, semakin sensitif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366256
+    m_Localized: Mike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366257
+    m_Localized: Matikan mikrofon game.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366258
+    m_Localized: Mikrofon tim dimatikan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366259
+    m_Localized: Ukuran suara game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366260
+    m_Localized: Ukuran Suara Tim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366261
+    m_Localized: "Permainan \u2014 Tekan dan bicara"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366262
+    m_Localized: Tombol mute mikrofon game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366263
+    m_Localized: "Tim \u2014 Tekan dan bicara"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366264
+    m_Localized: Tombol mute mikrofon tim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366265
+    m_Localized: Buka Pengaturan Suara dengan Cepat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366266
+    m_Localized: Tombol Suara default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366267
+    m_Localized: bawaan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366268
+    m_Localized: "Kembali ke T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366269
+    m_Localized: Ukuran HUD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366270
+    m_Localized: Jumlah kerusakan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366271
+    m_Localized: Nama di atas kepala
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366272
+    m_Localized: Bar kesehatan di atas kepala Anda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366273
+    m_Localized: Layar bergetar (saat terkena ledakan)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366274
+    m_Localized: Layar bergoyang saat berjalan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366275
+    m_Localized: Kurangi penggunaan jika Anda mudah mabuk perjalanan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366276
+    m_Localized: Layar berkedip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366277
+    m_Localized: Tekan Berhenti
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366278
+    m_Localized: warna batas merah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366279
+    m_Localized: Ganti jika sulit membedakan warna.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366280
+    m_Localized: mulai sekarang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366281
+    m_Localized: kembali
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366282
+    m_Localized: kiri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366283
+    m_Localized: Kanan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366284
+    m_Localized: Melompat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366285
+    m_Localized: Serangan dasar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366286
+    m_Localized: Keterampilan 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366287
+    m_Localized: Keterampilan 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366288
+    m_Localized: Keterampilan 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366289
+    m_Localized: Terakhir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366290
+    m_Localized: Kemampuan acak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183926366291
+    m_Localized: Kemampuan Acak 2 (Joker)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560512
+    m_Localized: "Interaksi (Altar \xB7 Peti \xB7 Mengambil)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560513
+    m_Localized: Buang senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560514
+    m_Localized: Senjata No. 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560515
+    m_Localized: Senjata No. 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560516
+    m_Localized: Senjata No. 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560517
+    m_Localized: Senjata No. 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560518
+    m_Localized: Senjata No. 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560519
+    m_Localized: Senjata No. 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560520
+    m_Localized: Senjata No. 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560521
+    m_Localized: Inventaris
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560522
+    m_Localized: toko
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560523
+    m_Localized: Jendela Kemampuan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560524
+    m_Localized: Mengobrol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560525
+    m_Localized: kedudukan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560526
+    m_Localized: Klik kiri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560527
+    m_Localized: Klik kanan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560528
+    m_Localized: Bunyi klik roda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560529
+    m_Localized: Sisi tikus 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560530
+    m_Localized: Sisi tikus 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560531
+    m_Localized: Geser ke kiri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560532
+    m_Localized: Geser ke Kanan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560533
+    m_Localized: Ctrl Kiri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560534
+    m_Localized: Alt Kiri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560535
+    m_Localized: Layar penuh (tanpa bingkai)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560536
+    m_Localized: Layar penuh (eksklusif)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560537
+    m_Localized: Mode jendela
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560538
+    m_Localized: Takut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560539
+    m_Localized: kerendahan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560540
+    m_Localized: tengah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560541
+    m_Localized: tinggi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560542
+    m_Localized: Merah (standar)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560543
+    m_Localized: kuning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560544
+    m_Localized: Jahong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560545
+    m_Localized: Biru kehijauan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560546
+    m_Localized: putih
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560547
+    m_Localized: abstrak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560548
+    m_Localized: hijau muda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560549
+    m_Localized: kuning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560550
+    m_Localized: Biru kehijauan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560551
+    m_Localized: berwarna merah muda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560552
+    m_Localized: merah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560553
+    m_Localized: hitam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560554
+    m_Localized: Salin kode ke papan klip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560555
+    m_Localized: Pasta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560556
+    m_Localized: Tidak ada kode crosshair di clipboard.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560557
+    m_Localized: Atur ulang ke pengaturan default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560558
+    m_Localized: Terapkan hal yang sama pada senjata-senjata lainnya juga.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560559
+    m_Localized: Tidak ada batasan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560560
+    m_Localized: Memuat...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560561
+    m_Localized: Tombol angka {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560562
+    m_Localized: mempersiapkan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560563
+    m_Localized: "Tekan tombol\u2026 (Esc Batal)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560564
+    m_Localized: (secara langsung)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560565
+    m_Localized: menyelesaikan!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560566
+    m_Localized: Tekan sekali lagi untuk mengatur ulang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560567
+    m_Localized: Dasar-dasar Sistem
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560568
+    m_Localized: pengaturan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560569
+    m_Localized: Tutup (Esc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560570
+    m_Localized: "Tombol suara ada di tab 'Obrolan \xB7 Suara'."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560571
+    m_Localized: pistol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560572
+    m_Localized: "Busur \xB7 Tongkat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560573
+    m_Localized: sekitar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560574
+    m_Localized: '[Penggunaan crosshair yang sama pada semua senjata] diaktifkan,
+      sehingga semua crosshair digunakan.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560575
+    m_Localized: Ubah latar belakang pratinjau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560576
+    m_Localized: Lihat pergerakan yang menyebar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560577
+    m_Localized: Salin kode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560578
+    m_Localized: Tempel kode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560579
+    m_Localized: Dengan senjata ini sebagai senjata standar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560580
+    m_Localized: Hal yang sama berlaku untuk senjata lainnya.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560581
+    m_Localized: menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560582
+    m_Localized: Melanjutkan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560583
+    m_Localized: pengaturan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560584
+    m_Localized: Keluar dari ruangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15217183930560585
+    m_Localized: Permainan berakhir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945284591616
+    m_Localized: Pada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340352
+    m_Localized: Mati
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340378
+    m_Localized: Memasuki kondisi 'Spray' selama 12 detik, meningkatkan kecepatan
+      serangan sebesar {b:UltAtkSpeedPct:all}% dan mendapatkan 20% lifesteal. Selama
+      durasi tersebut, saat menembak senjata, penyebaran peluru meningkat sebesar
+      30% alih-alih memantul {b:UltRicochets:all} kali ke dinding.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340401
+    m_Localized: Kerakusan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340414
+    m_Localized: bayangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534723
+    m_Localized: Ketidakmampuan yang serbaguna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534725
+    m_Localized: Ketidakmampuan yang serbaguna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534726
+    m_Localized: Mengejutkan, dia biasa saja dan tidak kompeten.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340353
+    m_Localized: pandai besi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340354
+    m_Localized: 'Anda adalah pandai besi.
+
+
+      Batas penguatan untuk item senjata
+      meningkat menjadi 100.
+
+
+      Anda dapat menggunakan Jiwa untuk menetapkan
+      penguatan berikutnya ke nilai yang diinginkan.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340355
+    m_Localized: bengkel pandai besi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Localized: 'Batas penguatan meningkat hingga 100.
+
+
+      Anda dapat menentukan
+      nilai penguatan berikutnya dengan menggunakan Jiwa.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340357
+    m_Localized: tubuh yang terlatih dengan baik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340358
+    m_Localized: 'Tubuhmu cocok untuk pekerjaan menggunakan alat peniup udara.
+
+
+      HP
+      + {0:semua}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Localized: Penumpasan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340360
+    m_Localized: Ayunkan palu ke depan untuk memberikan kerusakan sebesar {dmg:SmashCoef+SmashFlat},
+      dan setrum musuh yang terkena selama 0,25 detik. Selain itu, musuh yang terkena
+      mendapatkan efek status yang mengurangi armor mereka sebesar {b:ArmorBreakPct}%
+      selama 5 detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340362
+    m_Localized: 'Meledakkan lava dalam radius {b:FurnaceRadius}m dari sekitarnya,
+      memberikan kerusakan sebesar {dmg:FurnaceCoef+FurnaceFlat}.
+
+
+      Semakin
+      rendah kesehatannya, semakin kuat efeknya, hingga {b:FurnaceMaxMul} kali, dan
+      memiliki peluang {b:BurnChance:pct}% untuk menyebabkan luka bakar.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340363
+    m_Localized: Daya maksimum tercapai ketika HP dikurangi hingga 30%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340364
+    m_Localized: Keturunan Api
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340365
+    m_Localized: 'Selama {b:UltDuration} detik, tubuhmu diselimuti api, dan kamu
+      memasuki keadaan Keturunan Api.
+
+
+      Musuh yang menyerangmu dengan serangan
+      jarak dekat akan mendapatkan efek Terbakar, dan semua efek item meningkat sebesar
+      25%. Selain itu, cooldown Tungku akan direset setiap kali kesehatanmu turun
+      sebesar 15%, misalnya pada 85%, 70%, 55%, dan seterusnya.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Localized: Di antara Keturunan Api, konsumsi Batu Sihir karena Sihir berkurang
+      setengahnya.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340367
+    m_Localized: Ahli Senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340368
+    m_Localized: Anda adalah Penguasa Semua Senjata Api. Seorang Penguasa Senjata
+      dapat memberikan sihir pada semua senjata api dan menerima kalibrasi untuk
+      senjata-senjata tersebut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340369
+    m_Localized: Pesona senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340370
+    m_Localized: Anda bisa memberikan sihir pada senjata api.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340371
+    m_Localized: Ahli senjata api
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340374
+    m_Localized: 'Bergulinglah ke depan untuk memasuki mode menghindar selama 1 detik.
+
+
+      Isi
+      ulang amunisi sebesar 20%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340375
+    m_Localized: menembak dengan presisi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Localized: 'Perbesar tampilan selama {b:AimTimeout} detik dan perlambat kecepatan
+      gerakan Anda.
+
+
+      Sebagai gantinya, peluru berikutnya memberikan kerusakan
+      tambahan sebesar {b:AimBonusPct:all}% saat mengenai target dan selalu menghasilkan
+      serangan kritis.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340377
+    m_Localized: Masuklah ke kamar mandi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340379
+    m_Localized: Ksatria Kematian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340381
+    m_Localized: naungan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340382
+    m_Localized: 'Nama acak akan diberikan.
+
+
+      Statistik tambahan dan efek keterampilan
+      berubah tergantung pada Nama tersebut.
+
+
+      Nama Saat Ini: {x:nametag}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340383
+    m_Localized: 'Nama Saat Ini: {x:nametag}
+
+
+      Statistik Tambahan: {x:stats}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340385
+    m_Localized: Saat kesehatanmu mencapai 50%, kamu memasuki status 'Hantu' selama
+      {b:GhostTime} detik dan mengabaikan semua hitbox fisik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340386
+    m_Localized: Pedang Dunia Bawah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340388
+    m_Localized: '{x:garis miring}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340389
+    m_Localized: berkuda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340390
+    m_Localized: 'Naiki kuda mayat hidup selama {b:MountDuration} detik. Saat menunggangi,
+      kecepatan gerak Anda meningkat sebesar {b:MountSpeed} dan kerusakan yang diterima
+      berkurang sebesar {b:MountDamageReduce}%.
+
+
+      Gunakan kembali saat menunggangi
+      untuk melesat cepat ke depan, memberikan kerusakan sebesar {dmg:ChargeCoef}.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340392
+    m_Localized: Aroma Kematian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340393
+    m_Localized: Dengan menggunakan pedang terkutuk sihir gelap, serang ke bawah
+      untuk memberikan kerusakan senjata sebesar {dmg:FinisherCoef+FinisherFlat}
+      kepada musuh di depan, dan picu ledakan sihir gelap di depan untuk menimbulkan
+      racun besar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Localized: '{x:ult}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340395
+    m_Localized: pelahap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340396
+    m_Localized: 'Kamu lapar.
+
+
+      Dan kamu memiliki perut yang bisa menelan apa
+      saja.
+
+
+      Kamu bisa menelan apa saja dan menjadi makhluk yang sangat besar.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340397
+    m_Localized: pencernaan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340398
+    m_Localized: pelahap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340399
+    m_Localized: 'Makan senjata untuk mendapatkan {b:AbsorbRatio:pct}% poin kemampuan
+      Anda secara permanen.
+
+
+      {x:digest}
+
+
+      {x:absorbed}
+
+
+      {x:specials}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340400
+    m_Localized: "Anda mendapatkan keuntungan berdasarkan Statistik Dasar Senjata
+      \xD7 Rasio Penyerapan {b:AbsorbRatio*100:all}% \xD7 Pengali Tingkat.\n\nAnda
+      dapat memperoleh hingga {b:AbsorbEnchants*100:all}% Efek Penguatan, dan mengonsumsi
+      senjata khusus memberikan efek khusus permanen.\n\nWaktu pencernaan berkurang
+      hingga {b:DigestMul*100}% tergantung pada tingkat keahlian."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Localized: Gigit ke depan untuk memberikan kerusakan {dmg:DevourCoef+DevourFlat}.
+      Jika target yang terkena kerusakan mati dalam 1 detik, dapatkan jiwa tambahan
+      dan persiapkan <b>Spit Out</b>.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340403
+    m_Localized: Memulihkan kesehatan sebesar {b:DevourHealPct}% dari kerusakan yang
+      ditimbulkan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340404
+    m_Localized: meludah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340405
+    m_Localized: Tersedia saat Anda baru saja membunuh musuh atau menggunakan senjata
+      dengan 'Ketamakan'. Memuntahkan muntahan ke depan, memberikan kerusakan {dmg:SpitCoef+SpitFlat}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340407
+    m_Localized: Konsumsi makanan tidak sehat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Localized: monster kelaparan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Localized: 'Lepaskan {b:MonsterCount:all} monster lapar untuk secara otomatis
+      menggigit musuh dalam radius {b:MonsterRadius:all}m selama {b:UltDuration:all}
+      detik, memberikan serangan Gluttony dengan efek {b:MonsterPowerMul*100}%.
+
+
+      Jika
+      Anda membunuh pemain dengan serangan Gluttony, durasinya meningkat sebesar
+      {b:UltKillExtend} detik.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340411
+    m_Localized: 'Monster ini memiliki cooldown serangan 3 detik per target dan memberikan
+      tambahan kerusakan sebesar {b:MonsterLowHpBonus:all}% kepada target dengan
+      kesehatan 30% atau kurang.
+
+
+      Selama durasi tersebut, Kekuatan Serangan,
+      Kecepatan Serangan, dan Kecepatan Gerak sedikit meningkat.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340412
+    m_Localized: Shidou Walker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340413
+    m_Localized: 'Anda selalu bertindak dengan bayangan Anda.
+
+
+      Manfaatkan
+      bayangan Anda untuk bertindak agresif, terkadang lincah, dan sebarkan untuk
+      mendominasi wilayah tersebut.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Localized: 'Bayangan mengikuti Sang Penjelajah Bayangan.
+
+
+      Saat tidak
+      dalam pertempuran, isi daya <b>Kegelapan</b> selama {b:DarkChargeTime:all}
+      detik.
+
+
+      Saat menyerang musuh, jika <b>Kegelapan</b> telah terisi daya,
+      butakan target selama {b:BlindTime:all} detik.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340416
+    m_Localized: Senjata Bayangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340418
+    m_Localized: Musuh yang terkena serangan Senjata Bayangan akan mengalami perlambatan
+      sebesar 10% selama 1 detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340419
+    m_Localized: Pergerakan bayangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340420
+    m_Localized: 'Bertukar posisi dengan bayanganmu untuk berteleportasi ke lokasi
+      yang sedang kamu lihat.
+
+
+      Kamu dapat bergerak hingga {b:MoveRange:all}m.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340421
+    m_Localized: Tangan Bayangan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340422
+    m_Localized: 'Meninggalkan <b>Tangan Bayangan</b> di tempat Anda melihat. Jika
+      ada musuh dalam radius {b:HandRadius:all}m dari <b>Tangan Bayangan</b>, tangan
+      tersebut akan meluas ke luar.
+
+
+      Saat mengenai target, ia memberikan kerusakan
+      {dmg:HandCoef+HandFlat} dan mengikat musuh selama {b:HandRoot:all} detik.
+
+
+      Anda
+      dapat meninggalkan hingga {b:HandMax:all} Tangan Bayangan di peta sekaligus.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Localized: Musuh yang terikat oleh <b>tangan bayangan</b> dalam waktu {b:HandImmune:all}
+      detik tidak dapat terikat oleh <b>tangan bayangan</b> lainnya.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340424
+    m_Localized: Kegelapan total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340425
+    m_Localized: 'Menetapkan area sekitarnya sebagai <b>Zona Bayangan</b>, yang sangat
+      mengurangi jangkauan pandang musuh di dalam zona tersebut, kecuali diri Anda
+      sendiri.
+
+
+      Musuh di luar Zona Bayangan tidak dapat melihat ke dalam.
+
+
+      Di
+      dalam Zona Bayangan, waktu pendinginan Gerakan Bayangan (Shadow Move) milik
+      Shadow Walker menjadi {b:ZoneMoveCooldown:all} detik, dan kecepatan geraknya
+      meningkat sebesar {b:ZoneMoveSpeedPct:all}%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340426
+    m_Localized: Sang Penjelajah Bayangan dapat menemukan semua musuh di dalam area
+      bayangan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340427
+    m_Localized: Ahli Senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340428
+    m_Localized: 'Anda adalah seorang Ahli Senjata.
+
+
+      Tidak seperti pemain
+      lain, Anda dapat membawa hingga 8 senjata.
+
+
+      Bahkan ketika Anda tidak
+      memegangnya, senjata-senjata tersebut melayang di samping Anda dan ikut bertarung.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340429
+    m_Localized: Penyimpanan Mugu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340430
+    m_Localized: Jumlah maksimum senjata yang dapat Anda bawa meningkat menjadi {b:SlotCount:all}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340431
+    m_Localized: Ahli Senjata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340433
+    m_Localized: 'Jangkauan maksimum adalah {b:OrbitRange:all}m, dan senjata api
+      tidak dapat dikendalikan oleh Master of Weapons.
+
+
+      Busur dan tongkat
+      didasarkan pada waktu pengisian 100%.
+
+
+      Pesona khusus pada senjata yang
+      bersangkutan memiliki peluang 50% untuk aktif, dan nilai serta durasinya juga
+      berkurang setengahnya. (Pengisapan nyawa tidak berlaku.)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340434
+    m_Localized: pengumpul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340437
+    m_Localized: Sebagai Master of Weapons, senjata-senjata yang melayang akan melesat
+      ke arah yang mereka hadapi, memberikan kerusakan yang setara dengan jumlah
+      senjata X {dmg:CommandCoef}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340438
+    m_Localized: percepatan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340439
+    m_Localized: Selama {b:HasteDuration:all} detik, waktu serangan dasar Weapon
+      Master dikurangi sebesar {b:HasteIntervalPct:all}% dan kecepatan perintah ditingkatkan
+      sebesar 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340441
+    m_Localized: 'Menembakkan semua senjata yang saat ini melayang sebagai Master
+      Senjata ke lokasi yang Anda cari selama {b:DancerDuration:all} detik.
+
+
+      Selama
+      waktu ini, kerusakan senjata dikurangi hingga {b:DancerCoef:all}%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340442
+    m_Localized: pelawak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340444
+    m_Localized: pelawak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340445
+    m_Localized: Anda selalu memiliki 2 kemampuan acak.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340446
+    m_Localized: kegembiraan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Localized: Perolehan jiwa menjadi {b:SoulGain:all} kali.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340448
+    m_Localized: Joker Draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340449
+    m_Localized: Berteleportasi ke belakang, meninggalkan kartu Joker di lokasi semula.
+      Jika diinjak, kartu tersebut akan meledak setelah jeda singkat, memberikan
+      kerusakan sebesar {dmg:BlastCoef+BlastFlat} dan menerapkan efek perlambatan
+      sebesar {b:BlastSlowPct:all}% selama 2 detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340450
+    m_Localized: Jumlah kartu yang dapat ditampung maksimal {b:CardMax:all} kartu
+      dalam satu waktu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340451
+    m_Localized: Satu Kartu!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340452
+    m_Localized: Menambahkan {b:OneCardSeconds:all} detik ke waktu pendinginan semua
+      skill normal (tidak termasuk ultimate dan kemampuan acak) untuk semua musuh
+      dalam radius {b:OneCardRadius:all}m dari mereka.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340453
+    m_Localized: Kartu pengganti
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340454
+    m_Localized: Mengubah waktu pendinginan salah satu kemampuan acak yang saat ini
+      sedang dalam masa pendinginan menjadi waktu pendinginan kemampuan kartu pengganti,
+      dan sebagai gantinya mengatur ulang waktu pendinginan kemampuan acak tersebut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340455
+    m_Localized: hadiah kejutan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Localized: 'Memanggil klon identik diri Anda dengan kemampuan dan item acak
+      selama {b:CloneDuration:all} detik.
+
+
+      Klon tersebut secara default mengikuti
+      musuh terdekat.
+
+
+      Saat klon mati atau Anda menekan tombol Ultimate lagi,
+      ia meledak, memberikan kerusakan ledakan Joker Draw sebesar {b:CloneBlastMul*100:all}%
+      kepada musuh di dekatnya.
+
+
+      Klon tersebut menyerang musuh dalam jarak
+      10m dengan senjata yang dimilikinya.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Localized: Klon mengurangi kerusakan senjata sebesar 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Localized: Sensasi euforia pelari.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Localized: Alih-alih meningkatkan kecepatan secara signifikan, Anda malah menerima
+      kerusakan setiap kali berhenti!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340462
+    m_Localized: kepiting biru
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340464
+    m_Localized: Kekuatan kepiting biru
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340466
+    m_Localized: fobia sosial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534656
+    m_Localized: Membunuh satu pemain secara acak saat mati.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534657
+    m_Localized: jamak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534658
+    m_Localized: 'Setelah mati, Anda memasuki ''Waktu Balas Dendam'' selama 1 menit.
+
+
+      Selama
+      ''Waktu Balas Dendam'', jika Anda mengalahkan musuh yang membunuh Anda, Anda
+      akan mendapatkan efek yang sangat kuat!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Localized: Kepak kepak.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534661
+    m_Localized: Regresi Kematian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534663
+    m_Localized: Buku Catatan Kematian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Localized: Pilih satu pemain untuk melakukan bunuh diri setelah 60 detik.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534665
+    m_Localized: Mencatat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534666
+    m_Localized: Aku akan menjadi Dewa Dunia Baru!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534667
+    m_Localized: Boneka Voodoo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534669
+    m_Localized: Boneka Voodoo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534670
+    m_Localized: Aku sudah membencimu sejak lama.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534671
+    m_Localized: Bertingkah imut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534672
+    m_Localized: Menggunakan kelucuan yang mematikan untuk mengurangi kerusakan yang
+      ditimbulkan oleh target hingga 0%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534673
+    m_Localized: Bertingkah imut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534676
+    m_Localized: Saat digunakan, kemampuan ini akan memindahkan satu musuh dalam
+      jangkauan ke lokasi acak!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534677
+    m_Localized: Kita membutuhkan lebih banyak pahlawan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534679
+    m_Localized: Raksasa catur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534680
+    m_Localized: 'Kumpulkan 1 ''Pion'' setelah mengalahkan pemain.
+
+
+      Kumpulkan
+      6 Pion atau lebih untuk menjadi ''Kolosus Catur''.
+
+
+      (Jumlah Pion Saat
+      Ini {x:pawns} / {x:pawnsneed} )'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534681
+    m_Localized: Promosi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Localized: Pion tersebut dipromosikan menjadi <b>raksasa catur</b>.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534684
+    m_Localized: Lompat ke depan dua kali dengan gerakan Ksatria, dan gunakan kembali
+      dalam waktu 3 detik untuk melompat secara diagonal ke kiri/kanan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534685
+    m_Localized: eksistensi yang tak terhindarkan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534686
+    m_Localized: 'Cooldown ultimate berkurang 40% lebih cepat.
+
+
+      Menggunakan
+      ultimate 5 kali membunuh setengah dari pemain yang masih hidup.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534687
+    m_Localized: 'Cooldown ultimate berkurang 40% lebih cepat.
+
+
+      Menggunakan
+      Ultimate 5 kali membunuh setengah dari pemain yang masih hidup. (Saat ini:
+      {x:stack})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534688
+    m_Localized: Jentikan jari
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534689
+    m_Localized: 50% dari seluruh kehidupan....
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534690
+    m_Localized: Wasiat Beomgol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534694
+    m_Localized: 'Kerusakan yang ditimbulkan pada target saat mereka tidak melihat
+      Anda meningkat sebesar 100%.
+
+
+      Menjadi tidak terlihat selama 3 detik
+      saat digunakan.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534696
+    m_Localized: 'Anda dapat memutuskan apakah akan menggunakan Jubah Gaib dengan
+      menggunakan sebuah skill.
+
+
+      Saat menggunakan Jubah Gaib, Anda menjadi
+      ''Tak Terlihat'', sehingga tubuh Anda (kecuali senjata) tidak terlihat, tetapi
+      kerusakan yang ditimbulkan berkurang sebesar 50%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534697
+    m_Localized: Memakai jubah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534698
+    m_Localized: Aku harap tidak ada yang menemukanku.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534699
+    m_Localized: menggambar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Localized: Apakah kita anggap saja hasilnya seri...?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Localized: Saat digunakan, Anda akan terangkat sebentar, lalu melemparkan 'Bumi'
+      ke tempat yang Anda lihat tepat sebelum menggunakan kemampuan tersebut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534706
+    m_Localized: 'Setelah menentukan titik di depan, naiklah tinggi ke langit dan
+      lemparkan <b>Bumi<b> ke lokasi tersebut.
+
+
+      Kembali ke lokasi pelemparan
+      setelah digunakan.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534708
+    m_Localized: Saat digunakan, alat ini menembakkan sinar ke depan untuk mengubah
+      target menjadi 'kawan'.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534711
+    m_Localized: Para 'kawan' tidak dapat saling melukai, dan sebuah peristiwa khusus
+      terjadi ketika semua pemain menjadi 'kawan'.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534712
+    m_Localized: Mari kita menuju masa depan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534713
+    m_Localized: 'Saat digunakan, alat ini menarik satu target, menangkapnya, dan
+      menyerang.
+
+
+      Tidak ada yang tahu ke mana tujuannya.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Localized: Mari kita menuju masa depan bersama!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534715
+    m_Localized: Saat digunakan, alat ini mengarahkan satu target ke masa depan.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534716
+    m_Localized: Bahasa Naga Legendaris
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534717
+    m_Localized: 'Saat menggunakan suatu kemampuan, kamu akan meneriakkan Bahasa
+      Naga Legendaris.
+
+
+      Jika kamu meneriakkannya 30 kali, kamu akan menjadi
+      Naga Legendaris.
+
+
+      Jika kamu bertahan selama 3 menit, kamu akan langsung
+      menang.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534718
+    m_Localized: Bahasa Naga Legendaris
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534719
+    m_Localized: Namanya adalah...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534720
+    m_Localized: meluncur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534721
+    m_Localized: Fus Ro Da
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534724
+    m_Localized: 'Oh tidak! Kemampuan ini tidak berpengaruh.
+
+
+      Cobalah hanya
+      menggunakan kemampuanmu sendiri!'
     m_Metadata:
       m_Items: []
   references:

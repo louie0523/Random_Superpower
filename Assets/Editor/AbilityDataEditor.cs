@@ -340,6 +340,8 @@ public class AbilityDataEditor : Editor
         EditorGUILayout.PropertyField(_tags, new GUIContent("태그", "분류용. 다른 능력이 태그로 찾을 때 사용"), true);
 
         AbilityHudInspector.Draw(serializedObject, (AbilityData)target);     // 추가
+
+        AbilitySheetPush.DrawInspectorButtons((AbilityData)target);          // 다국어 — 시트에 올리기 · Pull
     }
 
     // ══════════════════ 탭: 패시브 / 스킬 ══════════════════

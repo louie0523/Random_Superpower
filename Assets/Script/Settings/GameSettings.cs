@@ -82,7 +82,7 @@ public static class GraphicsOptions
         { FullScreenMode.FullScreenWindow, FullScreenMode.ExclusiveFullScreen, FullScreenMode.Windowed };
 
     public static readonly int[] FpsValues = { 30, 60, 75, 120, 144, 165, 240, 0 };
-    public static string[] FpsNames => FpsValues.Select(v => v == 0 ? "제한 없음" : $"{v}").ToArray();
+    public static string[] FpsNames => FpsValues.Select(v => v == 0 ? SetLoc.T("set.gfx.fps.none", "제한 없음") : $"{v}").ToArray();
 
     public static readonly string[] ShadowNames = { "끔", "낮음", "중간", "높음" };
     static readonly float[] ShadowDistances = { 0f, 30f, 60f, 120f };
@@ -203,7 +203,7 @@ public static class LanguageOptions
 
     public static string[] Names =>
         Ready ? Locales.Select(l => l.Identifier.CultureInfo != null ? l.Identifier.CultureInfo.NativeName : l.LocaleName).ToArray()
-              : new[] { "불러오는 중..." };
+              : new[] { SetLoc.T("set.ui.loading", "불러오는 중...") };
 
     public static int Index
     {
