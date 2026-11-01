@@ -11,6 +11,11 @@ using UnityEngine.UI;
 public partial class RoomUI
 {
     RoomScreenView _view;
+    Button _showCodeButton;
+    TMPro.TMP_Text _showCodeLabel;
+
+    /// <summary>방 코드 보이기 (내 화면만, 처음엔 가림 — 방송 · 화면 공유 대비)</summary>
+    public static bool ShowCode;
 
     readonly List<RoomRowView> _roomRows = new();
     readonly List<RoomPlayerRowView> _playerRows = new();
@@ -69,7 +74,12 @@ public partial class RoomUI
             v.NickInput.onEndEdit.AddListener(s => RoomLauncher.Nick = s.Trim());
         }
         if (v.RoomNameInput != null) v.RoomNameInput.characterLimit = 24;
-        if (v.CodeInput != null) v.CodeInput.characterLimit = 8;
+        if (v.CodeInput != null)
+        {
+            v.CodeInput.characterLimit = 8;
+            v.CodeInput.contentType = TMPro.TMP_InputField.ContentType.Password;   // 입력하는 코드도 ●로 (방송 · 화면 공유 대비)
+            v.CodeInput.asteriskChar = '*';
+        }
         On(v.HiddenOption, () => v.HiddenOption.SetOn(!v.HiddenOption.IsOn));
         On(v.CreateButton, () =>
         {
@@ -81,6 +91,18 @@ public partial class RoomUI
 
         // 대기실
         On(v.CopyCodeButton, CopyCode);
+
+        // 코드 보이기 ON/OFF — 복사 버튼을 복제해서 옆에 (프리팹 안 고쳐도 됨). 내 화면에만 적용
+        if (v.CopyCodeButton != null)
+        {
+            _showCodeButton = Instantiate(v.CopyCodeButton, v.CopyCodeButton.transform.parent);
+            _showCodeButton.name = "ShowCode";
+            _showCodeButton.transform.SetSiblingIndex(v.CopyCodeButton.transform.GetSiblingIndex() + 1);
+            _showCodeButton.onClick.RemoveAllListeners();
+            foreach (var t in _showCodeButton.GetComponentsInChildren<SetLocText>(true)) Destroy(t);   // 복사 글자 번역 연결은 떼기
+            _showCodeLabel = _showCodeButton.GetComponentInChildren<TMPro.TMP_Text>(true);
+            On(_showCodeButton, () => ShowCode = !ShowCode);
+        }
         On(v.MainButton, MainPressed);
         On(v.LeaveButton, () => L.Leave());
 
@@ -181,6 +203,9 @@ public partial class RoomUI
         }
         return n;
     }
+
+    /// <summary>방 코드 가리기 — 길이만 보이게 (스트리머 · 화면 공유에서 코드 유출 방지)</summary>
+    public static string Mask(string code) => string.IsNullOrEmpty(code) ? "" : new string('*', code.Length);
 
     /// <summary>밴 칸 글자 — 능력 이름은 지금 언어로</summary>
     static string BanText(AbilityData a) => $"{a.Id % 100:00} {AbilityUi.Name(a)}";
@@ -337,7 +362,8 @@ public partial class RoomUI
         string code = runner.SessionInfo != null ? runner.SessionInfo.Name : "";
 
         GameUiKit.Set(v.RoomTitle, rs.RoomName.ToString());
-        GameUiKit.Set(v.CodeText, SetLoc.F("lobby.code_line", "방 코드  {0}", code));
+        GameUiKit.Set(v.CodeText, SetLoc.F("lobby.code_line", "방 코드  {0}", ShowCode ? code : Mask(code)));   // 복사 버튼은 항상 진짜 코드
+        GameUiKit.Set(_showCodeLabel, ShowCode ? SetLoc.T("lobby.hide_code", "코드 가리기") : SetLoc.T("lobby.show_code", "코드 보이기"));
         GameUiKit.Set(v.VisibilityText, rs.Hidden ? SetLoc.T("lobby.hidden_room", "숨김 방 — 코드로만 들어올 수 있어") : SetLoc.T("lobby.public_room", "공개 방"));
         GameUiKit.Set(v.CountText, SetLoc.F("lobby.people", "사람 {0}/{1}", rs.PlayerCount, rs.MaxPlayers));
 

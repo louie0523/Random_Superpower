@@ -3047,6 +3047,14 @@ MonoBehaviour:
     m_Localized: Assistindo
     m_Metadata:
       m_Items: []
+  - m_Id: 15336411908124672
+    m_Localized: "Mostrar c\xF3digo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15336411941679104
+    m_Localized: "Ocultar c\xF3digo"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

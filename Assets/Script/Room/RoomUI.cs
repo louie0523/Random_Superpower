@@ -169,7 +169,7 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
         // 코드로 참가
         GUILayout.BeginHorizontal();
         GUILayout.Label(SetLoc.T("lobby.code", "방 코드"), GUILayout.Width(110));
-        _code = GUILayout.TextField(_code, 8, GUILayout.Width(200));
+        _code = GUILayout.PasswordField(_code, '*', 8, GUILayout.Width(200));      // 입력 코드도 가림
         GUI.enabled = canAct && _code.Trim().Length > 0;
         if (GUILayout.Button(SetLoc.T("lobby.join_code", "코드로 참가"), GUILayout.Width(180))) L.JoinRoom(_code);
         GUI.enabled = true;
@@ -194,7 +194,9 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
 
         string code = runner.SessionInfo != null ? runner.SessionInfo.Name : "";
         GUILayout.BeginHorizontal();
-        GUILayout.Label(SetLoc.F("lobby.code_line", "방 코드  {0}", code));
+        GUILayout.Label(SetLoc.F("lobby.code_line", "방 코드  {0}", ShowCode ? code : Mask(code)));
+        if (GUILayout.Button(ShowCode ? SetLoc.T("lobby.hide_code", "코드 가리기") : SetLoc.T("lobby.show_code", "코드 보이기"), GUILayout.Width(160)))
+            ShowCode = !ShowCode;
         if (GUILayout.Button(SetLoc.T("lobby.copy", "복사"), GUILayout.Width(100)))
         {
             GUIUtility.systemCopyBuffer = code;

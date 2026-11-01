@@ -1747,6 +1747,14 @@ MonoBehaviour:
     m_Key: voice.hud.spectator
     m_Metadata:
       m_Items: []
+  - m_Id: 15336411908124672
+    m_Key: lobby.show_code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15336411941679104
+    m_Key: lobby.hide_code
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:
