@@ -122,7 +122,7 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
             if (_roomWait > 3f && _runner.IsSharedModeMasterClient)
             {
                 _roomWait = -999f;
-                SpawnRoomState($"{Nick}의 방", defaultSettings.Clone());
+                SpawnRoomState(SetLoc.F("lobby.default_room", "{0}의 방", Nick), defaultSettings.Clone());
             }
         }
 
@@ -152,7 +152,7 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             DropRunner();
             State = LinkState.Offline;
-            Toast($"서버 연결 실패 ({r.ShutdownReason})");
+            Toast(SetLoc.F("lobby.err.connect", "서버 연결 실패 ({0})", r.ShutdownReason));
         }
     }
 
@@ -277,7 +277,7 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
         Spectator.End();
 
         if (wasJoining) Toast(JoinFailText(reason));
-        else if (!purpose && reason != ShutdownReason.Ok) Toast($"연결이 끊겼어 ({reason})");
+        else if (!purpose && reason != ShutdownReason.Ok) Toast(SetLoc.F("lobby.err.disconnected", "연결이 끊겼어 ({0})", reason));
 
         if (SceneManager.GetActiveScene().name != lobbySceneName && LobbyBuildIndex >= 0)
             SceneManager.LoadScene(lobbySceneName);
@@ -291,13 +291,13 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             case "GameNotFound":
             case "GameDoesNotExist":
-                return "그 코드의 방이 없어";
+                return SetLoc.T("lobby.err.not_found", "그 코드의 방이 없어");
             case "GameIsFull":
-                return "방이 가득 찼어";
+                return SetLoc.T("lobby.err.full", "방이 가득 찼어");
             case "GameClosed":
-                return "들어갈 수 없는 방이야";
+                return SetLoc.T("lobby.err.closed", "들어갈 수 없는 방이야");
             default:
-                return $"참가 실패 ({r})";
+                return SetLoc.F("lobby.err.join", "참가 실패 ({0})", r);
         }
     }
 
@@ -311,7 +311,7 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ══════════════════ 맵 · 씬 ══════════════════
 
     public string MapName(int i) =>
-        i >= 0 && i < maps.Count && !string.IsNullOrEmpty(maps[i].Name) ? maps[i].Name : $"맵 {i + 1}";
+        i >= 0 && i < maps.Count && !string.IsNullOrEmpty(maps[i].Name) ? maps[i].Name : SetLoc.F("lobby.map_n", "맵 {0}", i + 1);
 
     public int MapBuildIndex(int i) =>
         i >= 0 && i < maps.Count ? BuildIndexOf(maps[i].SceneName) : -1;

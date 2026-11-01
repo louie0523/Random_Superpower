@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// 클래스 선택 카드 한 장 — 카드 프리팹 루트에 붙임. ClassPickPanel이 장 수만큼 복제해서 씀.
 /// 비어 있는 칸은 그냥 안 씀 (아이콘 없이 만들어도 됨).
 /// </summary>
-public class ClassCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ClassCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ILocRefresh
 {
     [Header("버튼")]
     [Tooltip("카드를 누르는 버튼 (카드 몸통)")]
@@ -80,8 +80,19 @@ public class ClassCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerExit(PointerEventData e) => _over = false;
 
     /// <summary>내용 채우기 — 이미 보이던 카드가 바뀌면 뒤집기 연출</summary>
+    AbilityData _data;
+
+    /// <summary>언어 바뀜 — 같은 카드 글자 다시 (뒤집기 연출 없이)</summary>
+    public void OnLocaleChanged()
+    {
+        if (ShownId < 0) return;
+        ShownId = -1;
+        Bind(_data);
+    }
+
     public void Bind(AbilityData a)
     {
+        _data = a;
         int id = a != null ? a.Id : 0;
         if (id == ShownId) return;
         if (ShownId > 0) _flip = 1f;

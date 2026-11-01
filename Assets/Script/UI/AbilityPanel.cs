@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.Localization.Settings;
 
-public class AbilityPanel : UIPanel
+public class AbilityPanel : UIPanel, ILocRefresh
 {
     [Header("헤더")]
     [SerializeField] private Image abilityIcon;
@@ -76,9 +76,8 @@ public class AbilityPanel : UIPanel
         skillLabel?.SetKey("ui.ability.skill");
     }
 
-    void OnEnable() => LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
-    void OnDisable() => LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
-    void OnLocaleChanged(UnityEngine.Localization.Locale _) { if (IsOpen) Rebuild(); }
+    /// <summary>언어 바뀜 (새 언어 표 준비 후) — 열려 있으면 다시 그림. 닫혀 있으면 열 때 다시 그림</summary>
+    public void OnLocaleChanged() { if (IsOpen && _runtime != null) Rebuild(); }
 
     public void Bind(AbilityRuntime runtime)
     {

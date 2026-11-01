@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ChargeGauge : MonoBehaviour
+public class ChargeGauge : MonoBehaviour, ILocRefresh
 {
     [SerializeField] private GameObject root;
     [SerializeField] private Image fill;               // Filled / Horizontal
@@ -17,7 +17,9 @@ public class ChargeGauge : MonoBehaviour
 
     private AbilityRuntime _ar;
     private int _cachedMainId = int.MinValue;
-    private string _cachedLocale;
+    private int _cachedLocale = -1;
+
+    public void OnLocaleChanged() => _cachedLocale = -1;
 
     public void Bind(AbilityRuntime ar)
     {
@@ -36,16 +38,17 @@ public class ChargeGauge : MonoBehaviour
         var info = main.Charges[chargeIndex];
 
         // 라벨은 능력이나 언어가 바뀔 때만 갱신 (매 프레임 번역 조회 금지)
-        string locale = UnityEngine.Localization.Settings.LocalizationSettings
-                            .SelectedLocale?.Identifier.Code;
+        int locale = LocUtil.Version;
         if (main.Id != _cachedMainId || locale != _cachedLocale)
         {
             _cachedMainId = main.Id;
             _cachedLocale = locale;
             if (label != null)
             {
-                string key = info.DisplayName;                 // 이 필드 자체를 키로 사용
-                label.text = string.IsNullOrEmpty(key) ? "" : LocUtil.GetOr(key, key);
+                // 시트 키 ability.{Id}.charge (첫 게이지 — '능력 → 시트'가 올림) → 없으면 칸 글(키처럼 생겼으면 키로)
+                string raw = info.DisplayName;
+                string fallback = string.IsNullOrEmpty(raw) ? "" : LocUtil.Resolve(raw);
+                label.text = chargeIndex == 0 ? LocUtil.GetOr($"ability.{main.Id}.charge", fallback) : fallback;
             }
         }
 

@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class InteractPrompt : MonoBehaviour
+public class InteractPrompt : MonoBehaviour, ILocRefresh
 {
     [SerializeField] private GameObject root;
     [SerializeField] private TMP_Text keyText;
@@ -17,6 +17,14 @@ public class InteractPrompt : MonoBehaviour
     private string _keyShown;
 
     public void Bind(PlayerInteract interact) => _interact = interact;
+
+    /// <summary>언어 바뀜 — 키 이름 · 열기 · 상자 등급 글자 다시</summary>
+    public void OnLocaleChanged()
+    {
+        _keyShown = null;
+        _shown = null;
+        actionLabel?.SetKey("ui.interact.open");
+    }
 
     void Start()
     {

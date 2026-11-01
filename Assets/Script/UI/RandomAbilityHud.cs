@@ -14,7 +14,7 @@ using UnityEngine.UI;
 ///   2. Row Prefab = RandomAbilityRowView가 붙은 한 줄 프리팹 (비우면 기본 모양)
 ///   3. Row Parent = 줄이 들어갈 곳 (비우면 이 오브젝트). Vertical Layout Group이 있으면 그걸로 쌓고, 없으면 코드가 위에서부터 쌓음
 /// </summary>
-public class RandomAbilityHud : MonoBehaviour
+public class RandomAbilityHud : MonoBehaviour, ILocRefresh
 {
     [Header("모양")]
     [Tooltip("글꼴 · 글자 크기 · 요약 줄 수 — Create → Game → UI → Random Ability HUD Style. 비우면 아래 값 / 줄 프리팹 그대로")]
@@ -43,6 +43,9 @@ public class RandomAbilityHud : MonoBehaviour
     private RandomAbilityRowView _template;
     private bool _manualStack;
     private float _liveAt;
+
+    /// <summary>언어 바뀜 — 요약 상태 글 바로 다시 (줄 글자는 줄이 LocUtil.Version으로 알아서)</summary>
+    public void OnLocaleChanged() => _liveAt = 0f;
     private readonly string[] _live = new string[2];
     private readonly AbilityData[] _liveFor = new AbilityData[2];
 

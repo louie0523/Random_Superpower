@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class ShopPanel : UIPanel
+public class ShopPanel : UIPanel, ILocRefresh
 {
     public enum Tab { Main, Enchant, Special }
 
@@ -101,6 +101,15 @@ public class ShopPanel : UIPanel
         if (t == Tab.Main) RebuildMain();
         else if (t == Tab.Special) RebuildSpecial();
         else enchantView?.Refresh();
+    }
+
+    /// <summary>언어 바뀜 — 열려 있으면 물품 이름 · 설명 다시 (닫혀 있으면 열 때 다시 만듦)</summary>
+    public void OnLocaleChanged()
+    {
+        if (!IsOpen) return;
+        RebuildMain();
+        RebuildSpecial();
+        enchantView?.Refresh();
     }
 
     void Update()

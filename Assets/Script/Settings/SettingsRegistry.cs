@@ -220,9 +220,8 @@ public static class SettingsRegistry
             .Visible = () => VoiceChat.TeamAvailable;
         Key("voice.key.teamMute", "voice", "팀 마이크 음소거 키", () => VoiceSettings.TeamMuteKey, k => VoiceSettings.TeamMuteKey = k)
             .Visible = () => VoiceChat.TeamAvailable;
-        Key("voice.key.settings", "voice", "보이스 설정 바로 열기", () => VoiceSettings.SettingsKey, k => VoiceSettings.SettingsKey = k);
         Confirm("voice.key.reset", "voice", "보이스 키 기본값으로", "기본값으로", ResetVoiceKeys,
-                "T · Y · K · L · O 로 돌아감");
+                "T · Y · K · L 로 돌아감");
 
         // ══════════ HUD · 접근성 ══════════
         Slider("hud.scale", "hud", "HUD 크기", () => GameSettings.HudScale, v => GameSettings.HudScale = v, 0.6f, 1.5f, Pct);

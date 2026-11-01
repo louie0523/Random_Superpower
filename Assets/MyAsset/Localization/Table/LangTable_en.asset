@@ -1202,7 +1202,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366268
-    m_Localized: "Return to T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Localized: "Return to T \xB7 Y \xB7 K \xB7 L"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366269
@@ -2755,6 +2755,427 @@ MonoBehaviour:
   - m_Id: 15311903084097546
     m_Localized: "<b>Farm</b> \u2014 Recovers {b:FarmHealPct}% of damage dealt\n<b>Combat
       Sense</b> \u2014 Shortly after, slash again with {b:SecondMul:pct}% power"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15324686622240768
+    m_Localized: Activated altar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328367992221696
+    m_Localized: Room List
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581824
+    m_Localized: Reconnect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581825
+    m_Localized: nickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581826
+    m_Localized: Room name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581827
+    m_Localized: personnel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581828
+    m_Localized: Lock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581829
+    m_Localized: Map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581830
+    m_Localized: situation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581831
+    m_Localized: There are currently no rooms available.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581832
+    m_Localized: When emptied, it becomes 'Nickname's Room'.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581833
+    m_Localized: Hidden (code only)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581834
+    m_Localized: Making a room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581835
+    m_Localized: Room code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581836
+    m_Localized: Join with code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581837
+    m_Localized: copy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581838
+    m_Localized: Exiting the room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581839
+    m_Localized: game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581840
+    m_Localized: Maximum number of people
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581841
+    m_Localized: Round time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581842
+    m_Localized: Start Soul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581843
+    m_Localized: Box refill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581844
+    m_Localized: Falling to death
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581845
+    m_Localized: instant death
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581846
+    m_Localized: To the resurrection point
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581847
+    m_Localized: "Team Match (Settings only \u2014 Team splitting later)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581848
+    m_Localized: Hide room (participate by code only)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581849
+    m_Localized: "Altar \u2014 N sub-altars \u2192 Central altar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581850
+    m_Localized: Sub-altar cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581851
+    m_Localized: Central altar cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581852
+    m_Localized: After activating all sub-altars, the central altar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581853
+    m_Localized: Required sub-altar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581854
+    m_Localized: Central Channel Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581855
+    m_Localized: If the number of sub-altars on the map is less than the required
+      amount, just open them all.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581856
+    m_Localized: van
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581857
+    m_Localized: Solve everything
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581858
+    m_Localized: Preset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581859
+    m_Localized: Copy settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581860
+    m_Localized: Paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581861
+    m_Localized: Preset name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581862
+    m_Localized: Save to file
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581863
+    m_Localized: Open Preset Folder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581864
+    m_Localized: Import
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581865
+    m_Localized: kicked out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776128
+    m_Localized: Receiving room information...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776129
+    m_Localized: Connecting to server...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776130
+    m_Localized: Entering...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776131
+    m_Localized: On my way out...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776132
+    m_Localized: Not connected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776133
+    m_Localized: During the game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776134
+    m_Localized: Waiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776135
+    m_Localized: Watching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776136
+    m_Localized: Participation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776137
+    m_Localized: There are no rooms available.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776138
+    m_Localized: Room code {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776139
+    m_Localized: private room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776140
+    m_Localized: public room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776141
+    m_Localized: person {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776142
+    m_Localized: Room Manager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776143
+    m_Localized: preparation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776144
+    m_Localized: atmosphere
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776145
+    m_Localized: me
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776146
+    m_Localized: Start Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776147
+    m_Localized: Cancel preparation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776148
+    m_Localized: I am waiting for the host to start.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776149
+    m_Localized: Room settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776150
+    m_Localized: Room settings (host only)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776151
+    m_Localized: borderless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776152
+    m_Localized: '{0} people'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776153
+    m_Localized: '{0} minutes'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776154
+    m_Localized: '{0} Soul'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776155
+    m_Localized: '{0} items'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776156
+    m_Localized: '{0} seconds'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776157
+    m_Localized: Class Ban
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776158
+    m_Localized: Random ability ban
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776159
+    m_Localized: Copy room code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776160
+    m_Localized: Copy room settings to clipboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776161
+    m_Localized: Apply pasted settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776162
+    m_Localized: There are no room settings on the clipboard.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776163
+    m_Localized: '[{0}] Saved'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776164
+    m_Localized: '[{0}] Load'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776165
+    m_Localized: '[{0}] Load failed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776166
+    m_Localized: Room of {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776167
+    m_Localized: Map {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776168
+    m_Localized: Server connection failed ({0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776169
+    m_Localized: The connection was lost. ({0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776170
+    m_Localized: The room for that code does not exist.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776171
+    m_Localized: The room is full.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776172
+    m_Localized: This is a room you cannot participate in.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776173
+    m_Localized: Failed to participate ({0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776174
+    m_Localized: The room owner kicked you out.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776175
+    m_Localized: Only the host can start.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776176
+    m_Localized: preparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776177
+    m_Localized: The map scene is not in the build settings.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776178
+    m_Localized: '{0} people who didn''t prepare'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776179
+    m_Localized: mike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776180
+    m_Localized: Spectator microphone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776181
+    m_Localized: Press and speak ({0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776182
+    m_Localized: Open Microphone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776183
+    m_Localized: Mute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776184
+    m_Localized: Team Mute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776185
+    m_Localized: Speaking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776186
+    m_Localized: game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776187
+    m_Localized: team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776188
+    m_Localized: Watching
     m_Metadata:
       m_Items: []
   references:

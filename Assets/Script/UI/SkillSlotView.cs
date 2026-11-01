@@ -43,10 +43,49 @@ public class SkillSlotView : MonoBehaviour
     private bool _wasReady;
     private float _punch;
 
-    void Start()
+    void Start() => UpdateKeyText();
+
+    void OnEnable() { GameSettings.Changed += UpdateKeyText; UpdateKeyText(); }
+    void OnDisable() => GameSettings.Changed -= UpdateKeyText;
+
+    /// <summary>
+    /// 칸의 키 글자 — 번역 안 함. 기본 키 그대로면 원래 글자(slot.Label()),
+    /// 설정 > 조작에서 키를 바꿨으면 그 키를 짧은 영문으로 (SHIFT · RMB · M4 · T …)
+    /// </summary>
+    void UpdateKeyText()
     {
-        if (keyText != null) keyText.text = slot.Label();
+        if (keyText == null) return;
+        GameAction? act = slot switch
+        {
+            SkillSlot.Skill1 => GameAction.Skill1,
+            SkillSlot.Skill2 => GameAction.Skill2,
+            SkillSlot.Skill3 => GameAction.Skill3,
+            SkillSlot.Ultimate => GameAction.Ultimate,
+            SkillSlot.Random => GameAction.Random,
+            SkillSlot.Random2 => GameAction.Random2,
+            _ => null,
+        };
+        keyText.text = act.HasValue && !KeyBinds.IsDefault(act.Value) ? ShortKey(KeyBinds.Get(act.Value)) : slot.Label();
     }
+
+    static string ShortKey(KeyCode k) => k switch
+    {
+        KeyCode.LeftShift or KeyCode.RightShift => "SHIFT",
+        KeyCode.LeftControl or KeyCode.RightControl => "CTRL",
+        KeyCode.LeftAlt or KeyCode.RightAlt => "ALT",
+        KeyCode.Mouse0 => "LMB",
+        KeyCode.Mouse1 => "RMB",
+        KeyCode.Mouse2 => "MMB",
+        KeyCode.Mouse3 => "M4",
+        KeyCode.Mouse4 => "M5",
+        KeyCode.Space => "SPACE",
+        KeyCode.Return => "ENTER",
+        KeyCode.Tab => "TAB",
+        KeyCode.BackQuote => "`",
+        >= KeyCode.Alpha0 and <= KeyCode.Alpha9 => ((int)(k - KeyCode.Alpha0)).ToString(),
+        >= KeyCode.Keypad0 and <= KeyCode.Keypad9 => "NUM" + (int)(k - KeyCode.Keypad0),
+        _ => k.ToString().ToUpperInvariant(),
+    };
 
     void Update()
     {

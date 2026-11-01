@@ -1203,7 +1203,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366268
-    m_Localized: "Retour \xE0 T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Localized: "Retour \xE0 T \xB7 Y \xB7 K \xB7 L"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366269
@@ -2658,6 +2658,429 @@ MonoBehaviour:
     m_Localized: "<b>Ferme</b> \u2014 Restaure {b:FarmHealPct}% des d\xE9g\xE2ts
       inflig\xE9s\n\n<b>Sens du combat</b> \u2014 Peu apr\xE8s, frappe \xE0 nouveau
       avec {b:SecondMul:pct}% de sa puissance"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15324686622240768
+    m_Localized: "Autel activ\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328367992221696
+    m_Localized: Liste des chambres
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581824
+    m_Localized: Reconnect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581825
+    m_Localized: surnom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581826
+    m_Localized: Nom de la chambre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581827
+    m_Localized: personnel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581828
+    m_Localized: Verrouillage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581829
+    m_Localized: Carte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581830
+    m_Localized: situation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581831
+    m_Localized: Il n'y a actuellement aucune chambre disponible.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581832
+    m_Localized: "Une fois vid\xE9e, elle devient la \xAB chambre de Surnom \xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581833
+    m_Localized: "Cach\xE9 (code uniquement)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581834
+    m_Localized: "Am\xE9nager une pi\xE8ce"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581835
+    m_Localized: Code de la chambre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581836
+    m_Localized: Rejoignez-nous avec le code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581837
+    m_Localized: copie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581838
+    m_Localized: "Sortie de la pi\xE8ce"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581839
+    m_Localized: jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581840
+    m_Localized: Nombre maximum de personnes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581841
+    m_Localized: Temps de ronde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581842
+    m_Localized: "\xC2me de d\xE9part"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581843
+    m_Localized: "Recharge de bo\xEEte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581844
+    m_Localized: Chute mortelle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581845
+    m_Localized: "mort instantan\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581846
+    m_Localized: "Au point de r\xE9surrection"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581847
+    m_Localized: "Match par \xE9quipe (Param\xE8tres uniquement \u2014 Division des
+      \xE9quipes ult\xE9rieurement)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581848
+    m_Localized: "Pi\xE8ce cach\xE9e (participation par code uniquement)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581849
+    m_Localized: "Autel \u2014 N sous-autels \u2192 Autel central"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581850
+    m_Localized: "co\xFBt du sous-autel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581851
+    m_Localized: "co\xFBt de l'autel central"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581852
+    m_Localized: "Apr\xE8s avoir activ\xE9 tous les sous-autels, l'autel central"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581853
+    m_Localized: sous-autel requis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581854
+    m_Localized: Heure du canal central
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581855
+    m_Localized: "Si le nombre de sous-autels sur la carte est inf\xE9rieur au nombre
+      requis, ouvrez-les tous."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581856
+    m_Localized: van
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581857
+    m_Localized: "R\xE9solvez tout"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581858
+    m_Localized: "Pr\xE9r\xE9glage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581859
+    m_Localized: "Copier les param\xE8tres"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581860
+    m_Localized: Coller
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581861
+    m_Localized: "Nom pr\xE9d\xE9fini"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581862
+    m_Localized: Enregistrer dans un fichier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581863
+    m_Localized: "Ouvrir le dossier pr\xE9d\xE9fini"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581864
+    m_Localized: Importer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581865
+    m_Localized: "expuls\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776128
+    m_Localized: "Informations sur la chambre de r\xE9ception..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776129
+    m_Localized: Connexion au serveur...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776130
+    m_Localized: "Entr\xE9e..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776131
+    m_Localized: Je m'en vais...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776132
+    m_Localized: "Non connect\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776133
+    m_Localized: Pendant le jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776134
+    m_Localized: En attendant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776135
+    m_Localized: Regarder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776136
+    m_Localized: Participation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776137
+    m_Localized: Il n'y a plus de chambres disponibles.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776138
+    m_Localized: Code de la chambre {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776139
+    m_Localized: "chambre priv\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776140
+    m_Localized: salle publique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776141
+    m_Localized: personne {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776142
+    m_Localized: Responsable de chambre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776143
+    m_Localized: "pr\xE9paration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776144
+    m_Localized: "atmosph\xE8re"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776145
+    m_Localized: moi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776146
+    m_Localized: "D\xE9marrer la partie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776147
+    m_Localized: "Annuler la pr\xE9paration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776148
+    m_Localized: "J'attends que l'h\xF4te commence."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776149
+    m_Localized: "Param\xE8tres de la chambre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776150
+    m_Localized: "Param\xE8tres de la chambre (h\xF4te uniquement)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776151
+    m_Localized: "sans fronti\xE8res"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776152
+    m_Localized: '{0} personnes'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776153
+    m_Localized: '{0} minutes'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776154
+    m_Localized: "{0} \xC2me"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776155
+    m_Localized: "{0} \xE9l\xE9ments"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776156
+    m_Localized: '{0} secondes'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776157
+    m_Localized: Interdiction de classe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776158
+    m_Localized: "Bannissement al\xE9atoire de capacit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776159
+    m_Localized: Copier le code de la chambre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776160
+    m_Localized: "Copier les param\xE8tres de la salle dans le presse-papiers"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776161
+    m_Localized: "Appliquer les param\xE8tres coll\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776162
+    m_Localized: "Aucun param\xE8tre de pi\xE8ce n'est pr\xE9sent dans le presse-papiers."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776163
+    m_Localized: "[{0}] Enregistr\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776164
+    m_Localized: '[{0}] Charger'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776165
+    m_Localized: "[{0}] \xC9chec du chargement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776166
+    m_Localized: Chambre de {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776167
+    m_Localized: Carte {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776168
+    m_Localized: "\xC9chec de la connexion au serveur ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776169
+    m_Localized: "La connexion a \xE9t\xE9 perdue. ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776170
+    m_Localized: "L'espace n\xE9cessaire pour ce code n'existe pas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776171
+    m_Localized: La salle est pleine.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776172
+    m_Localized: "Il s'agit d'une salle \xE0 laquelle vous ne pouvez pas participer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776173
+    m_Localized: "N'a pas particip\xE9 ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776174
+    m_Localized: "Le propri\xE9taire de la chambre vous a mis \xE0 la porte."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776175
+    m_Localized: "Seul l'h\xF4te peut d\xE9marrer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776176
+    m_Localized: "se pr\xE9parer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776177
+    m_Localized: "La sc\xE8ne de la carte n'est pas disponible dans les param\xE8tres
+      de compilation."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776178
+    m_Localized: "{0} personnes qui ne se sont pas pr\xE9par\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776179
+    m_Localized: micro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776180
+    m_Localized: Microphone du spectateur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776181
+    m_Localized: Appuyez et parlez ({0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776182
+    m_Localized: Microphone ouvert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776183
+    m_Localized: Muet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776184
+    m_Localized: "\xC9quipe Mute"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776185
+    m_Localized: Parlant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776186
+    m_Localized: jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776187
+    m_Localized: "\xE9quipe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776188
+    m_Localized: Regarder
     m_Metadata:
       m_Items: []
   references:

@@ -60,12 +60,15 @@ public class RandomAbilityRowView : MonoBehaviour
         if (PopTarget != null) PopTarget.localScale = Vector3.one;
     }
 
+    int _locVer = -1;      // 언어가 바뀌면 같은 능력이어도 글자 다시
+
     public void Bind(AbilityData a)
     {
         int id = a != null ? a.Id : 0;
-        if (id == ShownId) return;
+        if (id == ShownId && _locVer == LocUtil.Version) return;
+        if (id != ShownId) _pop = 1f;          // 언어만 바뀐 거면 안 튐
         ShownId = id;
-        _pop = 1f;
+        _locVer = LocUtil.Version;
         _live = false;
 
         ApplyStyle(a);
@@ -80,10 +83,11 @@ public class RandomAbilityRowView : MonoBehaviour
     /// <summary>추가 줄 (복수 시간 등) — 요약은 매 프레임 바뀔 수 있음 (남은 초)</summary>
     public void BindExtra(HudExtraRow r)
     {
-        if (r.Key != ShownId)
+        if (r.Key != ShownId || _locVer != LocUtil.Version)
         {
+            if (r.Key != ShownId) _pop = 1f;
             ShownId = r.Key;
-            _pop = 1f;
+            _locVer = LocUtil.Version;
             ApplyStyle(r.Style);
             if (Name != null) Name.text = r.Name ?? "";
             if (Number != null) Number.text = r.Number ?? "";

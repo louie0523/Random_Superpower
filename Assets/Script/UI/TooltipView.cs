@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TooltipView : MonoBehaviour
+public class TooltipView : MonoBehaviour, ILocRefresh
 {
     public struct Content
     {
@@ -65,6 +65,9 @@ public class TooltipView : MonoBehaviour
     }
 
     public void Hide() => root.gameObject.SetActive(false);
+
+    /// <summary>언어 바뀜 — 예전 언어 글자라 닫음 (다시 올리면 새 언어)</summary>
+    public void OnLocaleChanged() { if (root != null) Hide(); }
 
     /// <summary>칩처럼 보이도록 리치 텍스트로 배경을 깔아줌</summary>
     static string BuildTagLine(string[] tags)

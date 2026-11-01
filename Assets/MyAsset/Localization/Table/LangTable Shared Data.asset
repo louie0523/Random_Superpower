@@ -1327,6 +1327,426 @@ MonoBehaviour:
     m_Key: set.ui.off
     m_Metadata:
       m_Items: []
+  - m_Id: 15324686622240768
+    m_Key: ui.score.altars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328367992221696
+    m_Key: lobby.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581824
+    m_Key: lobby.reconnect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581825
+    m_Key: lobby.nick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581826
+    m_Key: lobby.room_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581827
+    m_Key: lobby.col.count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581828
+    m_Key: lobby.lock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581829
+    m_Key: lobby.map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581830
+    m_Key: lobby.col.state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581831
+    m_Key: lobby.empty_hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581832
+    m_Key: lobby.room_name_hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581833
+    m_Key: lobby.hidden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581834
+    m_Key: lobby.create
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581835
+    m_Key: lobby.code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581836
+    m_Key: lobby.join_code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581837
+    m_Key: lobby.copy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581838
+    m_Key: lobby.leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581839
+    m_Key: lobby.section_game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581840
+    m_Key: lobby.max_players
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581841
+    m_Key: lobby.round_time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581842
+    m_Key: lobby.start_soul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581843
+    m_Key: lobby.chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581844
+    m_Key: lobby.fall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581845
+    m_Key: lobby.fall_death
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581846
+    m_Key: lobby.fall_return
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581847
+    m_Key: lobby.team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581848
+    m_Key: lobby.hide_room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581849
+    m_Key: lobby.altar_section
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581850
+    m_Key: lobby.sub_cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581851
+    m_Key: lobby.central_cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581852
+    m_Key: lobby.need_all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581853
+    m_Key: lobby.needed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581854
+    m_Key: lobby.channel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581855
+    m_Key: lobby.altar_note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581856
+    m_Key: lobby.section_ban
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581857
+    m_Key: lobby.unban_all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581858
+    m_Key: lobby.presets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581859
+    m_Key: lobby.copy_settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581860
+    m_Key: lobby.paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581861
+    m_Key: lobby.preset_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581862
+    m_Key: lobby.save_file
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581863
+    m_Key: lobby.open_folder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581864
+    m_Key: lobby.load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581865
+    m_Key: lobby.kick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776128
+    m_Key: lobby.loading_room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776129
+    m_Key: lobby.connecting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776130
+    m_Key: lobby.joining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776131
+    m_Key: lobby.leaving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776132
+    m_Key: lobby.offline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776133
+    m_Key: lobby.playing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776134
+    m_Key: lobby.waiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776135
+    m_Key: lobby.spectate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776136
+    m_Key: lobby.join
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776137
+    m_Key: lobby.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776138
+    m_Key: lobby.code_line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776139
+    m_Key: lobby.hidden_room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776140
+    m_Key: lobby.public_room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776141
+    m_Key: lobby.people
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776142
+    m_Key: lobby.host
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776143
+    m_Key: lobby.ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776144
+    m_Key: lobby.wait_badge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776145
+    m_Key: lobby.me
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776146
+    m_Key: lobby.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776147
+    m_Key: lobby.unready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776148
+    m_Key: lobby.wait_host
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776149
+    m_Key: lobby.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776150
+    m_Key: lobby.settings_guest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776151
+    m_Key: lobby.unlimited
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776152
+    m_Key: lobby.unit.people
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776153
+    m_Key: lobby.unit.min
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776154
+    m_Key: lobby.unit.soul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776155
+    m_Key: lobby.unit.count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776156
+    m_Key: lobby.unit.sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776157
+    m_Key: lobby.ban_class
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776158
+    m_Key: lobby.ban_random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776159
+    m_Key: lobby.code_copied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776160
+    m_Key: lobby.settings_copied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776161
+    m_Key: lobby.settings_pasted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776162
+    m_Key: lobby.no_settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776163
+    m_Key: lobby.saved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776164
+    m_Key: lobby.loaded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776165
+    m_Key: lobby.load_failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776166
+    m_Key: lobby.default_room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776167
+    m_Key: lobby.map_n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776168
+    m_Key: lobby.err.connect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776169
+    m_Key: lobby.err.disconnected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776170
+    m_Key: lobby.err.not_found
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776171
+    m_Key: lobby.err.full
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776172
+    m_Key: lobby.err.closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776173
+    m_Key: lobby.err.join
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776174
+    m_Key: lobby.msg.kicked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776175
+    m_Key: lobby.why.host_only
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776176
+    m_Key: lobby.why.preparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776177
+    m_Key: lobby.why.no_scene
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776178
+    m_Key: lobby.why.not_ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776179
+    m_Key: voice.hud.mic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776180
+    m_Key: voice.hud.spec_mic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776181
+    m_Key: voice.hud.ptt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776182
+    m_Key: voice.hud.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776183
+    m_Key: voice.hud.muted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776184
+    m_Key: voice.hud.team_muted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776185
+    m_Key: voice.hud.talking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776186
+    m_Key: voice.hud.match
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776187
+    m_Key: voice.hud.team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776188
+    m_Key: voice.hud.spectator
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:

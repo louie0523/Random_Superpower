@@ -32,6 +32,7 @@ public partial class RoomUI
     class BanBind
     {
         public UiOption Opt;
+        public AbilityData A;
         public int Id;
         public bool Class;
     }
@@ -47,6 +48,11 @@ public partial class RoomUI
         if (prefab == null) return;
 
         _view = Instantiate(prefab, transform);
+        var v = _view;
+        // 고정 글자 번역 연결 — 코드가 계속 바꾸는 글자는 빼고
+        LobbyLoc.TagStatic(v.transform, v.ToastText, v.CenterText, v.LobbyStatus, v.RoomTitle, v.CodeText, v.VisibilityText,
+                           v.CountText, v.MainButtonLabel, v.ReasonText, v.SettingsTitle, v.ClassBanLabel, v.RandBanLabel);
+        UiTextFit.Apply(v.transform);           // 다른 언어로 길어지면 줄바꿈 · 글자 줄이기
         WireView();
         GameUiKit.Active(_view.Root, false);
     }
@@ -68,7 +74,7 @@ public partial class RoomUI
         On(v.CreateButton, () =>
         {
             string n = v.RoomNameInput != null ? v.RoomNameInput.text.Trim() : "";
-            L.CreateRoom(string.IsNullOrEmpty(n) ? $"{RoomLauncher.Nick}의 방" : n,
+            L.CreateRoom(string.IsNullOrEmpty(n) ? SetLoc.F("lobby.default_room", "{0}의 방", RoomLauncher.Nick) : n,
                          v.HiddenOption != null && v.HiddenOption.IsOn);
         });
         On(v.JoinCodeButton, () => { if (v.CodeInput != null) L.JoinRoom(v.CodeInput.text); });
@@ -81,21 +87,21 @@ public partial class RoomUI
         // 설정 — 값 줄
         Step(v.MapRow, s => L.MapName(s.MapIndex),
              (s, d) => { int n = L.MapCount; s.MapIndex = ((s.MapIndex + d) % n + n) % n; }, 1);
-        Step(v.MaxPlayersRow, s => $"{s.MaxPlayers}명",
+        Step(v.MaxPlayersRow, s => SetLoc.F("lobby.unit.people", "{0}명", s.MaxPlayers),
              (s, d) => s.MaxPlayers = Mathf.Clamp(s.MaxPlayers + d, Mathf.Max(2, Rs != null ? Rs.PlayerCount : 2), L.HardMaxPlayers), 1);
-        Step(v.RoundTimeRow, s => s.RoundSeconds / 60 == 0 ? "무제한" : $"{s.RoundSeconds / 60}분",
+        Step(v.RoundTimeRow, s => s.RoundSeconds / 60 == 0 ? SetLoc.T("lobby.unlimited", "무제한") : SetLoc.F("lobby.unit.min", "{0}분", s.RoundSeconds / 60),
              (s, d) => s.RoundSeconds = Mathf.Clamp(s.RoundSeconds / 60 + d, 0, 60) * 60, 1);
         Step(v.StartSoulRow, s => s.StartSoul.ToString(),
              (s, d) => s.StartSoul = Mathf.Clamp(s.StartSoul + d, 0, 9999), 10);
-        Step(v.ChestRow, s => $"{Mathf.RoundToInt(s.ChestRefillSeconds)}초",
+        Step(v.ChestRow, s => SetLoc.F("lobby.unit.sec", "{0}초", Mathf.RoundToInt(s.ChestRefillSeconds)),
              (s, d) => s.ChestRefillSeconds = Mathf.Clamp(Mathf.RoundToInt(s.ChestRefillSeconds) + d, 5, 600), 5);
-        Step(v.SubCostRow, s => $"{s.SubAltarCost} 소울",
+        Step(v.SubCostRow, s => SetLoc.F("lobby.unit.soul", "{0} 소울", s.SubAltarCost),
              (s, d) => s.SubAltarCost = Mathf.Clamp(s.SubAltarCost + d, 0, 9999), 5);
-        Step(v.CentralCostRow, s => $"{s.CentralAltarCost} 소울",
+        Step(v.CentralCostRow, s => SetLoc.F("lobby.unit.soul", "{0} 소울", s.CentralAltarCost),
              (s, d) => s.CentralAltarCost = Mathf.Clamp(s.CentralAltarCost + d, 0, 9999), 5);
-        Step(v.NeededRow, s => $"{s.AltarsNeeded}개",
+        Step(v.NeededRow, s => SetLoc.F("lobby.unit.count", "{0}개", s.AltarsNeeded),
              (s, d) => s.AltarsNeeded = Mathf.Clamp(s.AltarsNeeded + d, 0, Altar.MaxSub), 1);
-        Step(v.ChannelRow, s => $"{s.CentralChannelSeconds}초",
+        Step(v.ChannelRow, s => SetLoc.F("lobby.unit.sec", "{0}초", s.CentralChannelSeconds),
              (s, d) => s.CentralChannelSeconds = Mathf.Clamp(s.CentralChannelSeconds + d, 1, 60), 1);
 
         // 설정 — 켜고 끄기
@@ -118,14 +124,14 @@ public partial class RoomUI
         {
             if (Rs == null) return;
             GUIUtility.systemCopyBuffer = Rs.Settings.ToShareCode();
-            L.Toast("방 설정을 클립보드에 복사함");
+            L.Toast(SetLoc.T("lobby.settings_copied", "방 설정을 클립보드에 복사함"));
         });
         On(v.PasteButton, () =>
         {
             if (Rs != null && RoomSettings.TryParse(GUIUtility.systemCopyBuffer, out var p) && Rs.ApplySettings(p))
-                L.Toast("붙여 넣은 설정 적용");
+                L.Toast(SetLoc.T("lobby.settings_pasted", "붙여 넣은 설정 적용"));
             else
-                L.Toast("클립보드에 방 설정이 없어");
+                L.Toast(SetLoc.T("lobby.no_settings", "클립보드에 방 설정이 없어"));
         });
         if (v.PresetNameInput != null)
         {
@@ -136,7 +142,7 @@ public partial class RoomUI
         {
             if (Rs == null) return;
             string n = v.PresetNameInput != null ? v.PresetNameInput.text.Trim() : _presetName;
-            if (Rs.Settings.SaveAs(n)) L.Toast($"'{n}' 저장함");
+            if (Rs.Settings.SaveAs(n)) L.Toast(SetLoc.F("lobby.saved", "[{0}] 저장함", n));
             _vPresetAt = 0f;
         });
         On(v.OpenFolderButton, () =>
@@ -163,18 +169,27 @@ public partial class RoomUI
         foreach (var a in abilities.Where(x => x != null && x.Id >= range.x && x.Id <= range.y).OrderBy(x => x.Id))
         {
             var o = Instantiate(_view.BanTogglePrefab, content);
-            string label = string.IsNullOrEmpty(a.DisplayName) ? a.name : a.DisplayName;
-            o.SetText($"{a.Id % 100:00} {label}");
+            o.SetText(BanText(a));
             int id = a.Id;
             On(o, () => Change(s =>
             {
                 var list = cls ? s.BanClass : s.BanRandom;
                 if (list.Contains(id)) list.Remove(id); else list.Add(id);
             }));
-            _bans.Add(new BanBind { Opt = o, Id = id, Class = cls });
+            _bans.Add(new BanBind { Opt = o, A = a, Id = id, Class = cls });
             n++;
         }
         return n;
+    }
+
+    /// <summary>밴 칸 글자 — 능력 이름은 지금 언어로</summary>
+    static string BanText(AbilityData a) => $"{a.Id % 100:00} {AbilityUi.Name(a)}";
+
+    /// <summary>언어 바뀜 — 코드로 만든 칸(밴 능력 이름) 다시. 나머지는 매 틱 / SetLocText가 함</summary>
+    public void OnLocaleChanged()
+    {
+        foreach (var b in _bans)
+            if (b.Opt != null && b.A != null) b.Opt.SetText(BanText(b.A));
     }
 
     /// <summary>설정 바꾸기 — 방장만 (RoomState가 대기실인지 확인)</summary>
@@ -192,7 +207,7 @@ public partial class RoomUI
         var runner = RoomLauncher.Runner;
         string code = runner != null && runner.SessionInfo != null ? runner.SessionInfo.Name : "";
         GUIUtility.systemCopyBuffer = code;
-        L.Toast("방 코드 복사함");
+        L.Toast(SetLoc.T("lobby.code_copied", "방 코드 복사함"));
     }
 
     void MainPressed()
@@ -237,7 +252,7 @@ public partial class RoomUI
 
         bool toast = !string.IsNullOrEmpty(L.Message) && Time.unscaledTime - L.MessageTime < 6f;
         GameUiKit.Active(v.ToastBox, toast);
-        if (toast) GameUiKit.Set(v.ToastText, L.Message);
+        if (toast) GameUiKit.Set(v.ToastText, LobbyLoc.Msg(L.Message));
 
         var rs = Rs;
         bool inRoom = L.State == RoomLauncher.LinkState.InRoom;
@@ -246,7 +261,7 @@ public partial class RoomUI
         if (v.CenterText != null)
         {
             GameUiKit.Active(v.CenterText, inRoom && rs == null);
-            GameUiKit.Set(v.CenterText, "방 정보 받는 중...");
+            GameUiKit.Set(v.CenterText, SetLoc.T("lobby.loading_room", "방 정보 받는 중..."));
         }
 
         if (!inRoom) TickLobby(v);
@@ -257,10 +272,10 @@ public partial class RoomUI
     {
         string status = L.State switch
         {
-            RoomLauncher.LinkState.ConnectingLobby => "서버 연결 중...",
-            RoomLauncher.LinkState.Joining => "들어가는 중...",
-            RoomLauncher.LinkState.Leaving => "나가는 중...",
-            RoomLauncher.LinkState.Offline => "연결 안 됨",
+            RoomLauncher.LinkState.ConnectingLobby => SetLoc.T("lobby.connecting", "서버 연결 중..."),
+            RoomLauncher.LinkState.Joining => SetLoc.T("lobby.joining", "들어가는 중..."),
+            RoomLauncher.LinkState.Leaving => SetLoc.T("lobby.leaving", "나가는 중..."),
+            RoomLauncher.LinkState.Offline => SetLoc.T("lobby.offline", "연결 안 됨"),
             _ => "",
         };
         GameUiKit.Set(v.LobbyStatus, status);
@@ -288,10 +303,10 @@ public partial class RoomUI
                 row.Code = si.Name;
                 GameUiKit.Set(row.Name, RoomLauncher.PropStr(si, "n", si.Name));
                 GameUiKit.Set(row.Count, $"{si.PlayerCount}/{max}");
-                GameUiKit.Set(row.Lock, locked ? "잠금" : "");
+                GameUiKit.Set(row.Lock, locked ? SetLoc.T("lobby.lock", "잠금") : "");
                 GameUiKit.Set(row.Map, L.MapName(RoomLauncher.PropInt(si, "map", 0)));
-                GameUiKit.Set(row.State, playing ? "게임 중" : "대기 중");
-                GameUiKit.Set(row.JoinLabel, playing ? "관전" : "참가");
+                GameUiKit.Set(row.State, playing ? SetLoc.T("lobby.playing", "게임 중") : SetLoc.T("lobby.waiting", "대기 중"));
+                GameUiKit.Set(row.JoinLabel, playing ? SetLoc.T("lobby.spectate", "관전") : SetLoc.T("lobby.join", "참가"));
                 GameUiKit.Interact(row.Join, canAct && !locked);
             }
         }
@@ -304,6 +319,8 @@ public partial class RoomUI
         while (_roomRows.Count <= i)
         {
             var r = Instantiate(_view.RoomRowPrefab, _view.RoomListContent);
+            LobbyLoc.TagStatic(r.transform, r.Name, r.Count, r.Lock, r.Map, r.State, r.JoinLabel);
+            UiTextFit.Apply(r.transform);
             On(r.Join, () => { if (!string.IsNullOrEmpty(r.Code)) L.JoinRoom(r.Code); });
             _roomRows.Add(r);
         }
@@ -320,9 +337,9 @@ public partial class RoomUI
         string code = runner.SessionInfo != null ? runner.SessionInfo.Name : "";
 
         GameUiKit.Set(v.RoomTitle, rs.RoomName.ToString());
-        GameUiKit.Set(v.CodeText, $"방 코드  {code}");
-        GameUiKit.Set(v.VisibilityText, rs.Hidden ? "숨김 방 — 코드로만 들어올 수 있어" : "공개 방");
-        GameUiKit.Set(v.CountText, $"사람 {rs.PlayerCount}/{rs.MaxPlayers}");
+        GameUiKit.Set(v.CodeText, SetLoc.F("lobby.code_line", "방 코드  {0}", code));
+        GameUiKit.Set(v.VisibilityText, rs.Hidden ? SetLoc.T("lobby.hidden_room", "숨김 방 — 코드로만 들어올 수 있어") : SetLoc.T("lobby.public_room", "공개 방"));
+        GameUiKit.Set(v.CountText, SetLoc.F("lobby.people", "사람 {0}/{1}", rs.PlayerCount, rs.MaxPlayers));
 
         // 명단
         rs.SortedPlayers(_vPlayers);
@@ -336,9 +353,9 @@ public partial class RoomUI
                 row.Ref = p.Ref;
 
                 bool isHost = p.Ref == rs.Host;
-                GameUiKit.Set(row.BadgeText, isHost ? "방장" : p.Ready ? "준비" : "대기");
+                GameUiKit.Set(row.BadgeText, isHost ? SetLoc.T("lobby.host", "방장") : p.Ready ? SetLoc.T("lobby.ready", "준비") : SetLoc.T("lobby.wait_badge", "대기"));
                 if (row.Badge != null) row.Badge.color = isHost ? v.HostBadge : p.Ready ? v.ReadyBadge : v.WaitBadge;
-                GameUiKit.Set(row.Name, p.Name.ToString() + (p.Ref == me ? "  (나)" : ""));
+                GameUiKit.Set(row.Name, p.Name.ToString() + (p.Ref == me ? "  (" + SetLoc.T("lobby.me", "나") + ")" : ""));
                 GameUiKit.Active(row.Kick, host && p.Ref != me);
             }
         }
@@ -348,22 +365,22 @@ public partial class RoomUI
         if (host)
         {
             bool can = rs.CanStart(out string why);
-            GameUiKit.Set(v.MainButtonLabel, "게임 시작");
+            GameUiKit.Set(v.MainButtonLabel, SetLoc.T("lobby.start", "게임 시작"));
             if (v.MainButtonFace != null) v.MainButtonFace.color = v.StartColor;
             GameUiKit.Interact(v.MainButton, can);
-            GameUiKit.Set(v.ReasonText, can ? "" : why);
+            GameUiKit.Set(v.ReasonText, can ? "" : LobbyLoc.Msg(why));
         }
         else
         {
             bool ready = rs.IsReady(me);
-            GameUiKit.Set(v.MainButtonLabel, ready ? "준비 취소" : "준비");
+            GameUiKit.Set(v.MainButtonLabel, ready ? SetLoc.T("lobby.unready", "준비 취소") : SetLoc.T("lobby.ready", "준비"));
             if (v.MainButtonFace != null) v.MainButtonFace.color = ready ? v.UnreadyColor : v.ReadyColor;
             GameUiKit.Interact(v.MainButton, true);
-            GameUiKit.Set(v.ReasonText, ready ? "방장이 시작하면 게임이 시작돼" : "");
+            GameUiKit.Set(v.ReasonText, ready ? SetLoc.T("lobby.wait_host", "방장이 시작하면 게임이 시작돼") : "");
         }
 
         // 설정
-        GameUiKit.Set(v.SettingsTitle, host ? "방 설정" : "방 설정 (방장만)");
+        GameUiKit.Set(v.SettingsTitle, host ? SetLoc.T("lobby.settings", "방 설정") : SetLoc.T("lobby.settings_guest", "방 설정 (방장만)"));
         var s = rs.Settings;
         foreach (var b in _steps)
         {
@@ -384,8 +401,8 @@ public partial class RoomUI
             Opt(b.Opt, (b.Class ? s.BanClass : s.BanRandom).Contains(b.Id), host);
         GameUiKit.Active(v.ClassBanContent, _classOpen);
         GameUiKit.Active(v.RandBanContent, _randOpen);
-        GameUiKit.Set(v.ClassBanLabel, BanLabel("클래스 밴", _classOpen, s.BanClass.Count, _classBanCount));
-        GameUiKit.Set(v.RandBanLabel, BanLabel("랜덤 능력 밴", _randOpen, s.BanRandom.Count, _randBanCount));
+        GameUiKit.Set(v.ClassBanLabel, BanLabel(SetLoc.T("lobby.ban_class", "클래스 밴"), _classOpen, s.BanClass.Count, _classBanCount));
+        GameUiKit.Set(v.RandBanLabel, BanLabel(SetLoc.T("lobby.ban_random", "랜덤 능력 밴"), _randOpen, s.BanRandom.Count, _randBanCount));
         GameUiKit.Active(v.ClassBanClear, host && s.BanClass.Count > 0);
         GameUiKit.Active(v.RandBanClear, host && s.BanRandom.Count > 0);
 
@@ -412,13 +429,15 @@ public partial class RoomUI
     static string BanLabel(string title, bool open, int banned, int total) =>
         total == 0
             ? $"{title} — 능력 목록 비어 있음 (RoomUI 우클릭 → 능력 목록 자동 채우기)"
-            : $"{(open ? "[-]" : "[+]")} {title} ({banned}개)";
+            : $"{(open ? "[-]" : "[+]")} {title} ({SetLoc.F("lobby.unit.count", "{0}개", banned)})";
 
     RoomPlayerRowView PlayerRow(int i)
     {
         while (_playerRows.Count <= i)
         {
             var r = Instantiate(_view.PlayerRowPrefab, _view.PlayerListContent);
+            LobbyLoc.TagStatic(r.transform, r.Name, r.BadgeText);       // 강퇴 버튼 글자 등
+            UiTextFit.Apply(r.transform);
             On(r.Kick, () => { if (Rs != null) Rs.Kick(r.Ref); });
             _playerRows.Add(r);
         }
@@ -430,13 +449,14 @@ public partial class RoomUI
         while (_presetRows.Count <= i)
         {
             var r = Instantiate(_view.PresetRowPrefab, _view.PresetListContent);
+            LobbyLoc.TagStatic(r.transform, r.Label);                   // 불러오기 버튼 글자
             int idx = _presetRows.Count;
             On(r.Action, () =>
             {
                 if (Rs == null || idx >= _vPresets.Length) return;
                 string f = _vPresets[idx];
-                if (RoomSettings.TryLoad(f, out var p) && Rs.ApplySettings(p)) L.Toast($"'{f}' 불러옴");
-                else L.Toast($"'{f}' 불러오기 실패");
+                if (RoomSettings.TryLoad(f, out var p) && Rs.ApplySettings(p)) L.Toast(SetLoc.F("lobby.loaded", "[{0}] 불러옴", f));
+                else L.Toast(SetLoc.F("lobby.load_failed", "[{0}] 불러오기 실패", f));
             });
             _presetRows.Add(r);
         }

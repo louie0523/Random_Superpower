@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class EnchantPage : MonoBehaviour
+public class EnchantPage : MonoBehaviour, ILocRefresh
 {
     [Header("스톤")]
     [SerializeField] private LocText stoneLabel;
@@ -93,6 +93,9 @@ public class EnchantPage : MonoBehaviour
         _health = enchant != null ? enchant.GetComponent<PlayerHealth>() : null;
         Invalidate();
     }
+
+    /// <summary>언어 바뀜 — 무기 이름 · 인챈트 줄 다시</summary>
+    public void OnLocaleChanged() { if (_enchant != null) Refresh(); }
 
     public void Refresh()
     {

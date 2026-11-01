@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DetailWindow : MonoBehaviour
+public class DetailWindow : MonoBehaviour, ILocRefresh
 {
     public struct Content
     {
@@ -57,6 +57,9 @@ public class DetailWindow : MonoBehaviour
     }
 
     public void Hide() => Apply(false);
+
+    /// <summary>언어 바뀜 — 예전 언어 글자라 닫음</summary>
+    public void OnLocaleChanged() { if (IsOpen) Hide(); }
 
     void Apply(bool on)
     {

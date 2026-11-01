@@ -141,6 +141,9 @@ public static class KeyBinds
         _cache[a] = k;
     }
 
+    /// <summary>기본 키 그대로인가</summary>
+    public static bool IsDefault(GameAction a) => Defaults.TryGetValue(a, out var d) && Get(a) == d;
+
     public static void ResetAll()
     {
         foreach (var kv in Defaults) Store(kv.Key, kv.Value);

@@ -1,7 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// 보이스 설정 창 (O 키 · 설정에서 바꿈) + 화면 왼쪽 아래 마이크 상태 · 말하는 사람 표시.
+/// 보이스 설정 창 (예전 단독 창 — 이제 키로 안 열림. 보이스 설정은 설정 > 채팅 · 보이스 탭).
+/// 화면 왼쪽 아래 마이크 상태 · 말하는 사람 표시는 VoiceStatusHud로 옮김.
 /// 씬에 없으면 알아서 생김. 나중에 게임 설정 메뉴가 생기면 VoiceSettings 값을 거기서 바꾸면 됨.
 /// 창 모양: Resources/UiPrefabSet의 '보이스 설정 창'을 켜면 프리팹(VoiceSettingsView), 아니면 아래 코드 모양.
 /// 관전자도 열 수 있음 (SpectatorVoice).
@@ -106,15 +107,7 @@ public class VoiceSettingsPanel : MonoBehaviour
             return;
         }
 
-        if (!HasVoice) return;
-        if (CommsHud.ChatOpen || DevConsole.IsOpen || PlayerPickPanel.IsShowing) return;
-        if (SettingsWindow.IsOpen || EscMenu.IsOpen) return;
-        if (Input.GetKeyDown(VoiceSettings.SettingsKey))
-        {
-            // 보이스 전용 프리팹을 켰으면 그 창, 아니면 설정 창의 '채팅 · 보이스' 탭
-            if (UiPrefabSet.VoicePrefab != null) Open();
-            else SettingsWindow.Open("voice");
-        }
+        // O 키로 여는 건 없앰 — 보이스 설정은 설정(Esc) > 채팅 · 보이스 탭에서만
     }
 
     void Styles()
@@ -131,9 +124,8 @@ public class VoiceSettingsPanel : MonoBehaviour
 
     void OnGUI()
     {
-        Styles();
-        DrawStatus();
         if (!IsOpen) return;
+        Styles();
         if (HandleKeys()) return;
         if (_view == null) DrawPanel();
     }
@@ -158,57 +150,6 @@ public class VoiceSettingsPanel : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-    // ── 왼쪽 아래: 내 마이크 · 말하는 사람 ──
-
-    void DrawStatus()
-    {
-        var me = VoiceChat.Local;
-        var spec = SpectatorVoice.Local;
-        if (me == null && spec == null) return;
-
-        float s = _scale;
-        float x = 20f * s;
-        float y = Screen.height - 120f * s;
-        float lineH = _small.fontSize * 1.5f;
-
-        // 말하는 사람들 (위로 쌓임)
-        foreach (var v in VoiceChat.All)
-        {
-            if (v == null || v == me || !v.IsTalking) continue;
-            bool team = (v.Flags & VoiceChat.FlagTeam) != 0 && VoiceChat.TeamAvailable;
-            string tag = team ? "<color=#6fd6ff>팀</color>" : "<color=#ffffff>경기</color>";
-            y -= lineH;
-            Shadow(new Rect(x, y, 400f * s, lineH), $"▶ [{tag}] {TargetUtil.NameOf(v)}");
-        }
-        foreach (var v in SpectatorVoice.All)
-        {
-            if (v == null || v == spec || !v.IsTalking) continue;
-            y -= lineH;
-            Shadow(new Rect(x, y, 400f * s, lineH), $"▶ [<color=#b8b8b8>관전</color>] {v.DisplayName}");
-        }
-
-        // 내 상태
-        string mode = VoiceSettings.Mode == MicMode.PushToTalk
-            ? TargetUtil.Text("voice.mode.ptt", "누르고 말하기 ({0})", VoiceSettings.MatchTalkKey)
-            : TargetUtil.Text("voice.mode.open", "열린 마이크");
-        string mm = VoiceSettings.MatchMuted ? "<color=#ff6b6b>음소거</color>" : "";
-        string who = me != null ? "[마이크]" : "[관전 마이크 — 관전자끼리]";
-        string tm = me != null && VoiceChat.TeamAvailable && VoiceSettings.TeamMuted ? "<color=#ff6b6b>팀 음소거</color>" : "";
-        bool talking = me != null ? me.IsTalking : spec.IsTalking;
-        string talk = talking ? "<color=#7dff8a>● 말하는 중</color>" : "";
-        Shadow(new Rect(x, Screen.height - 120f * s, 760f * s, lineH),
-            $"{who} {mode}  {mm}  {tm}  {talk}   <color=#999999>[{VoiceSettings.SettingsKey}] 설정</color>");
-    }
-
-    void Shadow(Rect r, string text)
-    {
-        var c = GUI.color;
-        GUI.color = new Color(0f, 0f, 0f, 0.8f);
-        GUI.Label(new Rect(r.x + 1.5f, r.y + 1.5f, r.width, r.height), System.Text.RegularExpressions.Regex.Replace(text, "</?color[^>]*>", ""), _small);
-        GUI.color = c;
-        GUI.Label(r, text, _small);
     }
 
     // ── 설정 창 (코드 모양) ──
@@ -278,17 +219,7 @@ public class VoiceSettingsPanel : MonoBehaviour
         GUILayout.Label(TargetUtil.Text("voice.vol.team", "팀 보이스 크기") + $"  {VoiceSettings.TeamVolume * 100f:0}%", _small);
         VoiceSettings.TeamVolume = GUILayout.HorizontalSlider(VoiceSettings.TeamVolume, 0f, 1f);
 
-        // 진단
-        if (VoiceChat.Local != null)
-        {
-            GUILayout.Space(8f * s);
-            GUILayout.Label("<color=#aaaaaa>" + VoiceChat.Local.Diagnose() + "</color>", _small);
-        }
-        else if (SpectatorVoice.Local != null)
-        {
-            GUILayout.Space(8f * s);
-            GUILayout.Label("<color=#aaaaaa>관전자 보이스 — 관전자끼리만 들림</color>", _small);
-        }
+        // (진단 글은 없앰 — 필요하면 VoiceChat.Local.Diagnose()를 콘솔로)
 
         GUILayout.EndScrollView();
         GUILayout.Space(6f * s);

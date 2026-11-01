@@ -1,10 +1,56 @@
+using System;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
+
+/// <summary>화면에 번역 글자를 그리는 UI가 구현 — 언어가 바뀌면 불림 (글자를 다시 만들 것)</summary>
+public interface ILocRefresh
+{
+    void OnLocaleChanged();
+}
 
 public static class LocUtil
 {
     public const string TableName = "LangTable";
+
+    // ══════════════════ 언어 바뀜 알림 ══════════════════
+
+    /// <summary>언어가 바뀔 때마다 +1 — UI가 '바뀌었나' 비교(서명 · 해시)에 섞어 쓰면 저절로 다시 그림</summary>
+    public static int Version { get; private set; }
+
+    /// <summary>언어가 바뀐 뒤 (새 언어 표가 준비된 뒤) 한 번</summary>
+    public static event Action Changed;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Hook()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLocale;
+        LocalizationSettings.SelectedLocaleChanged += OnLocale;
+    }
+
+    static void OnLocale(Locale _)
+    {
+        // 새 언어 표를 먼저 불러온 뒤 알림 — 안 그러면 UI가 예전 언어 글자를 다시 읽음
+        var op = LocalizationSettings.StringDatabase.GetTableAsync(TableName);
+        if (op.IsDone) Raise();
+        else op.Completed += _ => Raise();
+    }
+
+    static void Raise()
+    {
+        Version++;
+        try { Changed?.Invoke(); }
+        catch (Exception e) { Debug.LogException(e); }
+
+        // 씬의 ILocRefresh 전부 (꺼진 것 포함)
+        foreach (var mb in UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (mb is ILocRefresh r)
+            {
+                try { r.OnLocaleChanged(); }
+                catch (Exception e) { Debug.LogException(e, mb); }
+            }
+    }
 
     static StringTable Table
     {

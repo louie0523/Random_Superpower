@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class InventoryPanel : UIPanel
+public class InventoryPanel : UIPanel, ILocRefresh
 {
     [Header("무기 슬롯")]
     [SerializeField] private Transform weaponSlotParent;
@@ -91,6 +91,13 @@ public class InventoryPanel : UIPanel
     }
 
     protected override void OnClosed() => HideUpgradeChoice();
+
+    /// <summary>언어 바뀜 — 다음 Update에 전부 다시 (닫혀 있으면 열 때)</summary>
+    public void OnLocaleChanged()
+    {
+        _sig = int.MinValue;
+        if (IsOpen && _equip != null) { HideUpgradeChoice(); _sig = ComputeSig(); Refresh(); }
+    }
 
     void Update()
     {

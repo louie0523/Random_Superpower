@@ -17,6 +17,7 @@ public class ScoreboardView : MonoBehaviour
         public string Name;
         public int K, A, D, Soul, Altars;
         public bool Local;
+        public AbilityData Class;
     }
 
     private readonly List<ScoreboardRow> _rows = new();
@@ -68,6 +69,7 @@ public class ScoreboardView : MonoBehaviour
                 Soul = h.Soul,
                 Altars = PlayerAltars.CountOf(p),
                 Local = p == _runner.LocalPlayer,
+                Class = obj.TryGetComponent<AbilityRuntime>(out var ar) ? ar.GetMainAbility() : null,   // 고르는 중이면 null
             });
         }
 
@@ -95,6 +97,7 @@ public class ScoreboardView : MonoBehaviour
             var e = _entries[i];
             _rows[i].Bind(i + 1, e.Name, e.K, e.A, e.D, e.Soul, e.Local);
             _rows[i].SetAltars(e.Altars, need);
+            _rows[i].SetClass(e.Class);            // Bind 뒤에 (이름 칸에 붙일 수도 있어서)
         }
     }
 }

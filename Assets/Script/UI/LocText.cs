@@ -1,11 +1,11 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
 /// <summary>키를 코드로 바꿀 수 있는 로컬라이즈 텍스트</summary>
 [RequireComponent(typeof(TMP_Text))]
-public class LocText : MonoBehaviour
+public class LocText : MonoBehaviour, ILocRefresh
 {
     [SerializeField] private string tableName = "LangTable";
     [SerializeField] private string entryKey;
@@ -30,6 +30,9 @@ public class LocText : MonoBehaviour
     }
 
     void OnLocaleChanged(Locale _) => Refresh();
+
+    /// <summary>새 언어 표가 준비된 뒤 한 번 더 (위 알림은 표 로딩 전에 올 수 있음)</summary>
+    void ILocRefresh.OnLocaleChanged() => Refresh();
 
     public void SetKey(string key, params object[] args)
     {

@@ -1196,7 +1196,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366268
-    m_Localized: "Regresar a T \xB7 Y \xB7 K \xB7 L \xB7 O"
+    m_Localized: "Regresar a T \xB7 Y \xB7 K \xB7 L"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366269
@@ -2644,6 +2644,428 @@ MonoBehaviour:
     m_Localized: "<b>Granja</b> \u2014 Recupera {b:FarmHealPct}% del da\xF1o infligido\n<b>Sentido
       de combate</b> \u2014 Poco despu\xE9s, ataca de nuevo con {b:SecondMul:pct}%
       de poder"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15324686622240768
+    m_Localized: Altar activado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328367992221696
+    m_Localized: Lista de habitaciones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581824
+    m_Localized: Reconectar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581825
+    m_Localized: apodo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581826
+    m_Localized: "Nombre de la habitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581827
+    m_Localized: personal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581828
+    m_Localized: Cerrar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581829
+    m_Localized: Mapa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581830
+    m_Localized: "situaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581831
+    m_Localized: Actualmente no hay habitaciones disponibles.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581832
+    m_Localized: "Cuando se vac\xEDa, se convierte en la \"Habitaci\xF3n de Apodo\"."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581833
+    m_Localized: "Oculto (solo c\xF3digo)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581834
+    m_Localized: "Hacer una habitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581835
+    m_Localized: "C\xF3digo de habitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581836
+    m_Localized: "\xDAnete con c\xF3digo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581837
+    m_Localized: Copiar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581838
+    m_Localized: "Saliendo de la habitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581839
+    m_Localized: juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581840
+    m_Localized: "N\xFAmero m\xE1ximo de personas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581841
+    m_Localized: Tiempo de ida y vuelta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581842
+    m_Localized: Iniciar alma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581843
+    m_Localized: Recarga de caja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581844
+    m_Localized: "Ca\xEDda mortal"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581845
+    m_Localized: "muerte instant\xE1nea"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581846
+    m_Localized: "Hasta el punto de resurrecci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581847
+    m_Localized: "Partido por equipos (solo configuraci\xF3n; la divisi\xF3n de equipos
+      se realizar\xE1 m\xE1s adelante)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581848
+    m_Localized: "Sala oculta (participaci\xF3n solo mediante c\xF3digo)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581849
+    m_Localized: "Altar \u2014 Subaltares N \u2192 Altar central"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581850
+    m_Localized: Costo del subaltar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581851
+    m_Localized: Costo del altar central
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581852
+    m_Localized: "Despu\xE9s de activar todos los subaltares, el altar central"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581853
+    m_Localized: Subaltar requerido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581854
+    m_Localized: Hora del Canal Central
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581855
+    m_Localized: "Si el n\xFAmero de subaltares en el mapa es menor que la cantidad
+      requerida, simplemente \xE1bralos todos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581856
+    m_Localized: furgoneta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581857
+    m_Localized: Resolverlo todo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581858
+    m_Localized: Programar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581859
+    m_Localized: "Copiar configuraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581860
+    m_Localized: Pasta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581861
+    m_Localized: Nombre del preajuste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581862
+    m_Localized: Guardar en archivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581863
+    m_Localized: Abrir carpeta de preajustes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581864
+    m_Localized: Importar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368021581865
+    m_Localized: expulsado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776128
+    m_Localized: "Informaci\xF3n de la sala de recepci\xF3n..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776129
+    m_Localized: Conectando con el servidor...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776130
+    m_Localized: Entrando...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776131
+    m_Localized: Al salir...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776132
+    m_Localized: No conectado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776133
+    m_Localized: Durante el juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776134
+    m_Localized: Espera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776135
+    m_Localized: Mirando
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776136
+    m_Localized: "Participaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776137
+    m_Localized: No hay habitaciones disponibles.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776138
+    m_Localized: "C\xF3digo de habitaci\xF3n {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776139
+    m_Localized: "habitaci\xF3n privada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776140
+    m_Localized: "sala p\xFAblica"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776141
+    m_Localized: persona {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776142
+    m_Localized: Gerente de habitaciones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776143
+    m_Localized: "preparaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776144
+    m_Localized: "atm\xF3sfera"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776145
+    m_Localized: "a m\xED"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776146
+    m_Localized: Iniciar juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776147
+    m_Localized: "Cancelar la preparaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776148
+    m_Localized: "Estoy esperando a que el anfitri\xF3n comience."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776149
+    m_Localized: "Configuraci\xF3n de la habitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776150
+    m_Localized: "Configuraci\xF3n de la habitaci\xF3n (solo para el anfitri\xF3n)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776151
+    m_Localized: sin fronteras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776152
+    m_Localized: '{0} personas'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776153
+    m_Localized: '{0} minutos'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776154
+    m_Localized: '{0} Alma'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776155
+    m_Localized: "{0} art\xEDculos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776156
+    m_Localized: '{0} segundos'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776157
+    m_Localized: "Prohibici\xF3n de clases"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776158
+    m_Localized: "prohibici\xF3n de habilidades aleatorias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776159
+    m_Localized: "Copiar el c\xF3digo de la habitaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776160
+    m_Localized: "Copiar la configuraci\xF3n de la habitaci\xF3n al portapapeles"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776161
+    m_Localized: "Aplicar configuraci\xF3n pegada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776162
+    m_Localized: "No hay ajustes de habitaci\xF3n en el portapapeles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776163
+    m_Localized: '[{0}] Guardado'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776164
+    m_Localized: '[{0}] Cargar'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776165
+    m_Localized: '[{0}] Error de carga'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776166
+    m_Localized: "Habitaci\xF3n de {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776167
+    m_Localized: Mapa {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776168
+    m_Localized: "Fall\xF3 la conexi\xF3n con el servidor ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776169
+    m_Localized: "Se perdi\xF3 la conexi\xF3n. ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776170
+    m_Localized: "No existe espacio para ese c\xF3digo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776171
+    m_Localized: "La sala est\xE1 llena."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776172
+    m_Localized: Esta es una sala en la que no puedes participar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776173
+    m_Localized: No pudo participar ({0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776174
+    m_Localized: "El due\xF1o de la habitaci\xF3n te ech\xF3."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776175
+    m_Localized: "Solo el anfitri\xF3n puede iniciar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776176
+    m_Localized: preparante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776177
+    m_Localized: "La escena del mapa no est\xE1 en la configuraci\xF3n de compilaci\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776178
+    m_Localized: '{0} personas que no se prepararon'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776179
+    m_Localized: micro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776180
+    m_Localized: "Micr\xF3fono para espectadores"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776181
+    m_Localized: Pulsa y habla ({0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776182
+    m_Localized: "Micr\xF3fono abierto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776183
+    m_Localized: Silenciar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776184
+    m_Localized: Equipo Silencio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776185
+    m_Localized: Discurso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776186
+    m_Localized: juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776187
+    m_Localized: equipo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15328368025776188
+    m_Localized: Mirando
     m_Metadata:
       m_Items: []
   references:
