@@ -2598,6 +2598,142 @@ MonoBehaviour:
     m_Localized: "\uB180\uB78D\uB3C4\uB85D \uD3C9\uBC94\uD558\uACE0 \uBB34\uB2A5\uD569\uB2C8\uB2E4."
     m_Metadata:
       m_Items: []
+  - m_Id: 15311903037960192
+    m_Localized: "\uC70C\uB9AC\uC5C4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Localized: "\uC874"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Localized: "\uD1A0\uB9C8\uC2A4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Localized: "\uD5E8\uB9AC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Localized: "\uB85C\uBC84\uD2B8"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Localized: "\uC6B8\uD504"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Localized: "\uD558\uCF58"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Localized: "\uC5D0\uB9AD"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Localized: "\uC544\uC11C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Localized: "<b>\uB4A4\uC5BD\uD78C \uC131\uAC80</b> \u2014 \uD53C\uD574\uC758
+      {b:ArthurTrueRatio:pct}%\uAC00 \uBC29\uC5B4\uB825\uC744 \uBB34\uC2DC\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Localized: "<b>\uC9C4\uACA9</b> \u2014 \uB3CC\uC9C4 \uC18D\uB3C4\uAC00 \uC99D\uAC00\uD558\uACE0,
+      \uB2FF\uC740 \uC801\uC774 {b:ArthurStun}\uCD08 \uAE30\uC808\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Localized: "<b>\uC131\uD718</b> \u2014 \uD3ED\uBC1C \uBC94\uC704\uC5D0 {dmg:ArthurBlastCoef}
+      \uCD94\uAC00 \uD53C\uD574\uB97C \uAC00\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Localized: "\uB864\uB780\uB4DC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Localized: "<b>\uB4A4\uB791\uB2EC</b> \u2014 \uC704\uB825\uC774 {b:RolandBonusPct}%
+      \uC99D\uAC00\uD558\uBA70 \uB300\uC0C1\uC774 \uC783\uC740 \uCCB4\uB825\uC758
+      {b:RolandMissingPct}% \uCD94\uAC00 \uD53C\uD574\uB97C \uAC00\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Localized: "<b>\uB3C4\uC57D</b> \u2014 \uD0D1\uC2B9 \uC911 \uB2E4\uC2DC \uB204\uB974\uBA74
+      \uB3CC\uC9C4 \uB300\uC2E0 \uB6F0\uC5B4\uC62C\uB77C \uC8FC\uC704 {b:RolandPushRadius}m\uC758
+      \uC801\uC744 \uBC00\uCCD0\uB0B4\uACE0 \uC783\uC740 \uCCB4\uB825\uC758 {b:RolandHealMissingPct}%\uB97C
+      \uD68C\uBCF5\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Localized: "<b>\uC2EC\uD310</b> \u2014 \uC804\uBC29 \uD53C\uD574\uAC00 \uACF5\uACA9\uB825\uC758
+      {b:RolandFinisherCoef}%\uB85C \uC99D\uAC00\uD558\uBA70 \uC801\uC911\uB2F9\uD55C
+      \uC801\uC774 {b:RolandStun}\uCD08 \uAE30\uC808\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Localized: "\uBCA0\uB978\uD558\uB974\uD2B8"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Localized: "<b>\uC885\uB9C9</b> \u2014 \uC704\uB825\uC774  {b:BernhardBonusPct}%
+      \uC99D\uAC00\uD558\uBA70, \uC801\uC911\uB2F9\uD55C \uB300\uC0C1\uC774 {b:BernhardWoundTime}\uCD08\uAC04
+      \uAE4A\uC740 \uC0C1\uCC98 {b:BernhardWoundPct}% \uC0C1\uD0DC\uAC00 \uB429\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Localized: "<b>\uB9DD\uB839 \uB3CC\uC9C4</b> \u2014 \uD0D1\uC2B9 \uC911 \uB2E4\uC2DC
+      \uB204\uB974\uBA74 \uACE0\uC2A4\uD2B8 \uC0C1\uD0DC\uB85C \uB3CC\uC9C4, \uB3CC\uC9C4\uC758
+      \uC704\uB825\uC774 {b:BernhardChargePct}% \uC99D\uAC00\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Localized: "<b>\uC8FD\uC74C\uC758 \uBD88\uAE38</b> \u2014 \uD3ED\uBC1C\uC5D0
+      \uB9DE\uC740 \uC801\uC5D0\uAC8C {b:DeathFlameTime}\uCD08\uAC04 \uB9E4\uCD08
+      \uCD5C\uB300 \uCCB4\uB825\uC758 {b:DeathFlamePct}%\uC758 \uD53C\uD574\uB97C
+      \uAC00\uD558\uB294 \uB9C9\uB300\uD55C \uD654\uC0C1\uC744 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Localized: "\uB18D\uBBFC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Localized: "<b>\uB18D\uC791</b> \u2014 \uAC00\uD55C \uD53C\uD574\uC758 {b:FarmHealPct}%\uB97C
+      \uD68C\uBCF5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Localized: "<b>\uBBF8\uC219\uD55C \uC2B9\uB9C8</b> \u2014 \uC774\uB3D9\uC18D\uB3C4
+      \uC99D\uAC00 -{b:UnskilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Localized: "\uC6A9\uBCD1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Localized: "<b>\uB18D\uC791</b> \u2014 \uAC00\uD55C \uD53C\uD574\uC758 {b:FarmHealPct}%\uB97C
+      \uD68C\uBCF5\n<b>\uC804\uD22C\uAC10\uAC01</b> \u2014 \uC7A0\uC2DC \uB4A4 {b:SecondMul:pct}%
+      \uC704\uB825\uC73C\uB85C \uD55C \uBC88 \uB354 \uBCB0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Localized: "<b>\uBBF8\uC219\uD55C \uC2B9\uB9C8</b> \u2014 \uC774\uB3D9\uC18D\uB3C4
+      \uC99D\uAC00 -{b:UnskilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Localized: "\uB124\uC784\uB4DC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Localized: "<b>\uB18D\uC791</b> \u2014 \uAC00\uD55C \uD53C\uD574\uC758 {b:FarmHealPct}%\uB97C
+      \uD68C\uBCF5\n<b>\uC804\uD22C\uAC10\uAC01</b> \u2014 \uC7A0\uC2DC \uB4A4 {b:SecondMul:pct}%
+      \uC704\uB825\uC73C\uB85C \uD55C \uBC88 \uB354 \uBCB0"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

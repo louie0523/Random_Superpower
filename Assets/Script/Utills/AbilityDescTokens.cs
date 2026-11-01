@@ -220,12 +220,14 @@ public static class AbilityDescTokens
     }
 }
 
-/// <summary>설명용 키-글 한 줄. Behaviour가 {x:키}에 넣을 글을 인스펙터에서 적을 때</summary>
+/// <summary>설명용 키-글 한 줄. Behaviour가 {x:키}에 넣을 글을 인스펙터에서 적을 때.
+/// Text의 번역 키(TextKey)는 '능력 → 시트'가 채움 — 시트에 있으면 번역, 없으면 Text 그대로</summary>
 [System.Serializable]
 public class DescLine
 {
     public string Key = "slash";
     [TextArea(2, 12)] public string Text;
+    [HideInInspector] public string TextKey;
 
     public DescLine() { }
     public DescLine(string key, string text) { Key = key; Text = text; }
@@ -235,7 +237,7 @@ public class DescLine
         if (lines == null) return null;
         foreach (var l in lines)
             if (l != null && l.Key == key && !string.IsNullOrWhiteSpace(l.Text))
-                return LocUtil.Resolve(l.Text);
+                return LocUtil.Pick(l.TextKey, l.Text);
         return null;
     }
 }

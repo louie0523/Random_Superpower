@@ -17,6 +17,9 @@ using UnityEngine;
 /// 능력(AbilityData)에 한글로 적어 둔 이름 · 설명을 구글 시트(Ability 탭)에 키 맞춰 올림.
 ///   Tools → 다국어 → 능력 → 시트 올리기   (AbilityData 인스펙터 '기본' 탭 버튼도 같음)
 /// - 키: ability.{Id}.name · flavor · summary · charge · passive.{i}.name/desc/info/tip · skill.{i}.name/desc/info/tip
+/// - Behaviour(능력 로직 에셋) 안의 '글 + 숨은 키' 짝도 → ability.{Id}.x.{경로}
+///     짝 규칙: string 필드 X 옆에 [HideInInspector] string XKey (예: DescLine.Text/TextKey, 죽음의 기사 Name/NameKey · Label/LabelKey)
+///     키가 비어 있으면 여기서 만들어 에셋에 저장 (올리기 성공 후). 한 번 정해진 키는 배열 순서를 바꿔도 그대로
 /// - 시트에 없는 키 → 맨 아래 새 줄 (A 분류 · B 키 · C 한국어 + D~ 자동 번역 식)
 /// - 이미 있는 키 → 한국어(C)만 바꿈 (켜 뒀을 때). 직접 써 둔 다른 언어 칸은 안 건드림
 /// - 로그인은 LangTable의 구글 시트 연결(SheetsServiceProvider)을 그대로 씀. 풀려 있으면 다시 로그인
@@ -32,6 +35,9 @@ public class AbilitySheetPush : EditorWindow
     {
         public string Key, Korean;
         public AbilityData Source;
+        /// <summary>키를 에셋에 새로 적어야 할 때 — 그 에셋 · 키 필드 경로 (아니면 null)</summary>
+        public UnityEngine.Object KeyAsset;
+        public string KeyPath;
     }
 
     static readonly Regex LooksLikeKey = new(@"^[a-z0-9_]+(\.[A-Za-z0-9_{}]+)+$");
@@ -39,6 +45,7 @@ public class AbilitySheetPush : EditorWindow
     public static List<Entry> Collect(IEnumerable<AbilityData> abilities)
     {
         var list = new List<Entry>();
+        var doneBehaviours = new HashSet<UnityEngine.Object>();
         foreach (var a in abilities)
         {
             if (a == null || a.Id == 0) continue;
@@ -77,8 +84,88 @@ public class AbilitySheetPush : EditorWindow
                     Add($"{p}.skill.{i}.info", e.DetailedInfo);
                     Add($"{p}.skill.{i}.tip", e.Tip);
                 }
+
+            if (a.Behaviour != null && doneBehaviours.Add(a.Behaviour))
+                CollectPairs(a.Behaviour, $"{p}.x", a, list);
         }
         return list;
+    }
+
+    /// <summary>에셋 안의 모든 'X + XKey' 짝 (배열 · 중첩 클래스까지)</summary>
+    static void CollectPairs(UnityEngine.Object asset, string prefix, AbilityData src, List<Entry> list)
+    {
+        var so = new SerializedObject(asset);
+        var found = new List<(string path, string keyPath, string text, string key)>();
+
+        var it = so.GetIterator();
+        bool enter = true;
+        while (it.Next(enter))
+        {
+            enter = it.propertyType == SerializedPropertyType.Generic;      // 클래스 · 배열만 들어감 (글자 · 에셋 참조는 X)
+            if (it.propertyType != SerializedPropertyType.String || it.name.EndsWith("Key")) continue;
+
+            string path = it.propertyPath;
+            int dot = path.LastIndexOf('.');
+            string keyPath = (dot >= 0 ? path.Substring(0, dot + 1) : "") + it.name + "Key";
+            var kp = so.FindProperty(keyPath);
+            if (kp == null || kp.propertyType != SerializedPropertyType.String) continue;
+
+            string text = (it.stringValue ?? "").Replace("\r\n", "\n").Trim();
+            if (text.Length == 0 || LooksLikeKey.IsMatch(text)) continue;
+            found.Add((path, keyPath, text, kp.stringValue));
+        }
+
+        // 이미 있는 키 먼저 자리 잡기 → 새 키가 겹치지 않게. 복제로 같은 키 · 다른 글이면 뒤의 것은 새 키
+        var used = new Dictionary<string, string>();
+        var final = new List<(string keyPath, string text, string key, bool assign)>();
+        foreach (var f in found)
+        {
+            if (string.IsNullOrEmpty(f.key)) continue;
+            if (used.TryGetValue(f.key, out var t) && t != f.text) continue;
+            used[f.key] = f.text;
+        }
+        foreach (var f in found)
+        {
+            bool keep = !string.IsNullOrEmpty(f.key) && used.TryGetValue(f.key, out var t) && t == f.text;
+            string key = f.key;
+            if (!keep)
+            {
+                string baseKey = $"{prefix}.{f.path.Replace(".Array.data[", ".").Replace("]", "")}";
+                key = baseKey;
+                for (int n = 2; used.ContainsKey(key); n++) key = $"{baseKey}_{n}";
+                used[key] = f.text;
+            }
+            final.Add((f.keyPath, f.text, key, !keep || f.key != key));
+        }
+
+        foreach (var f in final)
+            list.Add(new Entry
+            {
+                Key = f.key, Korean = f.text, Source = src,
+                KeyAsset = f.assign ? asset : null, KeyPath = f.assign ? f.keyPath : null,
+            });
+    }
+
+    /// <summary>새로 만든 키를 에셋에 저장 — 시트에 올린 뒤</summary>
+    static int ApplyKeys(IEnumerable<Entry> entries)
+    {
+        int n = 0;
+        foreach (var g in entries.Where(e => e.KeyAsset != null && e.KeyPath != null).GroupBy(e => e.KeyAsset))
+        {
+            var so = new SerializedObject(g.Key);
+            Undo.RecordObject(g.Key, "번역 키 채우기");
+            foreach (var e in g)
+            {
+                var p = so.FindProperty(e.KeyPath);
+                if (p == null) continue;
+                p.stringValue = e.Key;
+                n++;
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(g.Key);
+        }
+        if (n > 0) AssetDatabase.SaveAssets();
+        return n;
     }
 
     static IEnumerable<AbilityData> AllAbilities() =>
@@ -172,7 +259,7 @@ public class AbilitySheetPush : EditorWindow
         using (new EditorGUILayout.HorizontalScope())
         {
             if (GUILayout.Button("1. 미리보기 (시트 읽기)", GUILayout.Height(28))) Run(false);
-            using (new EditorGUI.DisabledScope(_plan == null || (_plan.Added.Count == 0 && _plan.Changed.Count == 0)))
+            using (new EditorGUI.DisabledScope(_plan == null || (_plan.Added.Count == 0 && _plan.Changed.Count == 0 && _plan.PendingKeys == 0)))
                 if (GUILayout.Button("2. 시트에 올리기", GUILayout.Height(28))) Run(true);
         }
 
@@ -184,6 +271,8 @@ public class AbilitySheetPush : EditorWindow
         DrawList($"한국어 바뀜 {_plan.Changed.Count}" + (_overwrite ? "" : "  (끔 — 안 바꿈)"),
                  _plan.Changed.Select(c => $"{c.e.Key}   {Short(c.old)}  →  {Short(c.e.Korean)}"));
         GUILayout.Label($"같음 {_plan.Same}개", EditorStyles.miniLabel);
+        if (_plan.PendingKeys > 0)
+            GUILayout.Label($"에셋에 새로 적을 번역 키 {_plan.PendingKeys}개 (Behaviour 글 — 올리면 저장)", EditorStyles.miniLabel);
         if (_plan.Duplicates.Count > 0)
             DrawList($"시트에 같은 키가 여러 줄 {_plan.Duplicates.Count} (첫 줄만 바꿈)", _plan.Duplicates);
         EditorGUILayout.EndScrollView();
@@ -210,6 +299,8 @@ public class AbilitySheetPush : EditorWindow
 
     class Plan
     {
+        public List<Entry> Entries = new();
+        public int PendingKeys;
         public List<Entry> Added = new();
         public List<(Entry e, int row, string old)> Changed = new();
         public int Same;
@@ -236,12 +327,14 @@ public class AbilitySheetPush : EditorWindow
             if (!write) return;
 
             if (!EditorUtility.DisplayDialog("시트에 올리기",
-                    $"'{_tab}' 탭에\n새 줄 {_plan.Added.Count}개" + (_overwrite ? $"\n한국어 바꿈 {_plan.Changed.Count}개" : "") + "\n\n올릴까요?", "올리기", "취소"))
+                    $"'{_tab}' 탭에\n새 줄 {_plan.Added.Count}개" + (_overwrite ? $"\n한국어 바꿈 {_plan.Changed.Count}개" : "") +
+                    (_plan.PendingKeys > 0 ? $"\n에셋에 번역 키 {_plan.PendingKeys}개 저장" : "") + "\n\n올릴까요?", "올리기", "취소"))
                 return;
 
             EditorUtility.DisplayProgressBar("능력 → 시트", "쓰는 중…", 0.6f);
             Write(ctx, _plan);
-            _status = $"올림 — 새로 {_plan.Added.Count} · 바뀜 {(_overwrite ? _plan.Changed.Count : 0)}.  Unity로 가져오려면 'Tools → 다국어 → 시트에서 전부 Pull'";
+            int keys = ApplyKeys(_plan.Entries);
+            _status = $"올림 — 새로 {_plan.Added.Count} · 바뀜 {(_overwrite ? _plan.Changed.Count : 0)} · 에셋 키 {keys}.  Unity로 가져오려면 'Tools → 다국어 → 시트에서 전부 Pull'";
             Debug.Log("[다국어] " + _status);
             _plan = null;
         }
@@ -255,7 +348,7 @@ public class AbilitySheetPush : EditorWindow
 
     Plan MakePlan(Ctx ctx, List<Entry> entries)
     {
-        var plan = new Plan();
+        var plan = new Plan { Entries = entries, PendingKeys = entries.Count(e => e.KeyPath != null) };
         var header = GetValues(ctx, Q(_tab) + "!1:1");
         if (header.Count > 0) plan.Header = header[0];
 

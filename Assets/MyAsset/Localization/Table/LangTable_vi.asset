@@ -595,7 +595,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072779
-    m_Localized: "Ti\u1EBFp theo l\xE0 danh hi\u1EC7u Enchant"
+    m_Localized: Next Enchant Designation
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072780
@@ -654,7 +654,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837760
-    m_Localized: "L\xE0m gi\u1EA3m t\u1ED1c \u0111\u1ED9 di chuy\u1EC3n c\u1EE7a
+    m_Localized: "L\xE0m ch\u1EADm t\u1ED1c \u0111\u1ED9 di chuy\u1EC3n c\u1EE7a
       m\u1EE5c ti\xEAu \u0111i {v0}% trong {d0} gi\xE2y."
     m_Metadata:
       m_Items: []
@@ -675,7 +675,7 @@ MonoBehaviour:
   - m_Id: 5227191342837764
     m_Localized: "G\xE2y hi\u1EC7u \u1EE9ng <color=#00BBFF>B\u1ECFng B\u0103ng</color>
       l\xEAn m\u1EE5c ti\xEAu trong {d0} gi\xE2y, gi\u1EA3m t\u1ED1c \u0111\u1ED9
-      t\u1EA5n c\xF4ng c\u1EE7a m\u1EE5c ti\xEAu \u0111i {v1}%."
+      t\u1EA5n c\xF4ng c\u1EE7a ch\xFAng \u0111i {v1}%."
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
@@ -1032,13 +1032,13 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15217183926366217
     m_Localized: "C\xE1c ph\xEDm tho\u1EA1i (Tr\xF2 chuy\u1EC7n \xB7 Tab Tho\u1EA1i)
-      s\u1EBD xoay v\xF2ng c\xF9ng nhau \xB7 N\u1EBFu nh\u1EA5n c\xF9ng m\u1ED9t
+      c\u0169ng xoay v\xF2ng c\xF9ng nhau \xB7 N\u1EBFu nh\u1EA5n c\xF9ng m\u1ED9t
       ph\xEDm, c\xE1c ph\xEDm cho hai h\xE0nh \u0111\u1ED9ng s\u1EBD \u0111\u01B0\u1EE3c
       ho\xE1n \u0111\u1ED5i v\u1ECB tr\xED."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: "Hi\u1EC3n th\u1ECB \u0111i\u1EC3m ng\u1EAFm"
+    m_Localized: "Hi\u1EC3n th\u1ECB t\xE2m ng\u1EAFm"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1533,7 +1533,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560559
-    m_Localized: "Kh\xF4ng c\xF3 h\u1EA1n ch\u1EBF"
+    m_Localized: "Kh\xF4ng c\xF3 h\u1EA1n ch\u1EBF n\xE0o"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560560
@@ -1869,11 +1869,11 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340393
     m_Localized: "S\u1EED d\u1EE5ng thanh ki\u1EBFm b\u1ECB nguy\u1EC1n r\u1EE7a
-      mang ma thu\u1EADt h\u1EAFc \xE1m, gi\xE1ng xu\u1ED1ng g\xE2y s\xE1t th\u01B0\u01A1ng
+      c\u1EE7a ma thu\u1EADt h\u1EAFc \xE1m, gi\xE1ng xu\u1ED1ng g\xE2y s\xE1t th\u01B0\u01A1ng
       v\u0169 kh\xED {dmg:FinisherCoef+FinisherFlat} cho k\u1EBB \u0111\u1ECBch ph\xEDa
       tr\u01B0\u1EDBc, \u0111\u1ED3ng th\u1EDDi k\xEDch ho\u1EA1t m\u1ED9t v\u1EE5
       n\u1ED5 ma thu\u1EADt h\u1EAFc \xE1m ph\xEDa tr\u01B0\u1EDBc \u0111\u1EC3 g\xE2y
-      \u0111\u1ED9c di\u1EC7n r\u1ED9ng."
+      ra \u0111\u1ED9c t\u1ED1 c\u1EF1c m\u1EA1nh."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340395
@@ -1917,7 +1917,7 @@ MonoBehaviour:
   - m_Id: 15224945322340405
     m_Localized: "C\xF3 th\u1EC3 s\u1EED d\u1EE5ng khi b\u1EA1n v\u1EEBa ti\xEAu
       di\u1EC7t m\u1ED9t k\u1EBB \u0111\u1ECBch ho\u1EB7c s\u1EED d\u1EE5ng v\u0169
-      kh\xED c\xF3 thu\u1ED9c t\xEDnh 'Tham lam'. Phun ch\u1EA5t n\xF4n v\u1EC1 ph\xEDa
+      kh\xED c\xF3 thu\u1ED9c t\xEDnh 'Tham lam'. N\xF4n m\u1EEDa v\u1EC1 ph\xEDa
       tr\u01B0\u1EDBc, g\xE2y s\xE1t th\u01B0\u01A1ng {dmg:SpitCoef+SpitFlat}."
     m_Metadata:
       m_Items: []
@@ -2135,9 +2135,9 @@ MonoBehaviour:
     m_Localized: "Thay \u0111\u1ED5i th\u1EDDi gian h\u1ED3i chi\xEAu c\u1EE7a m\u1ED9t
       trong nh\u1EEFng k\u1EF9 n\u0103ng ng\u1EABu nhi\xEAn hi\u1EC7n \u0111ang trong
       th\u1EDDi gian h\u1ED3i chi\xEAu th\xE0nh th\u1EDDi gian h\u1ED3i chi\xEAu
-      c\u1EE7a m\u1ED9t k\u1EF9 n\u0103ng thay th\u1EBF tr\xEAn th\u1EBB b\xE0i,
-      v\xE0 thay v\xE0o \u0111\xF3 \u0111\u1EB7t l\u1EA1i th\u1EDDi gian h\u1ED3i
-      chi\xEAu c\u1EE7a k\u1EF9 n\u0103ng ng\u1EABu nhi\xEAn \u0111\xF3."
+      c\u1EE7a k\u1EF9 n\u0103ng th\u1EBB thay th\u1EBF, v\xE0 thay v\xE0o \u0111\xF3
+      \u0111\u1EB7t l\u1EA1i th\u1EDDi gian h\u1ED3i chi\xEAu c\u1EE7a k\u1EF9 n\u0103ng
+      ng\u1EABu nhi\xEAn \u0111\xF3."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340455
@@ -2451,7 +2451,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945326534717
     m_Localized: "Khi s\u1EED d\u1EE5ng k\u1EF9 n\u0103ng, b\u1EA1n s\u1EBD h\xE9t
-      l\xEAn m\u1ED9t th\u1EE9 ng\xF4n ng\u1EEF R\u1ED3ng Huy\u1EC1n Tho\u1EA1i.\n\nN\u1EBFu
+      l\xEAn b\u1EB1ng Ng\xF4n ng\u1EEF R\u1ED3ng Huy\u1EC1n Tho\u1EA1i.\n\nN\u1EBFu
       b\u1EA1n h\xE9t l\xEAn 30 l\u1EA7n, b\u1EA1n s\u1EBD bi\u1EBFn th\xE0nh R\u1ED3ng
       Huy\u1EC1n Tho\u1EA1i.\n\nN\u1EBFu b\u1EA1n s\u1ED1ng s\xF3t \u0111\u01B0\u1EE3c
       3 ph\xFAt, b\u1EA1n s\u1EBD th\u1EAFng ngay l\u1EADp t\u1EE9c."
@@ -2467,6 +2467,357 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945326534722
     m_Localized: "H\u01A1i th\u1EDF c\u1EE7a k\u1EBFt th\xFAc"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Localized: "Gi\u1EDBi h\u1EA1n c\u01B0\u1EDDng h\xF3a t\u0103ng l\xEAn \u0111\u1EBFn
+      100.\n\nB\u1EA1n c\xF3 th\u1EC3 ch\u1EC9 \u0111\u1ECBnh gi\xE1 tr\u1ECB c\u1EE7a
+      l\u1EA7n c\u01B0\u1EDDng h\xF3a ti\u1EBFp theo b\u1EB1ng c\xE1ch ti\xEAu hao
+      Linh h\u1ED3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Localized: "Nghi\u1EC1n n\xE1t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Localized: "\u0110\u1ED1i v\u1EDBi H\u1EADu du\u1EC7 c\u1EE7a L\u1EEDa, l\u01B0\u1EE3ng
+      \u0110\xE1 Ph\xE9p Thu\u1EADt ti\xEAu hao do Ph\xE9p Thu\u1EADt g\xE2y ra gi\u1EA3m
+      \u0111i m\u1ED9t n\u1EEDa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Localized: "Ph\xF3ng to h\xECnh \u1EA3nh trong {b:AimTimeout} gi\xE2y v\xE0
+      gi\u1EA3m t\u1ED1c \u0111\u1ED9 di chuy\u1EC3n.\n\nThay v\xE0o \u0111\xF3,
+      vi\xEAn \u0111\u1EA1n ti\u1EBFp theo g\xE2y th\xEAm {b:AimBonusPct:all}% s\xE1t
+      th\u01B0\u01A1ng khi tr\xFAng \u0111\xEDch v\xE0 lu\xF4n g\xE2y s\xE1t th\u01B0\u01A1ng
+      ch\xED m\u1EA1ng."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340377
+    m_Localized: "V\xE0o ph\xF2ng t\u1EAFm"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340384
+    m_Localized: "Thi th\u1EC3 c\u1EE7a ng\u01B0\u1EDDi \u0111\xE3 khu\u1EA5t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Localized: '{x:ult}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340396
+    m_Localized: "B\u1EA1n \u0111ang \u0111\xF3i.\n\nV\xE0 b\u1EA1n c\xF3 m\u1ED9t
+      c\xE1i d\u1EA1 d\xE0y c\xF3 th\u1EC3 nu\u1ED1t ch\u1EEDng b\u1EA5t c\u1EE9
+      th\u1EE9 g\xEC.\n\nB\u1EA1n c\xF3 th\u1EC3 nu\u1ED1t ch\u1EEDng b\u1EA5t c\u1EE9
+      th\u1EE9 g\xEC v\xE0 tr\u1EDF th\xE0nh m\u1ED9t sinh v\u1EADt kh\u1ED5ng l\u1ED3."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Localized: "C\u1EAFn v\u1EC1 ph\xEDa tr\u01B0\u1EDBc \u0111\u1EC3 g\xE2y s\xE1t
+      th\u01B0\u01A1ng {dmg:DevourCoef+DevourFlat}. N\u1EBFu m\u1EE5c ti\xEAu b\u1ECB
+      tr\xFAng \u0111\xF2n ch\u1EBFt trong v\xF2ng 1 gi\xE2y, nh\u1EADn th\xEAm linh
+      h\u1ED3n v\xE0 chu\u1EA9n b\u1ECB <b>Spit Out</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Localized: "qu\xE1i v\u1EADt \u0111\xF3i kh\xE1t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Localized: "Gi\u1EA3i ph\xF3ng {b:MonsterCount:all} qu\xE1i th\xFA \u0111\xF3i
+      kh\xE1t \u0111\u1EC3 ch\xFAng t\u1EF1 \u0111\u1ED9ng c\u1EAFn k\u1EBB th\xF9
+      trong b\xE1n k\xEDnh {b:MonsterRadius:all}m trong {b:UltDuration:all} gi\xE2y,
+      g\xE2y s\xE1t th\u01B0\u01A1ng Tham lam v\u1EDBi hi\u1EC7u \u1EE9ng {b:MonsterPowerMul*100}%.\n\nN\u1EBFu
+      b\u1EA1n ti\xEAu di\u1EC7t \u0111\u01B0\u1EE3c ng\u01B0\u1EDDi ch\u01A1i b\u1EB1ng
+      \u0111\xF2n t\u1EA5n c\xF4ng Tham lam, th\u1EDDi gian hi\u1EC7u l\u1EF1c s\u1EBD
+      t\u0103ng th\xEAm {b:UltKillExtend} gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340411
+    m_Localized: "Qu\xE1i v\u1EADt c\xF3 th\u1EDDi gian h\u1ED3i chi\xEAu t\u1EA5n
+      c\xF4ng 3 gi\xE2y cho m\u1ED7i m\u1EE5c ti\xEAu v\xE0 g\xE2y th\xEAm {b:MonsterLowHpBonus:all}%
+      s\xE1t th\u01B0\u01A1ng cho c\xE1c m\u1EE5c ti\xEAu c\xF3 l\u01B0\u1EE3ng m\xE1u
+      t\u1EEB 30% tr\u1EDF xu\u1ED1ng.\n\nTrong th\u1EDDi gian hi\u1EC7u l\u1EF1c,
+      S\u1EE9c t\u1EA5n c\xF4ng, T\u1ED1c \u0111\u1ED9 t\u1EA5n c\xF4ng v\xE0 T\u1ED1c
+      \u0111\u1ED9 di chuy\u1EC3n \u0111\u01B0\u1EE3c t\u0103ng nh\u1EB9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340412
+    m_Localized: Shidou Walker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Localized: "M\u1ED9t c\xE1i b\xF3ng lu\xF4n b\xE1m theo K\u1EBB \u0110i Trong
+      B\xF3ng T\u1ED1i.\n\nKhi kh\xF4ng chi\u1EBFn \u0111\u1EA5u, n\xF3 t\xEDch t\u1EE5
+      <b>B\xF3ng T\u1ED1i</b> trong {b:DarkChargeTime:all} gi\xE2y.\n\nKhi t\u1EA5n
+      c\xF4ng k\u1EBB th\xF9, n\u1EBFu <b>B\xF3ng T\u1ED1i</b> \u0111\xE3 \u0111\u01B0\u1EE3c
+      t\xEDch t\u1EE5, n\xF3 s\u1EBD l\xE0m m\xF9 t\u1EA7m nh\xECn c\u1EE7a m\u1EE5c
+      ti\xEAu trong {b:BlindTime:all} gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Localized: "M\u1ED9t k\u1EBB \u0111\u1ECBch b\u1ECB tr\xF3i b\u1EB1ng m\u1ED9t
+      <b>b\xE0n tay b\xF3ng t\u1ED1i</b> trong v\xF2ng {b:HandImmune:all} gi\xE2y
+      s\u1EBD kh\xF4ng th\u1EC3 b\u1ECB tr\xF3i b\u1EB1ng m\u1ED9t <b>b\xE0n tay
+      b\xF3ng t\u1ED1i</b> kh\xE1c."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340429
+    m_Localized: "Kho ch\u1EE9a Mugu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340434
+    m_Localized: "nh\xE0 s\u01B0u t\u1EADp"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Localized: "L\u01B0\u1EE3ng linh h\u1ED3n nh\u1EADn \u0111\u01B0\u1EE3c t\u0103ng
+      l\xEAn {b:SoulGain:all} l\u1EA7n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340450
+    m_Localized: "B\u1EA1n c\xF3 th\u1EC3 c\xF3 t\u1ED1i \u0111a {b:CardMax:all}
+      th\u1EBB c\xF9ng m\u1ED9t l\xFAc."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340451
+    m_Localized: "M\u1ED9t t\u1EA5m th\u1EBB!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Localized: "Tri\u1EC7u h\u1ED3i m\u1ED9t b\u1EA3n sao gi\u1ED1ng h\u1EC7t b\u1EA1n
+      v\u1EDBi c\xE1c k\u1EF9 n\u0103ng v\xE0 trang b\u1ECB ng\u1EABu nhi\xEAn v\u1EC1
+      ph\xEDa tr\u01B0\u1EDBc trong {b:CloneDuration:all} gi\xE2y.\n\nB\u1EA3n sao
+      s\u1EBD t\u1EF1 \u0111\u1ED9ng \u0111i theo k\u1EBB \u0111\u1ECBch g\u1EA7n
+      nh\u1EA5t.\n\nKhi b\u1EA3n sao ch\u1EBFt ho\u1EB7c b\u1EA1n nh\u1EA5n ph\xEDm
+      Chi\xEAu cu\u1ED1i m\u1ED9t l\u1EA7n n\u1EEFa, n\xF3 s\u1EBD ph\xE1t n\u1ED5,
+      g\xE2y s\xE1t th\u01B0\u01A1ng {b:CloneBlastMul*100:all}% s\xE1t th\u01B0\u01A1ng
+      v\u1EE5 n\u1ED5 c\u1EE7a Joker Draw cho k\u1EBB \u0111\u1ECBch g\u1EA7n \u0111\xF3.\n\nB\u1EA3n
+      sao t\u1EA5n c\xF4ng k\u1EBB \u0111\u1ECBch trong ph\u1EA1m vi 10m b\u1EB1ng
+      v\u0169 kh\xED hi\u1EC7n t\u1EA1i c\u1EE7a n\xF3."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Localized: "Nh\xE2n b\u1EA3n gi\u1EA3m s\xE1t th\u01B0\u01A1ng v\u0169 kh\xED
+      \u0111i 50%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Localized: "C\u1EA3m gi\xE1c h\u01B0ng ph\u1EA5n khi ch\u1EA1y b\u1ED9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Localized: "Thay v\xEC t\u0103ng t\u1ED1c \u0111\xE1ng k\u1EC3, b\u1EA1n s\u1EBD
+      b\u1ECB m\u1EA5t m\xE1u m\u1ED7i khi d\u1EEBng l\u1EA1i!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Localized: "V\u1ED7 v\u1ED7 v\u1ED7."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534661
+    m_Localized: "H\u1ED3i quy t\u1EED vong"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Localized: "Ch\u1ECDn m\u1ED9t ng\u01B0\u1EDDi ch\u01A1i \u0111\u1EC3 h\u1ECD
+      t\u1EF1 s\xE1t sau 60 gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Localized: "Qu\xE2n t\u1ED1t \u0111\u01B0\u1EE3c phong c\u1EA5p tr\u1EDF th\xE0nh
+      m\u1ED9t <b>ng\u01B0\u1EDDi kh\u1ED5ng l\u1ED3</b> trong c\u1EDD vua."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534689
+    m_Localized: "50% c\u1EE7a to\xE0n b\u1ED9 cu\u1ED9c s\u1ED1ng...."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534694
+    m_Localized: "S\xE1t th\u01B0\u01A1ng g\xE2y ra khi m\u1EE5c ti\xEAu kh\xF4ng
+      nh\xECn v\xE0o b\u1EA1n t\u0103ng 100%.\n\nKhi s\u1EED d\u1EE5ng, b\u1EA1n
+      tr\u1EDF n\xEAn v\xF4 h\xECnh trong 3 gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Localized: "Ch\xFAng ta coi nh\u01B0 h\xF2a nh\xE9...?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Localized: "Khi s\u1EED d\u1EE5ng, b\u1EA1n s\u1EBD bay l\xEAn trong gi\xE2y
+      l\xE1t, sau \u0111\xF3 n\xE9m \"\u0110\u1EA5t\" v\xE0o v\u1ECB tr\xED b\u1EA1n
+      v\u1EEBa nh\xECn v\xE0o tr\u01B0\u1EDBc khi s\u1EED d\u1EE5ng k\u1EF9 n\u0103ng."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Localized: "H\xE3y c\xF9ng nhau h\u01B0\u1EDBng t\u1EDBi t\u01B0\u01A1ng lai!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534716
+    m_Localized: "Ng\xF4n ng\u1EEF R\u1ED3ng Huy\u1EC1n Tho\u1EA1i"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534718
+    m_Localized: "Ng\xF4n ng\u1EEF R\u1ED3ng Huy\u1EC1n Tho\u1EA1i"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534719
+    m_Localized: "T\xEAn anh \u1EA5y l\xE0..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534723
+    m_Localized: "S\u1EF1 b\u1EA5t t\xE0i \u0111a n\u0103ng"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534724
+    m_Localized: "\xD4i kh\xF4ng! Kh\u1EA3 n\u0103ng n\xE0y kh\xF4ng c\xF3 t\xE1c
+      d\u1EE5ng.\n\nH\xE3y th\u1EED ch\u1EC9 s\u1EED d\u1EE5ng kh\u1EA3 n\u0103ng
+      c\u1EE7a ri\xEAng b\u1EA1n!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534725
+    m_Localized: "S\u1EF1 b\u1EA5t t\xE0i \u0111a n\u0103ng"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903037960192
+    m_Localized: William
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Localized: "v\xF9ng"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Localized: Thomas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Localized: Henry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Localized: Robert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Localized: "S\xF3i"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Localized: Hakon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Localized: Eric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Localized: Arthur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Localized: "<b>Th\u1EA7n Ki\u1EBFm Tr\xF3i Bu\u1ED9c</b> \u2014 {b:ArthurTrueRatio:pct}%
+      s\xE1t th\u01B0\u01A1ng b\u1ECF qua gi\xE1p."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Localized: "<b>T\u1EA5n c\xF4ng</b> \u2014 T\u1ED1c \u0111\u1ED9 t\u1EA5n c\xF4ng
+      t\u0103ng l\xEAn, v\xE0 k\u1EBB \u0111\u1ECBch tr\xFAng \u0111\xF2n s\u1EBD
+      b\u1ECB cho\xE1ng trong {b:ArthurStun} gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Localized: "<b>Seonghwi</b> \u2014 G\xE2y th\xEAm {dmg:ArthurBlastCoef} s\xE1t
+      th\u01B0\u01A1ng trong ph\u1EA1m vi v\u1EE5 n\u1ED5."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Localized: Roland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Localized: "<b>Durandal</b> \u2014 S\u1EE9c m\u1EA1nh t\u0103ng th\xEAm {b:RolandBonusPct}%
+      v\xE0 g\xE2y th\xEAm s\xE1t th\u01B0\u01A1ng b\u1EB1ng {b:RolandMissingPct}%
+      l\u01B0\u1EE3ng m\xE1u \u0111\xE3 m\u1EA5t c\u1EE7a m\u1EE5c ti\xEAu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Localized: "<b>Nh\u1EA3y</b> \u2014 Nh\u1EA5n l\u1EA1i khi \u0111ang c\u01B0\u1EE1i
+      th\xFA \u0111\u1EC3 nh\u1EA3y thay v\xEC lao t\u1EDBi, \u0111\u1EA9y l\xF9i
+      k\u1EBB th\xF9 trong ph\u1EA1m vi {b:RolandPushRadius}m v\xE0 h\u1ED3i ph\u1EE5c
+      {b:RolandHealMissingPct}% l\u01B0\u1EE3ng m\xE1u \u0111\xE3 m\u1EA5t."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Localized: "<b>Ph\xE1n x\xE9t</b> \u2014 S\xE1t th\u01B0\u01A1ng tr\u1EF1c
+      di\u1EC7n t\u0103ng th\xEAm {b:RolandFinisherCoef}% S\u1EE9c m\u1EA1nh t\u1EA5n
+      c\xF4ng, v\xE0 k\u1EBB \u0111\u1ECBch tr\xFAng \u0111\xF2n s\u1EBD b\u1ECB
+      cho\xE1ng trong {b:RolandStun} gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Localized: Bernhard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Localized: "<b>K\u1EBFt th\xFAc</b> \u2014 S\u1EE9c m\u1EA1nh t\u0103ng th\xEAm
+      {b:BernhardBonusPct}%, v\xE0 m\u1EE5c ti\xEAu tr\xFAng \u0111\xF2n s\u1EBD
+      b\u1ECB th\u01B0\u01A1ng n\u1EB7ng {b:BernhardWoundPct}% trong {b:BernhardWoundTime}
+      gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Localized: "<b>T\xEDch \u0111i\u1EC7n Ma</b> \u2014 Nh\u1EA5n l\u1EA1i khi
+      \u0111ang c\u01B0\u1EE1i th\xFA \u0111\u1EC3 t\xEDch \u0111i\u1EC7n \u1EDF
+      d\u1EA1ng Ma, t\u0103ng s\u1EE9c m\u1EA1nh c\u1EE7a \u0111\xF2n t\xEDch \u0111i\u1EC7n
+      l\xEAn {b:BernhardChargePct}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Localized: "<b>Ng\u1ECDn L\u1EEDa T\u1EED Th\u1EA7n</b> \u2014 G\xE2y b\u1ECFng
+      n\u1EB7ng cho k\u1EBB \u0111\u1ECBch tr\xFAng ph\u1EA3i v\u1EE5 n\u1ED5, g\xE2y
+      s\xE1t th\u01B0\u01A1ng b\u1EB1ng {b:DeathFlameTime}% m\xE1u t\u1ED1i \u0111a
+      c\u1EE7a ch\xFAng m\u1ED7i gi\xE2y trong {b:DeathFlamePct} gi\xE2y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Localized: "n\xF4ng d\xE2n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Localized: "<b>C\xE2y tr\u1ED3ng</b> \u2014 H\u1ED3i ph\u1EE5c {b:FarmHealPct}%
+      s\xE1t th\u01B0\u01A1ng g\xE2y ra"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Localized: "<b>K\u1EF5 s\u0129 nghi\u1EC7p d\u01B0</b> \u2014 T\u1ED1c \u0111\u1ED9
+      di chuy\u1EC3n t\u0103ng l\xEAn -{b:UnkilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Localized: "l\xEDnh \u0111\xE1nh thu\xEA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Localized: "<b>Farm</b> \u2014 H\u1ED3i ph\u1EE5c {b:FarmHealPct}% s\xE1t th\u01B0\u01A1ng
+      g\xE2y ra\n<b>Combat Sense</b> \u2014 Ngay sau \u0111\xF3, ch\xE9m th\xEAm
+      m\u1ED9t nh\xE1t v\u1EDBi s\u1EE9c m\u1EA1nh {b:SecondMul:pct}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Localized: "<b>K\u1EF5 s\u0129 nghi\u1EC7p d\u01B0</b> \u2014 T\u1ED1c \u0111\u1ED9
+      di chuy\u1EC3n t\u0103ng l\xEAn -{b:UnkilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Localized: "\u0110\u01B0\u1EE3c \u0111\u1EB7t t\xEAn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Localized: "<b>Farm</b> \u2014 H\u1ED3i ph\u1EE5c {b:FarmHealPct}% s\xE1t th\u01B0\u01A1ng
+      g\xE2y ra\n<b>Combat Sense</b> \u2014 Ngay sau \u0111\xF3, ch\xE9m th\xEAm
+      m\u1ED9t nh\xE1t v\u1EDBi s\u1EE9c m\u1EA1nh {b:SecondMul:pct}%"
     m_Metadata:
       m_Items: []
   references:

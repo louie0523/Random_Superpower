@@ -14,118 +14,126 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeathKnightAbility
   Names:
   - Name: "\uC70C\uB9AC\uC5C4"
+    NameKey: ability.6004.x.Names.0.Name
     Tier: 0
     Named: 0
     Weight: 10
     Stats:
     - Stat: 0
       Type: 0
-      Value: 10
+      Value: 50
     - Stat: 1
       Type: 0
-      Value: 2
+      Value: 5
     - Stat: 3
       Type: 0
-      Value: 0
+      Value: 1
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uC874"
+    NameKey: ability.6004.x.Names.1.Name
     Tier: 0
     Named: 0
     Weight: 10
     Stats:
     - Stat: 0
-      Type: 0
-      Value: 10
+      Type: 1
+      Value: 5
     - Stat: 1
       Type: 0
-      Value: 2
+      Value: 25
     - Stat: 3
       Type: 0
       Value: 0
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uD1A0\uB9C8\uC2A4"
+    NameKey: ability.6004.x.Names.2.Name
     Tier: 0
     Named: 0
     Weight: 10
     Stats:
     - Stat: 0
-      Type: 0
+      Type: 1
       Value: 10
     - Stat: 1
       Type: 0
-      Value: 2
+      Value: 0
     - Stat: 3
       Type: 0
-      Value: 0
+      Value: 3
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uD5E8\uB9AC"
+    NameKey: ability.6004.x.Names.3.Name
     Tier: 0
     Named: 0
     Weight: 10
     Stats:
     - Stat: 0
       Type: 0
-      Value: 10
+      Value: 200
     - Stat: 1
       Type: 0
-      Value: 2
+      Value: 4
     - Stat: 3
       Type: 0
       Value: 0
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uB85C\uBC84\uD2B8"
+    NameKey: ability.6004.x.Names.4.Name
     Tier: 0
     Named: 0
     Weight: 10
     Stats:
     - Stat: 0
       Type: 0
-      Value: 10
+      Value: 100
     - Stat: 1
       Type: 0
-      Value: 2
+      Value: 8
     - Stat: 3
       Type: 0
       Value: 0
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uC6B8\uD504"
+    NameKey: ability.6004.x.Names.5.Name
     Tier: 1
     Named: 0
     Weight: 6
     Stats:
     - Stat: 0
       Type: 0
-      Value: 25
+      Value: 250
     - Stat: 1
       Type: 0
-      Value: 5
+      Value: 20
     - Stat: 3
       Type: 0
-      Value: 0.5
+      Value: 1
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uD558\uCF58"
+    NameKey: ability.6004.x.Names.6.Name
     Tier: 1
     Named: 0
     Weight: 6
     Stats:
     - Stat: 0
-      Type: 0
-      Value: 25
+      Type: 1
+      Value: 5
     - Stat: 1
       Type: 0
-      Value: 5
+      Value: 10
     - Stat: 3
       Type: 0
-      Value: 0.5
+      Value: 5
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uC5D0\uB9AD"
+    NameKey: ability.6004.x.Names.7.Name
     Tier: 1
     Named: 0
     Weight: 6
@@ -142,6 +150,7 @@ MonoBehaviour:
     MountOverride: {fileID: 0}
     Texts: []
   - Name: "\uC544\uC11C"
+    NameKey: ability.6004.x.Names.8.Name
     Tier: 2
     Named: 1
     Weight: 30
@@ -159,15 +168,18 @@ MonoBehaviour:
     Texts:
     - Key: slash
       Text: "<b>\uB4A4\uC5BD\uD78C \uC131\uAC80</b> \u2014 \uD53C\uD574\uC758 {b:ArthurTrueRatio:pct}%\uAC00
-        \uBC29\uC5B4\uB825\uC744 \uBB34\uC2DC"
+        \uBC29\uC5B4\uB825\uC744 \uBB34\uC2DC\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.8.Texts.0.Text
     - Key: mount
-      Text: "<b>\uC9C4\uACA9</b> \u2014 \uC55E\uC73C\uB85C {b:ChargeDistance}m \uB3CC\uC9C4,
-        \uC9C0\uB098\uAC04 \uC801\uC5D0\uAC8C {dmg:ChargeCoef} \uD53C\uD574 + \uBC00\uCCD0\uB0B4\uACE0
-        {b:ArthurStun}\uCD08 \uAE30\uC808"
+      Text: "<b>\uC9C4\uACA9</b> \u2014 \uB3CC\uC9C4 \uC18D\uB3C4\uAC00 \uC99D\uAC00\uD558\uACE0,
+        \uB2FF\uC740 \uC801\uC774 {b:ArthurStun}\uCD08 \uAE30\uC808\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.8.Texts.1.Text
     - Key: ult
       Text: "<b>\uC131\uD718</b> \u2014 \uD3ED\uBC1C \uBC94\uC704\uC5D0 {dmg:ArthurBlastCoef}
-        \uCD94\uAC00 \uD53C\uD574"
+        \uCD94\uAC00 \uD53C\uD574\uB97C \uAC00\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.8.Texts.2.Text
   - Name: "\uB864\uB780\uB4DC"
+    NameKey: ability.6004.x.Names.9.Name
     Tier: 2
     Named: 2
     Weight: 30
@@ -184,18 +196,23 @@ MonoBehaviour:
     MountOverride: {fileID: 0}
     Texts:
     - Key: slash
-      Text: "<b>\uB4A4\uB791\uB2EC</b> \u2014 \uC704\uB825 +{b:RolandBonusPct}%,
-        \uB300\uC0C1\uC774 \uC783\uC740 \uCCB4\uB825\uC758 {b:RolandMissingPct}%
-        \uCD94\uAC00 \uD53C\uD574"
+      Text: "<b>\uB4A4\uB791\uB2EC</b> \u2014 \uC704\uB825\uC774 {b:RolandBonusPct}%
+        \uC99D\uAC00\uD558\uBA70 \uB300\uC0C1\uC774 \uC783\uC740 \uCCB4\uB825\uC758
+        {b:RolandMissingPct}% \uCD94\uAC00 \uD53C\uD574\uB97C \uAC00\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.9.Texts.0.Text
     - Key: mount
       Text: "<b>\uB3C4\uC57D</b> \u2014 \uD0D1\uC2B9 \uC911 \uB2E4\uC2DC \uB204\uB974\uBA74
         \uB3CC\uC9C4 \uB300\uC2E0 \uB6F0\uC5B4\uC62C\uB77C \uC8FC\uC704 {b:RolandPushRadius}m\uC758
-        \uC801\uC744 \uBC00\uCCD0\uB0B4\uACE0 \uC783\uC740 \uCCB4\uB825\uC758 {b:RolandHealMissingPct}%
-        \uD68C\uBCF5"
+        \uC801\uC744 \uBC00\uCCD0\uB0B4\uACE0 \uC783\uC740 \uCCB4\uB825\uC758 {b:RolandHealMissingPct}%\uB97C
+        \uD68C\uBCF5\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.9.Texts.1.Text
     - Key: ult
       Text: "<b>\uC2EC\uD310</b> \u2014 \uC804\uBC29 \uD53C\uD574\uAC00 \uACF5\uACA9\uB825\uC758
-        {b:RolandFinisherCoef}%\uB85C \uC99D\uAC00, {b:RolandStun}\uCD08 \uAE30\uC808"
+        {b:RolandFinisherCoef}%\uB85C \uC99D\uAC00\uD558\uBA70 \uC801\uC911\uB2F9\uD55C
+        \uC801\uC774 {b:RolandStun}\uCD08 \uAE30\uC808\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.9.Texts.2.Text
   - Name: "\uBCA0\uB978\uD558\uB974\uD2B8"
+    NameKey: ability.6004.x.Names.10.Name
     Tier: 2
     Named: 3
     Weight: 30
@@ -212,47 +229,59 @@ MonoBehaviour:
     MountOverride: {fileID: 0}
     Texts:
     - Key: slash
-      Text: "<b>\uCC98\uB2E8\uC790</b> \u2014 \uC704\uB825 +{b:BernhardBonusPct}%,
-        {b:BernhardWoundTime}\uCD08\uAC04 \uAE4A\uC740 \uC0C1\uCC98 {b:BernhardWoundPct}%"
+      Text: "<b>\uC885\uB9C9</b> \u2014 \uC704\uB825\uC774  {b:BernhardBonusPct}%
+        \uC99D\uAC00\uD558\uBA70, \uC801\uC911\uB2F9\uD55C \uB300\uC0C1\uC774 {b:BernhardWoundTime}\uCD08\uAC04
+        \uAE4A\uC740 \uC0C1\uCC98 {b:BernhardWoundPct}% \uC0C1\uD0DC\uAC00 \uB429\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.10.Texts.0.Text
     - Key: mount
       Text: "<b>\uB9DD\uB839 \uB3CC\uC9C4</b> \u2014 \uD0D1\uC2B9 \uC911 \uB2E4\uC2DC
-        \uB204\uB974\uBA74 \uACE0\uC2A4\uD2B8 \uC0C1\uD0DC\uB85C \uB3CC\uC9C4, \uC801\uC744
-        \uD1B5\uACFC\uD558\uBA70 \uC9C0\uB098\uAC04 \uBAA8\uB4E0 \uC801\uC5D0\uAC8C
-        {dmg:ChargeCoef} \uD53C\uD574 (\uC704\uB825 +{b:BernhardChargePct}%)"
+        \uB204\uB974\uBA74 \uACE0\uC2A4\uD2B8 \uC0C1\uD0DC\uB85C \uB3CC\uC9C4, \uB3CC\uC9C4\uC758
+        \uC704\uB825\uC774 {b:BernhardChargePct}% \uC99D\uAC00\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.10.Texts.1.Text
     - Key: ult
       Text: "<b>\uC8FD\uC74C\uC758 \uBD88\uAE38</b> \u2014 \uD3ED\uBC1C\uC5D0 \uB9DE\uC740
-        \uC801\uC774 {b:DeathFlameTime}\uCD08\uAC04 \uB9E4\uCD08 \uCD5C\uB300 \uCCB4\uB825\uC758
-        {b:DeathFlamePct}% \uD654\uC0C1"
+        \uC801\uC5D0\uAC8C {b:DeathFlameTime}\uCD08\uAC04 \uB9E4\uCD08 \uCD5C\uB300
+        \uCCB4\uB825\uC758 {b:DeathFlamePct}%\uC758 \uD53C\uD574\uB97C \uAC00\uD558\uB294
+        \uB9C9\uB300\uD55C \uD654\uC0C1\uC744 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+      TextKey: ability.6004.x.Names.10.Texts.2.Text
   Tiers:
   - Tier: 0
     Label: "\uB18D\uBBFC"
+    LabelKey: ability.6004.x.Tiers.0.Label
     Color: {r: 0.72, g: 0.72, b: 0.72, a: 1}
     Texts:
     - Key: slash
       Text: "<b>\uB18D\uC791</b> \u2014 \uAC00\uD55C \uD53C\uD574\uC758 {b:FarmHealPct}%\uB97C
         \uD68C\uBCF5"
+      TextKey: ability.6004.x.Tiers.0.Texts.0.Text
     - Key: mount
       Text: "<b>\uBBF8\uC219\uD55C \uC2B9\uB9C8</b> \u2014 \uC774\uB3D9\uC18D\uB3C4
         \uC99D\uAC00 -{b:UnskilledPenalty}"
+      TextKey: ability.6004.x.Tiers.0.Texts.1.Text
   - Tier: 1
     Label: "\uC6A9\uBCD1"
+    LabelKey: ability.6004.x.Tiers.1.Label
     Color: {r: 0.5, g: 0.7, b: 1, a: 1}
     Texts:
     - Key: slash
       Text: "<b>\uB18D\uC791</b> \u2014 \uAC00\uD55C \uD53C\uD574\uC758 {b:FarmHealPct}%\uB97C
         \uD68C\uBCF5\n<b>\uC804\uD22C\uAC10\uAC01</b> \u2014 \uC7A0\uC2DC \uB4A4
         {b:SecondMul:pct}% \uC704\uB825\uC73C\uB85C \uD55C \uBC88 \uB354 \uBCB0"
+      TextKey: ability.6004.x.Tiers.1.Texts.0.Text
     - Key: mount
       Text: "<b>\uBBF8\uC219\uD55C \uC2B9\uB9C8</b> \u2014 \uC774\uB3D9\uC18D\uB3C4
         \uC99D\uAC00 -{b:UnskilledPenalty}"
+      TextKey: ability.6004.x.Tiers.1.Texts.1.Text
   - Tier: 2
     Label: "\uB124\uC784\uB4DC"
+    LabelKey: ability.6004.x.Tiers.2.Label
     Color: {r: 1, g: 0.79, b: 0.29, a: 1}
     Texts:
     - Key: slash
       Text: "<b>\uB18D\uC791</b> \u2014 \uAC00\uD55C \uD53C\uD574\uC758 {b:FarmHealPct}%\uB97C
         \uD68C\uBCF5\n<b>\uC804\uD22C\uAC10\uAC01</b> \u2014 \uC7A0\uC2DC \uB4A4
         {b:SecondMul:pct}% \uC704\uB825\uC73C\uB85C \uD55C \uBC88 \uB354 \uBCB0"
+      TextKey: ability.6004.x.Tiers.2.Texts.0.Text
   GhostPassive: 1
   SlashSkill: 0
   MountSkill: 1

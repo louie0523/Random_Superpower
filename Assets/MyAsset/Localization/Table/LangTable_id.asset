@@ -87,7 +87,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943885
-    m_Localized: Pengukur Utama {0}
+    m_Localized: Pengukur Utama 0
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943886
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
-    m_Localized: '{0}, jangkauan {1}m, maksimal {2} orang'
+    m_Localized: '{0}, jangkauan {1}m, maks {2} orang'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943889
@@ -675,8 +675,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
-    m_Localized: Saat mengenai target, memberikan tambahan <b>kerusakan tetap sebesar
-      {v0}% dari HP maksimum target</b>.
+    m_Localized: Saat mengenai target, memberikan tambahan <b>kerusakan tetap yang
+      setara dengan {v0}% dari HP maksimum target</b>.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837767
@@ -724,7 +724,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5452611497603075
     m_Localized: Racuni target selama {d0} detik, memberikan kerusakan sebesar {v0}%
-      dari kesehatan maksimum per detik per tumpukan. (Maksimum {s0} tumpukan)
+      dari kesehatan maksimum per detik per tumpukan. (Maksimal {s0} tumpukan)
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -808,7 +808,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171912
-    m_Localized: Pemilihan kelas
+    m_Localized: Pemilihan Kelas
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171913
@@ -964,7 +964,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171950
-    m_Localized: "Dimensi Vertikal \u2014 Standar 75"
+    m_Localized: "Dimensi Vertikal \u2014 Default 75"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366208
@@ -1004,12 +1004,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Tombol suara (Obrolan \xB7 Tab Suara) berputar bersamaan \xB7 Jika
-      tombol yang sama ditekan, tombol untuk kedua tindakan tersebut akan ditukar."
+    m_Localized: "Tombol suara (Obrolan \xB7 Tab Suara) juga berputar bersamaan \xB7
+      Jika tombol yang sama ditekan, tombol untuk kedua tindakan tersebut akan ditukar."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Tunjukkan titik bidik
+    m_Localized: Tampilkan bidikan silang
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1490,7 +1490,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560558
-    m_Localized: Terapkan hal yang sama pada senjata-senjata lainnya juga.
+    m_Localized: Terapkan hal yang sama pada senjata lainnya juga.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560559
@@ -1713,8 +1713,8 @@ MonoBehaviour:
 
       Musuh yang menyerangmu dengan serangan
       jarak dekat akan mendapatkan efek Terbakar, dan semua efek item meningkat sebesar
-      25%. Selain itu, cooldown Tungku akan direset setiap kali kesehatanmu turun
-      sebesar 15%, misalnya pada 85%, 70%, 55%, dan seterusnya.'
+      25%. Selain itu, waktu pendinginan Tungku akan direset setiap kali kesehatanmu
+      turun sebesar 15%, misalnya pada 85%, 70%, 55%, dan seterusnya.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340366
@@ -1761,8 +1761,8 @@ MonoBehaviour:
       gerakan Anda.
 
 
-      Sebagai gantinya, peluru berikutnya memberikan kerusakan
-      tambahan sebesar {b:AimBonusPct:all}% saat mengenai target dan selalu menghasilkan
+      Sebagai gantinya, peluru berikutnya memberikan tambahan
+      kerusakan sebesar {b:AimBonusPct:all}% saat mengenai target dan selalu menghasilkan
       serangan kritis.'
     m_Metadata:
       m_Items: []
@@ -1900,7 +1900,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340405
     m_Localized: Tersedia saat Anda baru saja membunuh musuh atau menggunakan senjata
-      dengan 'Ketamakan'. Memuntahkan muntahan ke depan, memberikan kerusakan {dmg:SpitCoef+SpitFlat}.
+      dengan 'Ketamakan'. Muntahkan ke depan, memberikan kerusakan {dmg:SpitCoef+SpitFlat}.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340407
@@ -1950,12 +1950,12 @@ MonoBehaviour:
 
 
       Saat tidak
-      dalam pertempuran, isi daya <b>Kegelapan</b> selama {b:DarkChargeTime:all}
+      dalam pertempuran, ia mengisi daya <b>Kegelapan</b> selama {b:DarkChargeTime:all}
       detik.
 
 
-      Saat menyerang musuh, jika <b>Kegelapan</b> telah terisi daya,
-      butakan target selama {b:BlindTime:all} detik.'
+      Saat menyerang musuh, jika <b>Kegelapan</b> terisi penuh, ia
+      akan membutakan penglihatan target selama {b:BlindTime:all} detik.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340416
@@ -2313,7 +2313,7 @@ MonoBehaviour:
 
 
       Menggunakan
-      ultimate 5 kali membunuh setengah dari pemain yang masih hidup.'
+      Ultimate 5 kali membunuh setengah dari pemain yang masih hidup.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534687
@@ -2338,12 +2338,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: 'Kerusakan yang ditimbulkan pada target saat mereka tidak melihat
-      Anda meningkat sebesar 100%.
+    m_Localized: 'Kerusakan yang ditimbulkan saat target tidak melihat Anda meningkat
+      sebesar 100%.
 
 
-      Menjadi tidak terlihat selama 3 detik
-      saat digunakan.'
+      Saat digunakan, Anda menjadi tidak terlihat selama 3
+      detik.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534696
@@ -2425,12 +2425,11 @@ MonoBehaviour:
       Naga Legendaris.
 
 
-      Jika kamu meneriakkannya 30 kali, kamu akan menjadi
-      Naga Legendaris.
+      Jika kamu meneriakkan 30 kali, kamu akan menjadi Naga
+      Legendaris.
 
 
-      Jika kamu bertahan selama 3 menit, kamu akan langsung
-      menang.'
+      Jika kamu bertahan selama 3 menit, kamu akan langsung menang.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534718
@@ -2455,6 +2454,353 @@ MonoBehaviour:
 
       Cobalah hanya
       menggunakan kemampuanmu sendiri!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340361
+    m_Localized: letusan tanur tinggi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340372
+    m_Localized: 'Saat dilengkapi dengan senjata api, Kecepatan Serangan meningkat
+      sebesar {0}%, Kecepatan Gerak meningkat sebesar {1}, dan Kerusakan Kritis meningkat
+      sebesar tambahan {2}%.
+
+
+      Senjata default menjadi ''Glock''.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340373
+    m_Localized: gulungan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340380
+    m_Localized: 'Anda adalah seseorang yang telah lama meninggal tetapi kembali
+      karena suatu alasan.
+
+
+      Kemampuan seorang Ksatria Kematian berubah sesuai
+      dengan ''nama'' yang diberikan kepadanya.
+
+
+      Anda mungkin dulunya hanya
+      seorang petani, atau mungkin dulunya seorang yang hebat.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340384
+    m_Localized: Jenazah orang yang meninggal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340387
+    m_Localized: Tebas ke depan dengan kekuatan jahat, memberikan kerusakan sebesar
+      {dmg:SlashCoef+SlashFlat}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340391
+    m_Localized: '{x:mount}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340406
+    m_Localized: 'Kerusakan dasar adalah {dmg:SpitCoef+SpitFlat}, dan memberikan
+      kerusakan tambahan sebesar {b:InheritKillAtkPct}% dari kekuatan serangan target
+      jika targetnya adalah pemain, atau {b:InheritWeaponAtkPct}% jika targetnya
+      adalah senjata.
+
+
+      Dapat dipengaruhi oleh kemampuan musuh acak atau penguatan
+      senjata.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340408
+    m_Localized: Hancurkan senjata yang ada di tanganmu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340417
+    m_Localized: 'Mengaktifkan Senjata Bayangan selama {b:WeaponDuration:all} detik.
+
+
+      Saat
+      menyerang dengan senjata ini, ilusi Anda menyerang ke arah yang sama dengan
+      senjata yang sama setelah jeda singkat, memberikan kerusakan sebesar {b:EchoPct:all}%
+      dari kekuatan dasar Anda.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340432
+    m_Localized: 'Senjata selain yang sedang Anda gunakan akan melayang di samping
+      Anda.
+
+
+      Selama pertempuran, serang ke arah musuh terakhir yang Anda serang
+      setiap {b:OrbitInterval:all} detik, sebanding dengan kecepatan serangan senjata,
+      memberikan kerusakan sebesar {b:OrbitCoef:all} + {b:WeaponAtkPct:all}% dari
+      kerusakan senjata.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340435
+    m_Localized: Jumlah Batu Sihir yang diperoleh meningkat sebanyak {b:StoneGain:all}
+      kali.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340436
+    m_Localized: memerintah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340440
+    m_Localized: penari
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340443
+    m_Localized: 'Kamu adalah Joker dalam permainan ini.
+
+
+      Kamu selalu menciptakan
+      variabel-variabel besar dan memiliki kemampuan yang tak terduga.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340459
+    m_Localized: Kamu sangat cepat! Tapi jangan pernah berhenti!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340460
+    m_Localized: Kualitas Pelari
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340463
+    m_Localized: Kecepatan gerak dan kesehatan meningkat, dan kerusakan senjata jarak
+      dekat meningkat secara signifikan, tetapi Anda hanya dapat bergerak ke samping.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340465
+    m_Localized: Kesehatan dan kecepatan gerak meningkat sebesar 60%, dan kerusakan
+      senjata jarak dekat meningkat sebesar 100%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340467
+    m_Localized: Jika saya berada dalam jarak 5 meter dari seseorang selama lebih
+      dari 3 detik, saya akan sangat malu sampai meledak!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340468
+    m_Localized: Sekalipun aku harus pergi...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534659
+    m_Localized: ikan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534662
+    m_Localized: 'Saat mati, kamu langsung hidup kembali di tempat dan mengurangi
+      Soul musuh yang membunuhmu.
+
+
+      Selain itu, tingkatkan cooldown skill semua
+      musuh sebanyak 8 detik!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534668
+    m_Localized: Pilih satu pemain dan berikan status 'Kutukan' padanya selama 20
+      detik, yang mencegahnya berkomunikasi. Selain itu, ia menerima efek 'Segel'
+      hingga 999 detik selama masih hidup.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534674
+    m_Localized: Ppuing ppuing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534675
+    m_Localized: Badai Waktu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534678
+    m_Localized: Mengirim satu target ke dalam badai ruang dan waktu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534683
+    m_Localized: Metode pergerakan kuda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534691
+    m_Localized: Saat kesehatanmu turun menjadi 1 atau kurang, kamu akan mendapatkan
+      peningkatan statistik yang besar untuk waktu singkat dan tidak akan mati.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534692
+    m_Localized: Saat kesehatanmu turun menjadi 1 atau kurang, kamu akan mendapatkan
+      peningkatan statistik yang besar untuk waktu singkat dan tidak akan mati.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534693
+    m_Localized: pembunuh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534695
+    m_Localized: Jubah tak terlihat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534700
+    m_Localized: Pilih satu target dalam jangkauan, dan ada peluang 50% bahwa jumlah
+      Soul Anda akan menjadi sama dengan jumlah Soul target tersebut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534702
+    m_Localized: Bertaruhlah dengan target yang sedang Anda lihat, dan ada kemungkinan
+      50% bahwa jiwa Anda akan identik dengan jiwa target tersebut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534703
+    m_Localized: Lemparan bumi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534705
+    m_Localized: Lemparan bumi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534707
+    m_Localized: Sinar penolong rambut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534709
+    m_Localized: Sinar penolong rambut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534710
+    m_Localized: Jadikan targetnya sebagai 'kawan seperjuangan'.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534722
+    m_Localized: Napas Akhir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903037960192
+    m_Localized: William
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Localized: daerah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Localized: Thomas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Localized: Henry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Localized: Robert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Localized: Serigala
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Localized: Hakon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Localized: Eric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Localized: Arthur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Localized: "<b>Pedang Suci yang Terjalin</b> \u2014 {b:ArthurTrueRatio:pct}%
+      dari kerusakan mengabaikan armor."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Localized: "<b>Charge</b> \u2014 Kecepatan pengisian daya meningkat, dan musuh
+      yang terkena akan terkena efek setrum selama {b:ArthurStun} detik."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Localized: "<b>Seonghwi</b> \u2014 Menimbulkan kerusakan tambahan sebesar {dmg:ArthurBlastCoef}
+      dalam radius ledakan."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Localized: Roland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Localized: "<b>Durandal</b> \u2014 Kekuatan meningkat sebesar {b:RolandBonusPct}%
+      dan memberikan kerusakan tambahan yang setara dengan {b:RolandMissingPct}%
+      dari kesehatan target yang hilang."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Localized: "<b>Lompat</b> \u2014 Tekan lagi saat menunggangi hewan untuk melompat
+      alih-alih berlari, mendorong mundur musuh dalam jarak {b:RolandPushRadius}m
+      dan memulihkan {b:RolandHealMissingPct}% dari kesehatan Anda yang hilang."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Localized: "<b>Penghakiman</b> \u2014 Kerusakan frontal meningkat sebesar {b:RolandFinisherCoef}%
+      dari Kekuatan Serangan, dan musuh yang terkena akan terkena efek setrum selama
+      {b:RolandStun} detik."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Localized: Bernhard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Localized: "<b>Final</b> \u2014 Kekuatan meningkat sebesar {b:BernhardBonusPct}%,
+      dan target yang terkena menjadi Luka Parah {b:BernhardWoundPct}% selama {b:BernhardWoundTime}
+      detik."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Localized: "<b>Serangan Hantu</b> \u2014 Tekan lagi saat menunggangi untuk
+      menyerang dalam wujud Hantu, meningkatkan kekuatan serangan sebesar {b:BernhardChargePct}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Localized: "<b>Api Maut</b> \u2014 Menimbulkan luka bakar hebat pada musuh
+      yang terkena ledakan, mengurangi {b:DeathFlameTime}% dari kesehatan maksimal
+      mereka setiap detik selama {b:DeathFlamePct} detik."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Localized: petani
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Localized: "<b>Tanaman</b> \u2014 Pulihkan {b:FarmHealPct}% dari kerusakan
+      yang ditimbulkan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Localized: "<b>Penunggang Kuda Tidak Terampil</b> \u2014 Peningkatan kecepatan
+      gerakan -{b:Penalti Tidak Terampil}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Localized: mata duitan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Localized: "<b>Pertanian</b> \u2014 Memulihkan {b:FarmHealPct}% dari kerusakan
+      yang ditimbulkan\n<b>Indra Tempur</b> \u2014 Tak lama kemudian, tebas lagi
+      dengan kekuatan {b:SecondMul:pct}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Localized: "<b>Penunggang Kuda Tidak Terampil</b> \u2014 Peningkatan kecepatan
+      gerakan -{b:Penalti Tidak Terampil}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Localized: Bernama
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Localized: "<b>Pertanian</b> \u2014 Memulihkan {b:FarmHealPct}% dari kerusakan
+      yang ditimbulkan\n<b>Indra Tempur</b> \u2014 Tak lama kemudian, tebas lagi
+      dengan kekuatan {b:SecondMul:pct}%"
     m_Metadata:
       m_Items: []
   references:

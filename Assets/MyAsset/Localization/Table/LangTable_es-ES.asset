@@ -187,7 +187,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943910
-    m_Localized: No disponible para la compra
+    m_Localized: No disponible para la venta
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943911
@@ -564,8 +564,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072776
-    m_Localized: "Inflige {0}% de la salud m\xE1xima del objetivo como da\xF1o adicional
-      al golpear."
+    m_Localized: "Inflige un da\xF1o adicional del {0}% de la salud m\xE1xima del
+      objetivo al golpear."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072777
@@ -833,7 +833,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15217183922171921
     m_Localized: "\xA1Venganza consumada! Velocidad de movimiento \xB7 Salud m\xE1xima
-      \xB7 Poder de ataque +{0}% \xA1hasta la muerte!"
+      \xB7 Poder de ataque +0% hasta la muerte."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171922
@@ -991,12 +991,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Las teclas de voz (Chat \xB7 Pesta\xF1a Voz) giran juntas \xB7
+    m_Localized: "Las teclas de voz (Chat \xB7 Pesta\xF1a Voz) tambi\xE9n se intercambian.
       Si se pulsa la misma tecla, las teclas para las dos acciones se intercambian."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Mostrar punto de mira
+    m_Localized: Mostrar la mira
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1665,10 +1665,10 @@ MonoBehaviour:
   - m_Id: 15224945322340365
     m_Localized: "Durante {b:UltDuration} segundos, tu cuerpo se envuelve en llamas
       y entras en el estado Descendiente del Fuego.\n\nLos enemigos que te ataquen
-      cuerpo a cuerpo sufren el efecto de Quemadura, y todos los efectos de los objetos
-      aumentan un 25 %. Adem\xE1s, el tiempo de reutilizaci\xF3n de Horno se reinicia
-      cada vez que tu salud disminuye un 15 %, por ejemplo, al 85 %, 70 %, 55 %,
-      etc."
+      cuerpo a cuerpo obtienen el efecto de Quemadura, y todos los efectos de los
+      objetos aumentan un 25 %. Adem\xE1s, el tiempo de reutilizaci\xF3n de Horno
+      se reinicia cada vez que tu salud disminuye un 15 %, por ejemplo, al 85 %,
+      70 %, 55 %, etc."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340366
@@ -1792,7 +1792,7 @@ MonoBehaviour:
       \xCDndice de absorci\xF3n {b:AbsorbRatio*100:all}% \xD7 Multiplicador de grado.\n\nPuedes
       obtener hasta {b:AbsorbEnchants*100:all}% de efectos de encantamiento, y consumir
       armas especiales otorga un efecto especial permanente.\n\nEl tiempo de digesti\xF3n
-      se reduce hasta en {b:DigestMul*100}% dependiendo del nivel de habilidad."
+      se reduce hasta en un {b:DigestMul*100}% dependiendo del nivel de habilidad."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340402
@@ -1854,8 +1854,8 @@ MonoBehaviour:
   - m_Id: 15224945322340415
     m_Localized: "Una sombra sigue al Caminante de las Sombras.\n\nCuando no est\xE1
       en combate, carga <b>Oscuridad</b> durante {b:DarkChargeTime:all} segundos.\n\nAl
-      atacar a un enemigo, si <b>Oscuridad</b> est\xE1 cargada, ciega al objetivo
-      durante {b:BlindTime:all} segundos."
+      atacar a un enemigo, si <b>Oscuridad</b> est\xE1 cargada, ciega la visi\xF3n
+      del objetivo durante {b:BlindTime:all} segundos."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340416
@@ -1863,8 +1863,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340417
-    m_Localized: "Activa Arma Sombr\xEDa durante {b:WeaponDuration:all} segundos.\n\nAl
-      atacar con el arma, tu ilusi\xF3n ataca en la misma direcci\xF3n con la misma
+    m_Localized: "Activa Arma de Sombras durante {b:WeaponDuration:all} segundos.\n\nAl
+      atacar con esta arma, tu ilusi\xF3n ataca en la misma direcci\xF3n con la misma
       arma tras un breve lapso, infligiendo un da\xF1o equivalente al {b:EchoPct:all}%
       de tu poder base."
     m_Metadata:
@@ -1977,9 +1977,9 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340454
     m_Localized: "Cambia el tiempo de reutilizaci\xF3n de una de las habilidades
-      aleatorias que actualmente est\xE1n en tiempo de reutilizaci\xF3n por el de
-      una habilidad de carta sustituta, y en su lugar restablece el tiempo de reutilizaci\xF3n
-      de esa habilidad aleatoria."
+      aleatorias que actualmente est\xE1n en tiempo de reutilizaci\xF3n al tiempo
+      de reutilizaci\xF3n de la habilidad de la carta sustituta, y en su lugar restablece
+      el tiempo de reutilizaci\xF3n de esa habilidad aleatoria."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340455
@@ -2060,7 +2060,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534662
-    m_Localized: "Al morir, revives inmediatamente en el lugar y reduces el alma
+    m_Localized: "Al morir, revives inmediatamente en el lugar y reduces el Alma
       del enemigo que te mat\xF3.\n\nAdem\xE1s, \xA1aumenta el tiempo de reutilizaci\xF3n
       de las habilidades de todos los enemigos en 8 segundos!"
     m_Metadata:
@@ -2173,8 +2173,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: "El da\xF1o infligido a los objetivos cuando no te est\xE1n mirando
-      aumenta un 100 %.\n\nTe vuelves invisible durante 3 segundos al usarlo."
+    m_Localized: "El da\xF1o infligido cuando el objetivo no te est\xE1 mirando aumenta
+      un 100 %.\n\nAl usarla, te vuelves invisible durante 3 segundos."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534695
@@ -2281,6 +2281,369 @@ MonoBehaviour:
   - m_Id: 15224945326534724
     m_Localized: "\xA1Oh no! Esta habilidad no tiene efecto.\n\n\xA1Intenta usar
       solo tus propias habilidades!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340353
+    m_Localized: herrero
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340354
+    m_Localized: "Eres el herrero.\n\nEl l\xEDmite de encantamientos para armas aumenta
+      a 100.\n\nPuedes gastar Alma para establecer el siguiente encantamiento al
+      valor deseado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340355
+    m_Localized: "herrer\xEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340358
+    m_Localized: 'Tu cuerpo es apto para trabajar con fuelles.
+
+
+      HP + {0:all}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340360
+    m_Localized: "Balancea el martillo hacia adelante para infligir {dmg:SmashCoef+SmashFlat}
+      de da\xF1o y aturdir a los enemigos alcanzados durante 0,25 segundos. Adem\xE1s,
+      los enemigos alcanzados obtienen un efecto de estado que reduce su armadura
+      en un {b:ArmorBreakPct}% durante 5 segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340364
+    m_Localized: Descendientes del Fuego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340369
+    m_Localized: encantamiento de armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340374
+    m_Localized: "Rueda hacia adelante para entrar en Evasi\xF3n durante 1 segundo.\n\nRecupera
+      un 20 % de munici\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340377
+    m_Localized: "Ve al ba\xF1o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340379
+    m_Localized: Caballero de la Muerte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340382
+    m_Localized: "Se asigna un nombre aleatorio.\n\nLas estad\xEDsticas adicionales
+      y los efectos de las habilidades var\xEDan seg\xFAn el nombre.\n\nNombre actual:
+      {x:nametag}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340383
+    m_Localized: "Nombre actual: {x:nametag}\n\nEstad\xEDsticas adicionales: {x:stats}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340386
+    m_Localized: Espada del Inframundo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340388
+    m_Localized: '{x:barra}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340390
+    m_Localized: "Monta un caballo no muerto durante {b:MountDuration} segundos.
+      Mientras est\xE9s montado, tu velocidad de movimiento aumenta en {b:MountSpeed}
+      y el da\xF1o recibido se reduce en {b:MountDamageReduce}%.\n\nVuelve a usar
+      estando montado para lanzarte r\xE1pidamente hacia adelante, infligiendo {dmg:ChargeCoef}
+      de da\xF1o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340395
+    m_Localized: "glot\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340397
+    m_Localized: "digesti\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340398
+    m_Localized: "glot\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340403
+    m_Localized: "Recupera salud equivalente al {b:DevourHealPct}% del da\xF1o infligido."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340413
+    m_Localized: "Siempre act\xFAas con tu sombra.\n\nUtiliza tu sombra para actuar
+      con agresividad, a veces con agilidad, y exti\xE9ndela para dominar el territorio."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340420
+    m_Localized: "Intercambia posiciones con tu sombra para teletransportarte a la
+      ubicaci\xF3n que est\xE1s mirando.\n\nPuedes moverte hasta {b:MoveRange:all}
+      m."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340421
+    m_Localized: Mano de las Sombras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340422
+    m_Localized: "Deja una <b>Mano Sombr\xEDa</b> donde est\xE9s mirando. Si hay
+      enemigos a menos de {b:HandRadius:all} m de la <b>Mano Sombr\xEDa</b>, la mano
+      se extiende.\n\nAl impactar, inflige {dmg:HandCoef+HandFlat} de da\xF1o y enra\xEDza
+      durante {b:HandRoot:all} segundos.\n\nPuedes dejar hasta {b:HandMax:all} Manos
+      Sombr\xEDas en el mapa a la vez."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340426
+    m_Localized: "El Caminante de las Sombras puede localizar a todos los enemigos
+      dentro del \xE1rea de sombras."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340427
+    m_Localized: Maestro de armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340428
+    m_Localized: 'Eres un Maestro de las Armas.
+
+
+      A diferencia de otros jugadores,
+      puedes llevar hasta 8 armas.
+
+
+      Incluso cuando no las sostienes, las armas
+      flotan a tu lado y luchan.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340431
+    m_Localized: Maestro de armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340433
+    m_Localized: "El alcance m\xE1ximo es {b:OrbitRange:all}m, y el Maestro de Armas
+      no puede controlar las armas de fuego.\n\nLos arcos y bastones tienen un tiempo
+      de carga del 100%.\n\nLos encantamientos especiales en el arma correspondiente
+      tienen un 50% de probabilidad de activarse, y sus valores y duraci\xF3n se
+      reducen a la mitad. (El robo de vida no se aplica)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340439
+    m_Localized: Durante {b:HasteDuration:all} segundos, el tiempo de ataque base
+      del Maestro de Armas se reduce en un {b:HasteIntervalPct:all}% y la velocidad
+      de comando aumenta en un 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340442
+    m_Localized: bromista
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340444
+    m_Localized: bromista
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340453
+    m_Localized: "Tarjeta de sustituci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340464
+    m_Localized: El poder del cangrejo azul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340466
+    m_Localized: fobia social
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534656
+    m_Localized: Mata a un jugador al azar al morir.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534657
+    m_Localized: plural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534665
+    m_Localized: Toma de notas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534667
+    m_Localized: "Mu\xF1eco vud\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534669
+    m_Localized: "Mu\xF1eco vud\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534671
+    m_Localized: Actuando de forma adorable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534673
+    m_Localized: Actuando de forma adorable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534687
+    m_Localized: "El tiempo de reutilizaci\xF3n de la habilidad definitiva disminuye
+      un 40 % m\xE1s r\xE1pido.\n\nUsar la habilidad definitiva 5 veces elimina a
+      la mitad de los jugadores vivos. (Actual: {x:stack})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534697
+    m_Localized: Ponerse una capa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534699
+    m_Localized: dibujar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534708
+    m_Localized: Al utilizarse, dispara un rayo hacia adelante para convertir al
+      objetivo en un "camarada".
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534715
+    m_Localized: Cuando se utiliza, lleva a un objetivo al futuro.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534717
+    m_Localized: "Al usar una habilidad, gritas un idioma de drag\xF3n legendario.\n\nSi
+      lo gritas 30 veces, te conviertes en un drag\xF3n legendario.\n\nSi sobrevives
+      3 minutos, ganas inmediatamente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903037960192
+    m_Localized: Guillermo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Localized: zona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Localized: Thomas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Localized: Enrique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Localized: Robert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Localized: Lobo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Localized: Hakon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Localized: Eric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Localized: Arturo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Localized: "<b>Espada Sagrada Enredada</b> \u2014 {b:ArthurTrueRatio:pct}%
+      del da\xF1o ignora la armadura."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Localized: "<b>Carga</b> \u2014 La velocidad de carga aumenta y los enemigos
+      alcanzados quedan aturdidos durante {b:ArthurStun} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Localized: "<b>Seonghwi</b> \u2014 Inflige {dmg:ArthurBlastCoef} de da\xF1o
+      adicional en el radio de la explosi\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Localized: Roland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Localized: "<b>Durandal</b> \u2014 El poder aumenta en un {b:RolandBonusPct}%
+      y causa da\xF1o adicional igual al {b:RolandMissingPct}% de la salud faltante
+      del objetivo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Localized: "<b>Salto</b> \u2014 Pulsa de nuevo mientras est\xE9s montado para
+      saltar en lugar de correr, empujando hacia atr\xE1s a los enemigos dentro de
+      {b:RolandPushRadius}m y restaurando {b:RolandHealMissingPct}% de tu salud perdida."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Localized: "<b>Juicio</b> \u2014 El da\xF1o frontal aumenta en un {b:RolandFinisherCoef}%
+      del poder de ataque, y los enemigos golpeados quedan aturdidos durante {b:RolandStun}
+      segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Localized: Bernardo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Localized: "<b>Final</b> \u2014 El poder aumenta en un {b:BernhardBonusPct}%,
+      y los objetivos alcanzados se convierten en Herida Profunda {b:BernhardWoundPct}%
+      durante {b:BernhardWoundTime} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Localized: "<b>Carga Espectral</b> \u2014 Vuelve a pulsar mientras est\xE9s
+      montado para cargar en forma de fantasma, aumentando el poder de la carga en
+      un {b:BernhardChargePct}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Localized: "<b>Llamas de la muerte</b> \u2014 Inflige quemaduras masivas a
+      los enemigos alcanzados por la explosi\xF3n, quit\xE1ndoles {b:DeathFlameTime}%
+      de su salud m\xE1xima cada segundo durante {b:DeathFlamePct} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Localized: agricultores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Localized: "<b>Cultivo</b> \u2014 Recupera {b:FarmHealPct}% del da\xF1o infligido"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Localized: "<b>Jinete inexperto</b> \u2014 Velocidad de movimiento aumentada
+      -{b:Penalizaci\xF3nInexperto}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Localized: mercenario
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Localized: "<b>Granja</b> \u2014 Recupera {b:FarmHealPct}% del da\xF1o infligido\n<b>Sentido
+      de combate</b> \u2014 Poco despu\xE9s, ataca de nuevo con {b:SecondMul:pct}%
+      de poder"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Localized: "<b>Jinete inexperto</b> \u2014 Velocidad de movimiento aumentada
+      -{b:Penalizaci\xF3nInexperto}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Localized: Nombrado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Localized: "<b>Granja</b> \u2014 Recupera {b:FarmHealPct}% del da\xF1o infligido\n<b>Sentido
+      de combate</b> \u2014 Poco despu\xE9s, ataca de nuevo con {b:SecondMul:pct}%
+      de poder"
     m_Metadata:
       m_Items: []
   references:

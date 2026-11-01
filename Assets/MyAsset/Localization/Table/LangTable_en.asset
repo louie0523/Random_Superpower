@@ -802,7 +802,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171912
-    m_Localized: Class selection
+    m_Localized: Class Selection
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171913
@@ -997,12 +997,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Voice keys (Chat \xB7 Voice Tab) rotate together \xB7 If the same
-      key is entered, the keys for the two actions are swapped"
+    m_Localized: "Voice keys (Chat \xB7 Voice Tab) also rotate together \xB7 If the
+      same key is entered, the keys for the two actions are swapped."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Show aiming point
+    m_Localized: Show crosshair
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1726,8 +1726,8 @@ MonoBehaviour:
 
 
       Instead,
-      the next bullet deals {b:AimBonusPct:all}% additional damage upon hitting and
-      always hits as a critical strike.'
+      the next bullet deals {b:AimBonusPct:all}% additional damage on hit and always
+      hits as a critical strike.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340377
@@ -1912,12 +1912,12 @@ MonoBehaviour:
 
 
       When not in combat,
-      charge <b>Darkness</b> over {b:DarkChargeTime:all} seconds.
+      it charges <b>Darkness</b> for {b:DarkChargeTime:all} seconds.
 
 
-      When attacking
-      an enemy, if <b>Darkness</b> is charged, blind the target for {b:BlindTime:all}
-      seconds.'
+      When
+      attacking an enemy, if <b>Darkness</b> is charged, it blinds the target''s
+      vision for {b:BlindTime:all} seconds.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340417
@@ -2294,11 +2294,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: 'Damage dealt to targets when they are not looking at you increases
-      by 100%.
+    m_Localized: 'Damage dealt when the target is not looking at you increases by
+      100%.
 
 
-      Becomes invisible for 3 seconds when used.'
+      When used, you become invisible for 3 seconds.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534695
@@ -2409,11 +2409,11 @@ MonoBehaviour:
 
 
       If
-      you shout it 30 times, you become a Legendary Dragon.
+      you shout 30 times, you become a Legendary Dragon.
 
 
-      If you survive
-      for 3 minutes, you win immediately.'
+      If you survive for
+      3 minutes, you win immediately.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534718
@@ -2442,6 +2442,319 @@ MonoBehaviour:
 
       Try using only your
       own abilities!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340355
+    m_Localized: smithy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340362
+    m_Localized: 'Explodes lava within {b:FurnaceRadius}m of surroundings, dealing
+      {dmg:FurnaceCoef+FurnaceFlat} damage.
+
+
+      The lower the health, the stronger
+      it becomes, up to {b:FurnaceMaxMul} times, and has a {b:BurnChance:pct}% chance
+      to inflict burn.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340368
+    m_Localized: You are the Master of All Firearms. A Gun Master can enchant all
+      firearms and receives calibrations for the weapons.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340371
+    m_Localized: Master of firearms
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340381
+    m_Localized: shade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340382
+    m_Localized: 'A random ''Name'' is assigned.
+
+
+      Additional stats and skill
+      effects change depending on the ''Name''.
+
+
+      Current Name : {x:nametag}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340392
+    m_Localized: Scent of Death
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340393
+    m_Localized: Wielding a cursed sword of dark magic, strike down to deal {dmg:FinisherCoef+FinisherFlat}
+      weapon damage to enemies in front, and trigger a dark magic explosion in front
+      to inflict massive poison.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340401
+    m_Localized: Gluttony
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340404
+    m_Localized: spitting out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340405
+    m_Localized: Available when you have recently killed an enemy or consumed a weapon
+      with 'Gluttony'. Spit vomit forward, dealing {dmg:SpitCoef+SpitFlat} damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340413
+    m_Localized: 'You always act with your shadow.
+
+
+      Utilize your shadow to
+      act aggressively, sometimes agilely, and spread it out to dominate the territory.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340414
+    m_Localized: shadow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340416
+    m_Localized: Shadow Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340420
+    m_Localized: 'Swaps positions with your shadow to teleport to the location you
+      are looking at.
+
+
+      You can move up to {b:MoveRange:all}m.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340424
+    m_Localized: Complete darkness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340425
+    m_Localized: 'Designates the surrounding area as a <b>Shadow Zone</b>, greatly
+      reducing the visibility range of enemies within the zone, excluding yourself.
+
+
+      Enemies
+      outside the Shadow Zone cannot see inside.
+
+
+      Inside the Shadow Zone,
+      Shadow Walkers'' Shadow Move cooldown becomes {b:ZoneMoveCooldown:all} seconds,
+      and their movement speed increases by {b:ZoneMoveSpeedPct:all}%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340438
+    m_Localized: acceleration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340442
+    m_Localized: joker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340444
+    m_Localized: joker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340445
+    m_Localized: You always have 2 random abilities.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340454
+    m_Localized: Changes the cooldown of one of the random abilities currently on
+      cooldown to the cooldown of the substitute card skill, and instead resets the
+      cooldown of that random ability.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340455
+    m_Localized: surprise gift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340462
+    m_Localized: blue crab
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534663
+    m_Localized: Death Notepad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534666
+    m_Localized: I'm going to become the God of the New World!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534667
+    m_Localized: Voodoo doll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534669
+    m_Localized: Voodoo doll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534672
+    m_Localized: Uses deadly cuteness to reduce the damage dealt by the target to
+      0%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534676
+    m_Localized: When used, it teleports one enemy within range to a random location!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534677
+    m_Localized: We need more heroes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534681
+    m_Localized: Promotion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534685
+    m_Localized: inevitable existence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534686
+    m_Localized: 'Ultimate cooldown decreases 40% faster.
+
+
+      Using Ultimate
+      5 times kills half of the living players.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534688
+    m_Localized: Finger snap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534699
+    m_Localized: draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903037960192
+    m_Localized: William
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Localized: zone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Localized: Thomas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Localized: henry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Localized: Robert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Localized: Wolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Localized: Hakon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Localized: Eric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Localized: Arthur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Localized: "<b>Entangled Holy Sword</b> \u2014 {b:ArthurTrueRatio:pct}% of
+      damage ignores armor."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Localized: "<b>Charge</b> \u2014 Charge speed increases, and enemies hit are
+      stunned for {b:ArthurStun} seconds."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Localized: "<b>Seonghwi</b> \u2014 Deals {dmg:ArthurBlastCoef} additional damage
+      in the explosion radius."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Localized: Roland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Localized: "<b>Durandal</b> \u2014 Power increases by {b:RolandBonusPct}% and
+      deals additional damage equal to {b:RolandMissingPct}% of the target's missing
+      health."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Localized: "<b>Leap</b> \u2014 Press again while mounted to jump instead of
+      dashing, knocking back enemies within {b:RolandPushRadius}m and restoring {b:RolandHealMissingPct}%
+      of your missing health."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Localized: "<b>Judgment</b> \u2014 Frontal damage increases by {b:RolandFinisherCoef}%
+      of Attack Power, and enemies hit are stunned for {b:RolandStun} seconds."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Localized: Bernhard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Localized: "<b>Final</b> \u2014 Power increases by {b:BernhardBonusPct}%, and
+      targets hit become Deep Wound {b:BernhardWoundPct}% for {b:BernhardWoundTime}
+      seconds."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Localized: "<b>Wraith Charge</b> \u2014 Press again while mounted to charge
+      in Ghost form, increasing the charge's power by {b:BernhardChargePct}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Localized: "<b>Death Flames</b> \u2014 Inflicts massive burn on enemies hit
+      by the explosion, dealing {b:DeathFlameTime}% of their maximum health every
+      second for {b:DeathFlamePct} seconds."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Localized: farmers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Localized: "<b>Crop</b> \u2014 Recover {b:FarmHealPct}% of damage dealt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Localized: "<b>Unskilled Horseman</b> \u2014 Increased movement speed -{b:UnskilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Localized: mercenary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Localized: "<b>Farm</b> \u2014 Recovers {b:FarmHealPct}% of damage dealt\n<b>Combat
+      Sense</b> \u2014 Shortly after, slash again with {b:SecondMul:pct}% power"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Localized: "<b>Unskilled Horseman</b> \u2014 Increased movement speed -{b:UnskilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Localized: Named
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Localized: "<b>Farm</b> \u2014 Recovers {b:FarmHealPct}% of damage dealt\n<b>Combat
+      Sense</b> \u2014 Shortly after, slash again with {b:SecondMul:pct}% power"
     m_Metadata:
       m_Items: []
   references:

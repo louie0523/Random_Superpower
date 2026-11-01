@@ -9,6 +9,7 @@ public enum DKNamed { None, Arthur, Roland, Bernhard }
 public class DKName
 {
     public string Name = "윌리엄";
+    [HideInInspector] public string NameKey;        // 번역 키 — '능력 → 시트'가 채움
     public DKTier Tier = DKTier.Peasant;
     [Tooltip("네임드 고유 효과")]
     public DKNamed Named = DKNamed.None;
@@ -29,6 +30,7 @@ public class DKTierInfo
 {
     public DKTier Tier;
     public string Label = "농민";
+    [HideInInspector] public string LabelKey;       // 번역 키 — '능력 → 시트'가 채움
     public Color Color = Color.white;
     [Tooltip("이 등급 모두에게 들어가는 {x:키} 글")]
     public DescLine[] Texts;
@@ -415,8 +417,8 @@ public class DeathKnightAbility : AbilityBehaviour
     {
         if (_name == null) return null;
         var tier = TierInfo(_name.Tier);
-        string tierLabel = tier != null && !string.IsNullOrEmpty(tier.Label) ? LocUtil.Resolve(tier.Label) : _name.Tier.ToString();
-        string name = LocUtil.Resolve(_name.Name);
+        string tierLabel = tier != null && !string.IsNullOrEmpty(tier.Label) ? LocUtil.Pick(tier.LabelKey, tier.Label) : _name.Tier.ToString();
+        string name = LocUtil.Pick(_name.NameKey, _name.Name);
 
         switch (key)
         {
@@ -947,7 +949,7 @@ public class DeathKnightAbility : AbilityBehaviour
                     var sb = new System.Text.StringBuilder("이름 목록:");
                     for (int i = 0; i < Names.Length; i++)
                         if (Names[i] != null)
-                            sb.Append($"\n  {i + 1}. {LocUtil.Resolve(Names[i].Name)} ({TierLabel(Names[i].Tier)})" + (Names[i] == _name ? "  ← 지금" : ""));
+                            sb.Append($"\n  {i + 1}. {LocUtil.Pick(Names[i].NameKey, Names[i].Name)} ({TierLabel(Names[i].Tier)})" + (Names[i] == _name ? "  ← 지금" : ""));
                     return sb.ToString();
                 }
 
@@ -961,7 +963,7 @@ public class DeathKnightAbility : AbilityBehaviour
                         if (int.TryParse(a[1], out int n)) idx = n - 1;
                         else
                             for (int i = 0; i < Names.Length; i++)
-                                if (Names[i] != null && LocUtil.Resolve(Names[i].Name).Contains(a[1])) { idx = i; break; }
+                                if (Names[i] != null && (Names[i].Name.Contains(a[1]) || LocUtil.Pick(Names[i].NameKey, Names[i].Name).Contains(a[1]))) { idx = i; break; }
                         if (a.Length > 1 && idx < 0)
                             foreach (DKTier t in System.Enum.GetValues(typeof(DKTier)))      // 등급으로: peasant · mercenary · named
                                 if (string.Equals(t.ToString(), a[1], System.StringComparison.OrdinalIgnoreCase) || TierLabel(t) == a[1])
@@ -983,7 +985,7 @@ public class DeathKnightAbility : AbilityBehaviour
                     Ctx.SetSaved(Data.Id, idx + 1);
                     _name = Names[idx];
                     ApplyNameStats();
-                    return $"이름 → {LocUtil.Resolve(_name.Name)} ({TierLabel(_name.Tier)})" + (wasMounted ? " — 말에서 내림" : "");
+                    return $"이름 → {LocUtil.Pick(_name.NameKey, _name.Name)} ({TierLabel(_name.Tier)})" + (wasMounted ? " — 말에서 내림" : "");
                 }
 
             case "mount":
@@ -1020,7 +1022,7 @@ public class DeathKnightAbility : AbilityBehaviour
                 ("peasant", "농민 중 무작위"), ("mercenary", "용병 중 무작위"), ("named", "네임드 중 무작위"),
             };
             for (int i = 0; i < Names.Length; i++)
-                if (Names[i] != null) list.Add(((i + 1).ToString(), $"{LocUtil.Resolve(Names[i].Name)} ({TierLabel(Names[i].Tier)})"));
+                if (Names[i] != null) list.Add(((i + 1).ToString(), $"{LocUtil.Pick(Names[i].NameKey, Names[i].Name)} ({TierLabel(Names[i].Tier)})"));
             return list;
         }
         return null;
@@ -1029,6 +1031,6 @@ public class DeathKnightAbility : AbilityBehaviour
     string TierLabel(DKTier t)
     {
         var info = TierInfo(t);
-        return info != null && !string.IsNullOrEmpty(info.Label) ? LocUtil.Resolve(info.Label) : t.ToString();
+        return info != null && !string.IsNullOrEmpty(info.Label) ? LocUtil.Pick(info.LabelKey, info.Label) : t.ToString();
     }
 }

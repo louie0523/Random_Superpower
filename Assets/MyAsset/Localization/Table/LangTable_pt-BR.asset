@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943883
-    m_Localized: Tempo de recarga {0} segundos
+    m_Localized: Tempo de espera {0} segundos
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943884
@@ -986,13 +986,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "As teclas de voz (Chat \xB7 Aba de Voz) s\xE3o rotacionadas simultaneamente.
-      Se a mesma tecla for pressionada, as teclas para as duas a\xE7\xF5es ser\xE3o
-      trocadas."
+    m_Localized: "As teclas de voz (Chat \xB7 Aba de Voz) tamb\xE9m s\xE3o rotacionadas
+      juntas. Se a mesma tecla for pressionada, as teclas para as duas a\xE7\xF5es
+      ser\xE3o trocadas."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Mostrar ponto de mira
+    m_Localized: Mostrar mira
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1612,8 +1612,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: "O dano causado aos alvos quando eles n\xE3o est\xE3o olhando para
-      voc\xEA aumenta em 100%.\n\nTorna-se invis\xEDvel por 3 segundos ao usar."
+    m_Localized: "O dano causado quando o alvo n\xE3o est\xE1 olhando para voc\xEA
+      aumenta em 100%.\n\nAo usar esta habilidade, voc\xEA fica invis\xEDvel por
+      3 segundos."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534698
@@ -1854,7 +1855,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340405
     m_Localized: "Dispon\xEDvel quando voc\xEA tiver matado um inimigo recentemente
-      ou consumido uma arma com 'Gula'. Cospe v\xF4mito para frente, causando dano
+      ou consumido uma arma com 'Gula'. Cuspa v\xF4mito para frente, causando dano
       de {dmg:SpitCoef+SpitFlat}."
     m_Metadata:
       m_Items: []
@@ -2019,7 +2020,7 @@ MonoBehaviour:
   - m_Id: 15224945322340449
     m_Localized: "Teleporta-se para tr\xE1s, deixando uma carta Coringa em sua localiza\xE7\xE3o
       original. Se pisada, a carta explode ap\xF3s um breve atraso, causando dano
-      de {dmg:BlastCoef+BlastFlat} e aplicando lentid\xE3o de {b:BlastSlowPct:all}%
+      de {dmg:BlastCoef+BlastFlat} e aplicando redu\xE7\xE3o de velocidade de {b:BlastSlowPct:all}%
       por 2 segundos."
     m_Metadata:
       m_Items: []
@@ -2043,7 +2044,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340454
     m_Localized: "Altera o tempo de recarga de uma das habilidades aleat\xF3rias
-      atualmente em recarga para o tempo de recarga de uma habilidade de carta substituta
+      atualmente em recarga para o tempo de recarga da habilidade da carta substituta
       e, em vez disso, redefine o tempo de recarga dessa habilidade aleat\xF3ria."
     m_Metadata:
       m_Items: []
@@ -2319,9 +2320,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534717
-    m_Localized: "Ao usar uma habilidade, voc\xEA grita um idioma lend\xE1rio de
-      drag\xE3o.\n\nSe voc\xEA gritar 30 vezes, voc\xEA se torna um Drag\xE3o Lend\xE1rio.\n\nSe
-      voc\xEA sobreviver por 3 minutos, voc\xEA vence imediatamente."
+    m_Localized: "Ao usar uma habilidade, voc\xEA grita um idioma de drag\xE3o lend\xE1rio.\n\nSe
+      voc\xEA gritar 30 vezes, voc\xEA se torna um Drag\xE3o Lend\xE1rio.\n\nSe voc\xEA
+      sobreviver por 3 minutos, voc\xEA vence imediatamente."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534718
@@ -2347,6 +2348,281 @@ MonoBehaviour:
   - m_Id: 15224945326534724
     m_Localized: "Oh n\xE3o! Essa habilidade n\xE3o tem efeito.\n\nTente usar apenas
       suas pr\xF3prias habilidades!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340356
+    m_Localized: "O limite de encantamentos aumenta at\xE9 100.\n\nVoc\xEA pode especificar
+      o valor do pr\xF3ximo encantamento consumindo Alma."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340359
+    m_Localized: Esmagamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340366
+    m_Localized: "Entre os Descendentes do Fogo, o consumo de Pedras de Encantamento
+      devido ao encantamento \xE9 reduzido pela metade."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340370
+    m_Localized: "Voc\xEA pode encantar armas de fogo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340376
+    m_Localized: "Aproxime a mira por {b:AimTimeout} segundos e diminua sua velocidade
+      de movimento.\n\nEm vez disso, o pr\xF3ximo proj\xE9til causa {b:AimBonusPct:all}%
+      de dano adicional ao atingir o alvo e sempre acerta como um golpe cr\xEDtico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340388
+    m_Localized: '{x:barra}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340394
+    m_Localized: '{x:ult}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340402
+    m_Localized: "D\xEA uma mordida para frente para causar dano de {dmg:DevourCoef+DevourFlat}.
+      Se o alvo atingido morrer em 1 segundo, ganhe almas adicionais e prepare <b>Cuspir</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340407
+    m_Localized: "Ingest\xE3o de subst\xE2ncias n\xE3o saud\xE1veis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340409
+    m_Localized: monstro faminto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340410
+    m_Localized: "Libere {b:MonsterCount:all} feras famintas que morder\xE3o automaticamente
+      os inimigos em um raio de {b:MonsterRadius:all}m por {b:UltDuration:all} segundos,
+      causando um ataque de Gula com efeito de {b:MonsterPowerMul*100}%.\n\nSe voc\xEA
+      matar um jogador com um ataque de Gula, a dura\xE7\xE3o aumenta em {b:UltKillExtend}
+      segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Localized: "Uma sombra segue o Andarilho das Sombras.\n\nQuando n\xE3o est\xE1
+      em combate, ele carrega <b>Escurid\xE3o</b> por {b:DarkChargeTime:all} segundos.\n\nAo
+      atacar um inimigo, se <b>Escurid\xE3o</b> estiver carregada, ela cega a vis\xE3o
+      do alvo por {b:BlindTime:all} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Localized: "Um inimigo preso por uma <b>m\xE3o das sombras</b> dentro de {b:HandImmune:all}
+      segundos n\xE3o pode ser preso por outra <b>m\xE3o das sombras</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340427
+    m_Localized: Mestre de Armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340431
+    m_Localized: Mestre de Armas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340437
+    m_Localized: "Como Mestre das Armas, as armas flutuantes avan\xE7am na dire\xE7\xE3o
+      para a qual est\xE3o viradas, causando dano igual ao n\xFAmero de armas X {dmg:CommandCoef}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340439
+    m_Localized: "Durante {b:HasteDuration:all} segundos, o tempo de ataque base
+      do Mestre de Armas \xE9 reduzido em {b:HasteIntervalPct:all}% e a velocidade
+      de comando \xE9 aumentada em 50%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Localized: O ganho de almas torna-se {b:SoulGain:all} vezes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340456
+    m_Localized: "Invoca um clone id\xEAntico de si mesmo com habilidades e itens
+      aleat\xF3rios \xE0 sua frente por {b:CloneDuration:all} segundos.\n\nO clone
+      segue o inimigo mais pr\xF3ximo por padr\xE3o.\n\nQuando o clone morre ou voc\xEA
+      pressiona a tecla de Ultimate novamente, ele explode, causando {b:CloneBlastMul*100:all}%
+      de dano de explos\xE3o do Joker Draw aos inimigos pr\xF3ximos.\n\nO clone ataca
+      inimigos em um raio de 10m com sua arma atual."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340457
+    m_Localized: O clone reduz o dano da arma em 50%.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340458
+    m_Localized: Euforia do Corredor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340461
+    m_Localized: "Em vez de aumentar significativamente sua velocidade, voc\xEA sofre
+      dano sempre que para!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534660
+    m_Localized: Aba aba.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534664
+    m_Localized: "Selecione um jogador para que ele cometa suic\xEDdio ap\xF3s 60
+      segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534682
+    m_Localized: "O pe\xE3o \xE9 promovido a se tornar um <b>gigante do xadrez</b>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534701
+    m_Localized: Podemos considerar isso um empate...?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534704
+    m_Localized: "Ao usar essa habilidade, voc\xEA se eleva brevemente e, em seguida,
+      lan\xE7a 'Terra' no local para o qual estava olhando imediatamente antes de
+      us\xE1-la."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534713
+    m_Localized: "Quando usado, ele puxa um alvo, agarra-o e avan\xE7a.\n\nNingu\xE9m
+      sabe qual \xE9 o destino."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534714
+    m_Localized: Vamos juntos para o futuro!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903037960192
+    m_Localized: William
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Localized: zona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Localized: Thomas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Localized: Henrique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Localized: Roberto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Localized: Lobo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Localized: Hakon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Localized: Eric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Localized: Arthur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Localized: "<b>Espada Sagrada Emaranhada</b> \u2014 {b:ArthurTrueRatio:pct}%
+      do dano ignora a armadura."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Localized: "<b>Investida</b> \u2014 A velocidade de investida aumenta e os
+      inimigos atingidos ficam atordoados por {b:ArthurStun} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Localized: "<b>Seonghwi</b> \u2014 Causa {dmg:ArthurBlastCoef} de dano adicional
+      no raio da explos\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Localized: Roland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Localized: "<b>Durandal</b> \u2014 O poder aumenta em {b:RolandBonusPct}% e
+      causa dano adicional igual a {b:RolandMissingPct}% da vida perdida do alvo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Localized: "<b>Salto</b> \u2014 Pressione novamente enquanto estiver montado
+      para pular em vez de correr, empurrando os inimigos para tr\xE1s dentro de
+      {b:RolandPushRadius}m e restaurando {b:RolandHealMissingPct}% da sua sa\xFAde
+      perdida."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Localized: "<b>Julgamento</b> \u2014 O dano frontal aumenta em {b:RolandFinisherCoef}%
+      do Poder de Ataque, e os inimigos atingidos ficam atordoados por {b:RolandStun}
+      segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Localized: Bernhard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Localized: "<b>Final</b> \u2014 O poder aumenta em {b:BernhardBonusPct}%, e
+      os alvos atingidos ficam com Ferimento Profundo em {b:BernhardWoundPct}% por
+      {b:BernhardWoundTime} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Localized: "<b>Investida Espectral</b> \u2014 Pressione novamente enquanto
+      estiver montado para carregar na forma Fantasma, aumentando o poder da carga
+      em {b:BernhardChargePct}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Localized: "<b>Chamas da Morte</b> \u2014 Inflige queimadura massiva nos inimigos
+      atingidos pela explos\xE3o, causando dano equivalente a {b:DeathFlameTime}%
+      da sa\xFAde m\xE1xima deles a cada segundo durante {b:DeathFlamePct} segundos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Localized: agricultores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Localized: "<b>Cultivo</b> \u2014 Recupera {b:FarmHealPct}% do dano causado"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Localized: "<b>Cavaleiro Inexperiente</b> \u2014 Velocidade de movimento aumentada
+      -{b:UnskilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Localized: "mercen\xE1rio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Localized: "<b>Fazenda</b> \u2014 Recupera {b:FarmHealPct}% do dano causado\n<b>Senso
+      de Combate</b> \u2014 Logo em seguida, ataque novamente com {b:SecondMul:pct}%
+      de poder"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Localized: "<b>Cavaleiro Inexperiente</b> \u2014 Velocidade de movimento aumentada
+      -{b:UnskilledPenalty}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Localized: Nomeado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Localized: "<b>Fazenda</b> \u2014 Recupera {b:FarmHealPct}% do dano causado\n<b>Senso
+      de Combate</b> \u2014 Logo em seguida, ataque novamente com {b:SecondMul:pct}%
+      de poder"
     m_Metadata:
       m_Items: []
   references:

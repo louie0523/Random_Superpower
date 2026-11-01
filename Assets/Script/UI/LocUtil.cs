@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 
@@ -62,4 +62,11 @@ public static class LocUtil
         bool looksLikeKey = s.IndexOf(' ') < 0 && s.IndexOf('.') > 0;
         return looksLikeKey ? GetOr(s, s) : s;
     }
+
+    /// <summary>
+    /// 숨은 번역 키 + 인스펙터 한국어 짝 — 키가 시트에 있으면 번역, 없으면 한국어(또는 키처럼 생긴 글은 Resolve).
+    /// 짝 규칙: 글 필드 X 옆에 [HideInInspector] string XKey — '능력 → 시트'가 키를 채우고 시트에 올림
+    /// </summary>
+    public static string Pick(string key, string text)
+        => TryGet(key, out var v) ? v : Resolve(text);
 }

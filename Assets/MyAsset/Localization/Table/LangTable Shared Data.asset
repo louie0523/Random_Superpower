@@ -2191,6 +2191,118 @@ MonoBehaviour:
     m_Key: ability.8999.passive.0.desc
     m_Metadata:
       m_Items: []
+  - m_Id: 15311903037960192
+    m_Key: ability.6004.x.Names.0.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Key: ability.6004.x.Names.1.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Key: ability.6004.x.Names.2.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Key: ability.6004.x.Names.3.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Key: ability.6004.x.Names.4.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Key: ability.6004.x.Names.5.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Key: ability.6004.x.Names.6.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Key: ability.6004.x.Names.7.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Key: ability.6004.x.Names.8.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Key: ability.6004.x.Names.8.Texts.0.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Key: ability.6004.x.Names.8.Texts.1.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Key: ability.6004.x.Names.8.Texts.2.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Key: ability.6004.x.Names.9.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Key: ability.6004.x.Names.9.Texts.0.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Key: ability.6004.x.Names.9.Texts.1.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Key: ability.6004.x.Names.9.Texts.2.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Key: ability.6004.x.Names.10.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Key: ability.6004.x.Names.10.Texts.0.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Key: ability.6004.x.Names.10.Texts.1.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Key: ability.6004.x.Names.10.Texts.2.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Key: ability.6004.x.Tiers.0.Label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Key: ability.6004.x.Tiers.0.Texts.0.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Key: ability.6004.x.Tiers.0.Texts.1.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Key: ability.6004.x.Tiers.1.Label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Key: ability.6004.x.Tiers.1.Texts.0.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Key: ability.6004.x.Tiers.1.Texts.1.Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Key: ability.6004.x.Tiers.2.Label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Key: ability.6004.x.Tiers.2.Texts.0.Text
+    m_Metadata:
+      m_Items: []
   - m_Id: 5221716635267075
     m_Key: weapon.1000.name
     m_Metadata:

@@ -91,7 +91,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943886
-    m_Localized: "Vorderer Sektor {0}\xB0"
+    m_Localized: "Vorderer {0}\xB0 Sektor"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943887
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Stehle {0}% des beim Treffer verursachten Schadens.
+    m_Localized: Stehle {0}% des verursachten Schadens beim Treffer
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -991,12 +991,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Sprachtasten (Chat \xB7 Sprach-Tab) rotieren gemeinsam \xB7 Wird
-      dieselbe Taste gedr\xFCckt, werden die Tasten f\xFCr die beiden Aktionen vertauscht"
+    m_Localized: "Die Sprachtasten (Chat \xB7 Sprach-Tab) rotieren ebenfalls gemeinsam.
+      \xB7 Wenn dieselbe Taste gedr\xFCckt wird, werden die Tasten f\xFCr die beiden
+      Aktionen vertauscht."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Zielpunkt anzeigen
+    m_Localized: Fadenkreuz anzeigen
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1036,7 +1037,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366228
-    m_Localized: "innere Linienl\xE4nge"
+    m_Localized: "innere Leitungsl\xE4nge"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366229
@@ -1217,7 +1218,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366273
-    m_Localized: "Bildschirmwackeln (bei Treffer \xB7 Explosion)"
+    m_Localized: "Bildschirmwackeln (bei Aufprall \xB7 Explosion)"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366274
@@ -1708,7 +1709,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340372
-    m_Localized: "Mit einer Schusswaffe ausger\xFCstet, erh\xF6ht sich die Angriffsgeschwindigkeit
+    m_Localized: "Ausger\xFCstet mit einer Schusswaffe erh\xF6ht sich die Angriffsgeschwindigkeit
       um {0}%, die Bewegungsgeschwindigkeit um {1}% und der kritische Schaden um
       weitere {2}%.\n\nDie Standardwaffe ist eine Glock."
     m_Metadata:
@@ -1724,9 +1725,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340376
     m_Localized: "Zoome f\xFCr {b:AimTimeout} Sekunden heran und verlangsame deine
-      Bewegungsgeschwindigkeit.\n\nStattdessen verursacht die n\xE4chste Kugel beim
-      Treffer {b:AimBonusPct:all}% zus\xE4tzlichen Schaden und ist immer ein kritischer
-      Treffer."
+      Bewegungsgeschwindigkeit.\n\nStattdessen verursacht die n\xE4chste Kugel {b:AimBonusPct:all}%
+      zus\xE4tzlichen Schaden und ist immer ein kritischer Treffer."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340377
@@ -1767,7 +1767,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340387
-    m_Localized: "Sto\xDFe mit finsterer Macht nach vorn und verursache {dmg:SlashCoef+SlashFlat}
+    m_Localized: "Sto\xDFe mit teuflischer Macht nach vorn und verursache {dmg:SlashCoef+SlashFlat}
       Schaden."
     m_Metadata:
       m_Items: []
@@ -1830,8 +1830,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340405
     m_Localized: "Verf\xFCgbar, wenn du k\xFCrzlich einen Gegner get\xF6tet oder
-      eine Waffe mit \u201EV\xF6llerei\u201C verbraucht hast. Spuckt Erbrochenes
-      nach vorn und verursacht {dmg:SpitCoef+SpitFlat} Schaden."
+      eine Waffe mit \u201EV\xF6llerei\u201C verbraucht hast. Spucke Erbrochenes
+      nach vorn und verursache {dmg:SpitCoef+SpitFlat} Schaden."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340406
@@ -2013,7 +2013,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340454
     m_Localized: "\xC4ndert die Abklingzeit einer der zuf\xE4lligen F\xE4higkeiten,
-      die sich aktuell in der Abklingzeit befindet, auf die einer Ersatzkartenf\xE4higkeit
+      die sich aktuell in der Abklingzeit befindet, auf die Abklingzeit der Ersatzkartenf\xE4higkeit
       und setzt stattdessen die Abklingzeit dieser zuf\xE4lligen F\xE4higkeit zur\xFCck."
     m_Metadata:
       m_Items: []
@@ -2321,6 +2321,330 @@ MonoBehaviour:
   - m_Id: 15224945326534724
     m_Localized: "Oh nein! Diese F\xE4higkeit hat keine Wirkung.\n\nVersuche, nur
       deine eigenen F\xE4higkeiten einzusetzen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340361
+    m_Localized: Ausbruch eines Hochofens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340375
+    m_Localized: "Pr\xE4zisionsschie\xDFen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340380
+    m_Localized: "Du bist jemand, der vor langer Zeit starb, aber aus irgendeinem
+      Grund zur\xFCckgekehrt ist.\n\nDie F\xE4higkeiten eines Todesritters h\xE4ngen
+      von seinem Namen ab.\n\nDu warst vielleicht nur ein Bauer oder ein m\xE4chtiger
+      Krieger."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340384
+    m_Localized: Der Leichnam des Verstorbenen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340391
+    m_Localized: '{x:mount}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340396
+    m_Localized: 'Du bist hungrig.
+
+
+      Und dein Magen kann alles verschlingen.
+
+
+      Du
+      kannst alles verschlingen und zu einem riesigen Wesen werden.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340399
+    m_Localized: "Iss eine Waffe, um dauerhaft {b:AbsorbRatio:pct}% deiner F\xE4higkeitspunkte
+      zu erhalten.\n\n{x:digest}\n\n{x:absorbed}\n\n{x:specials}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340400
+    m_Localized: "Du erh\xE4ltst Boni basierend auf dem Basiswert der Waffe \xD7
+      Absorptionsrate {b:AbsorbRatio*100:all}% \xD7 Stufenmultiplikator.\n\nDu kannst
+      bis zu {b:AbsorbEnchants*100:all}% Verzauberungseffekte erhalten, und der Konsum
+      spezieller Waffen gew\xE4hrt einen permanenten Spezialeffekt.\n\nDie Verdauungszeit
+      wird abh\xE4ngig von der Fertigkeitsstufe um bis zu {b:DigestMul*100}% reduziert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340411
+    m_Localized: "Das Monster hat pro Ziel eine Angriffsabklingzeit von 3 Sekunden
+      und verursacht {b:MonsterLowHpBonus:all}% zus\xE4tzlichen Schaden an Zielen
+      mit 30 % oder weniger Gesundheit.\n\nW\xE4hrend der Wirkungsdauer werden Angriffskraft,
+      Angriffsgeschwindigkeit und Bewegungsgeschwindigkeit leicht erh\xF6ht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340415
+    m_Localized: "Ein Schatten folgt dem Schattenwandler.\n\nAu\xDFerhalb des Kampfes
+      l\xE4dt er Dunkelheit f\xFCr {b:DarkChargeTime:all} Sekunden auf.\n\nBeim Angriff
+      auf einen Gegner wird dessen Sicht f\xFCr {b:BlindTime:all} Sekunden geblendet,
+      sofern Dunkelheit aufgeladen ist."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340418
+    m_Localized: Gegner, die von Schattenwaffen getroffen werden, werden 1 Sekunde
+      lang um 10 % verlangsamt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340423
+    m_Localized: Ein Feind, der innerhalb von {b:HandImmune:all} Sekunden von einer
+      <b>Schattenhand</b> gebunden wird, kann nicht von einer anderen <b>Schattenhand</b>
+      gebunden werden.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340430
+    m_Localized: "Die maximale Anzahl an Waffen, die du tragen kannst, erh\xF6ht
+      sich auf {b:SlotCount:all}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340432
+    m_Localized: "Andere Waffen als die aktuell ausger\xFCstete schweben neben dir.\n\nIm
+      Kampf greifst du alle {b:OrbitInterval:all} Sekunden in Richtung des zuletzt
+      getroffenen Gegners an. Die Angriffsfrequenz ist proportional zur Angriffsgeschwindigkeit
+      deiner Waffe und verursacht Schaden in H\xF6he von {b:OrbitCoef:all} + {b:WeaponAtkPct:all}%
+      des Waffenschadens."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340434
+    m_Localized: Kollektor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340440
+    m_Localized: "T\xE4nzer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340443
+    m_Localized: "Du bist der Joker des Spiels.\n\nDu sorgst stets f\xFCr \xDCberraschungen
+      und besitzt unberechenbare F\xE4higkeiten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340447
+    m_Localized: Seelengewinn wird {b:SoulGain:all} mal.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340448
+    m_Localized: Joker Draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340449
+    m_Localized: "Teleportiert sich r\xFCckw\xE4rts und hinterl\xE4sst eine Jokerkarte
+      an seinem urspr\xFCnglichen Standort. Tritt man auf die Karte, explodiert sie
+      nach kurzer Verz\xF6gerung und verursacht {dmg:BlastCoef+BlastFlat} Schaden
+      sowie {b:BlastSlowPct:all}% Verlangsamung f\xFCr 2 Sekunden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340451
+    m_Localized: Eine Karte!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340452
+    m_Localized: "F\xFCgt {b:OneCardSeconds:all} Sekunden zur Abklingzeit aller normalen
+      F\xE4higkeiten (ausgenommen ultimative und zuf\xE4llige F\xE4higkeiten) f\xFCr
+      alle Gegner innerhalb von {b:OneCardRadius:all} Metern hinzu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340460
+    m_Localized: "Eigenschaften des L\xE4ufers"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945322340468
+    m_Localized: Selbst wenn ich gehen muss...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534659
+    m_Localized: Fisch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534661
+    m_Localized: Todesregression
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534668
+    m_Localized: "W\xE4hle einen Spieler aus und belege ihn f\xFCr 20 Sekunden mit
+      dem Status \u201EFluch\u201C, wodurch er an der Kommunikation gehindert wird.
+      Zus\xE4tzlich erh\xE4lt er, solange er lebt, f\xFCr bis zu 999 Sekunden den
+      Effekt \u201ESiegel\u201C."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534675
+    m_Localized: Sturm der Zeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534678
+    m_Localized: Schickt ein Ziel in einen Sturm aus Zeit und Raum.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534684
+    m_Localized: "Springe mit der Bewegung des Ritters zweimal vorw\xE4rts und setze
+      sie innerhalb von 3 Sekunden erneut ein, um diagonal nach links/rechts zu springen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534689
+    m_Localized: 50 % allen Lebens....
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534694
+    m_Localized: "Der Schaden, den du verursachst, wenn das Ziel dich nicht ansieht,
+      erh\xF6ht sich um 100 %.\n\nBei Anwendung wirst du f\xFCr 3 Sekunden unsichtbar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534700
+    m_Localized: "W\xE4hle ein Ziel innerhalb der Reichweite aus, und es besteht
+      eine 50%ige Chance, dass deine Seelenmenge derjenigen des Ziels entspricht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534702
+    m_Localized: "Wenn du eine Wette mit dem Zielobjekt abschlie\xDFt, das du ansiehst,
+      besteht eine 50%ige Chance, dass deine Seele mit der des Zielobjekts identisch
+      ist."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534710
+    m_Localized: "Mach das Ziel zu einem \u201EGenossen\u201C."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534712
+    m_Localized: Lasst uns in die Zukunft reisen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15224945326534719
+    m_Localized: "Sein Name ist\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903037960192
+    m_Localized: William
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903232
+    m_Localized: Zone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903233
+    m_Localized: Thomas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903234
+    m_Localized: Henry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903235
+    m_Localized: Robert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903236
+    m_Localized: Wolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903237
+    m_Localized: Hakon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903238
+    m_Localized: Eric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903239
+    m_Localized: Arthur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903240
+    m_Localized: "<b>Verstricktes Heiliges Schwert</b> \u2014 {b:ArthurTrueRatio:pct}%
+      des Schadens ignoriert die R\xFCstung."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903241
+    m_Localized: "<b>Aufladen</b> \u2014 Die Aufladegeschwindigkeit erh\xF6ht sich,
+      und getroffene Gegner werden f\xFCr {b:ArthurStun} Sekunden bet\xE4ubt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903242
+    m_Localized: "<b>Seonghwi</b> \u2014 Verursacht {dmg:ArthurBlastCoef} zus\xE4tzlichen
+      Schaden im Explosionsradius."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903243
+    m_Localized: Roland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903244
+    m_Localized: "<b>Durandal</b> \u2014 Die Kraft erh\xF6ht sich um {b:RolandBonusPct}%
+      und verursacht zus\xE4tzlichen Schaden in H\xF6he von {b:RolandMissingPct}%
+      der fehlenden Gesundheit des Ziels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903245
+    m_Localized: "<b>Sprung</b> \u2014 Dr\xFCcke die Taste erneut, w\xE4hrend du
+      reitest, um zu springen anstatt zu sprinten. Gegner innerhalb von {b:RolandPushRadius}m
+      werden zur\xFCckgesto\xDFen und {b:RolandHealMissingPct}% deiner fehlenden
+      Gesundheit werden wiederhergestellt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903246
+    m_Localized: "<b>Urteil</b> \u2014 Der Frontalschaden erh\xF6ht sich um {b:RolandFinisherCoef}%
+      der Angriffskraft, und getroffene Gegner werden f\xFCr {b:RolandStun} Sekunden
+      bet\xE4ubt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903079903247
+    m_Localized: Bernhard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097536
+    m_Localized: "<b>Final</b> \u2014 Die Kraft erh\xF6ht sich um {b:BernhardBonusPct}%,
+      und getroffene Ziele erleiden {b:BernhardWoundPct}% tiefe Wunden f\xFCr {b:BernhardWoundTime}
+      Sekunden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097537
+    m_Localized: "<b>Geisterladung</b> \u2014 Dr\xFCcke erneut, w\xE4hrend du reitest,
+      um in Geisterform aufzuladen. Dadurch erh\xF6ht sich die St\xE4rke der Ladung
+      um {b:BernhardChargePct}%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097538
+    m_Localized: "<b>Todesflammen</b> \u2014 F\xFCgt Gegnern, die von der Explosion
+      getroffen werden, massive Verbrennungen zu und verursacht {b:DeathFlameTime}%
+      ihrer maximalen Gesundheit pro Sekunde f\xFCr {b:DeathFlamePct} Sekunden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097539
+    m_Localized: Bauern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097540
+    m_Localized: "<b>Ernte</b> \u2014 Stellt {b:FarmHealPct}% des verursachten Schadens
+      wieder her"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097541
+    m_Localized: "<b>Unerfahrener Reiter</b> \u2014 Erh\xF6hte Bewegungsgeschwindigkeit
+      -{b:UnskilledMalt}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097542
+    m_Localized: "S\xF6ldner"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097543
+    m_Localized: "<b>Farm</b> \u2013 Heilt {b:FarmHealPct}% des verursachten Schadens.\n<b>Kampfsinn</b>
+      \u2013 Kurz darauf erneuter Angriff mit {b:SecondMul:pct}% St\xE4rke."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097544
+    m_Localized: "<b>Unerfahrener Reiter</b> \u2014 Erh\xF6hte Bewegungsgeschwindigkeit
+      -{b:UnskilledMalt}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097545
+    m_Localized: Namens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15311903084097546
+    m_Localized: "<b>Farm</b> \u2013 Heilt {b:FarmHealPct}% des verursachten Schadens.\n<b>Kampfsinn</b>
+      \u2013 Kurz darauf erneuter Angriff mit {b:SecondMul:pct}% St\xE4rke."
     m_Metadata:
       m_Items: []
   references:
