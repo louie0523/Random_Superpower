@@ -10,7 +10,8 @@ public static class StatText
 
     public static bool IsRatio(StatType s) =>
         s == StatType.CritChance || s == StatType.CritDamage ||
-        s == StatType.CooldownReduction || s == StatType.LifeSteal;
+        s == StatType.CooldownReduction || s == StatType.LifeSteal ||
+        s == StatType.HeadshotDamage || s == StatType.HeadshotReduction;
 
     /// <summary>+25 / +25% / -10% 형태</summary>
     public static string Value(StatType stat, ModType type, float v)
@@ -22,4 +23,4 @@ public static class StatText
         if (IsMultiplier(stat) || IsRatio(stat)) return $"{sign}{a * 100f:0.#}%";  // 0.25 → +25%
         return $"{sign}{a:0.##}";                                          // 25 → +25
     }
-}
+}

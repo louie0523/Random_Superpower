@@ -114,6 +114,12 @@ public class ShopItemView : MonoBehaviour
                 sb.AppendLine(LocUtil.Get("ui.shop.heal_amount", _data.HealAmount));
                 break;
 
+            case ShopItemKind.Shield:
+                sb.AppendLine(_data.ShieldSeconds > 0f
+                    ? SetLoc.F("ui.shop.shield_timed", "쉴드 {0} ({1}초)", _data.ShieldAmount, _data.ShieldSeconds.ToString("0.#"))
+                    : SetLoc.F("ui.shop.shield", "쉴드 {0} (깨질 때까지)", _data.ShieldAmount));
+                break;
+
             case ShopItemKind.RefillAmmo:
                 sb.AppendLine(LocUtil.Get("ui.shop.ammo_ratio",
                     Mathf.RoundToInt(_data.AmmoRatio * 100f)));
@@ -133,4 +139,4 @@ public class ShopItemView : MonoBehaviour
 
     static string FormatStat(ShopItemData d, int level) =>
         $"{LocUtil.Get($"stat.{d.Stat}")} {StatText.Value(d.Stat, d.ModType, d.GetValue(level))}";
-}
+}

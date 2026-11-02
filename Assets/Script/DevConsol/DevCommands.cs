@@ -302,7 +302,7 @@ public static class DevCommands
 
         switch (kind)
         {
-            case "item": case "아이템": case "무기": return GiveItem(c, arg);
+            case "item": case "아이템": case "무기": return GiveItem(c, arg, a.Length > 2 ? a[2] : null);
             case "alter": case "변화": return GiveAlter(c, arg);
             case "soul":
             case "소울":
@@ -335,7 +335,8 @@ public static class DevCommands
         return Err($"give 뒤에는 item · alter · soul · stone · sp ('{kind}' 모름)");
     }
 
-    static string GiveItem(Ctx c, string arg)
+    /// <param name="ench">방어구 — 특수 인챈트 ID (0 · 비우면 없음, 'r'이면 무작위)</param>
+    static string GiveItem(Ctx c, string arg, string ench = null)
     {
         var eq = c.Equipment;
         var db = Db.Items;
@@ -352,8 +353,14 @@ public static class DevCommands
 
         if (d.Slot != EquipSlot.Weapon)
         {
-            eq.Equip(d.Id);
-            return Ok($"{c.Who} 장착: {ItemName(d)} ({d.Id})");
+            // 방어구 — /give item <방어구> [인챈트 ID | r]
+            var edb = eq.ArmorEnchants;
+            int eid = 0;
+            if (!string.IsNullOrEmpty(ench))
+                eid = ench == "r" || ench == "랜덤" ? (edb != null ? edb.Roll(d.Slot) : 0) : int.TryParse(ench, out var n) ? n : 0;
+            if (!eq.EquipArmor(d.Id, eid, false)) return Err("지금은 못 낌 (변신 중?)");
+            var ed = edb != null ? edb.Get(eid) : null;
+            return Ok($"{c.Who} 장착: {ItemName(d)} ({d.Id})" + (ed != null ? $" + {ed.GetName()} ({ed.Id})" : ""));
         }
 
         // 들고 있는 칸이 비었으면 거기 → 빈 칸 → 다 차면 발밑에 픽업
@@ -763,4 +770,4 @@ public static class DevCommands
             return found != null && found.Length > 0 ? found[0] : null;
         }
     }
-}
+}

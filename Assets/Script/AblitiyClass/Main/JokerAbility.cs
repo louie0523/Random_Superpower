@@ -77,6 +77,7 @@ public class JokerAbility : AbilityBehaviour
 
     float Now => Ctx.Runner != null ? Ctx.Runner.SimulationTime : Time.time;
     bool CloneAlive => _clone != null && _clone.IsValid;
+    bool CloneKilled => CloneAlive && _clone.TryGetComponent<JokerClone>(out var jc) && jc.Dead;
 
     // ══════════════════ 생명주기 ══════════════════
 
@@ -110,9 +111,9 @@ public class JokerAbility : AbilityBehaviour
 
         if (_cloneEnd > 0f)
         {
-            // 시간 끝 · 내가 죽음 → 궁극기 다시 누르기와 같은 폭발. 분신이 이미 없어졌으면 정리만
+            // 시간 끝 · 내가 죽음 · 분신 체력 0 → 궁극기 다시 누르기와 같은 폭발. 분신이 이미 없어졌으면 정리만
             if (!CloneAlive) DespawnClone(false);
-            else if (dead || Now >= _cloneEnd) DespawnClone(true);
+            else if (dead || Now >= _cloneEnd || CloneKilled) DespawnClone(true);
         }
     }
 
@@ -255,6 +256,16 @@ public class JokerAbility : AbilityBehaviour
 
             if (h.TryGetComponent<PlayerStatus>(out var st))
                 st.Apply(StatusType.Slow, Lv(BlastSlowPct), Lv(BlastSlowTime), self);
+        }
+
+        // 다른 조커의 분신 등 소환물
+        if (Hittables.All.Count > 0)
+        {
+            float sd = DamageCalc.CalcOutgoing(stats, (stats.Get(StatType.AttackPower) * Lv(BlastCoef) * 0.01f + Lv(BlastFlat)) * mul,
+                                               DamageSource.Skill, true, out bool sc);
+            var si = DamageInfo.FromPlayerHit(Mathf.RoundToInt(sd), self, p);
+            si.IsCrit = sc;
+            Hittables.DamageSphere(p + Vector3.up * 0.5f, Lv(BlastRadius), Ctx.HitMask, si);
         }
 
         Broadcast(EvBlast, p);
@@ -458,4 +469,4 @@ public class JokerAbility : AbilityBehaviour
         if (index == 1 && a.Length > 0 && a[0] == "dual") return new[] { ("on", ""), ("off", "") };
         return null;
     }
-}
+}

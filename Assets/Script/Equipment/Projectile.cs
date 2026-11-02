@@ -41,6 +41,9 @@ public class Projectile : MonoBehaviour
     private float _damageMul = 1f;
 
     private System.Action<Collider, Vector3, float> _onHit;
+
+    /// <summary>이 콜라이더는 그냥 지나감 (내 편 소환물 — 조커 분신 등). Launch 뒤에 넣음</summary>
+    public System.Func<Collider, bool> PassThrough { get; set; }
     private readonly HashSet<int> _hitIds = new();
 
     private bool _dead;
@@ -129,6 +132,7 @@ public class Projectile : MonoBehaviour
         {
             if (h.collider == _ignore) continue;
             if (_ignore != null && h.collider.transform.root == _ignore.transform.root) continue;   // 추가
+            if (PassThrough != null && PassThrough(h.collider)) continue;
 
             int id = h.collider.gameObject.GetInstanceID();
             if (_hitIds.Contains(id)) continue;
@@ -244,4 +248,4 @@ public class Projectile : MonoBehaviour
         }
     }
 #endif
-}
+}

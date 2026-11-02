@@ -23,6 +23,8 @@ public class AlterHitbox
     public Vector3 Size = new(0.8f, 0.8f, 3f);
     [Tooltip("회전 (°) — 캡슐은 기본이 앞뒤(z)로 누운 방향")]
     public Vector3 Rotation;
+    [Tooltip("머리 — 여기 맞으면 헤드샷 (총 · 투사체 무기). 변화 피격 범위는 체크한 것만 머리")]
+    public bool Head;
 }
 
 /// <summary>AlterData.Hitboxes → 실제 콜라이더 (PlayerAlter가 모든 클라이언트에서 만듦)</summary>
@@ -92,6 +94,12 @@ public static class AlterHitboxes
             t.localPosition = h.Center - a.Position;      // 모델 위치(Position)와 상관없이 붙는 자리 기준
             t.localRotation = Quaternion.Euler(h.Rotation);
             t.localScale = Vector3.one;
+
+            // 머리 표시 — 헤드샷 판정 (Headshot.IsHead)
+            var hz = t.GetComponent<HeadZone>();
+            if (h.Head && hz == null) t.gameObject.AddComponent<HeadZone>();
+            else if (!h.Head && hz != null) UnityEngine.Object.Destroy(hz);
+
             switch (t.GetComponent<Collider>())
             {
                 case CapsuleCollider c:

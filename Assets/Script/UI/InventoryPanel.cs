@@ -132,6 +132,7 @@ public class InventoryPanel : UIPanel, ILocRefresh
             h = h * 31 + _equip.ArmorId;
             h = h * 31 + _equip.HelmetId;
             h = h * 31 + _equip.BootsId;
+            h = h * 31 + _equip.ArmorEnchantId * 7 + _equip.HelmetEnchantId * 11 + _equip.BootsEnchantId * 13;
 
             if (_enchant != null)
             {
@@ -166,12 +167,12 @@ public class InventoryPanel : UIPanel, ILocRefresh
             });
         }
 
-        BindGear(armorSlot, _equip.ArmorId);
-        BindGear(helmetSlot, _equip.HelmetId);
-        BindGear(bootsSlot, _equip.BootsId);
+        BindGear(armorSlot, _equip.ArmorId, EquipSlot.Armor);
+        BindGear(helmetSlot, _equip.HelmetId, EquipSlot.Helmet);
+        BindGear(bootsSlot, _equip.BootsId, EquipSlot.Boots);
     }
 
-    void BindGear(InventorySlotView view, int id)
+    void BindGear(InventorySlotView view, int id, EquipSlot slot)
     {
         if (view == null) return;
 
@@ -186,6 +187,7 @@ public class InventoryPanel : UIPanel, ILocRefresh
             Enchant = null,
             Ammo = -1,
             UpgradeReady = false,
+            ArmorEnchant = id != 0 ? _equip.GearEnchant(slot) : null,
         });
     }
 
@@ -258,4 +260,4 @@ public class InventoryPanel : UIPanel, ILocRefresh
             if (b != null) Destroy(b.gameObject);
         _choiceButtons.Clear();
     }
-}
+}

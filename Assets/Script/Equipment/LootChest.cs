@@ -83,6 +83,10 @@ public class LootChest : NetworkBehaviour
     [Header("드롭")]
     [SerializeField] private NetworkObject pickupPrefab;
     [SerializeField] private EquipmentDatabase equipDatabase;
+    [Tooltip("방어구 특수 인챈트 목록 — 비우면 Resources/ArmorEnchantDatabase")]
+    [SerializeField] private ArmorEnchantDatabase armorEnchants;
+    [Tooltip("비우면 데이터베이스의 방어구 전체(특수 제외). 채우면 이 목록 안에서만")]
+    [SerializeField] private EquipmentData[] armorPool;
     [SerializeField] private float dropSpread = 1.2f;
 
     [Header("연출")]
@@ -212,6 +216,10 @@ public class LootChest : NetworkBehaviour
         int drops = cfg != null ? cfg.DropCount : 1;
         for (int i = 0; i < drops; i++) DropOne(i, cfg);
 
+        // 방어구 — 확률로 하나 (특수 인챈트도 확률)
+        float armorChance = cfg != null ? cfg.ArmorChance : 0.35f;
+        if (Random.value < armorChance) DropArmor(drops, cfg);
+
         int stones = cfg != null ? Random.Range(cfg.StoneMin, cfg.StoneMax + 1) : Random.Range(3, 11);
 
         if (logRolls) Debug.Log($"[Chest] {name} 열림 — {Tier}, 무기 {drops}개, 스톤 {stones}", this);
@@ -247,6 +255,28 @@ public class LootChest : NetworkBehaviour
         }
     }
 
+    void DropArmor(int index, ChestRules.TierConfig cfg)
+    {
+        if (pickupPrefab == null) return;
+        int id = RollItemId(cfg, true);
+        if (id == 0) return;
+
+        var data = equipDatabase != null ? equipDatabase.Get(id) : null;
+        var edb = armorEnchants != null ? armorEnchants : ArmorEnchantDatabase.Default;
+        float ec = cfg != null ? cfg.ArmorEnchantChance : 0.25f;
+        int ench = data != null && edb != null && Random.value < ec ? edb.Roll(data.Slot) : 0;
+
+        float angle = index * 137f;
+        Vector3 off = Quaternion.Euler(0f, angle, 0f) * Vector3.forward * dropSpread;
+        var obj = Runner.Spawn(pickupPrefab, transform.position + off + Vector3.up * 0.6f, Quaternion.identity);
+        if (obj.TryGetComponent<Pickup>(out var pk))
+        {
+            pk.InitArmor(id, ench);
+            pk.SetPickupDelay(0.6f);
+        }
+        if (logRolls) Debug.Log($"[Chest] {name} 방어구 → {data?.name} (인챈트 {ench})", this);
+    }
+
     // ══════════════════ 추첨 ══════════════════
 
     ChestTier FirstTier() => fixedFirstTier ? firstTier : RollTier(0f);
@@ -273,16 +303,19 @@ public class LootChest : NetworkBehaviour
     static readonly List<EquipmentData> _inGrade = new();
     static readonly float[] _gradeW = new float[4];
 
-    /// <summary>① 무기 등급을 뽑고 ② 그 등급 안에서 무기별 배율로 하나</summary>
-    int RollWeaponId(ChestRules.TierConfig cfg)
+    int RollWeaponId(ChestRules.TierConfig cfg) => RollItemId(cfg, false);
+
+    /// <summary>① 등급을 뽑고 ② 그 등급 안에서 아이템별 배율로 하나. armor = 방어구 (갑옷 · 투구 · 신발)</summary>
+    int RollItemId(ChestRules.TierConfig cfg, bool armor)
     {
         // 후보
         _cands.Clear();
-        var src = weaponPool != null && weaponPool.Length > 0 ? weaponPool : equipDatabase?.All;
+        var pool0 = armor ? armorPool : weaponPool;
+        var src = pool0 != null && pool0.Length > 0 ? pool0 : equipDatabase?.All;
         if (src == null) return 0;
 
         foreach (var w in src)
-            if (w != null && w.Slot == EquipSlot.Weapon && !w.IsSpecial && WeaponWeight(w) > 0f)
+            if (w != null && (armor ? w.IsArmorPiece : w.Slot == EquipSlot.Weapon) && !w.IsSpecial && WeaponWeight(w) > 0f)
                 _cands.Add(w);
 
         if (_cands.Count == 0) return 0;
@@ -389,4 +422,4 @@ public class LootChest : NetworkBehaviour
         Gizmos.color = new Color(1f, 0.8f, 0.2f, 0.5f);
         Gizmos.DrawWireSphere(transform.position, interactRange);
     }
-}
+}

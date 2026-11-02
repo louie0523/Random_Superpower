@@ -32,4 +32,8 @@ public static class SourceId
     public const int AlterBase = 700000;   // + 변화 칸 (0~7)
 
     public const int MarkBase = 800000;
-}
+
+    // ── 아이템 고유 특성 · 방어구 특수 인챈트 (ItemTraitRunner) — + 칸 × 1000 + 특성 × 50 + 중첩 ──
+    public const int TraitBase = 900000;
+    public const int TraitEnd = 910000;
+}

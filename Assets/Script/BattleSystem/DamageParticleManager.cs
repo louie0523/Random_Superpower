@@ -8,6 +8,8 @@ public enum DamageNumberKind
     Burn,       // 화상 틱
     Poison,     // 중독 틱
     Miss,       // 회피
+    Headshot,   // 헤드샷 — 뒤에만 추가 (저장값)
+    Shield,     // 쉴드가 전부 막음
 }
 
 /// <summary>
@@ -68,6 +70,8 @@ public class DamageParticleManager : MonoBehaviour
         new() { Kind = DamageNumberKind.Burn,   Color = new Color(1f, 0.55f, 0.2f), Scale = 0.8f },
         new() { Kind = DamageNumberKind.Poison, Color = new Color(0.5f, 0.95f, 0.4f), Scale = 0.8f },
         new() { Kind = DamageNumberKind.Miss,   Color = Color.white, Scale = 1f },
+        new() { Kind = DamageNumberKind.Headshot, Color = new Color(1f, 0.32f, 0.25f), Scale = 1.55f },
+        new() { Kind = DamageNumberKind.Shield, Color = new Color(0.62f, 0.85f, 1f), Scale = 0.95f },
     };
 
     private Camera _cam;
@@ -99,12 +103,39 @@ public class DamageParticleManager : MonoBehaviour
     /// <summary>UIManager.BindLocalPlayer가 플레이어 카메라를 넘김</summary>
     public void SetCamera(Camera cam) => _cam = cam;
 
+    [Header("헤드샷")]
+    [Tooltip("헤드샷 숫자에 같이 나는 소리 (때린 사람만) — 비우면 없음")]
+    [SerializeField] private AudioClip headshotSound;
+    [Range(0f, 1f)][SerializeField] private float headshotVolume = 0.7f;
+    private AudioSource _audio;
+
+    /// <summary>씬에 저장된 styles 배열에 없는 종류 (나중에 추가된 것) — 코드 기본값</summary>
+    static readonly Style HeadshotDefault = new() { Kind = DamageNumberKind.Headshot, Color = new Color(1f, 0.32f, 0.25f), Scale = 1.55f };
+    static readonly Style ShieldDefault = new() { Kind = DamageNumberKind.Shield, Color = new Color(0.62f, 0.85f, 1f), Scale = 0.95f };
+
     Style GetStyle(DamageNumberKind k)
     {
         if (styles != null)
             foreach (var s in styles)
                 if (s != null && s.Kind == k) return s;
-        return null;
+        return k switch
+        {
+            DamageNumberKind.Headshot => HeadshotDefault,
+            DamageNumberKind.Shield => ShieldDefault,
+            _ => null,
+        };
+    }
+
+    void PlayHeadshotSound()
+    {
+        if (headshotSound == null) return;
+        if (_audio == null)
+        {
+            _audio = gameObject.AddComponent<AudioSource>();
+            _audio.playOnAwake = false;
+            _audio.spatialBlend = 0f;
+        }
+        _audio.PlayOneShot(headshotSound, headshotVolume);
     }
 
     /// <param name="targetPos">맞은 대상의 발 위치</param>
@@ -114,6 +145,7 @@ public class DamageParticleManager : MonoBehaviour
         var cam = _cam != null ? _cam : Camera.main;
         if (cam == null) return;
         if (kind != DamageNumberKind.Miss && amount <= 0) return;
+        if (kind == DamageNumberKind.Headshot) PlayHeadshotSound();
 
         var style = GetStyle(kind);
         float scale = style != null ? style.Scale : 1f;

@@ -86,6 +86,31 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Header("Base Stats")]
     public StatEntry[] BaseStats;
 
+    [Header("─── 방어구: 주요 능력치 ───")]
+    [Tooltip("칸마다 정해진 주요 능력치의 값 (기초 스탯과 따로 더해짐)\n" +
+             "투구 = 받는 헤드샷 피해 감소 (0.2 = 20%)\n" +
+             "신발 = 이동 속도 % (10 = +10%)\n" +
+             "갑옷 = 아직 없음 (나중에 쉴드 등으로 확장 — MainStatOf에 한 줄)")]
+    public float MainStatValue;
+
+    [Header("─── 고유 특성 ───")]
+    [Tooltip("이 아이템만의 특성 — 언제(Trigger) + 무엇을(Effect). 무기는 들고 있을 때, 방어구는 끼고 있을 때")]
+    public ItemTrait[] Traits;
+
+    /// <summary>칸별 주요 능력치 — 없으면 false (갑옷은 아직 비움)</summary>
+    public static bool MainStatOf(EquipSlot slot, out StatType stat, out ModType mod)
+    {
+        switch (slot)
+        {
+            case EquipSlot.Helmet: stat = StatType.HeadshotReduction; mod = ModType.Flat; return true;
+            case EquipSlot.Boots: stat = StatType.MoveSpeed; mod = ModType.Percent; return true;
+            // case EquipSlot.Armor: stat = StatType.Shield; mod = ModType.Flat; return true;   ← 갑옷 주요 능력치를 정하면 여기
+            default: stat = default; mod = default; return false;
+        }
+    }
+
+    public bool IsArmorPiece => Slot is EquipSlot.Armor or EquipSlot.Helmet or EquipSlot.Boots;
+
     [Header("─── Weapon: 인챈트 ───")]
     [Tooltip("비우면 이 무기는 인챈트 불가. 최대 단계도 이 테이블이 정함")]
     public EnchantTable EnchantTable;
@@ -255,6 +280,10 @@ public class EquipmentData : ScriptableObject, IMotionSource
 
     [Tooltip("탄퍼짐 원뿔 각도 (°). 0 = 조준점 정확히")]
     [Range(0f, 15f)] public float SpreadAngle = 0f;
+
+    [Header("─── Ranged: 헤드샷 ───")]
+    [Tooltip("헤드샷 피해 배율.\n0 = 기본 (총 2배 · 활 · 지팡이 · 투척 1.5배)\n-1 = 이 무기는 헤드샷 없음\n그 밖 = 그 배율 (예: 저격총 2.5)")]
+    public float HeadshotMul = 0f;
 
     [Tooltip("공속 반영 비율. 1 = 공속 증가분 그대로, 0.5 = 절반만, 0 = 공속 무시")]
     [Range(0f, 1f)] public float AttackSpeedScale = 1f;
@@ -432,4 +461,4 @@ public class EquipmentData : ScriptableObject, IMotionSource
                     Debug.LogWarning($"[Equipment] {name}: 진화 대상이 자기 자신입니다", this);
     }
 #endif
-}
+}

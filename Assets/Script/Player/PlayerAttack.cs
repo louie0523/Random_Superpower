@@ -511,12 +511,13 @@ public class PlayerAttack : NetworkBehaviour
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, hit.point);
         info.IsCrit = crit;
+        bool head = ApplyHeadshot(ref info, weapon, hit.collider, hit.point, target);
         _enchant?.ModifyWeaponHit(ref info);
         target.RPC_TakeDamage(info);
 
-        AfterWeaponHit(target, hit.collider.gameObject, outgoing);
+        AfterWeaponHit(target, hit.collider.gameObject, head ? outgoing * info.HeadshotMul : outgoing);
 
-        if (fpsCamera != null) fpsCamera.Shake(0.15f);
+        if (fpsCamera != null) fpsCamera.Shake(head ? 0.25f : 0.15f);
     }
 
     void FireHitscan(EquipmentData weapon, float bonusMul = 1f, bool forceCrit = false)
@@ -533,7 +534,7 @@ public class PlayerAttack : NetworkBehaviour
         {
             Vector3 endPoint = from + dir * remaining;
             // 내 몸(루트 · 자식 피격 콜라이더 전부)은 무시 — 튕긴 탄이 나한테 막히거나 내 몸에서 또 튕기지 않게
-            bool hitSomething = CastUtil.Raycast(from, dir, remaining, projectileMask, transform.root, out var hit);
+            bool hitSomething = CastShot(from, dir, remaining, out var hit);
 
             bool hitPlayer = false;
             if (hitSomething)
@@ -541,6 +542,12 @@ public class PlayerAttack : NetworkBehaviour
                 endPoint = hit.point;
                 hitPlayer = hit.collider.GetComponentInParent<PlayerHealth>() != null;     // 자식 피격 콜라이더도 사람으로
                 if (hitPlayer) OnHitscanHit(hit, weapon, bonusMul, forceCrit);
+                else if (Hittables.Find(hit.collider) is { } summon)                       // 조커 분신 등
+                {
+                    hitPlayer = true;
+                    HitSummon(summon, hit.collider, hit.point, _stats.Get(StatType.AttackPower) * bonusMul,
+                              DamageSource.RangedWeapon, forceCrit, weapon, true, 1f);
+                }
             }
 
             // 연출은 총구 → 착탄점, 도탄이면 이어서 튕긴 구간
@@ -564,6 +571,50 @@ public class PlayerAttack : NetworkBehaviour
             if (RicochetSeekRange > 0f && SeekRicochet(from, dir, Mathf.Min(remaining, RicochetSeekRange), out var aim))
                 dir = aim;
         }
+    }
+
+    /// <summary>히트스캔 · 조준용 레이 — 내 몸과 내 편 소환물(조커 분신 등)은 지나감</summary>
+    bool CastShot(Vector3 from, Vector3 dir, float dist, out RaycastHit hit)
+    {
+        float skipped = 0f;
+        for (int i = 0; i < 4; i++)
+        {
+            if (!CastUtil.Raycast(from + dir * skipped, dir, dist - skipped, projectileMask, transform.root, out hit)) return false;
+            if (!Hittables.IsFriendlyCollider(hit.collider, Object.InputAuthority))
+            {
+                hit.distance += skipped;
+                return true;
+            }
+            skipped += hit.distance + 0.05f;
+            if (skipped >= dist) break;
+        }
+        hit = default;
+        return false;
+    }
+
+    /// <summary>
+    /// 소환물(조커 분신 등) 타격 — 무기 피해 · 치명 · 헤드샷 · 인챈트(관통 · 처형). 흡혈 · 능력 반응은 플레이어에게만
+    /// </summary>
+    void HitSummon(IHittable h, Collider col, Vector3 point, float baseDmg, DamageSource src,
+                   bool forceCrit, EquipmentData weapon, bool ranged, float shake, bool enchants = true)
+    {
+        if (!Hittables.CanHit(h, Object.InputAuthority)) return;
+
+        float outgoing = Outgoing(baseDmg, src, forceCrit, out bool crit);
+        var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, ranged ? point : cameraRoot.position);
+        info.IsCrit = crit;
+        info.IsMelee = src == DamageSource.MeleeWeapon;
+
+        if (ranged)
+        {
+            float mul = Headshot.MulFor(weapon, _stats);
+            if (mul > 1f && Headshot.IsHead(col, point)) info.HeadshotMul = mul;
+        }
+
+        if (enchants) _enchant?.ModifyWeaponHit(ref info);
+        h.TakeHit(info);
+
+        if (fpsCamera != null) fpsCamera.Shake(shake);
     }
 
     /// <summary>튕긴 지점에서 노릴 적 — 반사 방향 기준 각도 안 · 거리 안 · 벽에 안 가린 적 중 가장 가까운 쪽 (각도 가중)</summary>
@@ -678,7 +729,7 @@ public class PlayerAttack : NetworkBehaviour
 
         Vector3 aimPoint;
 
-        if (CastUtil.Raycast(camPos, camFwd, maxAim, projectileMask, transform.root, out var hit))
+        if (CastShot(camPos, camFwd, maxAim, out var hit))
             aimPoint = hit.point;
         else
             aimPoint = camPos + camFwd * maxAim;
@@ -722,14 +773,23 @@ public class PlayerAttack : NetworkBehaviour
             weapon.PierceDamageFalloff,
             _cc,
             authoritative
-                ? (col, point, mul) => OnProjectileHit(col, point, baseDmg * mul, forceCrit)
+                ? (col, point, mul) => OnProjectileHit(col, point, baseDmg * mul, forceCrit, weapon)
                 : null);
+
+        // 내 편 소환물(조커 분신 등)은 그냥 지나감 — 모든 화면 같게
+        var me = Object.InputAuthority;
+        proj.PassThrough = c => Hittables.IsFriendlyCollider(c, me);
     }
 
-    void OnProjectileHit(Collider col, Vector3 point, float baseDmg, bool forceCrit = false)
+    void OnProjectileHit(Collider col, Vector3 point, float baseDmg, bool forceCrit = false, EquipmentData weapon = null)
     {
         if (col == null) return;
         var target = col.GetComponentInParent<PlayerHealth>();
+        if (target == null && Hittables.Find(col) is { } summon)          // 조커 분신 등
+        {
+            HitSummon(summon, col, point, baseDmg, DamageSource.RangedWeapon, forceCrit, weapon, true, 0.2f);
+            return;
+        }
         if (target == null || target.IsDead) return;                     // 지형이면 그냥 멈춤
         if (target.transform.root == transform.root) return;
         if (TeamUtil.IsFriendly(Object.InputAuthority, target)) return;
@@ -739,12 +799,13 @@ public class PlayerAttack : NetworkBehaviour
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, point);
         info.IsCrit = crit;
+        bool head = ApplyHeadshot(ref info, weapon, col, point, target);
         _enchant?.ModifyWeaponHit(ref info);
         target.RPC_TakeDamage(info);
 
-        AfterWeaponHit(target, col.gameObject, outgoing);
+        AfterWeaponHit(target, col.gameObject, head ? outgoing * info.HeadshotMul : outgoing);
 
-        if (fpsCamera != null) fpsCamera.Shake(0.2f);
+        if (fpsCamera != null) fpsCamera.Shake(head ? 0.3f : 0.2f);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -903,6 +964,21 @@ public class PlayerAttack : NetworkBehaviour
     }
 
     /// <summary>무기 타격 후 공통 처리 — OnHit 트리거, 특수 인챈트, 흡혈</summary>
+    /// <summary>헤드샷이면 배율을 실어 보냄 (실제 곱은 맞는 쪽 — 투구 감소 때문). 머리였으면 true</summary>
+    bool ApplyHeadshot(ref DamageInfo info, EquipmentData weapon, Collider col, Vector3 point, PlayerHealth target)
+    {
+        float mul = Headshot.MulFor(weapon, _stats);
+        if (mul <= 1f || !Headshot.IsHead(col, point, target)) return false;
+
+        info.HeadshotMul = mul;
+        HeadshotHit?.Invoke(target);
+        if (logHits) Debug.Log($"[Attack] 헤드샷 ×{mul:0.##} → {target.name}", this);
+        return true;
+    }
+
+    /// <summary>헤드샷을 맞혔을 때 (SA) — 방어구 · 인챈트 · 능력 반응용</summary>
+    public event System.Action<PlayerHealth> HeadshotHit;
+
     void AfterWeaponHit(PlayerHealth target, GameObject targetObj, float outgoing, bool weaponEnchants = true)
     {
         if (target.TryGetComponent<PlayerStatus>(out var ts) && ts.IsEvading) return;
@@ -984,13 +1060,23 @@ public class PlayerAttack : NetworkBehaviour
 
         int hits = 0;
         var done = new System.Collections.Generic.HashSet<PlayerHealth>();   // 한 사람에 콜라이더가 여러 개여도 한 번만
+        var doneSummon = new System.Collections.Generic.HashSet<IHittable>();
 
         foreach (var col in cols)
         {
             if (col.gameObject == gameObject) continue;
             var target = col.GetComponentInParent<PlayerHealth>();     // 자식 피격 콜라이더(변신 범위)도
-            if (target == null || target == _health || !done.Add(target)) continue;
-            if (target.IsDead) continue;
+            IHittable summon = null;
+            if (target == null)
+            {
+                summon = Hittables.Find(col);                           // 조커 분신 등
+                if (summon == null || !doneSummon.Add(summon) || !Hittables.CanHit(summon, Object.InputAuthority)) continue;
+            }
+            else
+            {
+                if (target == _health || !done.Add(target)) continue;
+                if (target.IsDead) continue;
+            }
 
             Vector3 toTarget = col.transform.position - origin;
 
@@ -1019,9 +1105,20 @@ public class PlayerAttack : NetworkBehaviour
                 }
             }
 
-            ApplyHit(target, col.gameObject, step);
+            if (summon != null) ApplySummonHit(summon, col, step);
+            else ApplyHit(target, col.gameObject, step);
             if (step.MaxTargets > 0 && ++hits >= step.MaxTargets) break;      // 0 = 제한 없음
         }
+    }
+
+    /// <summary>근접 — 소환물(조커 분신 등)</summary>
+    void ApplySummonHit(IHittable h, Collider col, ComboStep step)
+    {
+        var weapon = _equip.GetWeapon();
+        var src = (weapon != null && weapon.Class == WeaponClass.Ranged) ? DamageSource.RangedWeapon : DamageSource.MeleeWeapon;
+        float baseDmg = _stats.Get(StatType.AttackPower) * step.DamageMultiplier * _pendingDamageMul;
+        HitSummon(h, col, col.bounds.center, baseDmg, src, false, weapon, false, step.CameraShake, !step.NoWeaponEnchants);
+        if (step.HitStopDuration > 0f) HitStop.Do(step.HitStopDuration);
     }
 
     void ApplyHit(PlayerHealth target, GameObject targetObj, ComboStep step)
@@ -1113,10 +1210,19 @@ public class PlayerAttack : NetworkBehaviour
 
 
             var target = col.GetComponentInParent<PlayerHealth>();
-            if (target == null || target == _health) continue;
-            if (target.IsDead) continue;
-
-            int id = target.GetInstanceID();
+            IHittable summon = null;
+            int id;
+            if (target == null)
+            {
+                summon = Hittables.Find(col);                           // 조커 분신 등
+                if (summon == null || !Hittables.CanHit(summon, Object.InputAuthority)) continue;
+                id = ((Component)summon).GetInstanceID();
+            }
+            else
+            {
+                if (target == _health || target.IsDead) continue;
+                id = target.GetInstanceID();
+            }
             if (_hitThisAttack.Contains(id)) continue;
 
             Vector3 to = col.transform.position - origin;
@@ -1130,7 +1236,8 @@ public class PlayerAttack : NetworkBehaviour
                 if (Vector3.Angle(flatFwd, flat.normalized) > halfAngle) continue;
 
             _hitThisAttack.Add(id);
-            ApplyHit(target, col.gameObject, step);
+            if (summon != null) ApplySummonHit(summon, col, step);
+            else ApplyHit(target, col.gameObject, step);
 
         }
     }
@@ -1197,4 +1304,4 @@ public class PlayerAttack : NetworkBehaviour
     }
 
 
-}
+}

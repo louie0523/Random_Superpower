@@ -947,7 +947,7 @@ public class DevourerAbility : AbilityBehaviour
         foreach (var kv in _s.Absorbed)
         {
             var (stat, type) = kv.Key;
-            bool ratio = type == ModType.Flat && (stat is StatType.CritChance or StatType.CritDamage or StatType.CooldownReduction or StatType.LifeSteal);
+            bool ratio = type == ModType.Flat && StatText.IsRatio(stat);
             float v = ratio ? kv.Value * 100f : kv.Value;
             bool pct = ratio || type == ModType.Percent;
             if (sb.Length > 0) sb.Append(", ");
@@ -1173,4 +1173,4 @@ public class DevourerAbility : AbilityBehaviour
         }
         return null;
     }
-}
+}

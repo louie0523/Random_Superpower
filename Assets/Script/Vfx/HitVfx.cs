@@ -62,4 +62,22 @@ public class HitVfx : MonoBehaviour
             IsOwner = self,
         });
     }
+
+    /// <summary>이 사람의 피격 이펙트를 다른 몸(조커 분신 등)에 — chest = 그 몸의 가슴 위치</summary>
+    public void PlayOn(Transform body, Vector3 chest, Vector3 from, bool crit)
+    {
+        var prefab = crit && critHit != null ? critHit : normalHit;
+        if (prefab == null || body == null) return;
+
+        Vector3 dir = from - chest;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) dir = body.forward;
+        dir.Normalize();
+
+        Vfx.Play(prefab, chest + dir * surfaceOffset, Quaternion.LookRotation(dir, Vector3.up), body, new VfxPlayOptions
+        {
+            Scale = crit ? critScale * scale : scale,
+            IsOwner = false,
+        });
+    }
 }

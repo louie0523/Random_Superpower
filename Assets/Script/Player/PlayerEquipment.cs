@@ -61,6 +61,38 @@ public class PlayerEquipment : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEquipChanged))]
     public int BootsId { get; set; }
 
+    // ── 방어구 특수 인챈트 (칸마다 1개, 0 = 없음) — ArmorEnchantData.Id ──
+    [Networked, OnChangedRender(nameof(OnEquipChanged))]
+    public int ArmorEnchantId { get; set; }
+    [Networked, OnChangedRender(nameof(OnEquipChanged))]
+    public int HelmetEnchantId { get; set; }
+    [Networked, OnChangedRender(nameof(OnEquipChanged))]
+    public int BootsEnchantId { get; set; }
+
+    [Tooltip("방어구 특수 인챈트 목록 — 비우면 Resources/ArmorEnchantDatabase")]
+    [SerializeField] private ArmorEnchantDatabase armorEnchants;
+    public ArmorEnchantDatabase ArmorEnchants => armorEnchants != null ? armorEnchants : ArmorEnchantDatabase.Default;
+
+    private ItemTraitRunner _traits;
+
+    public int GearId(EquipSlot s) => s switch
+    {
+        EquipSlot.Armor => ArmorId,
+        EquipSlot.Helmet => HelmetId,
+        EquipSlot.Boots => BootsId,
+        _ => WeaponId,
+    };
+
+    public int GearEnchantId(EquipSlot s) => s switch
+    {
+        EquipSlot.Armor => ArmorEnchantId,
+        EquipSlot.Helmet => HelmetEnchantId,
+        EquipSlot.Boots => BootsEnchantId,
+        _ => 0,
+    };
+
+    public ArmorEnchantData GearEnchant(EquipSlot s) => ArmorEnchants != null ? ArmorEnchants.Get(GearEnchantId(s)) : null;
+
     [Networked, Capacity(WeaponSlots)]
     public NetworkArray<int> SlotAmmo { get; }
 
@@ -92,6 +124,8 @@ public class PlayerEquipment : NetworkBehaviour
         _stats = GetComponent<PlayerStats>();
         _enchant = GetComponent<PlayerEnchant>();
         if (armRig == null) armRig = GetComponentInChildren<FPArmRig>(true);
+        _traits = GetComponent<ItemTraitRunner>();
+        if (_traits == null) _traits = gameObject.AddComponent<ItemTraitRunner>();     // 고유 특성 · 방어구 인챈트
 
         // 손 초기화
         if (armRig != null)
@@ -107,6 +141,7 @@ public class PlayerEquipment : NetworkBehaviour
             ArmorId = 0;
             HelmetId = 0;
             BootsId = 0;
+            ArmorEnchantId = HelmetEnchantId = BootsEnchantId = 0;
 
             RefillAmmo(0);
         }
@@ -189,18 +224,39 @@ public class PlayerEquipment : NetworkBehaviour
         Apply(HelmetId, SourceId.Helmet);
         Apply(BootsId, SourceId.Boots);
 
+        // 고유 특성 · 방어구 특수 인챈트 (권한자에서만 실제로 돎)
+        if (_traits != null)
+        {
+            SetTraits(0, database.Get(WeaponId));
+            SetTraits(1, database.Get(ArmorId));
+            SetTraits(2, database.Get(HelmetId));
+            SetTraits(3, database.Get(BootsId));
+            var ae = ArmorEnchants;
+            SetTraits(4, ae != null ? ae.Get(ArmorEnchantId) : null);
+            SetTraits(5, ae != null ? ae.Get(HelmetEnchantId) : null);
+            SetTraits(6, ae != null ? ae.Get(BootsEnchantId) : null);
+        }
+
         MountWeaponModel();
     }
+
+    void SetTraits(int slot, EquipmentData d) => _traits.SetSlot(slot, d, d != null ? d.Traits : null);
+    void SetTraits(int slot, ArmorEnchantData e) => _traits.SetSlot(slot, e, e != null ? e.Traits : null);
 
     void Apply(int id, int sourceId)
     {
         _stats.RemoveBySource(sourceId);
 
         var data = database.Get(id);
-        if (data == null || data.BaseStats == null) return;
+        if (data == null) return;
 
-        foreach (var s in data.BaseStats)
-            _stats.AddModifier(new StatModifier(s.Stat, s.Type, s.Value, sourceId));
+        if (data.BaseStats != null)
+            foreach (var s in data.BaseStats)
+                _stats.AddModifier(new StatModifier(s.Stat, s.Type, s.Value, sourceId));
+
+        // 방어구 주요 능력치 — 투구 = 헤드샷 감소 · 신발 = 이동 속도
+        if (!Mathf.Approximately(data.MainStatValue, 0f) && EquipmentData.MainStatOf(data.Slot, out var ms, out var mm))
+            _stats.AddModifier(new StatModifier(ms, mm, data.MainStatValue, sourceId));
     }
 
     void MountWeaponModel()
@@ -229,9 +285,49 @@ public class PlayerEquipment : NetworkBehaviour
                 RefillAmmo(ActiveWeaponSlot);
                 _enchant?.OnWeaponChanged(ActiveWeaponSlot, id);
                 break;
-            case EquipSlot.Armor: ArmorId = id; break;
-            case EquipSlot.Helmet: HelmetId = id; break;
-            case EquipSlot.Boots: BootsId = id; break;
+            case EquipSlot.Armor:
+            case EquipSlot.Helmet:
+            case EquipSlot.Boots:
+                EquipArmor(id, 0, false);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 방어구 끼기 (SA) — 인챈트까지. dropOld면 끼고 있던 것을 인챈트째 바닥에 (상자 · 암시장 · 줍기).
+    /// 방어구는 죽어도 안 떨어짐 — 바꿀 때만 바닥에
+    /// </summary>
+    public bool EquipArmor(int id, int enchantId, bool dropOld = true)
+    {
+        if (Locked || !HasStateAuthority) return false;
+        var data = database != null ? database.Get(id) : null;
+        if (data == null || !data.IsArmorPiece) return false;
+
+        int oldId = GearId(data.Slot);
+        int oldEnch = GearEnchantId(data.Slot);
+
+        switch (data.Slot)
+        {
+            case EquipSlot.Armor: ArmorId = id; ArmorEnchantId = enchantId; break;
+            case EquipSlot.Helmet: HelmetId = id; HelmetEnchantId = enchantId; break;
+            case EquipSlot.Boots: BootsId = id; BootsEnchantId = enchantId; break;
+        }
+        ApplyAll();     // SA는 즉시 반영
+
+        if (dropOld && oldId != 0) DropArmor(oldId, oldEnch);
+        return true;
+    }
+
+    /// <summary>방어구를 인챈트째 바닥에</summary>
+    public void DropArmor(int id, int enchantId)
+    {
+        if (!HasStateAuthority || pickupPrefab == null || id == 0) return;
+        Vector3 pos = transform.position + transform.forward * 1.5f + Vector3.up * 0.5f;
+        var obj = Runner.Spawn(pickupPrefab, pos, Quaternion.identity);
+        if (obj.TryGetComponent<Pickup>(out var pk))
+        {
+            pk.InitArmor(id, enchantId);
+            pk.SetPickupDelay(1.5f);
         }
     }
 
@@ -437,6 +533,7 @@ public class PlayerEquipment : NetworkBehaviour
         ArmorId = 0;
         HelmetId = 0;
         BootsId = 0;
+        ArmorEnchantId = HelmetEnchantId = BootsEnchantId = 0;
         SwapTimer = default;
         Locked = false;
 
@@ -446,4 +543,4 @@ public class PlayerEquipment : NetworkBehaviour
 
     public EquipmentData GetWeapon() => database != null ? database.Get(WeaponId) : null;
     public EquipmentData GetArmor() => database != null ? database.Get(ArmorId) : null;
-}
+}

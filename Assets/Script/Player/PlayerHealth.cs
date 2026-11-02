@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
-public class PlayerHealth : NetworkBehaviour
+public partial class PlayerHealth : NetworkBehaviour
 {
     [Header("부활")]
     [SerializeField] private float respawnDelay = 3f;
@@ -36,6 +36,26 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private float regenPercent = 1f;
     [Tooltip("비전투 중 매초 고정 회복")]
     [SerializeField] private int regenFlat = 2;
+
+    [Header("헤드샷")]
+    [Tooltip("키(캐릭터 컨트롤러 높이) 중 위쪽 이 비율이 머리 — 이 높이 위에 맞으면 헤드샷 (총 · 투사체 무기)")]
+    [Range(0.05f, 0.5f)][SerializeField] private float headFraction = 0.2f;
+    [Tooltip("머리 높이 최소 (m) — 작은 몸에서도 이만큼은 머리")]
+    [SerializeField] private float headMinHeight = 0.3f;
+
+    /// <summary>이 높이(월드 Y) 위에 맞으면 머리 — 캐릭터 컨트롤러 꼭대기 기준 (탈것 변화로 키가 늘면 같이)</summary>
+    public float HeadBottomY
+    {
+        get
+        {
+            if (_cc == null) _cc = GetComponent<CharacterController>();
+            if (_cc == null) return transform.position.y + 1.5f;
+            float sy = Mathf.Abs(transform.lossyScale.y);
+            float h = _cc.height * sy;
+            float top = transform.position.y + (_cc.center.y + _cc.height * 0.5f) * sy;
+            return top - Mathf.Max(headMinHeight, h * headFraction);
+        }
+    }
 
     [Networked] private TickTimer CombatTimer { get; set; }
     public bool InCombat => CombatTimer.IsRunning && !CombatTimer.Expired(Runner);
@@ -73,12 +93,27 @@ public class PlayerHealth : NetworkBehaviour
 
 
 
-    [Header("Hit Flash")]
-    [Tooltip("셰이더의 색 프로퍼티 이름. 비우면 자동 탐색")]
-    [SerializeField] private string colorProperty = "";
-    private Renderer _renderer;
-    private int _colorId = -1;
-    private Color _baseColor = Color.white;
+    [Header("피격 번쩍임 — 맞은 부위만 (HitFlash)")]
+    [Tooltip("Both = 재질 색을 실제로 바꿈 + 테두리 덮개 (기본) · Tint = 색만 · Overlay = 덮개만")]
+    [SerializeField] private HitFlash.FlashStyle flashStyle = HitFlash.FlashStyle.Both;
+    [Tooltip("재질 색을 번쩍임 색으로 얼마나 바꿀지 (1 = 완전히)")]
+    [Range(0f, 1f)][SerializeField] private float flashTint = 0.75f;
+    [Tooltip("Both일 때 덮개 진하기 (색 변화와 겹쳐 과하지 않게)")]
+    [Range(0f, 1f)][SerializeField] private float flashOverlayInBoth = 0.55f;
+    [Tooltip("몸 피격 — 옅은 빨강 (흰색은 밝은 피부 · 밝은 면에서 거의 안 보여서)")]
+    [SerializeField] private Color flashBody = new(1f, 0.42f, 0.38f, 0.8f);
+    [Tooltip("치명타 — 데미지 숫자와 같은 노랑")]
+    [SerializeField] private Color flashCrit = new(1f, 0.86f, 0.3f, 0.9f);
+    [Tooltip("헤드샷 — 머리만 진한 빨강 · 조금 더 길게 (데미지 숫자와 같은 색)")]
+    [SerializeField] private Color flashHead = new(1f, 0.12f, 0.08f, 1f);
+    [Tooltip("쉴드가 다 막음 — 하늘색 (쉴드 줄과 같은 색)")]
+    [SerializeField] private Color flashShield = new(0.55f, 0.82f, 1f, 0.8f);
+    [Tooltip("화상 · 중독 틱 — 옅게")]
+    [SerializeField] private Color flashBurn = new(1f, 0.55f, 0.2f, 0.45f);
+    [SerializeField] private Color flashPoison = new(0.5f, 0.95f, 0.4f, 0.45f);
+    [Tooltip("번쩍이는 시간 (초)")]
+    [SerializeField] private float flashTime = 0.14f;
+    private HitFlash _flash;
 
     /// <summary>소울 획득 배율 (조커 환락 1.25) — 처치·어시스트·획득 효과 모두. SA 전용</summary>
     public float SoulGainMul { get; set; } = 1f;
@@ -119,9 +154,9 @@ public class PlayerHealth : NetworkBehaviour
         _cc = GetComponent<CharacterController>();
         _ability = GetComponent<AbilityRuntime>();
         _status = GetComponent<PlayerStatus>();
-        _renderer = GetComponentInChildren<Renderer>();
         _hitVfx = GetComponent<HitVfx>();
-        SetupColorProperty();
+        _flash = HitFlash.For(gameObject);
+        ApplyFlashStyle(_flash);
 
         if (HasStateAuthority)
         {
@@ -129,6 +164,7 @@ public class PlayerHealth : NetworkBehaviour
             Soul = RoomRules.StartSoul(0);
             IsDead = false;
             _stats.OnStatsChanged += ClampHP;
+            ResetShieldsOnSpawn();
         }
         _prevHP = HP;
     }
@@ -146,33 +182,47 @@ public class PlayerHealth : NetworkBehaviour
         if (HP > max) HP = max;
     }
 
-    void SetupColorProperty()
+    const byte FxBody = 0, FxHead = 1, FxShield = 2;
+
+    /// <param name="part">0 몸 · 1 머리(헤드샷) · 2 쉴드가 다 막음</param>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_HitFx(Vector3 from, NetworkBool crit, byte part)
     {
-        if (_renderer == null) return;
+        if (_hitVfx != null && part != FxShield) _hitVfx.Play(from, crit);
+        if (_flash == null) return;
 
-        var mat = _renderer.sharedMaterial;
-        if (mat == null) return;
-
-        string[] candidates = string.IsNullOrEmpty(colorProperty)
-            ? new[] { "_BaseColor", "_Color", "_MainColor", "_Tint", "_ColorTint" }
-            : new[] { colorProperty };
-
-        foreach (var name in candidates)
+        switch (part)
         {
-            if (!mat.HasProperty(name)) continue;
-            _colorId = Shader.PropertyToID(name);
-            _baseColor = mat.GetColor(_colorId);
-            return;
+            case FxHead: _flash.Play(HitFlash.Part.Head, flashHead, flashTime * 1.3f); break;
+            case FxShield: _flash.Play(HitFlash.Part.All, flashShield, flashTime); break;
+            default: _flash.Play(HitFlash.Part.Body, crit ? flashCrit : flashBody, crit ? flashTime * 1.2f : flashTime); break;
         }
-
-        Debug.LogWarning($"[PlayerHealth] {mat.shader.name}에서 색 프로퍼티를 못 찾았습니다. 피격 플래시 비활성.", this);
     }
 
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    void RPC_HitFx(Vector3 from, NetworkBool crit)
+    /// <summary>다른 몸(조커 분신 등)을 이 사람과 같은 색으로 번쩍 — 분신인 걸 티 안 나게</summary>
+    void ApplyFlashStyle(HitFlash f)
     {
-        if (_hitVfx != null) _hitVfx.Play(from, crit);
+        if (f == null) return;
+        f.Style = flashStyle;
+        f.TintAmount = flashTint;
+        f.OverlayInBoth = flashOverlayInBoth;
+    }
+
+    public void FlashOther(HitFlash f, bool crit, bool head)
+    {
+        if (f == null) return;
+        ApplyFlashStyle(f);
+        if (head) f.Play(HitFlash.Part.Head, flashHead, flashTime * 1.3f);
+        else f.Play(HitFlash.Part.Body, crit ? flashCrit : flashBody, crit ? flashTime * 1.2f : flashTime);
+    }
+
+    /// <summary>화상 · 중독 틱 — 몸 전체 옅게</summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_TickFlash(int status)
+    {
+        if (_flash == null) return;
+        var c = status == (int)StatusType.Poison ? flashPoison : flashBurn;
+        _flash.Play(HitFlash.Part.All, c, flashTime);
     }
 
     // ══════════════════ 라운드 ══════════════════
@@ -211,6 +261,7 @@ public class PlayerHealth : NetworkBehaviour
 
         HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         IsDead = false;
+        ResetShieldsOnSpawn();
 
         MoveToSpawn();
     }
@@ -228,18 +279,17 @@ public class PlayerHealth : NetworkBehaviour
             if (now - _recentDamage[i].Time > assistWindow)
                 _recentDamage.RemoveAt(i);
 
-        if (!RoomRules.FallKills)
+        // 낙사 — 방 규칙이 '부활 지점으로'면 죽지 않고 옮기기만
+        // (예전엔 이 규칙일 때 높이와 상관없이 매 틱 순간이동하고 회복도 건너뛰었음)
+        if (!IsDead && transform.position.y < fallDeathY)
         {
-            var cc = GetComponent<CharacterController>();
-            if (SpawnPoint.TryPick(Runner, Object.StateAuthority, 15f, out var p, out var r, cc))
-                Teleport(p, r);          // Teleport 모양이 다르면 맞춰서
-            return;
+            if (RoomRules.FallKills) Die(DeathCause.Environment, PlayerRef.None);
+            else if (SpawnPoint.TryPick(Runner, Object.StateAuthority, safeSpawnRadius, out var p, out var r, _cc)) Teleport(p, r);
+            else MoveToSpawn();
         }
 
-        if (!IsDead && transform.position.y < fallDeathY)
-            Die(DeathCause.Environment, PlayerRef.None);
-
         TickRegen();
+        TickShield();
     }
 
     /// <summary>비전투 중 매초 최대 체력 N% + 고정 회복</summary>
@@ -296,12 +346,19 @@ public class PlayerHealth : NetworkBehaviour
         if (info.ExecuteBelow > 0f && HP <= maxHp * info.ExecuteBelow)
             raw *= 1f + info.ExecuteBonus;
 
+        // 헤드샷 — 투구(헤드샷 감소)를 넣고 곱함. 몸샷보다 덜 들어가진 않음
+        if (info.HeadshotMul > 1f)
+            raw *= Headshot.Incoming(info.HeadshotMul, _stats);
+
         raw *= ruleMul;
 
         int final = info.IgnoreDefense
             ? Mathf.Max(1, Mathf.RoundToInt(raw))
             : DamageCalc.CalcIncoming(_stats, raw, info.DefensePen);
         if (ruleMul <= 0f) final = 0;           // 피해 0% (최소 1 피해 규칙 무시)
+
+        // 쉴드 — 체력보다 먼저 (소모품 → 재생 → 소울)
+        int absorbed = AbsorbShield(ref final, info);
 
         // 언데드 — 체력이 1 아래로 안 떨어짐
         if (_status != null && _status.Has(StatusType.Undead) && HP - final < 1)
@@ -310,10 +367,14 @@ public class PlayerHealth : NetworkBehaviour
         LastHitFrom = info.SourcePos;
         HP -= final;
 
-        NotifyNumber(info, final, KindOf(info));
+        // 숫자는 막은 양까지 합쳐서 — 전부 쉴드로 막았으면 쉴드 색
+        NotifyNumber(info, final + absorbed, absorbed > 0 && final <= 0 ? DamageNumberKind.Shield : KindOf(info));
         Damaged?.Invoke(info, final);
 
-        if (!info.IsStatusTick && !info.IsDot) RPC_HitFx(info.SourcePos, info.IsCrit);
+        if (!info.IsStatusTick && !info.IsDot)
+            RPC_HitFx(info.SourcePos, info.IsCrit, absorbed > 0 && final <= 0 ? FxShield : info.IsHeadshot ? FxHead : FxBody);
+        else if (info.IsStatusTick && final + absorbed > 0)
+            RPC_TickFlash(info.TickStatus);
 
         if (info.FromPlayer && info.Attacker != PlayerRef.None)
         {
@@ -399,11 +460,12 @@ public class PlayerHealth : NetworkBehaviour
         DamageParticleManager.Instance?.Show(pos, amount, (DamageNumberKind)kind);
     }
 
-    static DamageNumberKind KindOf(in DamageInfo info)
+    public static DamageNumberKind KindOf(in DamageInfo info)
     {
         if (info.IsStatusTick)
             return info.TickStatus == (int)StatusType.Poison ? DamageNumberKind.Poison : DamageNumberKind.Burn;
         if (info.IgnoreDefense) return DamageNumberKind.True;
+        if (info.IsHeadshot) return DamageNumberKind.Headshot;
         if (info.IsCrit) return DamageNumberKind.Crit;
         return DamageNumberKind.Normal;
     }
@@ -489,6 +551,7 @@ public class PlayerHealth : NetworkBehaviour
         RespawnTimer = default;
         HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         IsDead = false;
+        ResetShieldsOnSpawn();
         if (_cc != null) _cc.enabled = true;
 
         _ability?.FireTrigger(TriggerType.OnRespawn, null);
@@ -635,6 +698,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         HP = Mathf.RoundToInt(_stats.Get(StatType.MaxHP));
         IsDead = false;
+        ResetShieldsOnSpawn();
 
         MoveToSpawn();
 
@@ -687,9 +751,7 @@ public class PlayerHealth : NetworkBehaviour
         _prevHP = HP;
 
         if (delta <= 0) return;
-
-        StopAllCoroutines();
-        StartCoroutine(FlashRed());
+        // 번쩍임은 RPC_HitFx · RPC_TickFlash (부위 · 종류별)
 
         if (!HasStateAuthority) return;
 
@@ -729,12 +791,4 @@ public class PlayerHealth : NetworkBehaviour
         if (_cc != null) _cc.enabled = !IsDead;
     }
 
-    System.Collections.IEnumerator FlashRed()
-    {
-        if (_renderer == null || _colorId < 0) yield break;
-
-        _renderer.material.SetColor(_colorId, Color.red);
-        yield return new WaitForSeconds(0.12f);
-        if (_renderer != null) _renderer.material.SetColor(_colorId, _baseColor);
-    }
-}
+}

@@ -48,6 +48,12 @@ public class ChestRules : ScriptableObject
         [Tooltip("여는 데 걸리는 시간(초). 0이면 상자 기본값")]
         [Min(0)] public float OpenTime = 0f;
 
+        [Header("방어구")]
+        [Tooltip("방어구 하나가 같이 나올 확률 (0~1). 등급은 위 무기 등급 가중치를 같이 씀")]
+        [Range(0f, 1f)] public float ArmorChance = 0.35f;
+        [Tooltip("나온 방어구에 특수 인챈트가 붙어 있을 확률 (0~1)")]
+        [Range(0f, 1f)] public float ArmorEnchantChance = 0.25f;
+
         public float Grade(ItemGrade g) => g switch
         {
             ItemGrade.B => B,

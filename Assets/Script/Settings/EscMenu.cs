@@ -39,7 +39,7 @@ public class EscMenu : MonoBehaviour
         get
         {
             if (CommsHud.ChatOpen || DevConsole.IsOpen || PlayerPickPanel.IsShowing ||
-                VoiceSettingsPanel.IsOpen || ClassPickPanel.IsShowing) return true;
+                VoiceSettingsPanel.IsOpen || ClassPickPanel.IsShowing || BlackMarketWindow.IsOpen) return true;
             var ui = UIManager.Instance;
             return ui != null && ui.AnyPanelOpen;
         }

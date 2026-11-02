@@ -450,7 +450,7 @@ public class DeathKnightAbility : AbilityBehaviour
 
             // 비율 스탯(치확·치피·쿨감·흡혈)은 Flat 0~1 → %로
             bool ratio = s.Type == ModType.Flat &&
-                         (s.Stat is StatType.CritChance or StatType.CritDamage or StatType.CooldownReduction or StatType.LifeSteal);
+                         StatText.IsRatio(s.Stat);
             float v = ratio ? s.Value * 100f : s.Value;
             bool pct = ratio || s.Type == ModType.Percent;
 
@@ -1033,4 +1033,4 @@ public class DeathKnightAbility : AbilityBehaviour
         var info = TierInfo(t);
         return info != null && !string.IsNullOrEmpty(info.Label) ? LocUtil.Pick(info.LabelKey, info.Label) : t.ToString();
     }
-}
+}

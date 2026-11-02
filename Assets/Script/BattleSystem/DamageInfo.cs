@@ -62,6 +62,14 @@ public struct DamageInfo : INetworkStruct
     /// <summary>대상이 잃은 체력의 N% 추가</summary>
     public float MissingHpPercent;
 
+    /// <summary>헤드샷 배율 (0 = 몸샷). 맞는 쪽에서 투구 감소를 넣어 곱함 — Headshot.Incoming</summary>
+    public float HeadshotMul;
+
+    public bool IsHeadshot => HeadshotMul > 1f;
+
+    /// <summary>쉴드를 무시하고 체력에 바로</summary>
+    public NetworkBool BypassShield;
+
 
 
     public static DamageInfo FromPlayerHit(int amount, PlayerRef attacker, Vector3 pos,
@@ -82,4 +90,4 @@ public struct DamageInfo : INetworkStruct
         FromPlayer = false,
         CanCauseFall = false,
     };
-}
+}

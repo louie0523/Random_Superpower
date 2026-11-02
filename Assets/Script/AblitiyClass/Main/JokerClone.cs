@@ -9,15 +9,21 @@ using UnityEngine.AI;
 ///   - 주인과 똑같음: 능력치 · 들고 있는 무기(바꾸면 따라 바꿈) · 치명 · 인챈트 · 흡혈 · 능력의 타격 반응 · 이동속도
 ///     (피해만 damageMul 배율 — 1이면 완전히 같음)
 ///   - 주인(과 나중에 같은 팀)은 절대 노리지도, 때리지도 않음 — TeamUtil
-///   - 맞지 않음 (판정 콜라이더 없음). 수명·폭발은 JokerAbility가 관리
+///   - 맞을 수 있음 — 체력 = 조커 최대 체력 × hpRatio(50%), 방어력 · 투구는 조커 것. 데미지 숫자 · 피격 이펙트 · 머리 위 체력바.
+///     체력이 0이 되면 궁극기 다시 누르기와 같은 폭발 (JokerAbility). 수명도 JokerAbility가 관리
+///   - 판정 콜라이더: CharacterController가 있으면 그것, 없으면 몸 크기로 캡슐을 만듦. 레이어는 조커 몸과 같게 (공격 판정에 잡히게)
+///     조커 본인(· 같은 팀)의 무기 공격 · 총알 · 화살은 그냥 지나감
 /// 프리팹 구성: NetworkObject + NetworkTransform + JokerClone (+ NavMeshAgent 선택, + CharacterController 선택)
 ///   팔 리그 방식(추천): 플레이어 프리팹의 겉모습(몸 · 머리 · FPArmRig + 손)을 복사해 두고 armRig에 연결
 ///                     → 무기를 손에 쥐고, 플레이어와 똑같은 콤보 모션 · 활 당기기 · 총 반동을 재생
 ///   간단 방식: armRig 비우고 손 위치에 weaponSocket만 — 무기를 들고 살짝 내미는 정도
 /// </summary>
-public class JokerClone : NetworkBehaviour
+public class JokerClone : NetworkBehaviour, IHittable
 {
     [Networked] public PlayerRef OwnerRef { get; set; }
+    [Networked] public int HP { get; set; }
+    [Networked] public int MaxHP { get; set; }
+    [Networked] public NetworkBool Dead { get; set; }
     [Networked, OnChangedRender(nameof(OnWeaponChanged))] public int WeaponId { get; set; }
 
     [Header("참조")]
@@ -44,6 +50,14 @@ public class JokerClone : NetworkBehaviour
     [Tooltip("맞힐 대상 레이어 (플레이어)")]
     [SerializeField] private LayerMask hitMask = ~0;
 
+    [Header("체력 · 피격")]
+    [Tooltip("체력 = 조커 최대 체력 × 이 비율")]
+    [SerializeField] private float hpRatio = 0.5f;
+    [Tooltip("맞았을 때 이펙트 — 비우면 조커의 피격 이펙트(HitVfx)를 분신 몸에")]
+    [SerializeField] private GameObject hitFx;
+    [Tooltip("발에서 가슴까지 (m) — 피격 이펙트 위치")]
+    [SerializeField] private float chestHeight = 1.2f;
+
     [Header("연출")]
     [SerializeField] private GameObject meleeHitFx;
     [Tooltip("원거리 궤적 (Tracer 컴포넌트가 있으면 사용)")]
@@ -51,6 +65,8 @@ public class JokerClone : NetworkBehaviour
 
     private NavMeshAgent _agent;
     private CharacterController _cc;
+    private Collider _hitCol;
+    private float _foot;
     private GameObject _weaponModel;
     private int _shownWeapon = -1;
     private float _atkTimer;
@@ -82,12 +98,25 @@ public class JokerClone : NetworkBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _cc = GetComponent<CharacterController>();
 
-        // 맞는 판정 없음 — 플레이어 공격이 분신을 대상으로 잡지 않게
+        // 복사해 온 팔 · 무기 콜라이더는 끔 — 맞는 판정은 아래 하나만
         foreach (var c in GetComponentsInChildren<Collider>(true))
             if (c != _cc) c.enabled = false;
 
-        // 피벗이 몸 가운데여도 발이 바닥에 — 에이전트 높이를 몸 크기에 맞춤 (땅에 박히지 않게)
         float foot = FootOffset();
+        _foot = foot;
+
+        SetupHitCollider();
+        Hittables.Add(this);
+
+        if (HasStateAuthority)
+        {
+            var o = OwnerObject();
+            float max = o != null && o.TryGetComponent<PlayerStats>(out var os) ? os.Get(StatType.MaxHP) : 100f;
+            MaxHP = Mathf.Max(1, Mathf.RoundToInt(max * hpRatio));
+            HP = MaxHP;
+            Dead = false;
+        }
+        // 피벗이 몸 가운데여도 발이 바닥에 — 에이전트 높이를 몸 크기에 맞춤 (땅에 박히지 않게)
         if (_agent != null && foot > 0.01f && Mathf.Abs(_agent.baseOffset) < 0.001f) _agent.baseOffset = foot;
 
         if (_agent != null)
@@ -99,7 +128,9 @@ public class JokerClone : NetworkBehaviour
                 _agent.Warp(nh.position);
                 _agent.speed = OwnerMoveSpeed(OwnerObject());
                 _agent.angularSpeed = 720f;
-                _agent.acceleration = 40f;
+                _agent.acceleration = 200f;      // 사실상 바로 최고 속도 (플레이어처럼)
+                _agent.autoBraking = false;      // 목적지 근처에서 느려지지 않게 — 조커와 같은 속도
+                _agent.stoppingDistance = 0f;
             }
         }
 
@@ -116,7 +147,124 @@ public class JokerClone : NetworkBehaviour
         OnWeaponChanged();
     }
 
+    public override void Despawned(NetworkRunner runner, bool hasState) => Hittables.Remove(this);
+
     EquipmentData Weapon => database != null ? database.Get(WeaponId) : null;
+
+    // ══════════════════ 피격 ══════════════════
+
+    /// <summary>맞는 판정 — CharacterController가 있으면 그것, 없으면 몸 크기 캡슐. 레이어 = 조커 몸 (공격 마스크에 들어 있음)</summary>
+    void SetupHitCollider()
+    {
+        var owner = OwnerObject();
+        int layer = owner != null ? owner.gameObject.layer : gameObject.layer;
+
+        if (_cc != null)
+        {
+            _cc.gameObject.layer = layer;
+            _cc.enabled = true;
+            _hitCol = _cc;
+        }
+        else
+        {
+            var b = new Bounds(transform.position + Vector3.up, Vector3.zero);
+            bool any = false;
+            foreach (var r in GetComponentsInChildren<Renderer>(true))
+            {
+                if (!(r is MeshRenderer || r is SkinnedMeshRenderer)) continue;
+                if (!any) { b = r.bounds; any = true; } else b.Encapsulate(r.bounds);
+            }
+            float h = any ? Mathf.Clamp(b.size.y, 1f, 4f) : 1.8f;
+
+            var go = new GameObject("CloneHitbox") { layer = layer };
+            go.transform.SetParent(transform, false);
+            var cap = go.AddComponent<CapsuleCollider>();
+            cap.direction = 1;
+            cap.height = h;
+            cap.radius = Mathf.Clamp(any ? Mathf.Max(b.extents.x, b.extents.z) * 0.6f : 0.4f, 0.25f, 0.6f);
+            Vector3 feet = transform.position - Vector3.up * _foot;
+            cap.center = transform.InverseTransformPoint(feet + Vector3.up * (h * 0.5f));
+            _hitCol = cap;
+        }
+
+        // 조커 몸과 부딪히지 않게
+        if (owner != null && _hitCol != null)
+            foreach (var oc in owner.GetComponentsInChildren<Collider>(true))
+                if (oc != null) Physics.IgnoreCollision(_hitCol, oc);
+    }
+
+    public bool HitAlive => Object != null && Object.IsValid && !Dead;
+    public PlayerRef HitOwner => OwnerRef;
+    public Transform HitTransform => transform;
+    public Vector3 HitFeet => transform.position - Vector3.up * _foot;
+    public int HitHP => HP;
+    public int HitMaxHP => MaxHP;
+    public bool HitShowBar => !Dead;
+    /// <summary>조커와 같은 이름 — 분신인 걸 바로 알 수 없게</summary>
+    public string HitName => Runner != null ? TargetUtil.NameOf(Runner, OwnerRef) : "";
+
+    public void TakeHit(DamageInfo info)
+    {
+        if (!HitAlive) return;
+        if (TeamUtil.AreAllies(info.Attacker, OwnerRef)) return;
+        RPC_TakeHit(info);
+    }
+
+    /// <summary>권한자(조커) — 조커의 방어력 · 받는 피해 · 투구(헤드샷 감소)를 그대로 씀</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_TakeHit(DamageInfo info)
+    {
+        if (Dead) return;
+        var owner = OwnerObject();
+        var st = owner != null ? owner.GetComponent<PlayerStats>() : null;
+
+        float raw = info.Amount;
+        if (info.MaxHpPercent > 0f) raw += MaxHP * info.MaxHpPercent * 0.01f;
+        if (info.MissingHpPercent > 0f) raw += Mathf.Max(0, MaxHP - HP) * info.MissingHpPercent * 0.01f;
+        if (info.ExecuteBelow > 0f && HP <= MaxHP * info.ExecuteBelow) raw *= 1f + info.ExecuteBonus;
+        if (info.HeadshotMul > 1f) raw *= Headshot.Incoming(info.HeadshotMul, st);
+
+        int final = info.IgnoreDefense
+            ? Mathf.Max(1, Mathf.RoundToInt(raw))
+            : DamageCalc.CalcIncoming(st, raw, info.DefensePen);
+
+        HP = Mathf.Max(0, HP - final);
+
+        if (info.FromPlayer && info.Attacker != PlayerRef.None)
+            RPC_HitNumber(info.Attacker, final, HitFeet, (int)PlayerHealth.KindOf(info));
+        if (!info.IsStatusTick && !info.IsDot)
+            RPC_HitFx(info.SourcePos, info.IsCrit, info.IsHeadshot);
+
+        if (HP <= 0) Dead = true;          // 폭발 · 정리는 JokerAbility.Tick
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_HitNumber([RpcTarget] PlayerRef target, int amount, Vector3 feet, int kind)
+    {
+        DamageParticleManager.Instance?.Show(feet, amount, (DamageNumberKind)kind);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_HitFx(Vector3 from, NetworkBool crit, NetworkBool head)
+    {
+        // 맞은 부위 번쩍임 — 플레이어와 같은 색 (조커 PlayerHealth의 설정을 따름)
+        var o = OwnerObject();
+        var ph = o != null ? o.GetComponent<PlayerHealth>() : null;
+        var hf = HitFlash.For(gameObject);
+        hf.ShowForSelf = true;          // 분신은 조커 '본인 몸'이 아님
+        if (ph != null) ph.FlashOther(hf, crit, head);
+
+        Vector3 chest = HitFeet + Vector3.up * chestHeight;
+        if (hitFx != null)
+        {
+            Vector3 d = from - chest; d.y = 0f;
+            var rot = d.sqrMagnitude > 0.0001f ? Quaternion.LookRotation(d.normalized) : transform.rotation;
+            Destroy(Instantiate(hitFx, chest, rot), 3f);
+            return;
+        }
+        var owner = OwnerObject();
+        if (owner != null && owner.TryGetComponent<HitVfx>(out var hv)) hv.PlayOn(transform, chest, from, crit);
+    }
 
     /// <summary>루트(피벗)에서 발바닥까지 — CharacterController 크기, 없으면 모델 크기로</summary>
     float FootOffset()
@@ -175,6 +323,12 @@ public class JokerClone : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
+        if (Dead)
+        {
+            if (_agent != null && _agent.enabled) _agent.isStopped = true;
+            _pendingAt = -1f;
+            return;
+        }
 
         float dt = Runner.DeltaTime;
         var owner = OwnerObject();
@@ -455,4 +609,4 @@ public class JokerClone : NetworkBehaviour
         armRig.SetPartParents(null);
         armRig.ApplyPose(armRig.GetEffectiveIdle());
     }
-}
+}

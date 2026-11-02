@@ -92,13 +92,19 @@ public static class TargetUtil
         }
         var runner = o.Runner;
         if (runner != null && o.InputAuthority != PlayerRef.None && runner.GetPlayerObject(o.InputAuthority) == o)
+        {
+            var rs = RoomState.Instance;                 // 방에서 들어왔으면 로비 닉네임 (채팅 · 알림 · 처치 · 보이스 등 전부)
+            if (rs != null && rs.Find(o.InputAuthority) >= 0) return rs.NameOf(o.InputAuthority);
             return LocUtil.Get("ui.score.player", o.InputAuthority.PlayerId);
+        }
         return o.name.Replace("(Clone)", "").Trim();
     }
 
     public static string NameOf(NetworkRunner runner, PlayerRef p)
     {
         if (runner == null || p == PlayerRef.None) return "?";
+        var rs = RoomState.Instance;
+        if (rs != null && rs.Find(p) >= 0) return rs.NameOf(p);      // 캐릭터가 없어도 (관전 · 죽음) 닉네임
         var o = runner.GetPlayerObject(p);
         return o != null ? NameOf(o) : LocUtil.Get("ui.score.player", p.PlayerId);
     }

@@ -7,6 +7,7 @@ public enum ShopItemKind
     InstantHeal,   // 즉시 회복 (레벨 없음, 반복 구매)
     ResetEnchant,  // 인첸트 초기화
     RefillAmmo,    // 탄약 보충
+    Shield,        // 소모품 쉴드 (반복 구매) — 뒤에만 추가 (저장값)
 }
 
 [CreateAssetMenu(menuName = "Game/Shop Item")]
@@ -39,6 +40,12 @@ public class ShopItemData : ScriptableObject
     [Tooltip("단계당 추가 비용")]
     public int PricePerStage = 8;
 
+    [Header("Shield 전용 — 소모품 쉴드")]
+    [Tooltip("쉴드 양")]
+    public int ShieldAmount = 50;
+    [Tooltip("유지 시간 (초). 0 = 깨질 때까지")]
+    public float ShieldSeconds = 0f;
+
     [Header("RefillAmmo 전용")]
     [Tooltip("채울 탄약 비율 (0.25 = 25%)")]
     [Range(0.1f, 1f)] public float AmmoRatio = 0.25f;
@@ -53,5 +60,5 @@ public class ShopItemData : ScriptableObject
         return ValuePerLevel[Mathf.Clamp(level - 1, 0, ValuePerLevel.Length - 1)];
     }
 
-    public bool IsRepeatable => Kind == ShopItemKind.InstantHeal;
-}
+    public bool IsRepeatable => Kind == ShopItemKind.InstantHeal || Kind == ShopItemKind.Shield;
+}

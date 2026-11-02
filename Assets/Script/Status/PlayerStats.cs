@@ -27,13 +27,7 @@ public class PlayerStats : NetworkBehaviour
 
 
     /// <summary>배율 스탯 — Percent를 곱연산으로 처리</summary>
-    static bool IsMultiplierStat(StatType s) =>
-        s == StatType.DamageDealt ||
-        s == StatType.DamageTaken ||
-        s == StatType.MeleeDamage ||
-        s == StatType.RangedDamage ||
-        s == StatType.SkillDamage ||
-        s == StatType.UltimateDamage;
+    static bool IsMultiplierStat(StatType s) => StatText.IsMultiplier(s);
 
     private readonly List<StatModifier> _mods = new();
     private readonly Dictionary<StatType, float> _cache = new();
@@ -45,11 +39,7 @@ public class PlayerStats : NetworkBehaviour
     /// 비율 스탯 — Percent 수정자를 쓰지 않고 Flat만 사용.
     /// 예: "치명타 확률 10% 증가" = Flat 0.1
     /// </summary>
-    static bool IsRatioStat(StatType s) =>
-        s == StatType.CritChance ||
-        s == StatType.CritDamage ||
-        s == StatType.CooldownReduction ||
-        s == StatType.LifeSteal;
+    static bool IsRatioStat(StatType s) => StatText.IsRatio(s);     // 치확 · 치피 · 쿨감 · 흡혈 · 헤드샷
 
     // ---------- 조회 ----------
 
@@ -62,7 +52,8 @@ public class PlayerStats : NetworkBehaviour
 
     /// <summary>아이템에서 온 수정자인가 — 장비 100001~100004, 상점 110000~110999</summary>
     static bool IsItemSource(int id) =>
-        (id >= 100001 && id <= 100004) || (id >= 110000 && id < 111000);
+        (id >= 100001 && id <= 100004) || (id >= 110000 && id < 111000)
+        || (id >= SourceId.TraitBase && id < SourceId.TraitEnd);         // 아이템 고유 특성 · 방어구 인챈트
     // 인챈트까지 넣으려면: || id == 100100
 
     float ValueOf(StatModifier m) => IsItemSource(m.SourceId) ? m.Value * _itemEffectMul : m.Value;
@@ -133,6 +124,8 @@ public class PlayerStats : NetworkBehaviour
 
     static string SourceName(int id) => id switch
     {
+        >= SourceId.TraitBase and < SourceId.TraitEnd => "아이템 특성",
+        >= 800000 => "표식",
         >= 700000 => "변화",
         >= 600000 => "상태이상",
         >= 500000 => "능력 Behaviour",
@@ -217,4 +210,4 @@ public class PlayerStats : NetworkBehaviour
         sb.AppendLine($"  (modifiers: {_mods.Count})");
         Debug.Log(sb.ToString());
     }
-}
+}

@@ -382,8 +382,7 @@ public class AbilityData : ScriptableObject
     /// <summary>비율 스탯(치확·치피·쿨감·흡혈)의 Flat 값은 0~1 단위라 설명에선 ×100 (0.2 → 20)</summary>
     static float PercentScale(EffectDef e) =>
         e != null && e.Effect == EffectType.StatMod && e.ModType == ModType.Flat &&
-        (e.Stat == StatType.CritChance || e.Stat == StatType.CritDamage ||
-         e.Stat == StatType.CooldownReduction || e.Stat == StatType.LifeSteal)
+        StatText.IsRatio(e.Stat)
             ? 100f : 1f;
 
     /// <summary>레벨별 값을 "8 / 7.5 / 7" 형태로 (현재 레벨 굵게)</summary>
@@ -522,4 +521,4 @@ public class AbilityData : ScriptableObject
             if (e != null && e.Chance <= 0f) e.Chance = 1f;
     }
 #endif
-}
+}

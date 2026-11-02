@@ -1,7 +1,7 @@
 using Fusion;
 using UnityEngine;
 
-public enum PickupKind { Weapon, EnchantStone, Soul }
+public enum PickupKind { Weapon, EnchantStone, Soul, Armor }     // 뒤에만 추가 (저장값)
 
 public class Pickup : NetworkBehaviour
 {
@@ -96,6 +96,13 @@ public class Pickup : NetworkBehaviour
             Enchants.Set(i, enchants[i]);
     }
 
+    /// <summary>방어구 — 특수 인챈트는 Enchants[0]에 실음</summary>
+    public void InitArmor(int armorId, int enchantId)
+    {
+        Init(PickupKind.Armor, armorId);
+        Enchants.Set(0, enchantId);
+    }
+
     /// <summary>스폰 직후 내용 설정. StateAuthority에서만</summary>
     public void Init(PickupKind kind, int itemId, int amount = 1)
     {
@@ -187,12 +194,16 @@ public class Pickup : NetworkBehaviour
             }
 
             // 설정 '무기 저절로 줍기'를 끄면 — 무기는 상호작용 키로 (소울 · 스톤은 그대로 저절로)
-            if (PickupKind == PickupKind.Weapon && !GameSettings.AutoPickup)
+            // 방어구는 늘 키로 (끼고 있던 걸 바꾸게 되니까)
+            if ((PickupKind == PickupKind.Weapon && !GameSettings.AutoPickup) || PickupKind == PickupKind.Armor)
             {
                 if (!UIManager.InputBlocked)
                 {
                     var data = equipDatabase != null ? equipDatabase.Get(ItemId) : null;
-                    AltarHud.Prompt($"[{KeyBinds.Name(GameAction.Interact)}] 줍기 — {(data != null ? data.DisplayName : "무기")}");
+                    string nm = data != null ? data.GetName() : "?";
+                    AltarHud.Prompt(PickupKind == PickupKind.Armor
+                        ? SetLoc.F("ui.pickup.wear", "[{0}] 착용 — {1}", KeyBinds.Name(GameAction.Interact), ArmorLabel(nm))
+                        : SetLoc.F("ui.pickup.take", "[{0}] 줍기 — {1}", KeyBinds.Name(GameAction.Interact), nm));
                     if (KeyBinds.Down(GameAction.Interact)) _manualUntil = Time.time + 0.8f;
                 }
                 if (Time.time > _manualUntil) return;
@@ -281,8 +292,23 @@ public class Pickup : NetworkBehaviour
 
             case PickupKind.EnchantStone:
                 return player.TryGetComponent<PlayerEnchant>(out _);
+
+            case PickupKind.Armor:
+                return player.TryGetComponent<PlayerEquipment>(out var ae) && !ae.Locked;
         }
         return false;
+    }
+
+    /// <summary>방어구 이름 + 특수 인챈트 이름</summary>
+    string ArmorLabel(string nm)
+    {
+        int ench = Enchants[0];
+        if (ench == 0) return nm;
+        var db = ArmorEnchantDatabase.Default;
+        var me = Runner.GetPlayerObject(Runner.LocalPlayer);
+        if (me != null && me.TryGetComponent<PlayerEquipment>(out var eq)) db = eq.ArmorEnchants;
+        var e = db != null ? db.Get(ench) : null;
+        return e != null ? $"{nm} <color=#{ColorUtility.ToHtmlStringRGB(e.Color)}>◆ {e.GetName()}</color>" : nm;
     }
 
     bool TryGive(NetworkObject player)
@@ -309,6 +335,10 @@ public class Pickup : NetworkBehaviour
                 if (!player.TryGetComponent<PlayerEnchant>(out var en)) return false;
                 en.RPC_AddStones(Amount);
                 return true;
+
+            case PickupKind.Armor:
+                if (!player.TryGetComponent<PlayerEquipment>(out var ae)) return false;
+                return ae.EquipArmor(ItemId, Enchants[0], true);       // 끼고 있던 건 인챈트째 바닥에
         }
         return false;
     }
@@ -322,10 +352,15 @@ public class Pickup : NetworkBehaviour
 
         if (_model != null) Destroy(_model);
 
-        if (PickupKind != PickupKind.Weapon) return;
+        if (PickupKind != PickupKind.Weapon && PickupKind != PickupKind.Armor) return;
 
         var data = equipDatabase != null ? equipDatabase.Get(ItemId) : null;
-        if (data == null || data.ModelPrefab == null) return;
+        if (data == null) return;
+        if (data.ModelPrefab == null)
+        {
+            if (PickupKind == PickupKind.Armor) BuildArmorPlaceholder(data);     // 모델이 없는 방어구 — 임시 모양
+            return;
+        }
 
         _model = Instantiate(data.ModelPrefab, visualRoot);
         _model.transform.localPosition = Vector3.zero;
@@ -340,10 +375,38 @@ public class Pickup : NetworkBehaviour
             c.enabled = false;
     }
 
+    /// <summary>방어구에 모델이 없을 때 — 칸별 간단한 모양 (등급 색). 모델을 넣으면 그걸 씀</summary>
+    void BuildArmorPlaceholder(EquipmentData d)
+    {
+        var shape = d.Slot switch
+        {
+            EquipSlot.Helmet => PrimitiveType.Sphere,
+            EquipSlot.Boots => PrimitiveType.Cube,
+            _ => PrimitiveType.Capsule,
+        };
+        _model = GameObject.CreatePrimitive(shape);
+        _model.name = "ArmorPlaceholder";
+        _model.transform.SetParent(visualRoot, false);
+        _model.transform.localScale = d.Slot == EquipSlot.Boots ? new Vector3(0.35f, 0.2f, 0.45f) : Vector3.one * 0.4f;
+        foreach (var c in _model.GetComponentsInChildren<Collider>(true)) Destroy(c);
+        var r = _model.GetComponent<Renderer>();
+        if (r != null)
+        {
+            var col = d.Grade switch
+            {
+                ItemGrade.B => new Color(0.35f, 0.65f, 1f),
+                ItemGrade.A => new Color(0.75f, 0.45f, 1f),
+                ItemGrade.S => new Color(1f, 0.75f, 0.2f),
+                _ => new Color(0.85f, 0.85f, 0.85f),
+            };
+            r.material.color = col;
+        }
+    }
+
     void Log(string msg)
     {
         if (!logFlow) return;
         string who = Runner != null ? $"P{Runner.LocalPlayer.PlayerId}" : "?";
         Debug.Log($"[Pickup:{who}] {name} — {msg}", this);
     }
-}
+}

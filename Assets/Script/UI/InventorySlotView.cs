@@ -14,6 +14,7 @@ public class InventorySlotView : MonoBehaviour
         public PlayerEnchant Enchant;
         public int Ammo;
         public bool UpgradeReady;            // 진화 버튼 표시
+        public ArmorEnchantData ArmorEnchant; // 방어구 특수 인챈트 (없으면 null)
     }
 
     [SerializeField] private Image icon;
@@ -164,6 +165,10 @@ public class InventorySlotView : MonoBehaviour
     {
         var sb = new System.Text.StringBuilder();
 
+        // 방어구 주요 능력치 — 맨 위
+        if (!Mathf.Approximately(d.MainStatValue, 0f) && EquipmentData.MainStatOf(d.Slot, out var ms, out var mm))
+            sb.AppendLine($"<b>{LocUtil.Get($"stat.{ms}")}  {StatText.Value(ms, mm, d.MainStatValue)}</b>");
+
         if (d.BaseStats != null)
             foreach (var s in d.BaseStats)
                 sb.AppendLine($"{LocUtil.Get($"stat.{s.Stat}")}  {StatText.Value(s.Stat, s.Type, s.Value)}");
@@ -203,6 +208,23 @@ public class InventorySlotView : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(desc) && !desc.StartsWith("#"))
         {
             sb.AppendLine(desc);
+            sb.AppendLine();
+        }
+
+        // 고유 특성
+        if (d.Traits != null && d.Traits.Length > 0)
+        {
+            sb.AppendLine(SetLoc.T("ui.item.traits", "고유 특성"));
+            foreach (var t in d.Traits)
+                if (t != null) sb.Append("  ").AppendLine(t.Describe());
+            sb.AppendLine();
+        }
+
+        // 방어구 특수 인챈트 (1칸)
+        if (d.IsArmorPiece)
+        {
+            if (_model.ArmorEnchant != null) sb.AppendLine(_model.ArmorEnchant.Describe());
+            else sb.Append("<color=").Append(DimColor).Append('>').Append(SetLoc.T("ui.item.armor_enchant_empty", "◇ 특수 인챈트 없음")).AppendLine("</color>");
             sb.AppendLine();
         }
 
@@ -271,4 +293,4 @@ public class InventorySlotView : MonoBehaviour
 
     static string Progress(string text, bool met) =>
         met ? $"<color={MetColor}>✓ {text}</color>" : $"<color={DimColor}>{text}</color>";
-}
+}

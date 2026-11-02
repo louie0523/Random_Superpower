@@ -53,7 +53,8 @@ public class EarthThrowAbility : AbilityBehaviour
     public GameObject ExplosionFx;
     [Tooltip("폭발 이펙트 크기 배율")]
     public float ExplosionFxScale = 5f;
-    public FeelDef ExplosionFeel = new() { ShakeRadius = 120f, ShakeAmount = 1.2f, ShakeSelf = 0.5f, SoundRange = 200f };
+    [Tooltip("지구가 땅에 닿을 때 — Shake Radius 안의 사람 화면이 거리 따라 흔들림 (가까울수록 세게). 추천 100m · 1.2")]
+    public FeelDef ExplosionFeel = new() { ShakeRadius = 100f, ShakeAmount = 1.2f, ShakeSelf = 0.5f, SoundRange = 200f };
     public GameObject ReturnFx;
 
     const int EvRise = 0, EvFrom = 1, EvTo = 2, EvBoom = 3, EvReturn = 4;

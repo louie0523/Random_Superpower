@@ -39,6 +39,11 @@ public class OverheadUI : MonoBehaviour
     [SerializeField] private Color barBack = new(0f, 0f, 0f, 0.55f);
     [SerializeField] private Color barFill = new(0.95f, 0.25f, 0.22f, 1f);
     [SerializeField] private Color barLow = new(1f, 0.55f, 0.15f, 1f);
+    [Tooltip("쉴드 칸 높이 (px) — 체력바 바로 위")]
+    [SerializeField] private float shieldHeight = 4f;
+    [SerializeField] private Color shieldRegenColor = new(0.96f, 0.97f, 1f, 1f);
+    [SerializeField] private Color shieldSoulColor = new(0.55f, 0.82f, 1f, 1f);
+    [SerializeField] private Color shieldTempColor = new(0.33f, 0.58f, 1f, 1f);
     [SerializeField] private float nameSize = 18f;
     [SerializeField] private Color nameColor = Color.white;
     [Tooltip("이름에 쓸 글꼴 (비우면 TMP 기본)")]
@@ -55,16 +60,20 @@ public class OverheadUI : MonoBehaviour
         public PlayerVitals V;
         public PlayerAlter A;
         public NetworkObject O;
+        public IHittable X;             // 소환물 (조커 분신 등) — H 대신
+        public Component XC;
         public RectTransform Root;
         public TextMeshProUGUI Name;
         public RectTransform Bar;
         public RectTransform Fill;
         public Image FillImg;
+        public RectTransform Shield, SegR, SegS, SegT;
         public float LosTimer;
         public bool Visible = true;
     }
 
     private readonly Dictionary<PlayerHealth, Plate> _plates = new();
+    private readonly Dictionary<IHittable, Plate> _summonPlates = new();
     private RectTransform _canvas;
     private float _scanTimer;
     private Camera _cam;
@@ -87,11 +96,18 @@ public class OverheadUI : MonoBehaviour
     void LateUpdate()
     {
         _scanTimer -= Time.deltaTime;
-        if (_scanTimer <= 0f) { _scanTimer = 1f; Scan(); }
+        if (_scanTimer <= 0f || Hittables.All.Count != _summonPlates.Count) { _scanTimer = 1f; Scan(); }   // 분신이 생기면 바로
 
         var cam = ActiveCamera();
-        if (cam == null) { foreach (var p in _plates.Values) Show(p, false); return; }
+        if (cam == null)
+        {
+            foreach (var p in _plates.Values) Show(p, false);
+            foreach (var p in _summonPlates.Values) Show(p, false);
+            return;
+        }
         Vector3 camPos = cam.transform.position;
+
+        foreach (var p in _summonPlates.Values) DrawSummon(p, cam, camPos);
 
         foreach (var p in _plates.Values)
         {
@@ -142,9 +158,90 @@ public class OverheadUI : MonoBehaviour
                 p.Fill.anchorMax = new Vector2(r, 1f);
                 p.FillImg.color = r < 0.3f ? barLow : barFill;
             }
-            // 체력바가 없으면 이름을 바 자리까지 내림
-            p.Name.rectTransform.anchoredPosition = new Vector2(0f, showBar ? barSize.y + 2f : 0f);
+            bool shield = showBar && DrawShield(p, p.V != null && p.V.MaxHp > 0 ? p.V.MaxHp : MaxFromStats(p.H));
+            // 체력바가 없으면 이름을 바 자리까지 내림 · 쉴드가 있으면 그만큼 위로
+            p.Name.rectTransform.anchoredPosition = new Vector2(0f, showBar ? barSize.y + 2f + (shield ? shieldHeight + 1f : 0f) : 0f);
         }
+    }
+
+    /// <summary>소환물 (조커 분신 등) — 체력바는 살아 있는 동안 늘, 이름은 가까이서. 내 것도 보임</summary>
+    void DrawSummon(Plate p, Camera cam, Vector3 camPos)
+    {
+        if (p.XC == null || p.X == null || !p.X.HitAlive) { Show(p, false); return; }
+
+        Vector3 world = p.X.HitFeet + Vector3.up * height;
+        float dist = Vector3.Distance(camPos, world);
+        bool showBar = GameSettings.OverheadBars && p.X.HitShowBar && dist <= barDistance;
+        bool showName = GameSettings.OverheadNames && dist <= nameDistance;
+        if (!showBar && !showName) { Show(p, false); return; }
+
+        Vector3 sp = cam.WorldToScreenPoint(world);
+        if (sp.z <= 0f) { Show(p, false); return; }
+
+        if (hideBehindWalls)
+        {
+            p.LosTimer -= Time.deltaTime;
+            if (p.LosTimer <= 0f)
+            {
+                p.LosTimer = 0.15f;
+                Vector3 dir = world - camPos;
+                p.Visible = !Physics.Raycast(camPos, dir.normalized, dir.magnitude - 0.3f, obstacleMask, QueryTriggerInteraction.Ignore);
+            }
+            if (!p.Visible) { Show(p, false); return; }
+        }
+        if (!ScreenDarkness.CanSee(p.X.HitFeet + Vector3.up)) { Show(p, false); return; }
+
+        Show(p, true);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvas, sp, null, out var local);
+        p.Root.anchoredPosition = local + Vector2.up * screenOffset;
+
+        p.Name.gameObject.SetActive(showName);
+        if (showName) p.Name.text = p.X.HitName;
+
+        p.Bar.gameObject.SetActive(showBar);
+        if (showBar)
+        {
+            int max = p.X.HitMaxHP;
+            float r = max > 0 ? Mathf.Clamp01(p.X.HitHP / (float)max) : 0f;
+            p.Fill.anchorMax = new Vector2(r, 1f);
+            p.FillImg.color = r < 0.3f ? barLow : barFill;
+        }
+        p.Name.rectTransform.anchoredPosition = new Vector2(0f, showBar ? barSize.y + 2f : 0f);
+    }
+
+    /// <summary>체력바 위 쉴드 — 재생(하양) · 소울(하늘) · 소모품(파랑). 보였으면 true</summary>
+    bool DrawShield(Plate p, int maxHp)
+    {
+        int total = p.H.ShieldTotal;
+        bool on = total > 0 && p.Shield != null;
+        if (p.Shield != null && p.Shield.gameObject.activeSelf != on) p.Shield.gameObject.SetActive(on);
+        if (!on) return false;
+
+        float full = Mathf.Max(maxHp, total, 1);
+        float x = Seg(p.SegR, 0f, p.H.ShieldRegen / full);
+        x = Seg(p.SegS, x, p.H.ShieldSoul / full);
+        Seg(p.SegT, x, p.H.ShieldTemp / full);
+        return true;
+    }
+
+    static float Seg(RectTransform r, float from, float w)
+    {
+        float to = Mathf.Clamp01(from + Mathf.Max(0f, w));
+        r.anchorMin = new Vector2(from, 0f);
+        r.anchorMax = new Vector2(to, 1f);
+        return to;
+    }
+
+    RectTransform ShieldSeg(RectTransform parent, string n, Color c)
+    {
+        var go = new GameObject(n, typeof(RectTransform), typeof(Image));
+        var r = (RectTransform)go.transform;
+        r.SetParent(parent, false);
+        r.offsetMin = r.offsetMax = Vector2.zero;
+        var img = go.GetComponent<Image>();
+        img.color = c;
+        img.raycastTarget = false;
+        return r;
     }
 
     static bool IsXRay(PlayerOutline ol) => ol.IsXRayNow;
@@ -189,6 +286,27 @@ public class OverheadUI : MonoBehaviour
 
         foreach (var h in found)
             if (h != null && !_plates.ContainsKey(h)) _plates[h] = Make(h);
+
+        // 소환물 (조커 분신 등)
+        var sGone = new List<IHittable>();
+        foreach (var kv in _summonPlates)
+        {
+            bool still = false;
+            foreach (var x in Hittables.All) if (ReferenceEquals(x, kv.Key)) { still = true; break; }
+            if (!still || kv.Value.XC == null) sGone.Add(kv.Key);
+        }
+        foreach (var x in sGone)
+        {
+            if (_summonPlates[x].Root != null) Destroy(_summonPlates[x].Root.gameObject);
+            _summonPlates.Remove(x);
+        }
+        foreach (var x in Hittables.All)
+        {
+            if (x is not Component c || c == null || _summonPlates.ContainsKey(x)) continue;
+            var p = new Plate { X = x, XC = c };
+            Build(p, c.name);
+            _summonPlates[x] = p;
+        }
     }
 
     Plate Make(PlayerHealth h)
@@ -200,8 +318,13 @@ public class OverheadUI : MonoBehaviour
             A = h.GetComponent<PlayerAlter>(),
             O = h.GetComponent<NetworkObject>(),
         };
+        Build(p, h.name);
+        return p;
+    }
 
-        var root = new GameObject("Plate_" + h.name, typeof(RectTransform));
+    void Build(Plate p, string label)
+    {
+        var root = new GameObject("Plate_" + label, typeof(RectTransform));
         p.Root = (RectTransform)root.transform;
         p.Root.SetParent(_canvas, false);
         p.Root.sizeDelta = new Vector2(barSize.x, barSize.y);
@@ -230,6 +353,23 @@ public class OverheadUI : MonoBehaviour
         p.FillImg.color = barFill;
         p.FillImg.raycastTarget = false;
 
+        // 쉴드 — 체력바 바로 위
+        var sh = new GameObject("Shield", typeof(RectTransform), typeof(Image));
+        p.Shield = (RectTransform)sh.transform;
+        p.Shield.SetParent(p.Bar, false);
+        p.Shield.anchorMin = new Vector2(0f, 1f);
+        p.Shield.anchorMax = new Vector2(1f, 1f);
+        p.Shield.pivot = new Vector2(0.5f, 0f);
+        p.Shield.anchoredPosition = new Vector2(0f, 1f);
+        p.Shield.sizeDelta = new Vector2(0f, shieldHeight);
+        var shBg = sh.GetComponent<Image>();
+        shBg.color = barBack;
+        shBg.raycastTarget = false;
+        p.SegR = ShieldSeg(p.Shield, "Regen", shieldRegenColor);
+        p.SegS = ShieldSeg(p.Shield, "Soul", shieldSoulColor);
+        p.SegT = ShieldSeg(p.Shield, "Temp", shieldTempColor);
+        sh.SetActive(false);
+
         // 이름
         var name = new GameObject("Name", typeof(RectTransform), typeof(TextMeshProUGUI));
         p.Name = name.GetComponent<TextMeshProUGUI>();
@@ -249,7 +389,6 @@ public class OverheadUI : MonoBehaviour
         p.Name.textWrappingMode = TextWrappingModes.NoWrap;
 
         Show(p, false);
-        return p;
     }
 
     static void Show(Plate p, bool on)
@@ -277,4 +416,4 @@ public class OverheadUI : MonoBehaviour
         _cam = best != null ? best : Camera.main;
         return _cam;
     }
-}
+}

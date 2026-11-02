@@ -36,6 +36,7 @@ public enum EffectType
     ApplyStatus,
     AddAlter,       // 변화 붙이기 (EffectDef.Alter)
     RemoveAlter,    // 변화 떼기
+    Shield,         // 소모품 쉴드 — 값 = 쉴드 양, Duration = 유지 초 (0 = 깨질 때까지)
 }
 
 /// <summary>누구에게</summary>
@@ -63,4 +64,4 @@ public enum WeaponRequirement
 
     AnyRanged = Bow | Staff | Gun | Thrown,
     Any = Unarmed | Melee | AnyRanged,
-}
+}

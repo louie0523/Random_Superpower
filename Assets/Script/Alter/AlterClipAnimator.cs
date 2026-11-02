@@ -523,8 +523,10 @@ public class AlterClipAnimator : MonoBehaviour, IAlterPartAnim
     int BaseIndex(out float playSpeed)
     {
         bool ext = Time.time - _extTime < 0.3f;
-        bool moving = ext ? _extMoving : _selfSpeed > MoveThreshold;
-        float speed = ext ? _extSpeed : _selfSpeed;
+        // 다른 사람 화면에선 신호(PlayerAlter)가 속도 0을 줄 수 있음 → 실제 위치 변화도 같이 봄
+        // (예전엔 다른 화면에서 걷기가 안 돌아서 발걸음 쿵 · 흔들림이 안 났음)
+        bool moving = (ext && _extMoving) || _selfSpeed > MoveThreshold;
+        float speed = Mathf.Max(ext ? _extSpeed : 0f, _selfSpeed);
         playSpeed = 1f;
 
         if (moving && _walk >= 0 || moving && _run >= 0)

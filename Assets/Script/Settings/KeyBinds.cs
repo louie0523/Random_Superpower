@@ -33,6 +33,7 @@ public enum GameAction
     AbilityPanel,
     Inventory,
     Shop,
+    ShieldCharge,       // 소울 쉴드 충전 (누르고 있기)
 }
 
 /// <summary>
@@ -73,6 +74,7 @@ public static class KeyBinds
         { GameAction.AbilityPanel, KeyCode.F1 },
         { GameAction.Inventory, KeyCode.I },
         { GameAction.Shop, KeyCode.B },
+        { GameAction.ShieldCharge, KeyCode.C },
     };
 
     /// <summary>설정 창 '조작' 탭에 나오는 순서</summary>
@@ -92,6 +94,7 @@ public static class KeyBinds
         (GameAction.Random2, "랜덤 능력 2 (조커)"),
         (GameAction.Interact, "상호작용 (제단 · 상자 · 줍기)"),
         (GameAction.Drop, "무기 버리기"),
+        (GameAction.ShieldCharge, "소울 쉴드 충전 (누르고 있기)"),
         (GameAction.Weapon1, "무기 1번"),
         (GameAction.Weapon2, "무기 2번"),
         (GameAction.Weapon3, "무기 3번"),

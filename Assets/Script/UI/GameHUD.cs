@@ -365,6 +365,10 @@ public class GameHUD : MonoBehaviour
     (StatType.RangedDamage,      "원거리 피해", "P0"),
     (StatType.SkillDamage,       "스킬 피해",   "P0"),
     (StatType.UltimateDamage,    "궁극기 피해", "P0"),
+    (StatType.HeadshotDamage,    "헤드샷 추가", "P0"),
+    (StatType.HeadshotReduction, "헤드샷 감소", "P0"),
+    (StatType.Shield,            "재생 쉴드",   "0"),
+    (StatType.SoulShield,        "소울 쉴드",   "0"),
 };
 
     void DrawStatPanel(NetworkObject local)
@@ -619,4 +623,4 @@ public class GameHUD : MonoBehaviour
                 $"{i + 1,-4} {e.name,-16} {e.k,3}   {e.a,3}   {e.d,3}   {e.soul,4}");
         }
     }
-}
+}

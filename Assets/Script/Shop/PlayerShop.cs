@@ -252,6 +252,10 @@ public class PlayerShop : NetworkBehaviour
                 _health.RPC_Heal(item.HealAmount);
                 break;
 
+            case ShopItemKind.Shield:
+                _health.AddTempShield(item.ShieldAmount, item.ShieldSeconds);
+                break;
+
             case ShopItemKind.ResetEnchant:
                 _enchant?.ClearSlot(_equip.ActiveWeaponSlot);
                 break;
@@ -276,4 +280,4 @@ public class PlayerShop : NetworkBehaviour
 
         return true;
     }
-}
+}

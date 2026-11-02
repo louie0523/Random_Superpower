@@ -17,6 +17,14 @@ public enum StatType
     RangedDamage,       // 원거리 무기
     SkillDamage,        // 모든 스킬 (궁극기 포함)
     UltimateDamage,     // 궁극기 전용
+
+    // ── 헤드샷 (비율, Flat만 · 0.2 = 20%) — 뒤에만 추가 (저장값) ──
+    HeadshotDamage,     // 헤드샷 배율 추가 (0.25 → 총 2배가 2.25배)
+    HeadshotReduction,  // 받는 헤드샷 피해 감소 (투구) — 몸샷 피해 밑으로는 안 내려감
+
+    // ── 쉴드 (일반 수치 · Flat 50 = 50) ──
+    Shield,             // 재생 쉴드 최대치 — 안 맞으면 다시 참
+    SoulShield,         // 소울 쉴드 최대치 — 소울로 충전
 }
 
 public enum ModType
@@ -25,4 +33,4 @@ public enum ModType
     Flat,
     /// <summary>퍼센트. 25 → +25%</summary>
     Percent,
-}
+}

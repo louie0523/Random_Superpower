@@ -95,6 +95,16 @@ public static class Shockwave
                 mv.AddKnockback(away * d.Push + Vector3.up * d.PushUp);
             }
         }
+
+        // 소환물 (조커 분신 등) — 피해만
+        if (d.DamageCoef > 0f && stats != null && Hittables.All.Count > 0)
+        {
+            float dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * d.DamageCoef * 0.01f,
+                                                DamageSource.Skill, true, out bool crit);
+            var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), me, center, true);
+            info.IsCrit = crit;
+            Hittables.DamageSphere(center, d.Radius, ctx.HitMask, info);
+        }
     }
 
     /// <summary>모든 화면 — 소리 · 이펙트 · 내 화면 흔들림 (거리 따라). owner = 일으킨 사람(본인 배율용)</summary>

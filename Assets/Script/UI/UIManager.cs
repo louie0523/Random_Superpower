@@ -68,7 +68,7 @@ public class UIManager : MonoBehaviour
             var ui = Instance;
             return ui != null && ui.AnyPanelOpen || DevConsole.IsOpen || ClassPickPanel.IsShowing
                    || CommsHud.ChatOpen || PlayerPickPanel.IsShowing || VoiceSettingsPanel.IsOpen
-                   || EscMenu.IsOpen || SettingsWindow.IsOpen;
+                   || EscMenu.IsOpen || SettingsWindow.IsOpen || BlackMarketWindow.IsOpen;
         }
     }
 
@@ -218,4 +218,4 @@ public class UIManager : MonoBehaviour
         if (bootCamera != null) bootCamera.enabled = true;
         if (hudRoot != null) hudRoot.SetActive(false);
     }
-}
+}

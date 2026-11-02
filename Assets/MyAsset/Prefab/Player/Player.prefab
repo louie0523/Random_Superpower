@@ -59,6 +59,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2650691376182830499}
+  - {fileID: 3377225710097036816}
   - {fileID: 6648097054573201572}
   - {fileID: 5929841297499440721}
   m_Father: {fileID: 0}
@@ -245,6 +246,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 640
   weaponAudio: {fileID: 0}
+  holdToAttack: 1
   drawGizmos: 1
   logHits: 0
   tracerPrefab: {fileID: 0}
@@ -261,6 +263,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4204d4157ba57e14d85bb9f843b3b331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  shieldRegenDelay: 3
+  shieldRegenFullTime: 1.5
+  soulShieldPerSoul: 4
+  soulShieldChargeRate: 40
+  soulShieldHitLock: 1
+  tempShieldCapOfMaxHp: 1
+  _ShieldRegen: 0
+  _ShieldRegenMax: 0
+  _ShieldSoul: 0
+  _ShieldSoulMax: 0
+  _ShieldTemp: 0
+  _ShieldCharging:
+    RawValue: 0
   respawnDelay: 3
   selfDeathDelayMul: 2
   safeSpawnRadius: 15
@@ -274,6 +289,8 @@ MonoBehaviour:
   combatDuration: 8
   regenPercent: 1
   regenFlat: 2
+  headFraction: 0.2
+  headMinHeight: 0.3
   _HP: 0
   _IsDead:
     RawValue: 0
@@ -281,7 +298,16 @@ MonoBehaviour:
   _Kills: 0
   _Assists: 0
   _Deaths: 0
-  colorProperty: _BaseColor
+  flashStyle: 0
+  flashTint: 1
+  flashOverlayInBoth: 1
+  flashBody: {r: 1, g: 0.07009345, b: 0, a: 1}
+  flashCrit: {r: 1, g: 0.07058824, b: 0, a: 0.9}
+  flashHead: {r: 1, g: 0.07058824, b: 0, a: 0.95}
+  flashShield: {r: 1, g: 0.07058824, b: 0, a: 0.8}
+  flashBurn: {r: 1, g: 0.55, b: 0.2, a: 0.45}
+  flashPoison: {r: 0.5, g: 0.95, b: 0.4, a: 0.45}
+  flashTime: 0.25
 --- !u!114 &-4611531175301071505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,6 +356,10 @@ MonoBehaviour:
   _ArmorId: 0
   _HelmetId: 0
   _BootsId: 0
+  _ArmorEnchantId: 0
+  _HelmetEnchantId: 0
+  _BootsEnchantId: 0
+  armorEnchants: {fileID: 0}
   _SlotAmmo: 
   startWeaponId: 1999
   fistWeaponId: 1000
@@ -347,13 +377,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillInput
   Pressed: 00000000
-  skill1: 304
-  skill2: 101
-  ultimate: 113
-  skill3UseRightMouse: 1
-  skill3Alt: 306
-  randomSkill: 102
-  randomSkill2: 118
 --- !u!114 &-6314287215948934650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,7 +496,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   searchRadius: 3
-  interactKey: 114
   sendInterval: 0.3
 --- !u!114 &959149403550185092
 MonoBehaviour:
@@ -867,10 +889,134 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ecae36a5e2c6ca42839441f08f24490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAltars
-  interactKey: 114
   subChannel: 2.5
   _Mask: 0
   _ChannelLength: 0
+--- !u!1 &3166822052299222123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3377225710097036816}
+  - component: {fileID: 7284061311107927958}
+  - component: {fileID: 2757347998650983755}
+  - component: {fileID: 1838300567752799673}
+  - component: {fileID: 1894434056528879711}
+  m_Layer: 3
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3377225710097036816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3166822052299222123}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 477382210114068769}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &7284061311107927958
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3166822052299222123}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &2757347998650983755
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3166822052299222123}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 195d91a7d2f27614b8b34de1331538d8, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &1838300567752799673
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3166822052299222123}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1894434056528879711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3166822052299222123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977f1cc539db4824792ad4d9e4d9075f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeadZone
 --- !u!1 &4519324451150578074
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,8 +1151,8 @@ Transform:
   m_GameObject: {fileID: 6188621016137893528}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.3125, z: 0}
+  m_LocalScale: {x: 1, y: 0.68748754, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 477382210114068769}

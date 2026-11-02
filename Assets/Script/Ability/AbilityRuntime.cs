@@ -196,6 +196,9 @@ public class AbilityRuntime : NetworkBehaviour
         if (empty >= 0) { SavedKeys.Set(empty, key); SavedValues.Set(empty, value); }
     }
 
+    /// <summary>스킬을 썼을 때 (SA) — 칸 번호 (SkillSlot). 아이템 특성 등 반응용</summary>
+    public event System.Action<int> SkillUsed;
+
     public AbilityData.SkillDef GetSlot(int i) =>
         (i >= 0 && i < _slots.Length) ? _slots[i] : null;
 
@@ -928,6 +931,7 @@ public class AbilityRuntime : NetworkBehaviour
         }
 
         // 스킬 사용 트리거 (다른 능력의 OnSkillUse 반응용)
+        SkillUsed?.Invoke(slotIndex);
         FireTrigger(TriggerType.OnSkillUse, null, skill);
         return true;
     }
@@ -1524,6 +1528,11 @@ public class AbilityRuntime : NetworkBehaviour
                     ar.RPC_ApplySeal(v);
                 break;
 
+            case EffectType.Shield:
+                if (target.TryGetComponent<PlayerHealth>(out var shp))
+                    shp.RPC_AddTempShield(Mathf.RoundToInt(v), e.Duration, 0);
+                break;
+
             case EffectType.GrantSoul:
                 if (target.TryGetComponent<PlayerHealth>(out var sh))
                     sh.RPC_GainSoul(Mathf.RoundToInt(v));
@@ -1686,4 +1695,4 @@ public class AbilityRuntime : NetworkBehaviour
         var go = Instantiate(prefab, pos, Quaternion.identity);
         Destroy(go, 3f);
     }
-}
+}
