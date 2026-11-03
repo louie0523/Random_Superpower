@@ -18,7 +18,7 @@ MonoBehaviour:
   Tier: 0
   Tags: 
   ExclusiveShopItems: []
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 63609051ec3f8a844bf0af7ef929d7da, type: 3}
   Flavor: "\uB2F9\uC2E0\uC740 \uBC30\uAC00 \uACE0\uD515\uB2C8\uB2E4.\n\uADF8\uB9AC\uACE0
     \uBB34\uC5C7\uC774\uB4E0 \uC0BC\uD0AC \uC218 \uC788\uB294 \uC704\uC7A5\uC774
     \uC874\uC7AC\uD569\uB2C8\uB2E4.\n\uBB34\uC5C7\uC774\uB4E0 \uC0BC\uCF1C \uB9C9\uB300\uD55C
@@ -59,6 +59,11 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 0
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    PickViewPrefab: {fileID: 0}
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0
@@ -98,6 +103,11 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 1
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    PickViewPrefab: {fileID: 0}
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0
@@ -123,6 +133,11 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 2
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    PickViewPrefab: {fileID: 0}
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0
@@ -164,6 +179,11 @@ MonoBehaviour:
     Tip: 
     DevNote: 
     Slot: 3
+    StartHidden: 0
+    PickPlayerFirst: 0
+    PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
+    PickIncludeSelf: 1
+    PickViewPrefab: {fileID: 0}
     MaxLevel: 3
     Vars: []
     RequiredWeapon: 0
