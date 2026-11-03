@@ -18,14 +18,14 @@ MonoBehaviour:
   Tier: 0
   Tags: 
   ExclusiveShopItems: []
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: d5d0baac17291f0409e0609fe7896b69, type: 3}
   Flavor: 
   Number: 0
   Summary: "\uC0AC\uC6A9\uC2DC \uC7A0\uC2DC \uC62C\uB77C\uAC04\uB4A4, \uC2A4\uD0AC
     \uC0AC\uC6A9 \uC9C1\uC804 \uBC14\uB77C\uBCF4\uC558\uB358 \uACF3\uC5D0 '\uC9C0\uAD6C'\uB97C
     \uB358\uC9D1\uB2C8\uB2E4."
   UiAccent: {r: 0, g: 0.5688939, b: 1, a: 1}
-  UiNameColor: {r: 0, g: 0, b: 0, a: 1}
+  UiNameColor: {r: 0, g: 1, b: 0.053387165, a: 1}
   UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives: []
   Skills:
@@ -43,6 +43,7 @@ MonoBehaviour:
     PickPlayerFirst: 0
     PickTitle: "\uB300\uC0C1 \uACE0\uB974\uAE30"
     PickIncludeSelf: 1
+    PickViewPrefab: {fileID: 0}
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0

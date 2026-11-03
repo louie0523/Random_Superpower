@@ -18,7 +18,7 @@ MonoBehaviour:
   Tier: 0
   Tags: 
   ExclusiveShopItems: []
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: b276073a5e0b7704e993b32837b69523, type: 3}
   Flavor: "\uC6D0\uD558\uB294 \uD50C\uB808\uC774\uC5B4 \uD55C\uBA85\uC744 \uC9C0\uC815\uD558\uC5EC
     60\uCD08\uD6C4 '\uC790\uC0B4' \uD558\uB3C4\uB85D \uD569\uB2C8\uB2E4."
   Number: 0
@@ -39,6 +39,7 @@ MonoBehaviour:
     PickPlayerFirst: 1
     PickTitle: "\uB178\uD2B8\uC5D0 \uC801\uC744 \uB300\uC0C1"
     PickIncludeSelf: 1
+    PickViewPrefab: {fileID: 0}
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0

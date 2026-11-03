@@ -18,7 +18,7 @@ MonoBehaviour:
   Tier: 0
   Tags: 
   ExclusiveShopItems: []
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: c23190ed3c53e424a863303539846d8e, type: 3}
   Flavor: "\uB300\uC0C1\uC774 \uC790\uC2E0\uC744 \uBCF4\uC9C0 \uC54A\uB294 \uC0C1\uD0DC\uC5D0\uC11C
     \uAC00\uD558\uB294 \uD53C\uD574\uAC00 100% \uC99D\uAC00\uD569\uB2C8\uB2E4.\n\uC0AC\uC6A9\uC2DC
     3\uCD08\uAC04 \uD22C\uBA85 \uC0C1\uD0DC\uAC00 \uB429\uB2C8\uB2E4."

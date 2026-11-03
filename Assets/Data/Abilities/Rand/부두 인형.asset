@@ -18,14 +18,14 @@ MonoBehaviour:
   Tier: 0
   Tags: 
   ExclusiveShopItems: []
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: cef4545b0ee084f48b4fbf2daec0ff43, type: 3}
   Flavor: "\uC6D0\uD558\uB294 \uD50C\uB808\uC774\uC5B4 \uD55C\uBA85\uC744 \uC9C0\uC815\uD558\uC5EC
     20\uCD08\uAC04 '\uC800\uC8FC' \uC0C1\uD0DC\uB85C \uB9CC\uB4E4\uC5B4 \uC18C\uD1B5\uC744
     \uD560 \uC218 \uC5C6\uB3C4\uB85D \uD569\uB2C8\uB2E4. \uB610\uD55C \uC0B4\uC544\uC788\uB294
     \uB3D9\uC548 \uCD5C\uB300 999\uCD08\uC758 '\uBD09\uC778' \uD6A8\uACFC\uB97C \uBC1B\uC2B5\uB2C8\uB2E4.\n"
   Number: 0
   Summary: 
-  UiAccent: {r: 0, g: 0, b: 0, a: 1}
+  UiAccent: {r: 0.28619123, g: 0, b: 0.3433962, a: 1}
   UiNameColor: {r: 1, g: 0, b: 0, a: 1}
   UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives: []
@@ -41,6 +41,7 @@ MonoBehaviour:
     PickPlayerFirst: 1
     PickTitle: "\uC800\uC8FC \uB300\uC0C1"
     PickIncludeSelf: 1
+    PickViewPrefab: {fileID: 0}
     MaxLevel: 5
     Vars: []
     RequiredWeapon: 0

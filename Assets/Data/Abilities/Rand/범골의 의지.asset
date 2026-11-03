@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: "\uBC94\uACE8\uC758 \uC758\uC9C0"
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   Id: 8014
-  DisplayName: "\uBC94\uACE8\uC758 \uC758\uC9C0"
+  DisplayName: "\uC624\uB2C8\uC758 \uC758\uC9C0"
   Kind: 2
   Tier: 0
   Tags: 
   ExclusiveShopItems: []
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: a8016dd656005334f83fa3158913899f, type: 3}
   Flavor: "\uCCB4\uB825\uC774 \uCC98\uC74C 1 \uC774\uD558\uAC00 \uB418\uBA74 \uC7A0\uC2DC\uB3D9\uC548
     \uB9C9\uB300\uD55C \uB2A5\uB825\uCE58\uB97C \uC5BB\uACE0, \uC0AC\uB9DD\uD558\uC9C0
     \uC54A\uC2B5\uB2C8\uB2E4."
@@ -26,7 +26,7 @@ MonoBehaviour:
   Summary: "\uCCB4\uB825\uC774 \uCC98\uC74C 1 \uC774\uD558\uAC00 \uB418\uBA74 \uC7A0\uC2DC\uB3D9\uC548
     \uB9C9\uB300\uD55C \uB2A5\uB825\uCE58\uB97C \uC5BB\uACE0, \uC0AC\uB9DD\uD558\uC9C0
     \uC54A\uC2B5\uB2C8\uB2E4."
-  UiAccent: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
+  UiAccent: {r: 1, g: 0, b: 0, a: 1}
   UiNameColor: {r: 0, g: 0, b: 0, a: 1}
   UiNumberColor: {r: 1, g: 0.84, b: 0.22, a: 1}
   Passives: []
