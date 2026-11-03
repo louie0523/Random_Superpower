@@ -421,9 +421,9 @@ public class JokerAbility : AbilityBehaviour
     {
         switch (key)
         {
-            case "cards": return _cards.Count > 0 ? $"깔린 카드 {_cards.Count}장" : null;
+            case "cards": return _cards.Count > 0 ? SetLoc.F("tok.joker.cards", "깔린 카드 {0}장", _cards.Count) : null;
             case "clone":
-                return CloneAlive ? $"분신 {Mathf.CeilToInt(_cloneEnd - Now)}초 — 궁극기 키로 폭발" : null;
+                return CloneAlive ? SetLoc.F("tok.joker.clone", "분신 {0}초 — 궁극기 키로 폭발", Mathf.CeilToInt(_cloneEnd - Now)) : null;
         }
         return null;
     }

@@ -56,6 +56,8 @@ public class StatusIconBar : MonoBehaviour
             var type = icons[i].Type;
             bool has = valid && _status.Has(type);
 
+            if (has && !v.gameObject.activeSelf)
+                v.SetName(LocUtil.GetOr($"status.{type}", type.ToString()));    // 새로 걸릴 때 (언어도 그때 반영)
             if (v.gameObject.activeSelf != has) v.gameObject.SetActive(has);
             if (!has) { _peak[i] = 0f; continue; }
 

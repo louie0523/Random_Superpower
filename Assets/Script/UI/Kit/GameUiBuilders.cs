@@ -38,7 +38,7 @@ public static class GameUiBuilders
     {
         var o = K.Option("BanToggle", parent, font, "01 능력 이름", true, 46f, 20f);
         ((RectTransform)o.transform).sizeDelta = new Vector2(372f, 46f);
-        o.OnFace = new Color(1f, 0.86f, 0.86f, 1f);     // 밴 = 빨간 기운
+        o.OnFace = new Color(0.29f, 0.13f, 0.16f, 1f);  // 밴 = 어두운 빨강
         if (o.Check != null) o.Check.color = K.Red;
         o.SetOn(false);
         return o;
@@ -49,7 +49,7 @@ public static class GameUiBuilders
         var rt = K.Rect("RoomRow", parent);
         rt.sizeDelta = new Vector2(1160f, 62f);
         K.Size(rt, -1f, 62f);
-        var face = K.Sticker(rt, Color.white, 3f, 4f);
+        var face = K.Sticker(rt, K.Raised, 0f, 3f);
         var hl = face.gameObject.AddComponent<UnityEngine.UI.HorizontalLayoutGroup>();
         hl.padding = new RectOffset(20, 8, 6, 6);
         hl.spacing = 10f;
@@ -76,7 +76,7 @@ public static class GameUiBuilders
         var rt = K.Rect("RoomPlayerRow", parent);
         rt.sizeDelta = new Vector2(780f, 60f);
         K.Size(rt, -1f, 60f);
-        var face = K.Sticker(rt, Color.white, 3f, 4f);
+        var face = K.Sticker(rt, K.Raised, 0f, 3f);
         var hl = face.gameObject.AddComponent<UnityEngine.UI.HorizontalLayoutGroup>();
         hl.padding = new RectOffset(10, 8, 7, 7);
         hl.spacing = 14f;
@@ -90,8 +90,8 @@ public static class GameUiBuilders
 
         var badge = K.Rect("Badge", face.transform);
         K.Size(badge, 96f);
-        v.Badge = K.Sticker(badge, K.Yellow, 3f, 0f);
-        v.BadgeText = K.Text("Text", v.Badge.transform, font, 19f, K.Ink, TextAlignmentOptions.Center, true);
+        v.Badge = K.Sticker(badge, K.Gold, 0f, 0f);
+        v.BadgeText = K.Text("Text", v.Badge.transform, font, 19f, K.TextOn(K.Gold), TextAlignmentOptions.Center, true);
         K.Fill(v.BadgeText.rectTransform, 2f);
         v.BadgeText.text = "방장";
 
@@ -142,8 +142,11 @@ public static class GameUiBuilders
         K.Size(v.EmptyText, -1f, 44f);
         v.EmptyText.gameObject.SetActive(false);
 
-        v.CancelButton = K.Btn("Cancel", c, font, "취소 (Esc)", Color.white, 24f, out _);
+        v.CancelButton = K.Btn("Cancel", c, font, "취소 (Esc)", K.Raised, 24f, out _);
         K.Size(v.CancelButton, -1f, 64f);
+        v.RowColor = K.Raised;
+        v.SelfColor = K.MintDark;
+        v.DeadColor = new Color(0.1f, 0.11f, 0.13f, 1f);
         return v;
     }
 
@@ -174,25 +177,25 @@ public static class GameUiBuilders
 
         if (v.CancelButton.targetGraphic is UnityEngine.UI.Image ci) ci.color = cancel;
         var ct = v.CancelButton.GetComponentInChildren<TMP_Text>();
-        if (ct != null) ct.color = cancelText;
+        if (ct != null) ct.color = K.TextOn(cancel);      // 면에 맞춰 (cancelText는 예전 호환 — 무시)
         return v;
     }
 
-    /// <summary>데스 노트 — 검은 노트 + 흰 글자 + 빨간 밑줄</summary>
+    /// <summary>데스 노트 — 새까만 노트 + 빨간 마름모</summary>
     public static PlayerPickView DeathNotePick(GameObject host, TMP_FontAsset font, UiListRow rowPrefab) =>
         PlayerPickThemed(host, font, rowPrefab, "이름을 적을 사람",
-            window: new Color(0.1f, 0.1f, 0.12f), titleColor: Color.white, accent: new Color(0.86f, 0.12f, 0.16f),
-            row: new Color(0.97f, 0.96f, 0.92f), dead: new Color(0.45f, 0.45f, 0.48f),
-            cancel: new Color(0.22f, 0.22f, 0.26f), cancelText: Color.white,
-            backdrop: new Color(0f, 0f, 0f, 0.78f));
+            window: new Color(0.06f, 0.06f, 0.07f, 0.98f), titleColor: K.Light, accent: K.Danger,
+            row: new Color(0.13f, 0.12f, 0.13f), dead: new Color(0.08f, 0.08f, 0.09f),
+            cancel: new Color(0.2f, 0.19f, 0.2f), cancelText: K.Light,
+            backdrop: new Color(0f, 0f, 0f, 0.8f));
 
-    /// <summary>저주 인형 — 보라 천 + 노란 실 밑줄</summary>
+    /// <summary>저주 인형 — 어두운 보라 천 + 노란 마름모</summary>
     public static PlayerPickView VoodooPick(GameObject host, TMP_FontAsset font, UiListRow rowPrefab) =>
         PlayerPickThemed(host, font, rowPrefab, "저주할 사람",
-            window: new Color(0.42f, 0.27f, 0.6f), titleColor: Color.white, accent: new Color(1f, 0.81f, 0.24f),
-            row: new Color(0.95f, 0.91f, 1f), dead: new Color(0.62f, 0.58f, 0.68f),
-            cancel: Color.white, cancelText: K.Ink,
-            backdrop: new Color(0.12f, 0.03f, 0.18f, 0.66f));
+            window: new Color(0.17f, 0.12f, 0.24f, 0.98f), titleColor: K.Light, accent: K.Gold,
+            row: new Color(0.25f, 0.18f, 0.34f), dead: new Color(0.12f, 0.09f, 0.16f),
+            cancel: new Color(0.3f, 0.22f, 0.4f), cancelText: K.Light,
+            backdrop: new Color(0.06f, 0.02f, 0.1f, 0.72f));
 
     // ══════════════════ 보이스 설정 창 ══════════════════
 
@@ -280,7 +283,8 @@ public static class GameUiBuilders
         r.Label.text = label;
         r.Label.fontStyle = FontStyles.Normal;
         K.Size(r.Action, 170f);
-        if (r.Action.targetGraphic is UnityEngine.UI.Image img) img.color = K.Soft;
+        if (r.Action.targetGraphic is UnityEngine.UI.Image img) img.color = K.Field;
+        if (r.ActionLabel != null) r.ActionLabel.color = K.Light;
         return r;
     }
 
@@ -306,35 +310,46 @@ public static class GameUiBuilders
         v.BanTogglePrefab = banToggle;
         v.PresetRowPrefab = presetRow;
 
-        Blob(root, -760f, 380f, 520f);
-        Blob(root, 820f, -360f, 640f);
-        Blob(root, 620f, 470f, 220f);
+        Blob(root, -760f, 380f, 520f, -8f);
+        Blob(root, 820f, -360f, 640f, 6f);
+        Blob(root, 620f, 470f, 220f, -14f);
 
         BuildLobby(v, root, font);
         BuildWaiting(v, root, font);
 
         v.CenterText = K.Text("Center", root, font, 34f, K.Ink, TextAlignmentOptions.Center, true);
+        v.CenterText.font = K.Display(font);
+        v.CenterText.fontStyle = FontStyles.Normal;
         K.Center(v.CenterText.rectTransform, 0f, 0f, 1000f, 80f);
         v.CenterText.text = "방 정보 받는 중...";
         v.CenterText.gameObject.SetActive(false);
 
         var tb = K.Rect("Toast", root);
         K.Center(tb, 0f, -478f, 900f, 62f);
-        var tf = K.Sticker(tb, K.Ink, 3f, 4f);
-        v.ToastText = K.Text("Text", tf.transform, font, 24f, Color.white, TextAlignmentOptions.Center, true);
+        var tf = K.Sticker(tb, new Color(K.Dark.r, K.Dark.g, K.Dark.b, 0.94f), 0f, 8f);
+        v.ToastText = K.Text("Text", tf.transform, font, 24f, K.Light, TextAlignmentOptions.Center, true);
         K.Fill(v.ToastText.rectTransform, 6f);
         v.ToastText.text = "알림";
         v.ToastBox = tb.gameObject;
         tb.gameObject.SetActive(false);
 
+        v.HostBadge = K.Gold;
+        v.ReadyBadge = K.Ok;
+        v.WaitBadge = K.LineColor;
+        v.StartColor = K.Mint;
+        v.ReadyColor = K.Ok;
+        v.UnreadyColor = K.Raised;
+
         v.WaitingPanel.SetActive(false);        // 편집할 땐 켜서 보기
         return v;
     }
 
-    static void Blob(RectTransform root, float x, float y, float size)
+    /// <summary>배경 장식 — 아주 옅은 육각형 (살짝 기울임)</summary>
+    static void Blob(RectTransform root, float x, float y, float size, float tilt)
     {
-        var b = K.Img("Blob", root, K.Circle, new Color(1f, 1f, 1f, 0.16f));
-        K.Center(b.rectTransform, x, y, size, size);
+        var b = K.Img("Blob", root, K.Hex, new Color(K.Mint.r, K.Mint.g, K.Mint.b, 0.045f));
+        K.Center(b.rectTransform, x, y, size, size * 0.875f);
+        b.rectTransform.localRotation = K.Tilt(tilt);
     }
 
     static void BuildLobby(RoomScreenView v, RectTransform root, TMP_FontAsset font)
@@ -386,7 +401,7 @@ public static class GameUiBuilders
         Label(code.transform, font, "방 코드", 140f);
         v.CodeInput = K.Input("CodeInput", code.transform, font, 22f, "ABC123", 8);
         K.Size(v.CodeInput, 260f);
-        v.JoinCodeButton = K.Btn("JoinCode", code.transform, font, "코드로 참가", K.Blue, 22f, out _);
+        v.JoinCodeButton = K.Btn("JoinCode", code.transform, font, "코드로 참가", K.Raised, 22f, out _);
         K.Size(v.JoinCodeButton, 200f);
     }
 
@@ -403,6 +418,8 @@ public static class GameUiBuilders
 
         var codeLine = K.Row("CodeLine", lc, 54f, 12f);
         v.CodeText = K.Text("Code", codeLine.transform, font, 26f, K.Ink, TextAlignmentOptions.MidlineLeft, true);
+        v.CodeText.font = K.Display(font);
+        v.CodeText.fontStyle = FontStyles.Normal;
         K.Size(v.CodeText, -1f, -1f, 1f);
         v.CodeText.text = "방 코드  ABC123";
         v.CopyCodeButton = K.Btn("Copy", codeLine.transform, font, "복사", Color.white, 22f, out _);
@@ -417,7 +434,9 @@ public static class GameUiBuilders
         K.Size(psr, -1f, -1f, -1f, 1f);
         v.PlayerListContent = plist;
 
-        v.MainButton = K.Btn("Main", lc, font, "게임 시작", K.Yellow, 32f, out var ml);
+        v.MainButton = K.Btn("Main", lc, font, "게임 시작", K.Mint, 34f, out var ml);
+        ml.font = K.Display(font);
+        ml.fontStyle = FontStyles.Normal;
         K.Size(v.MainButton, -1f, 88f);
         v.MainButtonLabel = ml;
         v.MainButtonFace = (UnityEngine.UI.Image)v.MainButton.targetGraphic;

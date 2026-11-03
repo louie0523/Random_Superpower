@@ -450,9 +450,9 @@ public class WeaponMasterAbility : AbilityBehaviour
         switch (key)
         {
             case "orbit":
-                return _orbit != null ? $"떠다니는 무기 {_orbit.OrbitingSlots(_orbiting).Count}개" : null;
+                return _orbit != null ? SetLoc.F("tok.weaponmaster.orbit", "떠다니는 무기 {0}개", _orbit.OrbitingSlots(_orbiting).Count) : null;
             case "slots":
-                return _equip != null ? $"무기 칸 {_equip.UsableSlots}" : null;
+                return _equip != null ? SetLoc.F("tok.weaponmaster.slots", "무기 칸 {0}", _equip.UsableSlots) : null;
         }
         return null;
     }
@@ -502,4 +502,4 @@ public class WeaponMasterAbility : AbilityBehaviour
         if (index == 1 && a.Length > 0 && a[0] == "slots") return new[] { ("5", ""), ("6", ""), ("7", "") };
         return null;
     }
-}
+}

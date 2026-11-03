@@ -380,7 +380,11 @@ public partial class RoomUI
 
                 bool isHost = p.Ref == rs.Host;
                 GameUiKit.Set(row.BadgeText, isHost ? SetLoc.T("lobby.host", "방장") : p.Ready ? SetLoc.T("lobby.ready", "준비") : SetLoc.T("lobby.wait_badge", "대기"));
-                if (row.Badge != null) row.Badge.color = isHost ? v.HostBadge : p.Ready ? v.ReadyBadge : v.WaitBadge;
+                if (row.Badge != null)
+                {
+                    row.Badge.color = isHost ? v.HostBadge : p.Ready ? v.ReadyBadge : v.WaitBadge;
+                    if (row.BadgeText != null) row.BadgeText.color = GameUiKit.TextOn(row.Badge.color);
+                }
                 GameUiKit.Set(row.Name, p.Name.ToString() + (p.Ref == me ? "  (" + SetLoc.T("lobby.me", "나") + ")" : ""));
                 GameUiKit.Active(row.Kick, host && p.Ref != me);
             }
@@ -393,6 +397,7 @@ public partial class RoomUI
             bool can = rs.CanStart(out string why);
             GameUiKit.Set(v.MainButtonLabel, SetLoc.T("lobby.start", "게임 시작"));
             if (v.MainButtonFace != null) v.MainButtonFace.color = v.StartColor;
+            if (v.MainButtonFace != null && v.MainButtonLabel != null) v.MainButtonLabel.color = GameUiKit.TextOn(v.MainButtonFace.color);
             GameUiKit.Interact(v.MainButton, can);
             GameUiKit.Set(v.ReasonText, can ? "" : LobbyLoc.Msg(why));
         }
@@ -401,6 +406,7 @@ public partial class RoomUI
             bool ready = rs.IsReady(me);
             GameUiKit.Set(v.MainButtonLabel, ready ? SetLoc.T("lobby.unready", "준비 취소") : SetLoc.T("lobby.ready", "준비"));
             if (v.MainButtonFace != null) v.MainButtonFace.color = ready ? v.UnreadyColor : v.ReadyColor;
+            if (v.MainButtonFace != null && v.MainButtonLabel != null) v.MainButtonLabel.color = GameUiKit.TextOn(v.MainButtonFace.color);
             GameUiKit.Interact(v.MainButton, true);
             GameUiKit.Set(v.ReasonText, ready ? SetLoc.T("lobby.wait_host", "방장이 시작하면 게임이 시작돼") : "");
         }

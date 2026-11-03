@@ -40,7 +40,7 @@ public class GameUiPrefabMaker : EditorWindow
     }
 
     List<Entry> _entries;
-    TMP_FontAsset _font;
+    TMP_FontAsset _font, _display;
     bool _backup = true;
     Vector2 _scroll;
 
@@ -62,6 +62,8 @@ public class GameUiPrefabMaker : EditorWindow
             new() { Name = "RoomScreenView", Label = "방 목록 · 대기실" },
             new() { Name = "SettingsView", Label = "설정 창" },
             new() { Name = "EscMenuView", Label = "ESC 메뉴" },
+            new() { Name = "GameHudV2", Label = "게임 HUD (v2)" },
+            new() { Name = "GamePanelsV2", Label = "게임 창 (v2) — 능력 F1 · 스킬 상세 · 상점 · 인벤토리 · 순위표 · 툴팁" },
 
             new() { Name = "PlayerPickRow", Label = "대상 선택 한 줄", Row = true },
             new() { Name = "VoiceMicOption", Label = "마이크 한 줄", Row = true },
@@ -77,11 +79,9 @@ public class GameUiPrefabMaker : EditorWindow
         string fontGuid = EditorPrefs.GetString(Pref + "font", "");
         if (!string.IsNullOrEmpty(fontGuid))
             _font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(fontGuid));
-        if (_font == null)
-        {
-            var set = AssetDatabase.LoadAssetAtPath<UiPrefabSet>(SetPath);
-            if (set != null) _font = set.Font;
-        }
+        var set0 = AssetDatabase.LoadAssetAtPath<UiPrefabSet>(SetPath);
+        if (_font == null && set0 != null) _font = set0.Font;
+        if (set0 != null) _display = set0.DisplayFont;
     }
 
     // ══════════════════ 창 ══════════════════
@@ -98,6 +98,8 @@ public class GameUiPrefabMaker : EditorWindow
             EditorPrefs.SetString(Pref + "font", _font != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(_font)) : "");
         if (_font == null)
             EditorGUILayout.HelpBox("글꼴이 비어 있으면 TMP 기본 글꼴로 만듦 (한글 깨짐) · '글꼴만'은 건너뜀", MessageType.Warning);
+        _display = (TMP_FontAsset)EditorGUILayout.ObjectField(new GUIContent("제목 글꼴 (선택)", "창 제목 · 작은 제목 · 큰 버튼 — 예: Black Han Sans 한글 TMP. 비우면 위 글꼴"),
+                                                             _display, typeof(TMP_FontAsset), false);
 
         EditorGUI.BeginChangeCheck();
         _backup = EditorGUILayout.ToggleLeft("교체 · 글꼴만 전에 백업 (" + BackupFolder + "/날짜시간/)", _backup);
@@ -185,6 +187,20 @@ public class GameUiPrefabMaker : EditorWindow
         EnsureFolder(Folder);
         EnsureFolder(SetFolder);
 
+        // 제목 글꼴은 만들기 전에 넣어 둠 (빌더가 UiPrefabSet에서 읽음)
+        var setPre = AssetDatabase.LoadAssetAtPath<UiPrefabSet>(SetPath);
+        if (setPre == null)
+        {
+            setPre = CreateInstance<UiPrefabSet>();
+            AssetDatabase.CreateAsset(setPre, SetPath);
+        }
+        if (setPre.DisplayFont != _display)
+        {
+            setPre.DisplayFont = _display;
+            EditorUtility.SetDirty(setPre);
+            AssetDatabase.SaveAssets();
+        }
+
         // 백업
         if (_backup)
         {
@@ -204,6 +220,13 @@ public class GameUiPrefabMaker : EditorWindow
         int R = AbilityUi.RoundedRadius;
         AbilityUi.RoundedOverride = SaveSprite("Rounded", AbilityUi.RoundedTexture(), new Vector4(R, R, R, R));
         AbilityUi.CircleOverride = SaveSprite("Circle", AbilityUi.CircleTexture(), Vector4.zero);
+        // v2 모양 — 모서리 잘린 판 · 부드러운 그림자 · 육각형 (파일 이름에 v2 — 예전 PNG와 안 겹치게)
+        int cb = GameUiKit.CutBorder, sb = GameUiKit.ShadowBorder;
+        GameUiKit.CutOverride = SaveSprite("Cut_v2", GameUiKit.CutTexture(), new Vector4(cb, cb, cb, cb));
+        GameUiKit.ShadowOverride = SaveSprite("Shadow_v2", GameUiKit.ShadowTexture(), new Vector4(sb, sb, sb, sb));
+        GameUiKit.HexOverride = SaveSprite("Hex_v2", GameUiKit.HexTexture(), Vector4.zero);
+        GameUiKit.SlantOverride = SaveSprite("Slant_v2", GameUiKit.SlantTexture(), Vector4.zero);
+        UiTheme.Reload();
 
         var holder = new GameObject("__GameUiMaker", typeof(RectTransform));
         var font = _font;
@@ -248,11 +271,18 @@ public class GameUiPrefabMaker : EditorWindow
             });
             MakeView(Get("SettingsView"), go => SettingsUiBuilders.Settings(go, font));
             MakeView(Get("EscMenuView"), go => SettingsUiBuilders.EscMenu(go, font));
+            MakeView(Get("GameHudV2"), go => HudUiBuilder.Build(go, font, new HudUiBuilder.Icons
+            {
+                Soul = FindIcon("skull_yellow"),
+                Portrait = FindIcon("skull"),
+            }));
+            MakeView(Get("GamePanelsV2"), go => PanelUiBuilder.Build(go, font, FindIcon("skull_yellow")));
         }
         finally
         {
             Object.DestroyImmediate(holder);
             AbilityUi.RoundedOverride = AbilityUi.CircleOverride = null;
+            GameUiKit.CutOverride = GameUiKit.ShadowOverride = GameUiKit.HexOverride = GameUiKit.SlantOverride = null;
         }
 
         Relink(links);
@@ -269,6 +299,8 @@ public class GameUiPrefabMaker : EditorWindow
         set.Room = Load<RoomScreenView>("RoomScreenView");
         set.Settings = Load<SettingsView>("SettingsView");
         set.EscMenu = Load<EscMenuView>("EscMenuView");
+        set.Hud = AssetDatabase.LoadAssetAtPath<GameObject>($"{Folder}/GameHudV2.prefab");
+        set.Panels = AssetDatabase.LoadAssetAtPath<GameObject>($"{Folder}/GamePanelsV2.prefab");
         if (font != null) set.Font = font;
         EditorUtility.SetDirty(set);
 
@@ -481,6 +513,45 @@ public class GameUiPrefabMaker : EditorWindow
     {
         if (prefab == null || parent == null) return;
         PrefabUtility.InstantiatePrefab(prefab.gameObject, parent);
+    }
+
+    /// <summary>스티커 아이콘 찾기 (sticker-icons.zip의 UiIcons — 똑바른(Straight) 것 먼저). 없으면 null → 코드 육각형</summary>
+    static Sprite FindIcon(string name)
+    {
+        Sprite any = null;
+        foreach (var guid in AssetDatabase.FindAssets(name + " t:Sprite"))
+        {
+            string p = AssetDatabase.GUIDToAssetPath(guid);
+            if (System.IO.Path.GetFileNameWithoutExtension(p) != name) continue;
+            var sp = AssetDatabase.LoadAssetAtPath<Sprite>(p);
+            if (sp == null) continue;
+            if (p.Replace('\\', '/').Contains("/Straight/")) return sp;
+            if (any == null) any = sp;
+        }
+        return any;
+    }
+
+    // ══════════════════ 색 배합 (테마) ══════════════════
+
+    const string ThemePath = SetFolder + "/UiTheme.asset";
+
+    [MenuItem("Tools/UI/색 배합(테마) 열기")]
+    static void OpenTheme()
+    {
+        EnsureFolder(Folder);
+        EnsureFolder(SetFolder);
+        var t = AssetDatabase.LoadAssetAtPath<UiTheme>(ThemePath);
+        if (t == null)
+        {
+            t = CreateInstance<UiTheme>();
+            t.PresetSlate();
+            AssetDatabase.CreateAsset(t, ThemePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[GameUI] 색 배합 에셋을 만들었어: {ThemePath} — 인스펙터 ⋮ 메뉴에서 프리셋을 고르거나 색을 직접 바꿔");
+        }
+        UiTheme.Reload();
+        Selection.activeObject = t;
+        EditorGUIUtility.PingObject(t);
     }
 
     static Sprite SaveSprite(string name, Texture2D tex, Vector4 border)

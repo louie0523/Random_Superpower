@@ -11,6 +11,7 @@ using K = GameUiKit;
 ///   ▶ 경기 · 닉네임            (말하는 사람마다 한 줄, 위로 쌓임)
 /// 점 색: 말하는 중 초록 · 음소거 빨강 · 평소 회색. 글자는 번역 키 voice.hud.* (없으면 한국어)
 /// 씬에 없으면 알아서 생김. HUD 크기 설정(HudScaler)도 따름.
+/// HUD v2 안에 들어 있으면(다른 캔버스 안) 그 자리에 그리고, 혼자 생긴 것은 그동안 숨음
 /// </summary>
 public class VoiceStatusHud : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class VoiceStatusHud : MonoBehaviour
     }
 
     RectTransform _root, _stack;
+    bool _embedded;                     // 다른 캔버스(HUD v2) 안
+    static VoiceStatusHud _inHud;
     readonly List<Line> _lines = new();
     readonly StringBuilder _sb = new();
 
@@ -45,10 +48,20 @@ public class VoiceStatusHud : MonoBehaviour
 
     void Awake()
     {
-        _root = K.MakeScreen(gameObject, 450, null);
-        var gr = GetComponent<GraphicRaycaster>();
-        if (gr != null) gr.enabled = false;                     // 클릭 안 막게
-        gameObject.AddComponent<HudScaler>();
+        _embedded = transform.parent != null && transform.parent.GetComponentInParent<Canvas>(true) != null;
+        if (_embedded)
+        {
+            _inHud = this;
+            _root = K.Rect("Root", transform);
+            K.Fill(_root);
+        }
+        else
+        {
+            _root = K.MakeScreen(gameObject, 450, null);
+            var gr = GetComponent<GraphicRaycaster>();
+            if (gr != null) gr.enabled = false;                     // 클릭 안 막게
+            gameObject.AddComponent<HudScaler>();
+        }
 
         _stack = K.Rect("Stack", _root);
         _stack.anchorMin = _stack.anchorMax = _stack.pivot = Vector2.zero;
@@ -99,11 +112,17 @@ public class VoiceStatusHud : MonoBehaviour
         if (l.Text.text != text) l.Text.text = text;
     }
 
+    void OnDestroy()
+    {
+        if (_inHud == this) _inHud = null;
+    }
+
     void LateUpdate()
     {
         var me = VoiceChat.Local;
         var spec = SpectatorVoice.Local;
         bool has = me != null || spec != null;
+        if (!_embedded && _inHud != null && _inHud.isActiveAndEnabled) has = false;     // HUD 안의 것이 보이는 동안은 숨음
         if (_root.gameObject.activeSelf != has) _root.gameObject.SetActive(has);
         if (!has) return;
 

@@ -385,11 +385,10 @@ public class EnchantPage : MonoBehaviour, ILocRefresh
         foreach (var s in d.Stats)
         {
             if (sb.Length > 0) sb.Append("   ");
-            sb.Append(LocUtil.Get($"stat.{s.Stat}")).Append(' ')
-              .Append(StatText.Value(s.Stat, s.Type, s.Value));
+            sb.Append(StatText.Line(s.Stat, s.Type, s.Value));
         }
         return sb.ToString();
     }
 
     void OnEnchant() => _enchant?.RPC_Enchant();
-}
+}

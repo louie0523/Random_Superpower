@@ -997,12 +997,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Voice keys (Chat \xB7 Voice Tab) also rotate together \xB7 If the
-      same key is entered, the keys for the two actions are swapped."
+    m_Localized: "Voice keys (Chat \xB7 Voice Tab) rotate together \xB7 If the same
+      key is entered, the keys for the two actions are swapped"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Show crosshair
+    m_Localized: Show aiming point
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1166,7 +1166,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366259
-    m_Localized: Game voice size
+    m_Localized: Game voice volume
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366260
@@ -1726,8 +1726,8 @@ MonoBehaviour:
 
 
       Instead,
-      the next bullet deals {b:AimBonusPct:all}% additional damage on hit and always
-      hits as a critical strike.'
+      the next bullet deals {b:AimBonusPct:all}% additional damage upon hitting and
+      always hits as a critical strike.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340377
@@ -1897,7 +1897,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340411
-    m_Localized: "The Monster has a 3-second attack cooldown per target and deals
+    m_Localized: "The monster has a 3-second attack cooldown per target and deals
       {b:MonsterLowHpBonus:all}% additional damage to targets with 30% or less health.\n\nDuring
       the duration, Attack Power, Attack Speed, and Movement Speed \u200B\u200Bare
       slightly increased."
@@ -1912,12 +1912,12 @@ MonoBehaviour:
 
 
       When not in combat,
-      it charges <b>Darkness</b> for {b:DarkChargeTime:all} seconds.
+      charge <b>Darkness</b> over {b:DarkChargeTime:all} seconds.
 
 
-      When
-      attacking an enemy, if <b>Darkness</b> is charged, it blinds the target''s
-      vision for {b:BlindTime:all} seconds.'
+      When attacking
+      an enemy, if <b>Darkness</b> is charged, blind the target for {b:BlindTime:all}
+      seconds.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340417
@@ -2031,8 +2031,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340439
     m_Localized: For {b:HasteDuration:all} seconds, the base attack time of Weapon
-      Master is reduced by {b:HasteIntervalPct:all}% and command speed is increased
-      by 50%.
+      Master is reduced by {b:HasteIntervalPct:all}% and the speed of commands is
+      increased by 50%.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340440
@@ -2205,7 +2205,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534668
-    m_Localized: Select one player and inflict the 'Curse' status on them for 20
+    m_Localized: Select one desired player and inflict the 'Curse' status for 20
       seconds, preventing them from communicating. Additionally, they receive a 'Seal'
       effect for up to 999 seconds while alive.
     m_Metadata:
@@ -2294,11 +2294,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: 'Damage dealt when the target is not looking at you increases by
-      100%.
+    m_Localized: 'Damage dealt to targets when they are not looking at you increases
+      by 100%.
 
 
-      When used, you become invisible for 3 seconds.'
+      Becomes invisible for 3 seconds when used.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534695
@@ -2351,8 +2351,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534706
-    m_Localized: 'After designating a spot in front, ascend high into the sky and
-      throw a <b>Earth<b> at that location.
+    m_Localized: 'After designating a location in front, ascend high into the sky
+      and throw a <b>Earth<b> at that location.
 
 
       Return to the casting location
@@ -2409,11 +2409,11 @@ MonoBehaviour:
 
 
       If
-      you shout 30 times, you become a Legendary Dragon.
+      you shout it 30 times, you become a Legendary Dragon.
 
 
-      If you survive for
-      3 minutes, you win immediately.'
+      If you survive
+      for 3 minutes, you win immediately.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534718
@@ -2594,8 +2594,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534672
-    m_Localized: Uses deadly cuteness to reduce the damage dealt by the target to
-      0%.
+    m_Localized: Uses deadly cuteness to reduce the damage dealt by the target by
+      50% for 8 seconds.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534676
@@ -2838,7 +2838,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581842
-    m_Localized: Start Soul
+    m_Localized: Starting Soul
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581843
@@ -3184,6 +3184,399 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15336411941679104
     m_Localized: Hide code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805591465984
+    m_Localized: Soul Shield Charge (Hold)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020416
+    m_Localized: black market
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020417
+    m_Localized: '[{0}] {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020418
+    m_Localized: '{0} Purchase'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020419
+    m_Localized: close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020420
+    m_Localized: If you select an item, it shows it in detail.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020421
+    m_Localized: No trading during combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020422
+    m_Localized: dead state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020423
+    m_Localized: Cannot buy now
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020424
+    m_Localized: It's too far.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020425
+    m_Localized: Cannot change while transforming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020426
+    m_Localized: Soul shortage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020427
+    m_Localized: armor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020428
+    m_Localized: weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020429
+    m_Localized: "\u25C6 Owned Souls {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020430
+    m_Localized: ({0} seconds)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020431
+    m_Localized: Attack Power {0}% additional damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020432
+    m_Localized: '{0} Reduce remaining cooldown by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020433
+    m_Localized: '{0} Reduce remaining cooldown by {1} seconds'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020434
+    m_Localized: Soul {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020435
+    m_Localized: Enchant Stone {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020436
+    m_Localized: Recover stamina {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020437
+    m_Localized: Recovers {0}% of maximum HP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020438
+    m_Localized: Regeneration Shield Instant Charge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020439
+    m_Localized: Recover {0} rounds of ammo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020440
+    m_Localized: To yourself {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020441
+    m_Localized: To the target {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020442
+    m_Localized: Shield {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020443
+    m_Localized: Shield equal to {0}% of maximum health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020444
+    m_Localized: All skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020445
+    m_Localized: Random ability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020446
+    m_Localized: Normal Skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020447
+    m_Localized: "Skills \xB7 Ultimate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020448
+    m_Localized: Ultimate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020449
+    m_Localized: Max {0} nesting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214720
+    m_Localized: '{0}% probability'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214721
+    m_Localized: Reuse {0} seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214722
+    m_Localized: '{0} When heard'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214723
+    m_Localized: Installing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214724
+    m_Localized: Assist
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214725
+    m_Localized: When shooting a headshot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214726
+    m_Localized: If you suffer damages
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214727
+    m_Localized: When treating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214728
+    m_Localized: If health drops below {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214729
+    m_Localized: When using random abilities
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214730
+    m_Localized: At the time of resurrection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214731
+    m_Localized: If the shield breaks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214732
+    m_Localized: When using a skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214733
+    m_Localized: When involved in treatment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214734
+    m_Localized: When using the ultimate ability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214735
+    m_Localized: When hitting with a weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214736
+    m_Localized: Every {0} seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214737
+    m_Localized: During combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214738
+    m_Localized: When HP is {0}% or less
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214739
+    m_Localized: Non-combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214740
+    m_Localized: While the shield is active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214741
+    m_Localized: "\u25C7 No special enchantments"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214742
+    m_Localized: Intrinsic characteristics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214743
+    m_Localized: "[{0}] Pick up \u2014 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214744
+    m_Localized: "[{0}] Wear \u2014 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214745
+    m_Localized: Shield {0} (until broken)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214746
+    m_Localized: Shield {0} ({1} seconds)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214747
+    m_Localized: standing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214748
+    m_Localized: ranking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214749
+    m_Localized: name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214750
+    m_Localized: class
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214751
+    m_Localized: altar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214752
+    m_Localized: Choose a weapon to evolve
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214753
+    m_Localized: Headshot damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214754
+    m_Localized: Reduced headshot damage taken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214755
+    m_Localized: Regeneration Shield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214756
+    m_Localized: Soul Shield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278020640768
+    m_Localized: '{0} seconds while digesting'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389504
+    m_Localized: "Digestion complete \u2014 Can eat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389505
+    m_Localized: Can spit out the power of defeated enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389506
+    m_Localized: Can spit out {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389507
+    m_Localized: "Undead \u2014 Still holding out"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389508
+    m_Localized: Last desperate struggle {0} seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389509
+    m_Localized: used it all up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389510
+    m_Localized: Promotion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389511
+    m_Localized: Phone {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389512
+    m_Localized: Promotion available!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389513
+    m_Localized: Floating weapons {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389514
+    m_Localized: Weapon slot {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389515
+    m_Localized: "<b>Darkness Charged</b> \u2014 The next weapon attack will darken
+      the target"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389516
+    m_Localized: Darkness {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389517
+    m_Localized: '{0} hands placed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389518
+    m_Localized: '{0} cards laid out'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389519
+    m_Localized: "Clone {0} seconds \u2014 Explode with Ultimate key"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389520
+    m_Localized: dragon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389521
+    m_Localized: fish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389522
+    m_Localized: Legendary Dragon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389523
+    m_Localized: '{0} shots per second'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389524
+    m_Localized: game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389525
+    m_Localized: team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389526
+    m_Localized: global
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389527
+    m_Localized: Watching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389528
+    m_Localized: "Enter message\u2026"
     m_Metadata:
       m_Items: []
   references:

@@ -150,7 +150,7 @@ public class FishAbility : TransformAbility
 
     public override string DescToken(string key, int rank) => key switch
     {
-        "form" => Form == Dragon ? "용" : "물고기",
+        "form" => Form == Dragon ? SetLoc.T("tok.fish.dragon", "용") : SetLoc.T("tok.fish.fish", "물고기"),
         "fly" => Form == Dragon ? Mathf.RoundToInt(FlyFuel01 * 100f).ToString() : null,     // 용일 때 남은 비행 % (숫자만)
         _ => null,
     };

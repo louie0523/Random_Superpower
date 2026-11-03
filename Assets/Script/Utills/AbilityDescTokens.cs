@@ -14,6 +14,7 @@ using UnityEngine;
 ///   {b:필드:all|pct|0.#}      섞어 쓰기 ( | 로 구분, 숫자 서식도 가능)
 ///
 ///   {dmg:계수}                공격력 × 계수% → 카드 "<b>230</b>" · 상세 창 "<b>230</b> (공격력 150%)"
+///       괄호 안 "공격력 …"은 스탯 아이콘 + 스탯 색 (StatStyle) · 이름은 시트 stat.AttackPower (번역)
 ///   {dmg:계수+고정}           공격력 × 계수% + 고정 → 카드 "<b>250</b>" · 상세 창 "<b>250</b> (공격력 150% + 20)"
 ///   {dmg:계수+고정:n}         항상 숫자만 / :full 항상 공식까지 / :f 공식만 / :all 전 레벨 숫자
 ///       계수·고정 자리에는 Behaviour 필드 이름, v0 v1 (이 항목의 Vars), 숫자(20) 모두 가능
@@ -38,7 +39,7 @@ public static class AbilityDescTokens
     // {b:필드} · {b:필드*100} · {b:필드/10:all} — 이름 뒤 *N /N 으로 곱하기·나누기
     static readonly Regex BToken = new(@"\{b:(\w+)\s*(?:([*/])\s*([\d.]+))?(?::([^}]*))?\}", RegexOptions.Compiled);
 
-    static string AtkLabel => LocUtil.GetOr("ui.ability.atk", "공격력");
+    static string AtkLabel => StatText.Name(StatType.AttackPower);
 
     // ══════════════════ 진입점 ══════════════════
 
@@ -127,8 +128,9 @@ public static class AbilityDescTokens
         }
 
         string sel = mode == "all" ? "all" : null;
-        string formula = $"{AtkLabel} {Levels(coef, rank, levels, sel)}%" +
-                         (anyFlat ? $" + {Levels(flat, rank, levels, sel)}" : "");
+        // 아이콘 + 공격력 색 — Levels 안의 흐린 색(다른 레벨)은 그대로
+        string formula = StatText.Styled(StatType.AttackPower,
+            $"{AtkLabel} {Levels(coef, rank, levels, sel)}%" + (anyFlat ? $" + {Levels(flat, rank, levels, sel)}" : ""));
 
         var stats = Local != null ? Local.Stats : null;
         if (stats == null || mode == "f") return formula;     // 에디터 · 로비 → 공식만
@@ -142,7 +144,7 @@ public static class AbilityDescTokens
             : "<b>" + At(dmg, rank).ToString("0", CultureInfo.InvariantCulture) + "</b>";
 
         bool withFormula = mode == "full" || (mode == "" && Detailed);
-        return withFormula ? $"{num}<color={Dim}> ({formula})</color>" : num;
+        return withFormula ? $"{num}<color={Dim}> (</color>{formula}<color={Dim}>)</color>" : num;
     }
 
     // ══════════════════ 값 찾기 ══════════════════
@@ -240,4 +242,4 @@ public class DescLine
                 return LocUtil.Pick(l.TextKey, l.Text);
         return null;
     }
-}
+}

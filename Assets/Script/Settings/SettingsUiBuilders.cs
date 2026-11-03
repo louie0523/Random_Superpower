@@ -27,7 +27,12 @@ public static class SettingsUiBuilders
 
         // 위: 제목 · 닫기
         var top = K.Row("Top", c, 60f, 12f);
-        v.Title = K.Text("Title", top.transform, font, 40f, K.Ink, TextAlignmentOptions.MidlineLeft, true);
+        var accHold = K.Rect("AccentHolder", top.transform);        // 제목 앞 민트 마름모
+        K.Size(accHold, 22f);
+        var acc = K.Img("Accent", accHold, null, K.Mint);
+        K.Center(acc.rectTransform, 0f, 0f, 18f, 18f);
+        acc.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+        v.Title = K.Text("Title", top.transform, K.Display(font), 42f, K.Ink, TextAlignmentOptions.MidlineLeft, false);
         K.Size(v.Title, -1f, -1f, 1f);
         v.Title.text = "설정";
         SetLocText.Add(v.Title, "set.ui.title");
@@ -86,7 +91,7 @@ public static class SettingsUiBuilders
         var rt = K.Rect("Row_" + d.Key, parent);
         K.Size(rt, -1f, note ? 80f : 62f, -1f, 0f);
 
-        var bg = K.Img("Back", rt, K.Round, K.Soft);
+        var bg = K.Img("Back", rt, K.Cut, K.Soft);
         K.Fill(bg.rectTransform);
         var hl = bg.gameObject.AddComponent<HorizontalLayoutGroup>();
         hl.padding = new RectOffset(18, 12, 7, 7);
@@ -190,7 +195,7 @@ public static class SettingsUiBuilders
 
         var box = K.Rect("Preview", pv.transform);
         K.Size(box, 300f);
-        v.PreviewBack = K.Sticker(box, new Color(0.36f, 0.42f, 0.36f), 4f, 6f);
+        v.PreviewBack = K.Sticker(box, new Color(0.36f, 0.42f, 0.36f), 0f, 8f);
         v.PreviewBack.gameObject.AddComponent<RectMask2D>();
         var cg = K.Rect("Crosshair", v.PreviewBack.transform);
         cg.anchorMin = cg.anchorMax = cg.pivot = new Vector2(0.5f, 0.5f);

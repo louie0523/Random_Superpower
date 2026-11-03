@@ -4,32 +4,228 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// 카툰 · 깔끔 UI 도구 — 흰 바탕 + 굵은 검은 테두리 + 아래로 딱 떨어지는 그림자.
-/// 프리팹 만들기(GameUiBuilders)와 뷰들이 같이 씀. 색을 바꾸려면 만들어진 프리팹을 직접 고치면 됨.
+/// UI 도구 — v2 '스티커 카툰' (2026-11-03 시안). 색은 UiTheme(색 배합 에셋)에서 — 바꾸면 전부 따라감.
+///   칸 · 창은 조용하게: 테두리 없음, 어두운 판 + 모서리 두 곳 잘림(Cut), 부드러운 그림자(Shadow)
+///   카툰은 아이콘 · 스티커에만 (육각 Hex · UiIcons)
+///   색은 쓰임새대로: 민트 = 기본 강조 · 노랑(Gold) = 랜덤 · SC · 뽑기 · 빨강 = 위험 · 나머지 회색 · 흰색
+/// 예전 이름(Ink · Paper · Yellow …)은 그대로 두고 값만 v2로 — 빌더 · 화면 코드는 안 고쳐도 새 모양이 됨.
+///   Ink = 판 위의 글자(밝음) · Paper = 창 · Soft = 칸 · Yellow = 주요 버튼(민트) · Color.white를 면으로 넘기면 Raised(보통 버튼)
+/// 프리팹 만들기(GameUiBuilders · SettingsUiBuilders)와 뷰들이 같이 씀.
 /// </summary>
 public static class GameUiKit
 {
-    // ══════════════════ 색 ══════════════════
+    // ══════════════════ 색 — UiTheme (Resources/UiTheme)에서 ══════════════════
 
-    public static readonly Color Ink = new(0.11f, 0.11f, 0.14f, 1f);       // 테두리 · 글자
-    public static readonly Color Paper = new(1f, 0.99f, 0.96f, 1f);        // 창 바탕
-    public static readonly Color Soft = new(0.92f, 0.92f, 0.94f, 1f);      // 칸 바탕
-    public static readonly Color Muted = new(0.46f, 0.46f, 0.52f, 1f);     // 흐린 글자
-    public static readonly Color Yellow = new(1f, 0.81f, 0.24f, 1f);       // 강조 · 주요 버튼
-    public static readonly Color Red = new(0.95f, 0.36f, 0.36f, 1f);       // 위험 · 밴
-    public static readonly Color Blue = new(0.36f, 0.67f, 1f, 1f);
-    public static readonly Color Green = new(0.4f, 0.84f, 0.6f, 1f);       // 준비
-    public static readonly Color Sky = new(0.55f, 0.78f, 0.96f, 1f);       // 로비 배경
-    public static readonly Color DimColor = new(0.04f, 0.04f, 0.07f, 0.62f);
-    public static readonly Color CheckOn = new(1f, 0.95f, 0.78f, 1f);      // 체크 켜짐 바탕
+    static UiTheme T => UiTheme.Current;
 
-    public const float Line = 4f;      // 테두리 두께
-    public const float Drop = 6f;      // 그림자 거리
+    public static Color Bg => T.Background;          // 화면 바탕
+    public static Color Panel => T.Panel;            // 창
+    public static Color Panel2 => T.Panel2;          // 칸
+    public static Color Raised => T.Raised;          // 보통 버튼
+    public static Color Field => T.Field;            // 입력 칸 · 막대 바닥
+    public static Color LineColor => T.Line;         // 구분선
+    public static Color Light => T.StickerRim;       // 스티커 테두리 · 어두운 면 위 흰 글자
+    public static Color Dim => T.TextDim;            // 흐린 글자
+    public static Color Dark => T.TextOnLight;       // 밝은 면 위 글자
+    public static Color Mint => T.Accent;            // 기본 강조
+    public static Color MintDark => T.AccentDark;    // 켜진 체크 줄 바탕
+    public static Color Gold => T.Gold;              // 랜덤 · SC · 소울 · 뽑기
+    public static Color Danger => T.Danger;          // 위험 · 체력
+    public static Color Ok => T.Ok;                  // 준비 · 성공
+    public static Color Info => T.Info;              // 보조
+    public static Color HudPanel => T.HudPanel;      // HUD 글자 판
+
+    // ── 예전 이름 → 테마 값 (빌더 · 화면 코드 안 고쳐도 됨) ──
+    public static Color Ink => T.Text;               // 판 위의 글자
+    public static Color Paper => T.Panel;            // 창 바탕
+    public static Color Soft => T.Panel2;            // 칸 바탕
+    public static Color Muted => T.TextDim;          // 흐린 글자
+    public static Color Yellow => T.Accent;          // 주요 버튼 (예전 노랑 → 강조색)
+    public static Color Red => T.Danger;
+    public static Color Blue => T.Info;
+    public static Color Green => T.Ok;
+    public static Color Sky => T.Background;         // 로비 바탕
+    public static Color DimColor => T.Backdrop;
+    public static Color CheckOn => T.AccentDark;
+
+    public const float Line = 0f;      // v2 — 테두리 없음 (예전 호출 호환용)
+    public const float Drop = 8f;      // 그림자 거리
+
+    /// <summary>면 색 정리 — Color.white(예전 '보통 흰 버튼')는 Raised로</summary>
+    public static Color Face(Color c) => c == Color.white ? Raised : c;
+
+    /// <summary>이 면 위에 올릴 글자 색 — 밝은 면이면 검정, 어두운 면이면 밝음</summary>
+    public static Color TextOn(Color face)
+    {
+        float l = 0.2126f * face.r + 0.7152f * face.g + 0.0722f * face.b;
+        return l > T.LightFaceThreshold ? T.TextOnLight : T.TextOnDark;
+    }
+
+    // ══════════════════ 모양 (스프라이트) ══════════════════
 
     public static Sprite Round => AbilityUi.Rounded;
     public static Sprite Circle => AbilityUi.Circle;
 
+    /// <summary>에디터 프리팹 생성기가 PNG 에셋으로 바꿔 끼움 — 비어 있으면 코드로 만든 것</summary>
+    public static Sprite CutOverride, ShadowOverride, HexOverride;
+    static Sprite _cut, _shadow, _hex;
+
+    public const int CutSize = 64, CutCorner = 14, CutBorder = 18;
+    public const int ShadowSize = 64, ShadowFade = 22, ShadowBorder = 26;
+
+    /// <summary>오른쪽 위 · 왼쪽 아래 모서리가 잘린 판 (9-slice) — 창 · 버튼 · 칸</summary>
+    public static Sprite Cut
+    {
+        get
+        {
+            if (CutOverride != null) return CutOverride;
+            if (_cut != null) return _cut;
+            var t = CutTexture();
+            return _cut = Sprite.Create(t, new UnityEngine.Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f), 100f, 0,
+                                        SpriteMeshType.FullRect, new Vector4(CutBorder, CutBorder, CutBorder, CutBorder));
+        }
+    }
+
+    /// <summary>부드러운 그림자 (9-slice) — 검정 반투명으로 칠해서 판 뒤에</summary>
+    public static Sprite Shadow
+    {
+        get
+        {
+            if (ShadowOverride != null) return ShadowOverride;
+            if (_shadow != null) return _shadow;
+            var t = ShadowTexture();
+            return _shadow = Sprite.Create(t, new UnityEngine.Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f), 100f, 0,
+                                           SpriteMeshType.FullRect, new Vector4(ShadowBorder, ShadowBorder, ShadowBorder, ShadowBorder));
+        }
+    }
+
+    public static Sprite SlantOverride;
+    static Sprite _slant;
+
+    /// <summary>기울어진 막대 (체력 · 쉴드 막대) — Filled로 써도 됨</summary>
+    public static Sprite Slant
+    {
+        get
+        {
+            if (SlantOverride != null) return SlantOverride;
+            if (_slant != null) return _slant;
+            var t = SlantTexture();
+            return _slant = Sprite.Create(t, new UnityEngine.Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f));
+        }
+    }
+
+    public static Texture2D SlantTexture()
+    {
+        const int W = 512, H = 32; const float S = 10f;      // 위가 오른쪽으로 S만큼 밀림
+        var tex = new Texture2D(W, H, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+        var px = new Color32[W * H];
+        for (int y = 0; y < H; y++)
+        {
+            float off = S * (y + 0.5f) / H;
+            for (int x = 0; x < W; x++)
+            {
+                float fx = x + 0.5f;
+                float a = Mathf.Clamp01(Mathf.Min(fx - off, (W - S + off) - fx) + 0.5f);
+                px[y * W + x] = new Color32(255, 255, 255, (byte)(a * 255));
+            }
+        }
+        tex.SetPixels32(px);
+        tex.Apply();
+        return tex;
+    }
+
+    /// <summary>가로로 넓은 육각형 — 키 이름표 · 스티커 바탕</summary>
+    public static Sprite Hex
+    {
+        get
+        {
+            if (HexOverride != null) return HexOverride;
+            if (_hex != null) return _hex;
+            var t = HexTexture();
+            return _hex = Sprite.Create(t, new UnityEngine.Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f));
+        }
+    }
+
+    public static Texture2D CutTexture()
+    {
+        int N = CutSize; float C = CutCorner;
+        var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+        var px = new Color32[N * N];
+        const float R2 = 1.41421356f;
+        for (int y = 0; y < N; y++)
+            for (int x = 0; x < N; x++)
+            {
+                float fx = x + 0.5f, fy = y + 0.5f;
+                float tr = ((N - fx) + (N - fy) - C) / R2;     // 오른쪽 위
+                float bl = (fx + fy - C) / R2;                 // 왼쪽 아래
+                float a = Mathf.Clamp01(Mathf.Min(tr, bl) + 0.5f);
+                px[y * N + x] = new Color32(255, 255, 255, (byte)(a * 255));
+            }
+        tex.SetPixels32(px);
+        tex.Apply();
+        return tex;
+    }
+
+    public static Texture2D ShadowTexture()
+    {
+        int N = ShadowSize; float F = ShadowFade;
+        var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+        var px = new Color32[N * N];
+        for (int y = 0; y < N; y++)
+            for (int x = 0; x < N; x++)
+            {
+                float dx = Mathf.Max(0f, Mathf.Max(F - (x + 0.5f), (x + 0.5f) - (N - F)));
+                float dy = Mathf.Max(0f, Mathf.Max(F - (y + 0.5f), (y + 0.5f) - (N - F)));
+                float d = Mathf.Sqrt(dx * dx + dy * dy) / F;
+                float a = Mathf.Clamp01(1f - d);
+                a = a * a * (3f - 2f * a);              // 부드럽게
+                px[y * N + x] = new Color32(255, 255, 255, (byte)(a * 255));
+            }
+        tex.SetPixels32(px);
+        tex.Apply();
+        return tex;
+    }
+
+    public static Texture2D HexTexture()
+    {
+        const int W = 128, H = 112;
+        var tex = new Texture2D(W, H, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+        var pts = new Vector2[] { new(W * 0.25f, 0), new(W * 0.75f, 0), new(W, H * 0.5f), new(W * 0.75f, H), new(W * 0.25f, H), new(0, H * 0.5f) };
+        var px = new Color32[W * H];
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+            {
+                var p = new Vector2(x + 0.5f, y + 0.5f);
+                float m = float.MaxValue;
+                for (int i = 0; i < 6; i++)
+                {
+                    var a = pts[i]; var b = pts[(i + 1) % 6];
+                    var e = (b - a).normalized;
+                    var n = new Vector2(-e.y, e.x);        // 반시계 → 안쪽
+                    m = Mathf.Min(m, Vector2.Dot(p - a, n));
+                }
+                float al = Mathf.Clamp01(m + 0.5f);
+                px[y * W + x] = new Color32(255, 255, 255, (byte)(al * 255));
+            }
+        tex.SetPixels32(px);
+        tex.Apply();
+        return tex;
+    }
+
+    // ══════════════════ 글꼴 ══════════════════
+
+    /// <summary>제목 글꼴 — UiPrefabSet의 '제목 글꼴'(예: Black Han Sans), 없으면 본문 글꼴</summary>
+    public static TMP_FontAsset Display(TMP_FontAsset fallback)
+    {
+        var set = UiPrefabSet.Get();
+        return set != null && set.DisplayFont != null ? set.DisplayFont : fallback;
+    }
+
     // ══════════════════ 기본 ══════════════════
+
+    /// <summary>스티커 · 칩 기울기 — 테마의 '살짝 기울이기'가 꺼져 있으면 0</summary>
+    public static Quaternion Tilt(float degrees) =>
+        Quaternion.Euler(0f, 0f, T.TiltStickers ? degrees : 0f);
 
     public static RectTransform Rect(string name, Transform parent)
     {
@@ -75,7 +271,7 @@ public static class GameUiKit
         img.sprite = sprite;
         img.color = color;
         img.raycastTarget = false;
-        if (sprite != null && sprite == Round) img.type = Image.Type.Sliced;
+        if (sprite != null && (sprite == Round || sprite == Cut || sprite == Shadow)) img.type = Image.Type.Sliced;
         return img;
     }
 
@@ -95,33 +291,57 @@ public static class GameUiKit
         return t;
     }
 
-    /// <summary>스티커 모양: root 안에 그림자 · 테두리 · 면을 깔고 면(Face)을 돌려줌 — 내용은 Face 안에</summary>
+    /// <summary>
+    /// 판: root 안에 (그림자) · 면을 깔고 면을 돌려줌 — 내용은 면 안에.
+    /// v2: 테두리 없음 (line은 무시), drop > 0이면 아래로 살짝 퍼지는 그림자. 면은 모서리 잘린 모양
+    /// </summary>
     public static Image Sticker(RectTransform root, Color face, float line = Line, float drop = Drop)
     {
         if (drop > 0f)
         {
-            var sh = Img("Shadow", root, Round, Ink);
+            var sh = Img("Shadow", root, Shadow, new Color(0f, 0f, 0f, Mathf.Clamp(0.22f + drop * 0.02f, 0.25f, 0.5f)));
             Fill(sh.rectTransform);
-            sh.rectTransform.offsetMin += new Vector2(0f, -drop);
-            sh.rectTransform.offsetMax += new Vector2(0f, -drop);
+            float spread = 6f + drop;
+            sh.rectTransform.offsetMin = new Vector2(-spread, -spread - drop * 0.7f);
+            sh.rectTransform.offsetMax = new Vector2(spread, spread - drop * 0.7f);
         }
-        var ol = Img("Outline", root, Round, Ink);
-        Fill(ol.rectTransform);
-        var f = Img("Face", root, Round, face);
-        Fill(f.rectTransform, line);
+        var f = Img("Face", root, Cut, Face(face));
+        Fill(f.rectTransform);
+        return f;
+    }
+
+    /// <summary>육각 스티커 이름표 (키 이름 · 짧은 표시) — 흰 테두리 + 색 면 + 글자</summary>
+    public static Image HexTag(string name, Transform parent, TMP_FontAsset font, string label, Color face, float w = 64f, float h = 56f)
+    {
+        var rt = Rect(name, parent);
+        Size(rt, w, h);
+        var rim = Img("Rim", rt, Hex, Light);
+        Fill(rim.rectTransform);
+        var f = Img("Face", rim.transform, Hex, face);
+        Fill(f.rectTransform, 4f);
+        var t = Text("Label", f.transform, font, h * 0.34f, TextOn(face), TextAlignmentOptions.Center, true);
+        Fill(t.rectTransform, 2f);
+        t.text = label;
         return f;
     }
 
     // ══════════════════ 화면 · 창 ══════════════════
 
-    /// <summary>오버레이 캔버스 + 전체 화면 Root (+ 어둡게)</summary>
-    public static RectTransform MakeScreen(GameObject host, int sortingOrder, Color? backdrop)
+    /// <summary>
+    /// 캔버스 + 전체 화면 Root (+ 어둡게). 기본은 오버레이.
+    /// matchCamera = 실행 중 씬 UI 캔버스가 스크린 카메라 모드면 같이 카메라 모드 (HUD)
+    /// </summary>
+    public static RectTransform MakeScreen(GameObject host, int sortingOrder, Color? backdrop, bool matchCamera = false)
     {
         if (host.GetComponent<RectTransform>() == null) host.AddComponent<RectTransform>();
+        host.layer = 5;     // UI — 스크린 카메라 모드의 UI 카메라가 그리는 레이어
         var c = host.GetComponent<Canvas>();
         if (c == null) c = host.AddComponent<Canvas>();
         c.renderMode = RenderMode.ScreenSpaceOverlay;
         c.sortingOrder = sortingOrder;
+        var follow = host.GetComponent<UiCanvasFollow>();
+        if (follow == null) follow = host.AddComponent<UiCanvasFollow>();
+        follow.matchCamera = matchCamera;
         var sc = host.GetComponent<CanvasScaler>();
         if (sc == null) sc = host.AddComponent<CanvasScaler>();
         sc.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -146,7 +366,7 @@ public static class GameUiKit
     {
         var rt = Rect(name, parent);
         Center(rt, 0f, 0f, w, h);
-        var face = Sticker(rt, Paper, Line + 1f, Drop + 4f);
+        var face = Sticker(rt, Paper, 0f, 14f);
         face.raycastTarget = true;
         var v = face.gameObject.AddComponent<VerticalLayoutGroup>();
         v.padding = new RectOffset(pad, pad, pad - 6, pad);
@@ -158,23 +378,47 @@ public static class GameUiKit
         return rt;
     }
 
-    /// <summary>제목 + 노란 밑줄</summary>
+    /// <summary>제목 — 민트 마름모 + 큰 제목 글꼴. 마름모 이름 'Accent' (대상 선택 창 테마가 색을 바꿈)</summary>
     public static TextMeshProUGUI Header(Transform parent, TMP_FontAsset font, string title, float size = 40f)
     {
-        var g = Group("Header", parent, 4f);
-        g.childForceExpandWidth = false;
-        var t = Text("Title", g.transform, font, size, Ink, TextAlignmentOptions.MidlineLeft, true);
-        Size(t, -1f, size * 1.25f, 1f);
+        var rt = Rect("Header", parent);
+        Size(rt, -1f, size * 1.35f);
+        var h = rt.gameObject.AddComponent<HorizontalLayoutGroup>();
+        h.spacing = 14f;
+        h.childAlignment = TextAnchor.MiddleLeft;
+        h.childControlWidth = h.childControlHeight = true;
+        h.childForceExpandWidth = false;
+        h.childForceExpandHeight = false;
+
+        var acc = Img("Accent", rt, null, Mint);
+        Size(acc, size * 0.42f, size * 0.42f);
+        acc.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+
+        var t = Text("Title", rt, Display(font), size, Ink, TextAlignmentOptions.MidlineLeft, false);
+        Size(t, -1f, size * 1.3f, 1f);
         t.text = title;
-        var bar = Img("Accent", g.transform, Round, Yellow);
-        Size(bar, 96f, 9f, 0f);
         return t;
     }
 
+    /// <summary>작은 제목 — 흰 마름모 + 글자</summary>
     public static TextMeshProUGUI Section(Transform parent, TMP_FontAsset font, string title)
     {
-        var t = Text("Section", parent, font, 24f, Ink, TextAlignmentOptions.BottomLeft, true);
-        Size(t, -1f, 40f);
+        var rt = Rect("Section", parent);
+        Size(rt, -1f, 44f);
+        var h = rt.gameObject.AddComponent<HorizontalLayoutGroup>();
+        h.spacing = 10f;
+        h.childAlignment = TextAnchor.LowerLeft;
+        h.padding = new RectOffset(2, 0, 0, 4);
+        h.childControlWidth = h.childControlHeight = true;
+        h.childForceExpandWidth = false;
+        h.childForceExpandHeight = false;
+
+        var dot = Img("Dot", rt, null, Light);
+        Size(dot, 10f, 10f);
+        dot.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+
+        var t = Text("Text", rt, Display(font), 24f, Ink, TextAlignmentOptions.BottomLeft, false);
+        Size(t, -1f, 34f, 1f);
         t.text = title;
         return t;
     }
@@ -217,16 +461,17 @@ public static class GameUiKit
 
     // ══════════════════ 조작 ══════════════════
 
+    /// <summary>버튼 — 면 색에 맞춰 글자 색이 저절로 (밝은 면 = 검정 글자). textColor는 예전 호출 호환용 (무시)</summary>
     public static Button Btn(string name, Transform parent, TMP_FontAsset font, string label, Color face, float fontSize,
                              out TextMeshProUGUI text, Color? textColor = null)
     {
         var rt = Rect(name, parent);
-        var f = Sticker(rt, face, 3f, 4f);
+        var f = Sticker(rt, face, 0f, 3f);
         f.raycastTarget = true;
         var b = rt.gameObject.AddComponent<Button>();
         b.targetGraphic = f;
         Tint(b);
-        text = Text("Label", f.transform, font, fontSize, textColor ?? Ink, TextAlignmentOptions.Center, true);
+        text = Text("Label", f.transform, font, fontSize, TextOn(f.color), TextAlignmentOptions.Center, true);
         Fill(text.rectTransform, 4f);
         text.text = label;
         return b;
@@ -236,20 +481,21 @@ public static class GameUiKit
     {
         var cb = s.colors;
         cb.normalColor = Color.white;
-        cb.highlightedColor = new Color(0.93f, 0.93f, 0.93f, 1f);
+        cb.highlightedColor = new Color(1.18f, 1.18f, 1.18f, 1f);   // 올리면 살짝 밝게
         cb.pressedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
         cb.selectedColor = Color.white;
-        cb.disabledColor = new Color(0.78f, 0.78f, 0.78f, 0.6f);
+        cb.disabledColor = new Color(0.6f, 0.6f, 0.6f, 0.5f);
+        cb.colorMultiplier = 1f;
         cb.fadeDuration = 0.06f;
         s.colors = cb;
         s.navigation = new Navigation { mode = Navigation.Mode.None };
     }
 
-    /// <summary>켜고 끄는 버튼. check = 왼쪽 체크칸 (켜면 점), 아니면 면 색이 바뀜</summary>
+    /// <summary>켜고 끄는 버튼. check = 왼쪽 체크칸 (켜면 민트 칸), 아니면 켜졌을 때 면이 민트</summary>
     public static UiOption Option(string name, Transform parent, TMP_FontAsset font, string label, bool check,
                                   float h = 48f, float fontSize = 22f)
     {
-        var b = Btn(name, parent, font, label, Color.white, fontSize, out var t);
+        var b = Btn(name, parent, font, label, Raised, fontSize, out var t);
         Size(b, -1f, h);
         var opt = b.gameObject.AddComponent<UiOption>();
         opt.Button = b;
@@ -258,24 +504,24 @@ public static class GameUiKit
 
         if (check)
         {
-            var box = Img("CheckBox", opt.Face.transform, Round, Ink);
+            var box = Img("CheckBox", opt.Face.transform, Cut, LineColor);
             var r = box.rectTransform;
             r.anchorMin = r.anchorMax = new Vector2(0f, 0.5f);
             r.pivot = new Vector2(0f, 0.5f);
-            r.anchoredPosition = new Vector2(12f, 0f);
+            r.anchoredPosition = new Vector2(14f, 0f);
             r.sizeDelta = new Vector2(26f, 26f);
-            var inner = Img("Inner", box.transform, Round, Color.white);
+            var inner = Img("Inner", box.transform, Cut, Field);
             Fill(inner.rectTransform, 3f);
-            var dot = Img("Check", inner.transform, Round, Ink);
-            Fill(dot.rectTransform, 4f);
+            var dot = Img("Check", inner.transform, Cut, Mint);
+            Fill(dot.rectTransform, 3f);
             opt.Check = dot;
-            opt.OnFace = CheckOn;
+            opt.OnFace = MintDark;
             t.alignment = TextAlignmentOptions.MidlineLeft;
-            t.rectTransform.offsetMin = new Vector2(50f, 4f);
+            t.rectTransform.offsetMin = new Vector2(52f, 4f);
         }
-        else opt.OnFace = Yellow;
+        else opt.OnFace = Mint;
 
-        opt.OffFace = Color.white;
+        opt.OffFace = Raised;
         opt.SetOn(false);
         return opt;
     }
@@ -283,14 +529,14 @@ public static class GameUiKit
     public static TMP_InputField Input(string name, Transform parent, TMP_FontAsset font, float fontSize, string placeholder, int limit)
     {
         var rt = Rect(name, parent);
-        var face = Sticker(rt, Color.white, 3f, 0f);
+        var face = Sticker(rt, Field, 0f, 0f);
         face.raycastTarget = true;
 
         var area = Rect("Text Area", face.transform);
-        Fill(area, 10f);
+        Fill(area, 12f);
         area.gameObject.AddComponent<RectMask2D>();
 
-        var ph = Text("Placeholder", area, font, fontSize, Muted);
+        var ph = Text("Placeholder", area, font, fontSize, new Color(Dim.r, Dim.g, Dim.b, 0.6f));
         Fill(ph.rectTransform);
         ph.fontStyle = FontStyles.Italic;
         ph.text = placeholder;
@@ -308,9 +554,9 @@ public static class GameUiKit
         inp.pointSize = fontSize;
         if (font != null) inp.fontAsset = font;
         inp.customCaretColor = true;
-        inp.caretColor = Ink;
+        inp.caretColor = Mint;
         inp.caretWidth = 2;
-        inp.selectionColor = new Color(1f, 0.81f, 0.24f, 0.45f);
+        inp.selectionColor = new Color(Mint.r, Mint.g, Mint.b, 0.35f);
         Tint(inp);
         return inp;
     }
@@ -320,31 +566,27 @@ public static class GameUiKit
         var rt = Rect(name, parent);
         Size(rt, -1f, height);
 
-        var bg = Img("Back", rt, Round, Ink);
-        Band(bg.rectTransform, 16f);
+        var bg = Img("Back", rt, Cut, Field);
+        Band(bg.rectTransform, 10f);
         bg.raycastTarget = true;
-        var bgIn = Img("Inner", bg.transform, Round, Soft);
-        Fill(bgIn.rectTransform, 3f);
 
         var fillArea = Rect("Fill Area", rt);
         Band(fillArea, 10f);
-        fillArea.offsetMin += new Vector2(3f, 0f);
-        fillArea.offsetMax -= new Vector2(3f, 0f);
-        var fill = Img("Fill", fillArea, Round, Yellow);
+        var fill = Img("Fill", fillArea, Cut, Mint);
         fill.rectTransform.anchorMin = Vector2.zero;
         fill.rectTransform.anchorMax = new Vector2(0f, 1f);
         fill.rectTransform.sizeDelta = Vector2.zero;
 
         var handleArea = Rect("Handle Slide Area", rt);
         Fill(handleArea);
-        handleArea.offsetMin = new Vector2(height * 0.5f, 0f);
-        handleArea.offsetMax = new Vector2(-height * 0.5f, 0f);
-        var handle = Img("Handle", handleArea, Circle, Ink);
+        handleArea.offsetMin = new Vector2(height * 0.35f, 0f);
+        handleArea.offsetMax = new Vector2(-height * 0.35f, 0f);
+        var handle = Img("Handle", handleArea, Hex, Light);
         handle.rectTransform.anchorMin = Vector2.zero;
         handle.rectTransform.anchorMax = new Vector2(0f, 1f);
-        handle.rectTransform.sizeDelta = new Vector2(height, 0f);
-        var hf = Img("Face", handle.transform, Circle, Color.white);
-        Fill(hf.rectTransform, 4f);
+        handle.rectTransform.sizeDelta = new Vector2(height * 0.8f, -height * 0.15f);
+        var hf = Img("Face", handle.transform, Hex, Raised);
+        Fill(hf.rectTransform, 3f);
 
         var s = rt.gameObject.AddComponent<Slider>();
         s.fillRect = fill.rectTransform;
@@ -384,7 +626,7 @@ public static class GameUiKit
         content.sizeDelta = Vector2.zero;
         var v = content.gameObject.AddComponent<VerticalLayoutGroup>();
         v.spacing = spacing;
-        v.padding = new RectOffset(4, 10, 4, 14);       // 오른쪽 · 아래 = 그림자 자리
+        v.padding = new RectOffset(4, 12, 4, 14);       // 오른쪽 · 아래 = 그림자 자리
         v.childControlWidth = v.childControlHeight = true;
         v.childForceExpandWidth = true;
         v.childForceExpandHeight = false;
@@ -408,7 +650,7 @@ public static class GameUiKit
     {
         var rt = Rect(name, parent);
         Size(rt, -1f, h);
-        var face = Sticker(rt, Color.white, 3f, 4f);
+        var face = Sticker(rt, Raised, 0f, 3f);
         var row = rt.gameObject.AddComponent<UiListRow>();
         row.Face = face;
 
@@ -443,7 +685,7 @@ public static class GameUiKit
 
         if (actionLabel != null)
         {
-            var a = Btn("Action", face.transform, font, actionLabel, Yellow, 20f, out var at);
+            var a = Btn("Action", face.transform, font, actionLabel, Mint, 20f, out var at);
             Size(a, 150f);
             row.Action = a;
             row.ActionLabel = at;
@@ -468,7 +710,7 @@ public static class GameUiKit
 
         var box = Rect("Value", row.transform);
         Size(box, 190f);
-        var face = Sticker(box, Soft, 3f, 0f);
+        var face = Sticker(box, Field, 0f, 0f);
         var val = Text("Text", face.transform, font, 22f, Ink, TextAlignmentOptions.Center, true);
         Fill(val.rectTransform, 4f);
         val.text = "0";
@@ -481,7 +723,7 @@ public static class GameUiKit
 
     static Button Small(string name, Transform parent, TMP_FontAsset font, string label)
     {
-        var b = Btn(name, parent, font, label, Color.white, 22f, out _);
+        var b = Btn(name, parent, font, label, Raised, 22f, out _);
         Size(b, 54f);
         return b;
     }

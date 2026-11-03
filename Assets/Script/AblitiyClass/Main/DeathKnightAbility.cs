@@ -455,8 +455,7 @@ public class DeathKnightAbility : AbilityBehaviour
             bool pct = ratio || s.Type == ModType.Percent;
 
             if (sb.Length > 0) sb.Append(", ");
-            sb.Append(LocUtil.Get($"stat.{s.Stat}")).Append(' ')
-              .Append(v > 0f ? "+" : "").Append(v.ToString("0.##")).Append(pct ? "%" : "");
+            sb.Append(StatText.Styled(s.Stat, StatText.Name(s.Stat) + " " + (v > 0f ? "+" : "") + v.ToString("0.##") + (pct ? "%" : "")));
         }
         return sb.Length > 0 ? sb.ToString() : null;
     }

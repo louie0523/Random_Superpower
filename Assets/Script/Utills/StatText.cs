@@ -23,4 +23,18 @@ public static class StatText
         if (IsMultiplier(stat) || IsRatio(stat)) return $"{sign}{a * 100f:0.#}%";  // 0.25 → +25%
         return $"{sign}{a:0.##}";                                          // 25 → +25
     }
-}
+
+    // ══════════════════ 보이는 글 (색 · 아이콘 — StatStyle) ══════════════════
+
+    /// <summary>스탯 이름 (번역)</summary>
+    public static string Name(StatType s) => LocUtil.Get($"stat.{s}");
+
+    /// <summary>아이콘 + 스탯 색으로 감싼 글 — 예) Styled(AttackPower, "공격력 120% + 30")</summary>
+    public static string Styled(StatType s, string body) => StatStyle.Current.Wrap(s, body);
+
+    /// <summary>아이콘 + 색 이름만</summary>
+    public static string Label(StatType s) => Styled(s, Name(s));
+
+    /// <summary>아이콘 + 색 "공격력 +25" — 툴팁 · 상점 · 인챈트 한 줄</summary>
+    public static string Line(StatType s, ModType type, float v, string gap = " ") => Styled(s, Name(s) + gap + Value(s, type, v));
+}

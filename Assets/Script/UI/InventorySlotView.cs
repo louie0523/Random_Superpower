@@ -61,8 +61,12 @@ public class InventorySlotView : MonoBehaviour
 
         if (icon != null)
         {
-            icon.enabled = hasItem && m.Data.Icon != null;
-            if (hasItem) icon.sprite = m.Data.Icon;
+            // 3D 모델을 찍은 그림 (없으면 아이콘)
+            var sp = hasItem ? ItemThumbnail.Get(m.Data) : null;
+            if (sp == null && hasItem) sp = m.Data.Icon;
+            icon.enabled = sp != null;
+            icon.sprite = sp;
+            icon.preserveAspect = true;
         }
 
         if (emptyLabel != null) emptyLabel.gameObject.SetActive(!hasItem);
@@ -127,6 +131,7 @@ public class InventorySlotView : MonoBehaviour
         {
             Title = NameOf(d),
             Body = BuildBody(d),
+            Spec = BuildSpec(d),
             Detail = BuildDetail(d),
             Tags = BuildTags(d),
         };
@@ -167,24 +172,32 @@ public class InventorySlotView : MonoBehaviour
 
         // 방어구 주요 능력치 — 맨 위
         if (!Mathf.Approximately(d.MainStatValue, 0f) && EquipmentData.MainStatOf(d.Slot, out var ms, out var mm))
-            sb.AppendLine($"<b>{LocUtil.Get($"stat.{ms}")}  {StatText.Value(ms, mm, d.MainStatValue)}</b>");
+            sb.AppendLine("<b>" + StatText.Line(ms, mm, d.MainStatValue, "  ") + "</b>");
 
         if (d.BaseStats != null)
             foreach (var s in d.BaseStats)
-                sb.AppendLine($"{LocUtil.Get($"stat.{s.Stat}")}  {StatText.Value(s.Stat, s.Type, s.Value)}");
+                sb.AppendLine(StatText.Line(s.Stat, s.Type, s.Value, "  "));
+
+        return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>무기 스펙 — 근접: 사거리 / 총: 탄약 · 분당 발사 / 활 · 지팡이: 차징 (툴팁에서 능력치 아래 줄 긋고)</summary>
+    string BuildSpec(EquipmentData d)
+    {
+        var sb = new System.Text.StringBuilder();
 
         if (d.Slot == EquipSlot.Weapon)
         {
-            sb.AppendLine();
-
             if (d.Class == WeaponClass.Melee)
             {
                 sb.AppendLine(LocUtil.Get("ui.item.melee_range", d.Range.ToString("0.#")));
             }
             else if (d.RangedKind == RangedType.Gun)
             {
+                if (d.FireMode == GunFireMode.Hitscan)
+                    sb.AppendLine(LocUtil.Get("ui.item.melee_range", d.HitscanRange.ToString("0.#")));     // "사거리 {0}m"
                 sb.AppendLine(LocUtil.Get("ui.item.ammo", d.MaxAmmo));
-                sb.AppendLine(LocUtil.Get("ui.item.rpm", d.RoundsPerMinute.ToString("0")));
+                sb.AppendLine(SetLoc.F("ui.item.rps", "초당 {0}발", (d.RoundsPerMinute / 60f).ToString("0.#")));
             }
             else
             {
@@ -282,15 +295,10 @@ public class InventorySlotView : MonoBehaviour
                 sb.AppendLine();
             }
         }
-        else if (weaponSlot && d.Slot == EquipSlot.Weapon)
-        {
-            // 진화가 없어도 처치 수는 보여줌
-            sb.AppendLine(LocUtil.Get("ui.item.kills", en.GetKills(slot)));
-        }
 
         return sb.ToString().TrimEnd();
     }
 
     static string Progress(string text, bool met) =>
         met ? $"<color={MetColor}>✓ {text}</color>" : $"<color={DimColor}>{text}</color>";
-}
+}

@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943883
-    m_Localized: Tempo de espera {0} segundos
+    m_Localized: Tempo de recarga {0} segundos
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943884
@@ -706,7 +706,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
-    m_Localized: "Envenena o alvo por {d0} segundos, causando {v0}% da vida m\xE1xima
+    m_Localized: "Envenena o alvo por {d0} segundos, causando {v0}% da sa\xFAde m\xE1xima
       de dano por segundo por ac\xFAmulo. (M\xE1ximo de {s0} ac\xFAmulos)"
     m_Metadata:
       m_Items: []
@@ -986,13 +986,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "As teclas de voz (Chat \xB7 Aba de Voz) tamb\xE9m s\xE3o rotacionadas
-      juntas. Se a mesma tecla for pressionada, as teclas para as duas a\xE7\xF5es
-      ser\xE3o trocadas."
+    m_Localized: "As teclas de voz (Chat \xB7 Aba de Voz) s\xE3o rotacionadas simultaneamente.
+      Se a mesma tecla for pressionada, as teclas para as duas a\xE7\xF5es ser\xE3o
+      trocadas."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Mostrar mira
+    m_Localized: Mostrar ponto de mira
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1157,7 +1157,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366259
-    m_Localized: Tamanho da voz do jogo
+    m_Localized: Volume de voz do jogo
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366260
@@ -1612,9 +1612,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: "O dano causado quando o alvo n\xE3o est\xE1 olhando para voc\xEA
-      aumenta em 100%.\n\nAo usar esta habilidade, voc\xEA fica invis\xEDvel por
-      3 segundos."
+    m_Localized: "O dano causado aos alvos quando eles n\xE3o est\xE3o olhando para
+      voc\xEA aumenta em 100%.\n\nTorna-se invis\xEDvel por 3 segundos ao usar."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534698
@@ -1867,11 +1866,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340408
-    m_Localized: "Consuma a arma que voc\xEA tem em m\xE3os."
+    m_Localized: Consuma a arma que estiver segurando.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340411
-    m_Localized: "O Monstro possui um tempo de recarga de ataque de 3 segundos por
+    m_Localized: "O monstro possui um tempo de recarga de ataque de 3 segundos por
       alvo e causa {b:MonsterLowHpBonus:all}% de dano adicional a alvos com 30% ou
       menos de vida.\n\nDurante a dura\xE7\xE3o, o Poder de Ataque, a Velocidade
       de Ataque e a Velocidade de Movimento s\xE3o ligeiramente aumentados."
@@ -2020,7 +2019,7 @@ MonoBehaviour:
   - m_Id: 15224945322340449
     m_Localized: "Teleporta-se para tr\xE1s, deixando uma carta Coringa em sua localiza\xE7\xE3o
       original. Se pisada, a carta explode ap\xF3s um breve atraso, causando dano
-      de {dmg:BlastCoef+BlastFlat} e aplicando redu\xE7\xE3o de velocidade de {b:BlastSlowPct:all}%
+      de {dmg:BlastCoef+BlastFlat} e aplicando lentid\xE3o de {b:BlastSlowPct:all}%
       por 2 segundos."
     m_Metadata:
       m_Items: []
@@ -2137,9 +2136,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534668
-    m_Localized: "Selecione um jogador e aplique o efeito \"Maldi\xE7\xE3o\" nele
-      por 20 segundos, impedindo-o de se comunicar. Al\xE9m disso, ele receber\xE1
-      o efeito \"Selo\" por at\xE9 999 segundos enquanto estiver vivo."
+    m_Localized: "Selecione um jogador e aplique o efeito \"Maldi\xE7\xE3o\" por
+      20 segundos, impedindo-o de se comunicar. Al\xE9m disso, ele receber\xE1 o
+      efeito \"Selo\" por at\xE9 999 segundos enquanto estiver vivo."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534669
@@ -2155,7 +2154,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534672
-    m_Localized: Usa sua fofura mortal para reduzir o dano causado pelo alvo a 0%.
+    m_Localized: Usa sua fofura mortal para reduzir o dano causado pelo alvo em 50%
+      durante 8 segundos.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534673
@@ -2280,7 +2280,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534706
-    m_Localized: "Ap\xF3s designar um ponto \xE0 frente, suba bem alto no c\xE9u
+    m_Localized: "Ap\xF3s designar um local \xE0 sua frente, suba bem alto no c\xE9u
       e lance um <b>Terra<b> nesse local.\n\nRetorne ao local de lan\xE7amento ap\xF3s
       o uso."
     m_Metadata:
@@ -2320,9 +2320,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534717
-    m_Localized: "Ao usar uma habilidade, voc\xEA grita um idioma de drag\xE3o lend\xE1rio.\n\nSe
-      voc\xEA gritar 30 vezes, voc\xEA se torna um Drag\xE3o Lend\xE1rio.\n\nSe voc\xEA
-      sobreviver por 3 minutos, voc\xEA vence imediatamente."
+    m_Localized: "Ao usar uma habilidade, voc\xEA grita um pronunciamento da L\xEDngua
+      dos Drag\xF5es Lend\xE1rios.\n\nSe voc\xEA gritar 30 vezes, voc\xEA se torna
+      um Drag\xE3o Lend\xE1rio.\n\nSe voc\xEA sobreviver por 3 minutos, voc\xEA vence
+      imediatamente."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534718
@@ -2369,7 +2370,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340376
-    m_Localized: "Aproxime a mira por {b:AimTimeout} segundos e diminua sua velocidade
+    m_Localized: "Aproxime a mira por {b:AimTimeout} segundos e reduza sua velocidade
       de movimento.\n\nEm vez disso, o pr\xF3ximo proj\xE9til causa {b:AimBonusPct:all}%
       de dano adicional ao atingir o alvo e sempre acerta como um golpe cr\xEDtico."
     m_Metadata:
@@ -2404,10 +2405,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340415
-    m_Localized: "Uma sombra segue o Andarilho das Sombras.\n\nQuando n\xE3o est\xE1
-      em combate, ele carrega <b>Escurid\xE3o</b> por {b:DarkChargeTime:all} segundos.\n\nAo
-      atacar um inimigo, se <b>Escurid\xE3o</b> estiver carregada, ela cega a vis\xE3o
-      do alvo por {b:BlindTime:all} segundos."
+    m_Localized: "Uma sombra segue o Andarilho das Sombras.\n\nQuando n\xE3o estiver
+      em combate, carregue <b>Escurid\xE3o</b> ao longo de {b:DarkChargeTime:all}
+      segundos.\n\nAo atacar um inimigo, se <b>Escurid\xE3o</b> estiver carregada,
+      cegue o alvo por {b:BlindTime:all} segundos."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340423
@@ -2431,7 +2432,7 @@ MonoBehaviour:
   - m_Id: 15224945322340439
     m_Localized: "Durante {b:HasteDuration:all} segundos, o tempo de ataque base
       do Mestre de Armas \xE9 reduzido em {b:HasteIntervalPct:all}% e a velocidade
-      de comando \xE9 aumentada em 50%."
+      dos comandos \xE9 aumentada em 50%."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340447
@@ -2892,7 +2893,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776150
-    m_Localized: "Configura\xE7\xF5es do quarto (somente para o anfitri\xE3o)"
+    m_Localized: "Configura\xE7\xF5es da sala (somente para o anfitri\xE3o)"
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776151
@@ -3053,6 +3054,399 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15336411941679104
     m_Localized: "Ocultar c\xF3digo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805591465984
+    m_Localized: Carregar Escudo da Alma (Segurar)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020416
+    m_Localized: mercado negro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020417
+    m_Localized: '[{0}] {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020418
+    m_Localized: '{0} Compra'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020419
+    m_Localized: fechar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020420
+    m_Localized: "Ao selecionar um item, ele ser\xE1 exibido em detalhes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020421
+    m_Localized: "\xC9 proibido negociar durante o combate."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020422
+    m_Localized: estado morto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020423
+    m_Localized: "N\xE3o \xE9 poss\xEDvel comprar agora."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020424
+    m_Localized: "\xC9 muito longe."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020425
+    m_Localized: "N\xE3o \xE9 poss\xEDvel alterar durante a transforma\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020426
+    m_Localized: Escassez de alma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020427
+    m_Localized: armadura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020428
+    m_Localized: arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020429
+    m_Localized: "\u25C6 Almas Pertencentes {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020430
+    m_Localized: ({0} segundos)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020431
+    m_Localized: Poder de Ataque {0}% de dano adicional
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020432
+    m_Localized: '{0} Reduza o tempo de recarga restante em {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020433
+    m_Localized: '{0} Reduza o tempo de recarga restante em {1} segundos'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020434
+    m_Localized: Alma {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020435
+    m_Localized: Pedra Encantada {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020436
+    m_Localized: "Recuperar resist\xEAncia {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020437
+    m_Localized: "Recupera 0% da pot\xEAncia m\xE1xima"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020438
+    m_Localized: "Escudo de Regenera\xE7\xE3o Carga Instant\xE2nea"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020439
+    m_Localized: "Recupere {0} rodadas de muni\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020440
+    m_Localized: "Para voc\xEA mesmo {0} {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020441
+    m_Localized: Para o alvo {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020442
+    m_Localized: Escudo {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020443
+    m_Localized: "Escudo igual a {0}% da vida m\xE1xima"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020444
+    m_Localized: Todas as habilidades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020445
+    m_Localized: "Habilidade aleat\xF3ria"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020446
+    m_Localized: Habilidade Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020447
+    m_Localized: "Habilidades \xB7 Suprema"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020448
+    m_Localized: Final
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020449
+    m_Localized: "Aninhamento m\xE1ximo {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214720
+    m_Localized: Probabilidade de 0%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214721
+    m_Localized: Reutilizar {0} segundos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214722
+    m_Localized: '{0} Quando ouvido'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214723
+    m_Localized: "Instala\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214724
+    m_Localized: Auxiliar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214725
+    m_Localized: "Ao tirar uma foto de cabe\xE7a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214726
+    m_Localized: "Se voc\xEA sofrer danos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214727
+    m_Localized: Ao tratar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214728
+    m_Localized: "Se a sa\xFAde cair abaixo de {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214729
+    m_Localized: "Ao usar habilidades aleat\xF3rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214730
+    m_Localized: "No momento da ressurrei\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214731
+    m_Localized: Se o escudo quebrar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214732
+    m_Localized: Ao usar uma habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214733
+    m_Localized: Quando envolvido no tratamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214734
+    m_Localized: Ao usar a habilidade suprema
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214735
+    m_Localized: Ao golpear com uma arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214736
+    m_Localized: A cada {0} segundos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214737
+    m_Localized: Durante o combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214738
+    m_Localized: Quando o HP for {0}% ou menos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214739
+    m_Localized: "N\xE3o combatente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214740
+    m_Localized: Enquanto o escudo estiver ativo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214741
+    m_Localized: "\u25C7 Sem encantamentos especiais"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214742
+    m_Localized: "Caracter\xEDsticas intr\xEDnsecas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214743
+    m_Localized: "[{0}] Pegar \u2014 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214744
+    m_Localized: "[{0}] Desgaste \u2014 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214745
+    m_Localized: "Escudo {0} (at\xE9 ser quebrado)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214746
+    m_Localized: Escudo {0} ({1} segundos)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214747
+    m_Localized: "de p\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214748
+    m_Localized: "classifica\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214749
+    m_Localized: nome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214750
+    m_Localized: aula
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214751
+    m_Localized: altar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214752
+    m_Localized: Escolha uma arma para evoluir.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214753
+    m_Localized: "dano de tiro na cabe\xE7a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214754
+    m_Localized: "Dano reduzido recebido por tiros na cabe\xE7a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214755
+    m_Localized: "Escudo de Regenera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214756
+    m_Localized: Escudo da Alma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278020640768
+    m_Localized: "{0} segundos durante a digest\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389504
+    m_Localized: "Digest\xE3o completa \u2014 Pode comer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389505
+    m_Localized: Capaz de expelir o poder dos inimigos derrotados.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389506
+    m_Localized: Pode expelir {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389507
+    m_Localized: "Mortos-vivos \u2014 Ainda resistindo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389508
+    m_Localized: "\xDAltima luta desesperada {0} segundos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389509
+    m_Localized: usou tudo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389510
+    m_Localized: "Promo\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389511
+    m_Localized: Telefone {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389512
+    m_Localized: "Promo\xE7\xE3o dispon\xEDvel!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389513
+    m_Localized: Armas flutuantes {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389514
+    m_Localized: "Espa\xE7o para arma {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389515
+    m_Localized: "<b>Carregado de Escurid\xE3o</b> \u2014 O pr\xF3ximo ataque com
+      arma escurecer\xE1 o alvo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389516
+    m_Localized: "Escurid\xE3o {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389517
+    m_Localized: "{0} m\xE3os colocadas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389518
+    m_Localized: '{0} cartas dispostas'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389519
+    m_Localized: "Clonar {0} segundos \u2014 Explodir com a chave Suprema"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389520
+    m_Localized: "drag\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389521
+    m_Localized: peixe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389522
+    m_Localized: "Drag\xE3o Lend\xE1rio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389523
+    m_Localized: '{0} disparos por segundo'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389524
+    m_Localized: jogo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389525
+    m_Localized: equipe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389526
+    m_Localized: global
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389527
+    m_Localized: Assistindo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389528
+    m_Localized: "Digite a mensagem\u2026"
     m_Metadata:
       m_Items: []
   references:

@@ -157,9 +157,8 @@ public static class EnchantSummary
         foreach (var s in g.Stats)
         {
             if (sb.Length > 0) sb.Append(separator);
-            sb.Append(LocUtil.Get($"stat.{s.Stat}")).Append(' ')
-              .Append(StatText.Value(s.Stat, s.Type, s.Value));
+            sb.Append(StatText.Line(s.Stat, s.Type, s.Value));
         }
         return sb.ToString();
     }
-}
+}

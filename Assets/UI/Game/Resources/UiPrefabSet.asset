@@ -22,4 +22,10 @@ MonoBehaviour:
   Settings: {fileID: 3389524243337961089, guid: c3983ba2e0acdd940bf56aff6fefc558, type: 3}
   UseEscMenu: 1
   EscMenu: {fileID: 5896713368935124614, guid: 66a4b79f22924994b877772781f6d2ed, type: 3}
+  UseHud: 0
+  Hud: {fileID: 641460101956805658, guid: 5a6a4cca02349a84c8c4226652d1333b, type: 3}
+  ForceOverlay: 0
+  UsePanels: 0
+  Panels: {fileID: 6588223508283120128, guid: 18dcb4c471262344ab8f05592c17e2c2, type: 3}
   Font: {fileID: 11400000, guid: d6996bfddc8f9344b892c6bea04f98e7, type: 2}
+  DisplayFont: {fileID: 11400000, guid: d6996bfddc8f9344b892c6bea04f98e7, type: 2}

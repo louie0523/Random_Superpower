@@ -385,11 +385,11 @@ public class ChessAbility : TransformAbility
 
     public override string DescToken(string key, int rank) => key switch
     {
-        "pawn" => IsTransformed ? "승격함" : $"폰 {_pawns} / {PawnsNeeded}",
-        "ready" => Ready ? "프로모션 가능!" : null,
+        "pawn" => IsTransformed ? SetLoc.T("tok.chess.promoted", "승격함") : SetLoc.F("tok.chess.pawns", "폰 {0} / {1}", _pawns, PawnsNeeded),
+        "ready" => Ready ? SetLoc.T("tok.chess.ready", "프로모션 가능!") : null,
         "pawns" => _pawns.ToString(),                       // 숫자만 — "현재 폰 {x:pawns}개"
         "pawnsneed" => PawnsNeeded.ToString(),
         "pawnsleft" => Mathf.Max(0, PawnsNeeded - _pawns).ToString(),
         _ => null,
     };
-}
+}

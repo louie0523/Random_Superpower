@@ -88,12 +88,12 @@ public class RoomScreenView : MonoBehaviour
     public Button OpenFolderButton;
 
     [Header("색")]
-    public Color HostBadge = new(1f, 0.81f, 0.24f, 1f);
-    public Color ReadyBadge = new(0.4f, 0.84f, 0.6f, 1f);
-    public Color WaitBadge = new(0.92f, 0.92f, 0.94f, 1f);
-    public Color StartColor = new(1f, 0.81f, 0.24f, 1f);
-    public Color ReadyColor = new(0.4f, 0.84f, 0.6f, 1f);
-    public Color UnreadyColor = Color.white;
+    public Color HostBadge = new(1f, 0.831f, 0.278f, 1f);       // 노랑 (GameUiKit.Gold)
+    public Color ReadyBadge = new(0.373f, 0.827f, 0.541f, 1f);  // 초록 (Ok)
+    public Color WaitBadge = new(0.227f, 0.255f, 0.294f, 1f);   // 회색 (LineColor)
+    public Color StartColor = new(0.306f, 0.839f, 0.745f, 1f);  // 민트
+    public Color ReadyColor = new(0.373f, 0.827f, 0.541f, 1f);
+    public Color UnreadyColor = new(0.169f, 0.196f, 0.235f, 1f);
 
     void Awake()
     {

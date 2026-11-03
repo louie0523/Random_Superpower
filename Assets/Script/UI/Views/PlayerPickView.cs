@@ -19,9 +19,9 @@ public class PlayerPickView : MonoBehaviour
     public Button CancelButton;
 
     [Header("줄 색")]
-    public Color RowColor = Color.white;
-    public Color SelfColor = new(1f, 0.95f, 0.78f, 1f);
-    public Color DeadColor = new(0.85f, 0.85f, 0.87f, 1f);
+    public Color RowColor = new(0.169f, 0.196f, 0.235f, 1f);    // GameUiKit.Raised
+    public Color SelfColor = new(0.122f, 0.235f, 0.22f, 1f);    // MintDark
+    public Color DeadColor = new(0.1f, 0.11f, 0.13f, 1f);
 
     public struct Entry
     {
@@ -85,7 +85,13 @@ public class PlayerPickView : MonoBehaviour
             GameUiKit.Set(row.Label, e.Name);
             GameUiKit.Set(row.Sub, e.Dead ? TargetUtil.Text("ui.pick.dead", "(사망)")
                                   : e.Self ? TargetUtil.Text("ui.pick.self", "(나)").Trim() : "");
-            if (row.Face != null) row.Face.color = e.Dead ? DeadColor : e.Self ? SelfColor : RowColor;
+            if (row.Face != null)
+            {
+                row.Face.color = e.Dead ? DeadColor : e.Self ? SelfColor : RowColor;
+                var tc = GameUiKit.TextOn(row.Face.color);             // 줄 색에 맞춰 글자 색
+                if (row.Label != null) row.Label.color = tc;
+                if (row.Sub != null) row.Sub.color = new Color(tc.r, tc.g, tc.b, 0.7f);
+            }
             GameUiKit.Interact(row.Button, !e.Dead);
             GameUiKit.Interact(row.Action, !e.Dead);
         }

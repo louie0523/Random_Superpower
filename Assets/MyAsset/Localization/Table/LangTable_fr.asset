@@ -995,13 +995,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Les touches vocales (Chat \xB7 Onglet vocal) pivotent \xE9galement
-      ensemble. Si la m\xEAme touche est enfonc\xE9e, les touches des deux actions
-      sont invers\xE9es."
+    m_Localized: "Les touches vocales (Chat \xB7 Onglet vocal) alternent. Si la m\xEAme
+      touche est enfonc\xE9e, les touches des deux actions sont invers\xE9es."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: "Afficher le r\xE9ticule"
+    m_Localized: "Afficher le point de vis\xE9e"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
@@ -1167,7 +1166,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366259
-    m_Localized: taille de la voix du jeu
+    m_Localized: Volume sonore du jeu
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366260
@@ -1244,7 +1243,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366278
-    m_Localized: bordure rouge
+    m_Localized: couleur de bordure rouge
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366279
@@ -1872,10 +1871,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340415
-    m_Localized: "Une ombre suit le Marcheur de l'Ombre.\n\nHors combat, il charge
+    m_Localized: "Une ombre suit le Marcheur de l'Ombre.\n\nHors combat, chargez
       <b>T\xE9n\xE8bres</b> pendant {b:DarkChargeTime:all} secondes.\n\nLors d'une
-      attaque contre un ennemi, si <b>T\xE9n\xE8bres</b> est charg\xE9, il aveugle
-      la cible pendant {b:BlindTime:all} secondes."
+      attaque, si <b>T\xE9n\xE8bres</b> est charg\xE9, aveuglez la cible pendant
+      {b:BlindTime:all} secondes."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340416
@@ -2119,8 +2118,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534672
-    m_Localized: "Utilise une mignonnerie mortelle pour r\xE9duire les d\xE9g\xE2ts
-      inflig\xE9s par la cible \xE0 0 %."
+    m_Localized: "Utilise une mignonnerie mortelle pour r\xE9duire de 50 % les d\xE9g\xE2ts
+      inflig\xE9s par la cible pendant 8 secondes."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534674
@@ -2132,8 +2131,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534676
-    m_Localized: "Lorsqu'il est utilis\xE9, il t\xE9l\xE9porte un ennemi \xE0 port\xE9e
-      vers un emplacement al\xE9atoire !"
+    m_Localized: "Lorsqu'elle est utilis\xE9e, elle t\xE9l\xE9porte un ennemi \xE0
+      port\xE9e vers un emplacement al\xE9atoire !"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534677
@@ -2202,9 +2201,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: "Les d\xE9g\xE2ts inflig\xE9s lorsque la cible ne vous regarde pas
-      sont augment\xE9s de 100 %.\n\nLorsqu'elle est utilis\xE9e, vous devenez invisible
-      pendant 3 secondes."
+    m_Localized: "Les d\xE9g\xE2ts inflig\xE9s aux cibles qui ne vous regardent pas
+      sont augment\xE9s de 100 %.\n\nDevient invisible pendant 3 secondes apr\xE8s
+      utilisation."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534695
@@ -2363,10 +2362,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340390
     m_Localized: "Montez un cheval mort-vivant pendant {b:MountDuration} secondes.
-      Pendant la chevauch\xE9e, votre vitesse de d\xE9placement augmente de {b:MountSpeed}
-      et les d\xE9g\xE2ts subis sont r\xE9duits de {b:MountDamageReduce}%.\n\nR\xE9utilisez
-      cette capacit\xE9 pour effectuer une charge rapide en avant, infligeant {dmg:ChargeCoef}
-      points de d\xE9g\xE2ts."
+      Pendant la dur\xE9e de la chevauch\xE9e, votre vitesse de d\xE9placement augmente
+      de {b:MountSpeed} et les d\xE9g\xE2ts subis sont r\xE9duits de {b:MountDamageReduce}%.\n\nR\xE9utilisez
+      cette capacit\xE9 pendant la chevauch\xE9e pour effectuer une charge rapide
+      en avant, infligeant {dmg:ChargeCoef} points de d\xE9g\xE2ts."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340395
@@ -2387,9 +2386,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340420
-    m_Localized: "\xC9changez votre position avec celle de votre ombre pour vous
-      t\xE9l\xE9porter \xE0 l'endroit que vous regardez.\n\nVous pouvez vous d\xE9placer
-      jusqu'\xE0 {b:MoveRange:all}m."
+    m_Localized: "\xC9changez votre position avec votre ombre pour vous t\xE9l\xE9porter
+      \xE0 l'endroit que vous regardez.\n\nVous pouvez vous d\xE9placer jusqu'\xE0
+      {b:MoveRange:all}m."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340421
@@ -2426,7 +2425,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340437
-    m_Localized: "En tant que Ma\xEEtre des armes, les armes flottantes se pr\xE9cipitent
+    m_Localized: "En tant que Ma\xEEtre des Armes, les armes flottantes se pr\xE9cipitent
       dans la direction o\xF9 elles sont orient\xE9es, infligeant des d\xE9g\xE2ts
       \xE9gaux au nombre d'armes X {dmg:CommandCoef}."
     m_Metadata:
@@ -2434,7 +2433,7 @@ MonoBehaviour:
   - m_Id: 15224945322340439
     m_Localized: "Pendant {b:HasteDuration:all} secondes, le temps d'attaque de base
       du Ma\xEEtre d'armes est r\xE9duit de {b:HasteIntervalPct:all}% et la vitesse
-      de commande est augment\xE9e de 50%."
+      des commandes est augment\xE9e de 50%."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340442
@@ -2507,9 +2506,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534706
-    m_Localized: "Apr\xE8s avoir d\xE9sign\xE9 un point devant vous, montez haut
-      dans le ciel et lancez un <b>Terre<b> \xE0 cet endroit.\n\nRetournez \xE0 votre
-      point de d\xE9part apr\xE8s utilisation."
+    m_Localized: "Apr\xE8s avoir d\xE9sign\xE9 un emplacement devant vous, montez
+      haut dans le ciel et lancez un <b>Terre<b> \xE0 cet endroit.\n\nRetournez \xE0
+      l'emplacement de lancement apr\xE8s utilisation."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534715
@@ -2518,7 +2517,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945326534717
     m_Localized: "Lorsque vous utilisez une comp\xE9tence, vous criez un cri en langue
-      draconique l\xE9gendaire.\n\nSi vous criez 30 fois, vous devenez un dragon
+      draconique l\xE9gendaire.\n\nSi vous le criez 30 fois, vous devenez un dragon
       l\xE9gendaire.\n\nSi vous survivez pendant 3 minutes, vous gagnez imm\xE9diatement."
     m_Metadata:
       m_Items: []
@@ -2661,7 +2660,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15324686622240768
-    m_Localized: "Autel activ\xE9"
+    m_Localized: "autel activ\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 15328367992221696
@@ -2741,7 +2740,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581842
-    m_Localized: "\xC2me de d\xE9part"
+    m_Localized: "\xC2me fondatrice"
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581843
@@ -2786,7 +2785,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581853
-    m_Localized: sous-autel requis
+    m_Localized: Sous-autel requis
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581854
@@ -2839,7 +2838,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776128
-    m_Localized: "Informations sur la chambre de r\xE9ception..."
+    m_Localized: "R\xE9ception des informations de la chambre..."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776129
@@ -3035,7 +3034,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776177
-    m_Localized: "La sc\xE8ne de la carte n'est pas disponible dans les param\xE8tres
+    m_Localized: "La sc\xE8ne de carte n'est pas disponible dans les param\xE8tres
       de compilation."
     m_Metadata:
       m_Items: []
@@ -3089,6 +3088,399 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15336411941679104
     m_Localized: Masquer le code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805591465984
+    m_Localized: "Charge de bouclier d'\xE2me (Maintenir)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020416
+    m_Localized: "march\xE9 noir"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020417
+    m_Localized: '[{0}] {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020418
+    m_Localized: '{0} Achat'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020419
+    m_Localized: fermer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020420
+    m_Localized: "Si vous s\xE9lectionnez un \xE9l\xE9ment, il s'affiche en d\xE9tail."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020421
+    m_Localized: Aucun commerce pendant le combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020422
+    m_Localized: "\xE9tat mort"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020423
+    m_Localized: Impossible d'acheter maintenant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020424
+    m_Localized: C'est trop loin.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020425
+    m_Localized: Impossible de modifier pendant la transformation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020426
+    m_Localized: "p\xE9nurie d'\xE2me"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020427
+    m_Localized: armure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020428
+    m_Localized: arme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020429
+    m_Localized: "\u25C6 \xC2mes poss\xE9d\xE9es {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020430
+    m_Localized: ({0} secondes)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020431
+    m_Localized: "Puissance d'attaque {0}% d\xE9g\xE2ts suppl\xE9mentaires"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020432
+    m_Localized: "{0} R\xE9duisez le temps de recharge restant de {1}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020433
+    m_Localized: "{0} R\xE9duisez le temps de recharge restant de {1} secondes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020434
+    m_Localized: "\xC2me {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020435
+    m_Localized: Pierre d'enchantement {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020436
+    m_Localized: "R\xE9cup\xE9rer de l'endurance {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020437
+    m_Localized: "R\xE9cup\xE8re {0}% des PV max"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020438
+    m_Localized: "Bouclier de r\xE9g\xE9n\xE9ration \xE0 charge instantan\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020439
+    m_Localized: "R\xE9cup\xE9rez {0} munitions"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020440
+    m_Localized: "\xC0 vous-m\xEAme {0} {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020441
+    m_Localized: Vers la cible {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020442
+    m_Localized: Bouclier {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020443
+    m_Localized: "Bouclier \xE9gal \xE0 {0}% des points de vie maximum"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020444
+    m_Localized: "Toutes les comp\xE9tences"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020445
+    m_Localized: "Capacit\xE9 al\xE9atoire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020446
+    m_Localized: Niveau normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020447
+    m_Localized: "Comp\xE9tences \xB7 Ultime"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020448
+    m_Localized: Ultime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020449
+    m_Localized: Imbrication maximale {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214720
+    m_Localized: "Probabilit\xE9 de {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214721
+    m_Localized: "R\xE9utiliser {0} secondes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214722
+    m_Localized: '{0} Quand on entend'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214723
+    m_Localized: Installation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214724
+    m_Localized: Assister
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214725
+    m_Localized: "Lors d'un tir \xE0 la t\xEAte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214726
+    m_Localized: Si vous subissez des dommages
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214727
+    m_Localized: Lors du traitement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214728
+    m_Localized: "Si la sant\xE9 descend en dessous de {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214729
+    m_Localized: "Lors de l'utilisation de capacit\xE9s al\xE9atoires"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214730
+    m_Localized: "Au moment de la r\xE9surrection"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214731
+    m_Localized: Si le bouclier se brise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214732
+    m_Localized: "Lors de l'utilisation d'une comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214733
+    m_Localized: "Lorsqu'il est impliqu\xE9 dans le traitement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214734
+    m_Localized: "Lors de l'utilisation de la capacit\xE9 ultime"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214735
+    m_Localized: Lorsqu'on frappe avec une arme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214736
+    m_Localized: Toutes les {0} secondes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214737
+    m_Localized: Au cours du combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214738
+    m_Localized: Lorsque les HP sont de {0}% ou moins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214739
+    m_Localized: Non-combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214740
+    m_Localized: Lorsque le bouclier est actif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214741
+    m_Localized: "\u25C7 Aucun enchantement sp\xE9cial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214742
+    m_Localized: "Caract\xE9ristiques intrins\xE8ques"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214743
+    m_Localized: "[{0}] Ramasser \u2014 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214744
+    m_Localized: "[{0}] Usure \u2014 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214745
+    m_Localized: "Bouclier {0} (jusqu'\xE0 ce qu'il soit bris\xE9)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214746
+    m_Localized: Bouclier {0} ({1} secondes)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214747
+    m_Localized: debout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214748
+    m_Localized: classement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214749
+    m_Localized: nom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214750
+    m_Localized: classe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214751
+    m_Localized: autel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214752
+    m_Localized: "Choisissez une arme \xE0 faire \xE9voluer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214753
+    m_Localized: "d\xE9g\xE2ts de tir \xE0 la t\xEAte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214754
+    m_Localized: "D\xE9g\xE2ts subis par tir \xE0 la t\xEAte r\xE9duits"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214755
+    m_Localized: "Bouclier de r\xE9g\xE9n\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214756
+    m_Localized: "Bouclier d'\xE2me"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278020640768
+    m_Localized: '{0} secondes pendant la digestion'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389504
+    m_Localized: "Digestion termin\xE9e \u2014 Peut manger"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389505
+    m_Localized: Peut cracher la puissance des ennemis vaincus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389506
+    m_Localized: Peut cracher {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389507
+    m_Localized: "Morts-vivants \u2014 Ils r\xE9sistent encore"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389508
+    m_Localized: "Dernier combat d\xE9sesp\xE9r\xE9 {0} secondes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389509
+    m_Localized: "Tout a \xE9t\xE9 utilis\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389510
+    m_Localized: Promotion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389511
+    m_Localized: "T\xE9l\xE9phone {0} / {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389512
+    m_Localized: Promotion disponible !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389513
+    m_Localized: Armes flottantes {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389514
+    m_Localized: Emplacement d'arme {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389515
+    m_Localized: "<b>T\xE9n\xE8bres charg\xE9es</b> \u2014 La prochaine attaque d'arme
+      obscurcira la cible"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389516
+    m_Localized: "Obscurit\xE9 {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389517
+    m_Localized: "{0} mains plac\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389518
+    m_Localized: "{0} cartes dispos\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389519
+    m_Localized: "Cloner {0} secondes \u2014 Exploser avec la cl\xE9 ultime"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389520
+    m_Localized: dragon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389521
+    m_Localized: poisson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389522
+    m_Localized: "Dragon l\xE9gendaire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389523
+    m_Localized: '{0} tirs par seconde'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389524
+    m_Localized: jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389525
+    m_Localized: "\xE9quipe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389526
+    m_Localized: mondial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389527
+    m_Localized: Regarder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389528
+    m_Localized: "Saisissez votre message\u2026"
     m_Metadata:
       m_Items: []
   references:

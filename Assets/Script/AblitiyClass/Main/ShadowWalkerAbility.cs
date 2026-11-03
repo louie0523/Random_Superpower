@@ -546,9 +546,9 @@ public class ShadowWalkerAbility : AbilityBehaviour
         {
             case "dark":
                 float r = Ctx != null ? Ctx.GetChargeRatio(DarkChargeSlot) : 0f;
-                return r >= 0.999f ? "<b>암흑 충전됨</b> — 다음 무기 공격이 대상을 암전" : $"암흑 {Mathf.FloorToInt(r * 100f)}%";
+                return r >= 0.999f ? SetLoc.T("tok.shadow.charged", "<b>암흑 충전됨</b> — 다음 무기 공격이 대상을 암전") : SetLoc.F("tok.shadow.dark", "암흑 {0}%", Mathf.FloorToInt(r * 100f));
             case "hands":
-                return _hands.Count > 0 ? $"놓인 손 {_hands.Count}개" : null;
+                return _hands.Count > 0 ? SetLoc.F("tok.shadow.hands", "놓인 손 {0}개", _hands.Count) : null;
         }
         return null;
     }
@@ -582,4 +582,4 @@ public class ShadowWalkerAbility : AbilityBehaviour
 
     public override IEnumerable<(string value, string label)> DevComplete(string[] a, int index) =>
         index == 0 ? new[] { ("dark", "암흑 충전"), ("hands", "놓인 손 지우기"), ("zone", "완전한 암흑") } : null;
-}
+}

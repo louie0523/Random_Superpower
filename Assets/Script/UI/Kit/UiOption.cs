@@ -11,8 +11,10 @@ public class UiOption : MonoBehaviour
     public TMP_Text Label;
     [Tooltip("체크 표시 (없으면 면 색으로만)")]
     public Image Check;
-    public Color OnFace = new(1f, 0.81f, 0.24f, 1f);
-    public Color OffFace = Color.white;
+    public Color OnFace = new(0.306f, 0.839f, 0.745f, 1f);      // 민트 (GameUiKit.Mint)
+    public Color OffFace = new(0.169f, 0.196f, 0.235f, 1f);     // GameUiKit.Raised
+    [Tooltip("켜고 끌 때 글자 색을 면에 맞춰 바꿈 (밝은 면 = 검정 글자)")]
+    public bool AutoTextColor = true;
 
     public bool IsOn { get; private set; }
 
@@ -20,6 +22,7 @@ public class UiOption : MonoBehaviour
     {
         IsOn = on;
         if (Face != null) Face.color = on ? OnFace : OffFace;
+        if (AutoTextColor && Label != null && Face != null) Label.color = GameUiKit.TextOn(Face.color);
         if (Check != null && Check.enabled != on) Check.enabled = on;
     }
 

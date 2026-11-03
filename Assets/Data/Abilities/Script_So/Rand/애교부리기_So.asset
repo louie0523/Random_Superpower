@@ -15,6 +15,6 @@ MonoBehaviour:
   CharmSkill: 0
   Range: 15
   AimAngle: 20
-  WeakenPercent: 100
-  Duration: 9999
+  WeakenPercent: 50
+  Duration: 8
   CharmFx: {fileID: 0}

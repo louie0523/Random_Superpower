@@ -86,9 +86,9 @@ public class UndeadWillAbility : AbilityBehaviour
         if (key != "undead") return null;
         return _phase switch
         {
-            Phase.Waiting => "언데드 — 아직 버팀",
-            Phase.LastStand => $"최후의 발악 {Mathf.CeilToInt(_endAt - Now)}초",
-            _ => "다 써 버림",
+            Phase.Waiting => SetLoc.T("tok.undead.waiting", "언데드 — 아직 버팀"),
+            Phase.LastStand => SetLoc.F("tok.undead.last_stand", "최후의 발악 {0}초", Mathf.CeilToInt(_endAt - Now)),
+            _ => SetLoc.T("tok.undead.spent", "다 써 버림"),
         };
     }
 

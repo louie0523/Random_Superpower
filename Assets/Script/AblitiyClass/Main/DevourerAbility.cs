@@ -12,6 +12,8 @@ public class DevourSpecial
     public EquipmentData Weapon;
     public string Name = "특수 패시브";
     [TextArea(2, 8)] public string Description;
+    [HideInInspector] public string NameKey;           // '능력 → 시트'가 채움 — 번역
+    [HideInInspector] public string DescriptionKey;
     [Tooltip("영구 추가 능력치")]
     public AlterStat[] Stats;
     [Tooltip("겉모습 변화 (선택)")]
@@ -204,7 +206,7 @@ public class DevourerAbility : AbilityBehaviour
     }
 
     private State _s;
-    private string MemKey => $"devourer.{Data.Id}";
+    private string MemKey => $"tok.devourer.{Data.Id}";
 
     private PlayerHealth _health;
     private PlayerEquipment _equip;
@@ -926,7 +928,9 @@ public class DevourerAbility : AbilityBehaviour
         switch (key)
         {
             case "digest":
-                return Digesting ? $"소화 중 {Mathf.CeilToInt(_s.DigestEnd - Now)}초" : "소화 완료 — 먹을 수 있음";
+                return Digesting
+                    ? SetLoc.F("tok.devourer.digesting", "소화 중 {0}초", Mathf.CeilToInt(_s.DigestEnd - Now))
+                    : SetLoc.T("tok.devourer.digest_done", "소화 완료 — 먹을 수 있음");
             case "eaten":
                 return _s.Eaten.ToString();
             case "absorbed":
@@ -935,7 +939,9 @@ public class DevourerAbility : AbilityBehaviour
                 return SpecialsLine();
             case "spit":
                 if (_s.Spit == null || Now > _s.Spit.Expire) return null;
-                return _s.Spit.FromKill ? "처치한 적의 힘을 뱉을 수 있음" : $"{_s.Spit.Label}을(를) 뱉을 수 있음";
+                return _s.Spit.FromKill
+                    ? SetLoc.T("tok.devourer.spit_kill", "처치한 적의 힘을 뱉을 수 있음")
+                    : SetLoc.F("tok.devourer.spit_weapon", "{0}을(를) 뱉을 수 있음", _s.Spit.Label);
         }
         return null;
     }
@@ -951,8 +957,7 @@ public class DevourerAbility : AbilityBehaviour
             float v = ratio ? kv.Value * 100f : kv.Value;
             bool pct = ratio || type == ModType.Percent;
             if (sb.Length > 0) sb.Append(", ");
-            sb.Append(LocUtil.Get($"stat.{stat}")).Append(' ').Append(v > 0f ? "+" : "")
-              .Append(v.ToString("0.#")).Append(pct ? "%" : "");
+            sb.Append(StatText.Styled(stat, StatText.Name(stat) + " " + (v > 0f ? "+" : "") + v.ToString("0.#") + (pct ? "%" : "")));
         }
         return sb.ToString();
     }
@@ -965,9 +970,9 @@ public class DevourerAbility : AbilityBehaviour
         {
             if (i >= Specials.Length || Specials[i] == null) continue;
             if (sb.Length > 0) sb.Append('\n');
-            sb.Append("<b>").Append(LocUtil.Resolve(Specials[i].Name)).Append("</b>");
+            sb.Append("<b>").Append(LocUtil.Pick(Specials[i].NameKey, Specials[i].Name)).Append("</b>");
             if (!string.IsNullOrWhiteSpace(Specials[i].Description))
-                sb.Append(" — ").Append(LocUtil.Resolve(Specials[i].Description));
+                sb.Append(" — ").Append(LocUtil.Pick(Specials[i].DescriptionKey, Specials[i].Description));
         }
         return sb.ToString();
     }
@@ -1173,4 +1178,4 @@ public class DevourerAbility : AbilityBehaviour
         }
         return null;
     }
-}
+}

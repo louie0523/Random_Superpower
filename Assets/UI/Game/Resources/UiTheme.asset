@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dee77baa74b46b548a1af6f410bae4d8, type: 3}
+  m_Name: UiTheme
+  m_EditorClassIdentifier: Assembly-CSharp::UiTheme
+  Background: {r: 0.2, g: 0.22745098, b: 0.27058825, a: 1}
+  Panel: {r: 0.23921569, g: 0.27058825, b: 0.32156864, a: 0.97}
+  Panel2: {r: 0.2784314, g: 0.3137255, b: 0.3764706, a: 1}
+  Raised: {r: 0.32156864, g: 0.36078432, b: 0.42745098, a: 1}
+  Field: {r: 0.16470589, g: 0.1882353, b: 0.22352941, a: 1}
+  Line: {r: 0.41568628, g: 0.45490196, b: 0.5254902, a: 1}
+  Backdrop: {r: 0.019607844, g: 0.02745098, b: 0.039215688, a: 0.6}
+  Text: {r: 0.96862745, g: 0.9647059, b: 0.9490196, a: 1}
+  TextDim: {r: 0.7647059, g: 0.7882353, b: 0.8235294, a: 1}
+  TextOnLight: {r: 0.050980393, g: 0.05882353, b: 0.07058824, a: 1}
+  TextOnDark: {r: 0.96862745, g: 0.9647059, b: 0.9490196, a: 1}
+  LightFaceThreshold: 0.4
+  Accent: {r: 0.30588236, g: 0.8392157, b: 0.74509805, a: 1}
+  AccentDark: {r: 0.16078432, g: 0.32941177, b: 0.30980393, a: 1}
+  Gold: {r: 1, g: 0.83137256, b: 0.2784314, a: 1}
+  Danger: {r: 1, g: 0.3019608, b: 0.36862746, a: 1}
+  Ok: {r: 0.37254903, g: 0.827451, b: 0.5411765, a: 1}
+  Info: {r: 0.35686275, g: 0.78431374, b: 1, a: 1}
+  StickerRim: {r: 0.95686275, g: 0.9529412, b: 0.93333334, a: 1}
+  HudPanel: {r: 0.07058824, g: 0.078431375, b: 0.101960786, a: 0.62}
+  ShieldRegen: {r: 0.9607843, g: 0.96862745, b: 1, a: 0.95}
+  ShieldSoul: {r: 0.54901963, g: 0.81960785, b: 1, a: 0.95}
+  ShieldTemp: {r: 0.32941177, g: 0.5803922, b: 1, a: 0.95}

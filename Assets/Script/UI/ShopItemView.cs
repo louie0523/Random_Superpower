@@ -138,5 +138,5 @@ public class ShopItemView : MonoBehaviour
     }
 
     static string FormatStat(ShopItemData d, int level) =>
-        $"{LocUtil.Get($"stat.{d.Stat}")} {StatText.Value(d.Stat, d.ModType, d.GetValue(level))}";
+        StatText.Line(d.Stat, d.ModType, d.GetValue(level));
 }

@@ -11,6 +11,8 @@ public class StatusIconView : MonoBehaviour
     [SerializeField] private TMP_Text timeText;
     [Tooltip("중독 중첩 수 (2 이상일 때만)")]
     [SerializeField] private TMP_Text stackText;
+    [Tooltip("아이콘 그림이 없을 때 대신 보일 이름 (앞 두 글자) — 없어도 됨")]
+    [SerializeField] private TMP_Text nameText;
 
     private int _shownSec = -1;
     private int _shownStacks = -1;
@@ -21,6 +23,16 @@ public class StatusIconView : MonoBehaviour
         icon.sprite = sprite;
         icon.color = color;
         icon.enabled = sprite != null;
+    }
+
+    /// <summary>그림이 없을 때 보일 이름 — 앞 두 글자</summary>
+    public void SetName(string name)
+    {
+        if (nameText == null) return;
+        name = name ?? "";
+        nameText.text = name.Length > 2 ? name.Substring(0, 2) : name;
+        if (icon != null) nameText.color = icon.color;      // 상태이상 색
+        nameText.gameObject.SetActive(icon == null || !icon.enabled);
     }
 
     public void Set(float remain, float ratio, int stacks)

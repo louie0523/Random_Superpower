@@ -183,7 +183,7 @@ public class ItemTrait
         {
             case TraitEffect.StatBuff:
                 {
-                    string s = $"{LocUtil.Get($"stat.{Stat}")} {StatText.Value(Stat, Mod, Value)}";
+                    string s = StatText.Line(Stat, Mod, Value);
                     if (Duration > 0f && !IsWhile) s += dur;
                     if (MaxStacks > 1) s += " · " + SetLoc.F("trait.stacks", "최대 {0}중첩", MaxStacks);
                     return s;

@@ -31,7 +31,7 @@ public class BlackMarketWindow : MonoBehaviour
     }
     readonly List<Row> _rows = new();
 
-    static readonly string[] GradeHex = { "#5a5a66", "#2f7fe0", "#9a4fe0", "#e0a020" };
+    static readonly string[] GradeHex = { "#A9B0BA", "#5BC8FF", "#C08BFF", "#FFD447" };   // 어두운 판 위에서 잘 보이게
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void AutoCreate()
@@ -108,7 +108,7 @@ public class BlackMarketWindow : MonoBehaviour
         var win = K.Window("Window", screen, 1180f, 740f, out var content);
         _title = K.Header(content, font, "암시장");
 
-        _soul = K.Text("Soul", content, font, 24f, K.Ink, TextAlignmentOptions.MidlineLeft, true);
+        _soul = K.Text("Soul", content, font, 24f, K.Gold, TextAlignmentOptions.MidlineLeft, true);
         K.Size(_soul, -1f, 32f);
 
         // 본문 — 왼쪽 목록 · 오른쪽 자세히
@@ -127,7 +127,7 @@ public class BlackMarketWindow : MonoBehaviour
 
         var detailHost = K.Rect("DetailHost", body);
         K.Size(detailHost, -1f, -1f, 1f, 1f);
-        var face = K.Sticker(detailHost, K.Soft, 3f, 4f);
+        var face = K.Sticker(detailHost, K.Field, 0f, 0f);
         _detail = K.Text("Detail", face.transform, font, 20f, K.Ink, TextAlignmentOptions.TopLeft);
         _detail.textWrappingMode = TextWrappingModes.Normal;
         _detail.overflowMode = TextOverflowModes.Overflow;
@@ -138,7 +138,7 @@ public class BlackMarketWindow : MonoBehaviour
         var bottom = K.Row("Bottom", content, 56f, 12f);
         _msg = K.Text("Msg", bottom.transform, font, 22f, K.Muted, TextAlignmentOptions.MidlineLeft);
         K.Size(_msg, -1f, -1f, 1f);
-        var close = K.Btn("Close", bottom.transform, font, SetLoc.T("market.close", "닫기"), K.Yellow, 22f, out var ct);
+        var close = K.Btn("Close", bottom.transform, font, SetLoc.T("market.close", "닫기"), K.Raised, 22f, out var ct);
         K.Size(close, 160f);
         SetLocText.Ensure(ct, "market.close");
         close.onClick.AddListener(Hide);
@@ -191,7 +191,7 @@ public class BlackMarketWindow : MonoBehaviour
     void ShowMsg(string s, bool good)
     {
         if (_msg == null) return;
-        _msg.color = good ? new Color(0.2f, 0.6f, 0.3f) : K.Red;
+        _msg.color = good ? K.Ok : K.Red;
         K.Set(_msg, s ?? "");
         _msgUntil = Time.time + 3f;
     }
@@ -230,7 +230,7 @@ public class BlackMarketWindow : MonoBehaviour
             K.Set(r.V.Sub, KindText(d));
             K.Set(r.V.ActionLabel, $"◆ {_market.PriceOf(r.E)}");
             K.Interact(r.V.Action, _market.CanBuy(r.E, out _));
-            r.V.Face.color = r.E == _selected ? K.CheckOn : Color.white;
+            r.V.Face.color = r.E == _selected ? K.CheckOn : K.Raised;
         }
 
         if (_msgUntil > 0f && Time.time > _msgUntil) { _msgUntil = 0f; K.Set(_msg, ""); }
@@ -247,7 +247,7 @@ public class BlackMarketWindow : MonoBehaviour
         if (_detail == null) return;
         if (_selected == null || _selected.Item == null)
         {
-            K.Set(_detail, $"<color=#8A8A8A>{SetLoc.T("market.detail.empty", "물건을 고르면 자세히 보여 줌")}</color>");
+            K.Set(_detail, $"<color=#A9B0BA>{SetLoc.T("market.detail.empty", "물건을 고르면 자세히 보여 줌")}</color>");
             return;
         }
         K.Set(_detail, Describe(_selected.Item, _selected.Item.IsArmorPiece ? _selected.Enchant : null));
@@ -258,14 +258,14 @@ public class BlackMarketWindow : MonoBehaviour
     {
         var sb = new StringBuilder();
         sb.Append("<size=120%><b>").Append(d.GetName()).AppendLine("</b></size>");
-        sb.Append("<color=#8A8A8A>").Append(LocUtil.Get($"ui.item.grade.{d.Grade}")).Append(" · ").Append(KindText(d)).AppendLine("</color>");
+        sb.Append("<color=#A9B0BA>").Append(LocUtil.Get($"ui.item.grade.{d.Grade}")).Append(" · ").Append(KindText(d)).AppendLine("</color>");
         sb.AppendLine();
 
         if (!Mathf.Approximately(d.MainStatValue, 0f) && EquipmentData.MainStatOf(d.Slot, out var ms, out var mm))
-            sb.AppendLine($"<b>{LocUtil.Get($"stat.{ms}")}  {StatText.Value(ms, mm, d.MainStatValue)}</b>");
+            sb.AppendLine("<b>" + StatText.Line(ms, mm, d.MainStatValue, "  ") + "</b>");
         if (d.BaseStats != null)
             foreach (var s in d.BaseStats)
-                sb.AppendLine($"{LocUtil.Get($"stat.{s.Stat}")}  {StatText.Value(s.Stat, s.Type, s.Value)}");
+                sb.AppendLine(StatText.Line(s.Stat, s.Type, s.Value, "  "));
 
         string desc = LocUtil.GetOr($"{Prefix(d)}.{d.Id}.desc", LocUtil.Resolve(d.Description));
         if (!string.IsNullOrWhiteSpace(desc) && !desc.StartsWith("#")) { sb.AppendLine(); sb.AppendLine(desc); }
@@ -281,7 +281,7 @@ public class BlackMarketWindow : MonoBehaviour
         {
             sb.AppendLine();
             if (ench != null) sb.AppendLine(ench.Describe());
-            else sb.Append("<color=#8A8A8A>").Append(SetLoc.T("ui.item.armor_enchant_empty", "◇ 특수 인챈트 없음")).AppendLine("</color>");
+            else sb.Append("<color=#A9B0BA>").Append(SetLoc.T("ui.item.armor_enchant_empty", "◇ 특수 인챈트 없음")).AppendLine("</color>");
         }
         return sb.ToString().TrimEnd();
     }

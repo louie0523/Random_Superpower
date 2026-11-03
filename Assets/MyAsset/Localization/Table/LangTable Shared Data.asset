@@ -1755,6 +1755,382 @@ MonoBehaviour:
     m_Key: lobby.hide_code
     m_Metadata:
       m_Items: []
+  - m_Id: 16007805591465984
+    m_Key: set.key.ShieldCharge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020416
+    m_Key: market.black.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020417
+    m_Key: market.black.prompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020418
+    m_Key: market.bought
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020419
+    m_Key: market.close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020420
+    m_Key: market.detail.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020421
+    m_Key: market.reason.combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020422
+    m_Key: market.reason.dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020423
+    m_Key: market.reason.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020424
+    m_Key: market.reason.far
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020425
+    m_Key: market.reason.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020426
+    m_Key: market.reason.soul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020427
+    m_Key: market.section.armor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020428
+    m_Key: market.section.weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020429
+    m_Key: market.soul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020430
+    m_Key: trait.dur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020431
+    m_Key: trait.eff.BonusDamage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020432
+    m_Key: trait.eff.CooldownPercent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020433
+    m_Key: trait.eff.CooldownSeconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020434
+    m_Key: trait.eff.GainSoul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020435
+    m_Key: trait.eff.GainStones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020436
+    m_Key: trait.eff.Heal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020437
+    m_Key: trait.eff.HealMaxHp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020438
+    m_Key: trait.eff.RefillShield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020439
+    m_Key: trait.eff.RefundAmmo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020440
+    m_Key: trait.eff.StatusToSelf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020441
+    m_Key: trait.eff.StatusToTarget
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020442
+    m_Key: trait.eff.TempShield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020443
+    m_Key: trait.eff.TempShieldMaxHp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020444
+    m_Key: trait.slots.All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020445
+    m_Key: trait.slots.Random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020446
+    m_Key: trait.slots.Skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020447
+    m_Key: trait.slots.SkillsAndUlt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020448
+    m_Key: trait.slots.Ultimate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805625020449
+    m_Key: trait.stacks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214720
+    m_Key: trait.tail.chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214721
+    m_Key: trait.tail.cooldown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214722
+    m_Key: trait.tail.weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214723
+    m_Key: trait.trig.Always
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214724
+    m_Key: trait.trig.OnAssist
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214725
+    m_Key: trait.trig.OnHeadshot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214726
+    m_Key: trait.trig.OnHitTaken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214727
+    m_Key: trait.trig.OnKill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214728
+    m_Key: trait.trig.OnLowHealth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214729
+    m_Key: trait.trig.OnRandomUse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214730
+    m_Key: trait.trig.OnRespawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214731
+    m_Key: trait.trig.OnShieldBreak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214732
+    m_Key: trait.trig.OnSkillUse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214733
+    m_Key: trait.trig.OnTakedown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214734
+    m_Key: trait.trig.OnUltimateUse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214735
+    m_Key: trait.trig.OnWeaponHit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214736
+    m_Key: trait.trig.Periodic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214737
+    m_Key: trait.trig.WhileInCombat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214738
+    m_Key: trait.trig.WhileLowHealth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214739
+    m_Key: trait.trig.WhileOutOfCombat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214740
+    m_Key: trait.trig.WhileShielded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214741
+    m_Key: ui.item.armor_enchant_empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214742
+    m_Key: ui.item.traits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214743
+    m_Key: ui.pickup.take
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214744
+    m_Key: ui.pickup.wear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214745
+    m_Key: ui.shop.shield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214746
+    m_Key: ui.shop.shield_timed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214747
+    m_Key: ui.score.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214748
+    m_Key: ui.score.rank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214749
+    m_Key: ui.score.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214750
+    m_Key: ui.score.class
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214751
+    m_Key: ui.score.altar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214752
+    m_Key: ui.inventory.upgrade_choose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278020640768
+    m_Key: tok.devourer.digesting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389504
+    m_Key: tok.devourer.digest_done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389505
+    m_Key: tok.devourer.spit_kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389506
+    m_Key: tok.devourer.spit_weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389507
+    m_Key: tok.undead.waiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389508
+    m_Key: tok.undead.last_stand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389509
+    m_Key: tok.undead.spent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389510
+    m_Key: tok.chess.promoted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389511
+    m_Key: tok.chess.pawns
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389512
+    m_Key: tok.chess.ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389513
+    m_Key: tok.weaponmaster.orbit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389514
+    m_Key: tok.weaponmaster.slots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389515
+    m_Key: tok.shadow.charged
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389516
+    m_Key: tok.shadow.dark
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389517
+    m_Key: tok.shadow.hands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389518
+    m_Key: tok.joker.cards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389519
+    m_Key: tok.joker.clone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389520
+    m_Key: tok.fish.dragon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389521
+    m_Key: tok.fish.fish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389522
+    m_Key: tok.dragonword.legend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389523
+    m_Key: ui.item.rps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389524
+    m_Key: chat.ch.match
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389525
+    m_Key: chat.ch.team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389526
+    m_Key: chat.ch.global
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389527
+    m_Key: chat.ch.spectator
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16022278058389528
+    m_Key: ui.chat.placeholder
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:
@@ -1813,6 +2189,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 442167561138207
     m_Key: stat.UltimateDamage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214753
+    m_Key: stat.HeadshotDamage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214754
+    m_Key: stat.HeadshotReduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214755
+    m_Key: stat.Shield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16007805629214756
+    m_Key: stat.SoulShield
     m_Metadata:
       m_Items: []
   - m_Id: 3001745490423811

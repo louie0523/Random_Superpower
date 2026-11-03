@@ -8,6 +8,7 @@ using UnityEngine.UI;
 /// 알림(큰 알림 · 작은 메시지) · 채팅창 · 플레이어 선택 창.
 /// 씬에 없으면 알아서 하나 만들어짐 — 글꼴을 지정하려면 HUD 오브젝트 등에 직접 붙이고 Font에 한글 글꼴을 넣을 것.
 ///
+/// 채팅 모양: HUD v2 안의 ChatView가 켜져 있으면 그걸로 (uGUI), 없으면 아래 코드(IMGUI)
 /// 채팅: Enter 열기 → 입력 → Enter 보내기 · Esc 닫기 · Tab 경기/팀 전환(팀 모드일 때만)
 /// 관전자: 채팅 가능 — 관전자끼리만 보임 (SpectatorChat)
 /// 선택 창 모양: Resources/UiPrefabSet의 '대상 선택 창'을 켜면 프리팹(PlayerPickView), 아니면 아래 코드 모양
@@ -228,6 +229,7 @@ public class CommsHud : MonoBehaviour
         _input = "";
         Input.imeCompositionMode = IMECompositionMode.On;      // 한글 · 일본어 · 중국어 등 조합 입력 켜기
         if (!TeamChatAvailable) _channel = ChatChannel.Match;
+        ChatView.Active?.Open(ChannelTag());
     }
 
     void CloseChat()
@@ -236,10 +238,43 @@ public class CommsHud : MonoBehaviour
         _input = "";
         Input.imeCompositionMode = IMECompositionMode.Auto;
         GUI.FocusControl(null);
+        ChatView.Active?.Close();
     }
+
+    /// <summary>입력 칸 앞 채널 표시 — [경기] · [팀] · [관전]</summary>
+    string ChannelTag() => PlayerComms.Local == null
+        ? "<color=#b8b8b8>[" + TargetUtil.Text("chat.ch.spectator", "관전") + "]</color>"
+        : $"<color={ChannelColor(_channel)}>[{ChannelLabel(_channel)}]</color>";
+
+    /// <summary>ChatView(uGUI 채팅창)가 있을 때 — 입력 키를 여기서 (IMGUI 쪽은 안 그림)</summary>
+    void LateUpdate()
+    {
+        var v = ChatView.Active;
+        if (!ChatOpen || v == null || PickShowing) return;
+        if (Time.frameCount == _openFrame) return;          // 여는 데 쓴 Enter로 바로 보내지 않게
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) SendChat();
+        else if (Input.GetKeyDown(KeyCode.Escape)) CloseChat();
+        else if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (TeamChatAvailable && PlayerComms.Local != null) _channel = _channel == ChatChannel.Match ? ChatChannel.Team : ChatChannel.Match;
+            v.SetChannel(ChannelTag());
+        }
+    }
+
+    /// <summary>채팅 한 줄 글 (색 · 채널 · 보낸 사람) — ChatView도 씀</summary>
+    internal static string FormatLine(ChatLog.Line l) => string.IsNullOrEmpty(l.Sender)
+        ? $"<color={ChannelColor(l.Channel)}>{Escape(l.Text)}</color>"
+        : $"<color={ChannelColor(l.Channel)}>[{ChannelLabel(l.Channel)}]</color> <b>{Escape(l.Sender)}</b>: {Escape(l.Text)}";
+
+    internal float ChatFadeTime => chatFade;
+    internal int ChatShownLines => chatShownLines;
+    internal int ChatOpenLines => chatOpenLines;
+    internal static CommsHud Instance => _inst;
 
     void SendChat()
     {
+        if (ChatView.Active != null) _input = ChatView.Active.Text;
         // 한글은 마지막 글자가 아직 '조합 중'일 수 있음 (예: "안녕" 치고 바로 Enter → '녕'이 조합 중) → 붙여서 보냄
         string text = _input + Input.compositionString;
         if (text.Length > PlayerComms.MaxChatLength) text = text.Substring(0, PlayerComms.MaxChatLength);
@@ -284,7 +319,7 @@ public class CommsHud : MonoBehaviour
     {
         Styles();
         if (PickShowing && _activePick == null) DrawPick();
-        DrawChat();
+        if (ChatView.Active == null) DrawChat();        // HUD 채팅창이 있으면 그쪽이 그림
     }
 
     static string ChannelLabel(ChatChannel ch) => ch switch
@@ -567,4 +602,4 @@ public static class PlayerPickPanel
     public static void Open(string title, bool includeSelf, Action<PlayerHealth> onPick, Action onCancel = null,
                             PlayerPickView viewPrefab = null) =>
         CommsHud.OpenPick(title, includeSelf, onPick, onCancel, viewPrefab);
-}
+}

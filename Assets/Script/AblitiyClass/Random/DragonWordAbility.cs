@@ -639,7 +639,7 @@ public class DragonWordAbility : TransformAbility
 
     public override string DescToken(string key, int rank) => key switch
     {
-        "chant" => IsTransformed ? "전설의 용" : $"{_chants} / {ChantsNeeded}",
+        "chant" => IsTransformed ? SetLoc.T("tok.dragonword.legend", "전설의 용") : $"{_chants} / {ChantsNeeded}",
         "chants" => _chants.ToString(),
         "chantsneed" => ChantsNeeded.ToString(),
         "chantsleft" => Mathf.Max(0, ChantsNeeded - _chants).ToString(),
@@ -665,4 +665,4 @@ public class DragonWordAbility : TransformAbility
 
     public override IEnumerable<(string value, string label)> DevComplete(string[] a, int index) =>
         index == 0 ? new[] { ("chant", "용언 횟수"), ("awaken", "바로 용"), ("time", "이벤트 시간") } : null;
-}
+}

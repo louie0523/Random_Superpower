@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cca4d517cbc9b62409d3f39a049a0896, type: 3}
   m_Name: "\uD0C4\uC57D \uAD6C\uB9E4"
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  Id: 5006
+  Id: 5007
   DisplayName: "\uD0C4\uC57D \uAD6C\uB9E4"
   Icon: {fileID: 0}
   Description: "\uAC74\uB9C8\uC2A4\uD130\uB97C \uC704\uD55C \uC0C1\uD488. \uD0C4\uC57D\uC744
@@ -26,4 +26,6 @@ MonoBehaviour:
   ValuePerLevel: []
   HealAmount: 40
   PricePerStage: 8
+  ShieldAmount: 50
+  ShieldSeconds: 0
   AmmoRatio: 0.25
