@@ -42,6 +42,7 @@ public class InventorySlotView : MonoBehaviour
     private readonly List<EnchantSummary.Group> _groups = new();
 
     const string MetColor = "#7FD07F";
+    const string BonusColor = "#7CFFB2";     // Shift — 기초 능력치에서 늘어난 만큼
     const string DimColor = "#8A8A8A";
 
     void Awake()
@@ -174,11 +175,100 @@ public class InventorySlotView : MonoBehaviour
         if (!Mathf.Approximately(d.MainStatValue, 0f) && EquipmentData.MainStatOf(d.Slot, out var ms, out var mm))
             sb.AppendLine("<b>" + StatText.Line(ms, mm, d.MainStatValue, "  ") + "</b>");
 
-        if (d.BaseStats != null)
-            foreach (var s in d.BaseStats)
-                sb.AppendLine(StatText.Line(s.Stat, s.Type, s.Value, "  "));
+        // 기초 능력치 + 인챈트 능력치 + 무기 능력치 종합 증가를 합친 값 (같은 능력치는 한 줄로)
+        // Shift = 기초 능력치에서 늘어난 만큼 옆에 (+5) — 무기에 원래 없던 능력치는 그냥 값만
+        BuildStatRows(d);
+        bool shift = TooltipTrigger.ShiftHeld;
+        foreach (var r in _rows)
+        {
+            sb.Append(StatText.Line(r.Stat, r.Type, r.Total, "  "));
+            if (shift && r.HasBase)
+            {
+                float diff = r.Total - r.Base;
+                if (!Mathf.Approximately(diff, 0f))
+                    sb.Append(" <color=").Append(BonusColor).Append(">(").Append(StatText.Value(r.Stat, r.Type, diff)).Append(")</color>");
+            }
+            sb.AppendLine();
+        }
 
         return sb.ToString().TrimEnd();
+    }
+
+    struct StatRow
+    {
+        public StatType Stat;
+        public ModType Type;
+        public float Base;      // 무기 기초 능력치 (없으면 0)
+        public float Total;     // 합친 값
+        public bool HasBase;    // 무기에 원래 있던 능력치인가
+    }
+
+    readonly List<StatRow> _rows = new();
+
+    void BuildStatRows(EquipmentData d)
+    {
+        _rows.Clear();
+        if (d.BaseStats != null)
+            foreach (var s in d.BaseStats)
+            {
+                int i = FindRow(s.Stat, s.Type);
+                if (i >= 0)
+                {
+                    var r = _rows[i];
+                    r.Base = Combine(r.Stat, r.Type, r.Base, s.Value);
+                    r.Total = r.Base;
+                    _rows[i] = r;
+                }
+                else _rows.Add(new StatRow { Stat = s.Stat, Type = s.Type, Base = s.Value, Total = s.Value, HasBase = true });
+            }
+
+        var en = _model.Enchant;
+        int slot = _model.SlotIndex;
+        if (d.Slot != EquipSlot.Weapon || en == null || slot < 0 || en.GetStage(slot) <= 0) return;
+
+        EnchantSummary.Build(en, slot, _groups);
+        float boost = 0f;
+        foreach (var g in _groups)
+        {
+            if (g.IsSpecial) continue;
+            foreach (var s in g.Stats)
+            {
+                if (s.Stat == StatType.WeaponStatBoost) { boost += StatText.BoostFraction(s.Type, s.Value); continue; }
+                int i = FindRow(s.Stat, s.Type);
+                if (i >= 0)
+                {
+                    var r = _rows[i];
+                    r.Total = Combine(r.Stat, r.Type, r.Total, s.Value);
+                    _rows[i] = r;
+                }
+                else _rows.Add(new StatRow { Stat = s.Stat, Type = s.Type, Total = s.Value });
+            }
+        }
+
+        // 무기 능력치 종합 증가 — 기초 능력치에만 (게임 계산과 같게: PlayerEnchant.ApplyAll)
+        if (!Mathf.Approximately(boost, 0f))
+            for (int i = 0; i < _rows.Count; i++)
+            {
+                var r = _rows[i];
+                if (!r.HasBase) continue;
+                r.Total = Combine(r.Stat, r.Type, r.Total, StatText.BoostExtra(r.Stat, r.Type, r.Base, boost));
+                _rows[i] = r;
+            }
+    }
+
+    int FindRow(StatType s, ModType t)
+    {
+        for (int i = 0; i < _rows.Count; i++)
+            if (_rows[i].Stat == s && _rows[i].Type == t) return i;
+        return -1;
+    }
+
+    /// <summary>두 값 합치기 — 배율 스탯 Percent는 곱연산 (게임 계산과 같게), 나머지는 더하기</summary>
+    static float Combine(StatType s, ModType t, float a, float b)
+    {
+        if (StatText.IsMultiplier(s) && t == ModType.Percent)
+            return ((1f + a * 0.01f) * (1f + b * 0.01f) - 1f) * 100f;
+        return a + b;
     }
 
     /// <summary>무기 스펙 — 근접: 사거리 / 총: 탄약 · 분당 발사 / 활 · 지팡이: 차징 (툴팁에서 능력치 아래 줄 긋고)</summary>

@@ -25,6 +25,10 @@ public enum StatType
     // ── 쉴드 (일반 수치 · Flat 50 = 50) ──
     Shield,             // 재생 쉴드 최대치 — 안 맞으면 다시 참
     SoulShield,         // 소울 쉴드 최대치 — 소울로 충전
+
+    // ── 무기 능력치 종합 증가 (인챈트 · Percent 10 = 무기 기초 능력치마다 +10%) — 뒤에만 추가 (저장값) ──
+    // 플레이어 능력치에 직접 더해지지 않고, 그 무기의 기초 능력치(BaseStats)에 비율만큼 추가로 붙음 (PlayerEnchant)
+    WeaponStatBoost,
 }
 
 public enum ModType

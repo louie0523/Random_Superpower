@@ -23,6 +23,7 @@ MonoBehaviour:
     ComboResetTime: 0.8
     OverrideHitShape: 0
     NoWeaponEnchants: 0
+    Reach: 0
     HitMode: 0
     Range: 3
     HitAngle: 120
@@ -43,6 +44,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -121,6 +124,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: -0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -217,6 +222,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: -0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -295,6 +302,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: -0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -373,6 +382,8 @@ MonoBehaviour:
           LeftRot: {x: 22.102999, y: 56.822, z: 30.659996}
           WeaponPos: {x: 0, y: 0, z: 0}
           WeaponRot: {x: 0, y: 0, z: 0}
+          WeaponScale: {x: 0, y: 0, z: 0}
+          Parts: []
           CamPos: {x: 0, y: 0, z: 0}
           CamRot: {x: 0, y: 0, z: 0}
           CamFov: 0
@@ -446,13 +457,16 @@ MonoBehaviour:
       Interp: 1
       Smoothness: 1.5
       Shakes: []
+      Floats: []
       LengthHint: 1
+    ContinueFromPrevious: 0
     HitStopDuration: 0.05
     CameraKickFov: 4
     CameraShake: 0.3
     LungeDistance: 0
     WeaponOverride: {fileID: 0}
     HideWeapon: 0
+    PartParents: 
     HandMode: 0
     SwingSound: {fileID: 0}
     TrailPrefab: {fileID: 0}

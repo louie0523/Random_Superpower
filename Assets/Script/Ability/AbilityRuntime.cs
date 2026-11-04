@@ -132,6 +132,7 @@ public class AbilityRuntime : NetworkBehaviour
     public PlayerStatus Status => _status;
 
     private bool _weaponHitSkill;   // 지금 실행 중인 스킬이 무기 판정인가
+    private SkillReach _skillReach = SkillReach.Other;   // 지금 실행 중인 스킬의 판정 (근거리 · 원거리 · 기타)
     private float _skillDealt;      // 그 스킬로 준 피해 합 (탐식 흡혈용)
 
     private int _lastWeaponId = -1;
@@ -970,6 +971,7 @@ public class AbilityRuntime : NetworkBehaviour
         }
 
         _weaponHitSkill = skill.AppliesWeaponEnchants;
+        _skillReach = ReachOf(skill);
         _skillDealt = 0f;
 
         var src = skill.Slot == SkillSlot.Ultimate ? DamageSource.Ultimate : DamageSource.Skill;
@@ -984,6 +986,16 @@ public class AbilityRuntime : NetworkBehaviour
         }
 
         _weaponHitSkill = false;
+        _skillReach = SkillReach.Other;
+    }
+
+    /// <summary>스킬 판정 (자동이면 '무기 판정 스킬' + 든 무기로 정함) — Behaviour도 피해 계산에 씀</summary>
+    public SkillReach ReachOf(AbilityData.SkillDef skill)
+    {
+        if (skill == null) return SkillReach.Other;
+        var reach = skill.Reach;
+        if (reach == SkillReach.Auto && skill.Motion != null) reach = skill.Motion.Reach;   // 스킬이 자동이면 모션 쪽 설정 (모션 셋업 창)
+        return DamageCalc.Resolve(reach, skill.AppliesWeaponEnchants, Equipment?.GetWeapon());
     }
 
     public GameObject FindTarget(AbilityData.SkillDef skill)
@@ -1503,7 +1515,7 @@ public class AbilityRuntime : NetworkBehaviour
                 {
                     if (!target.TryGetComponent<PlayerHealth>(out var h)) break;
 
-                    float outgoing = DamageCalc.CalcOutgoing(_stats, v, src, true, out bool crit);
+                    float outgoing = DamageCalc.CalcOutgoing(_stats, v, src, true, out bool crit, _skillReach);
                     var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(outgoing), Object.InputAuthority, transform.position);
                     info.IsCrit = crit;
 

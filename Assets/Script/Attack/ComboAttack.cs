@@ -37,6 +37,10 @@ public class ComboStep
     [Tooltip("체크하면 이 타격에는 무기의 특수 인챈트 효과가 붙지 않음")]
     public bool NoWeaponEnchants = false;
 
+    [Tooltip("스킬 판정 (이 모션을 쓰는 스킬) — 근거리면 '근접 무기 피해', 원거리면 '원거리 무기 피해'도 스킬 피해에 붙음.\n" +
+             "자동 = 스킬 쪽 설정을 따름 (스킬도 자동이면 '무기 판정 스킬' + 든 무기). 무기 기본 공격 모션에는 영향 없음")]
+    public SkillReach Reach = SkillReach.Auto;
+
     public WeaponHitMode HitMode = WeaponHitMode.ForwardArc;
     public float Range = 3f;
     [Range(20f, 360f)] public float HitAngle = 120f;

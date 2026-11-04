@@ -218,6 +218,10 @@ public class AbilityData : ScriptableObject
         [Tooltip("무기 판정 스킬 — 맞힌 대상에게 들고 있는 무기의 특수 인챈트 효과 적용")]
         public bool AppliesWeaponEnchants = false;
 
+        [Tooltip("스킬 판정 — 근거리면 '근접 무기 피해', 원거리면 '원거리 무기 피해' 증가도 이 스킬 피해에 붙음.\n" +
+                 "자동 = 위 '무기 판정 스킬'이 켜져 있으면 든 무기 계열(근접 · 원거리), 아니면 기타")]
+        public SkillReach Reach = SkillReach.Auto;
+
         public EffectDef[] Effects;
 
     }
@@ -521,4 +525,4 @@ public class AbilityData : ScriptableObject
             if (e != null && e.Chance <= 0f) e.Chance = 1f;
     }
 #endif
-}
+}

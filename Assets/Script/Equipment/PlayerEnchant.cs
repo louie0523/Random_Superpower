@@ -699,6 +699,7 @@ public class PlayerEnchant : NetworkBehaviour
         int wid = _equip.GetWeaponIdAt(slot);
         if (wid == 0 || EnchantedWeaponIds[slot] != wid) return;
 
+        float boost = 0f;      // 무기 능력치 종합 증가 (0.1 = +10%)
         for (int i = 0; i < MaxEnchants; i++)
         {
             int id = GetEnchantId(slot, i);
@@ -708,7 +709,23 @@ public class PlayerEnchant : NetworkBehaviour
             if (e == null || e.Stats == null) continue;
 
             foreach (var s in e.Stats)
+            {
+                if (s.Stat == StatType.WeaponStatBoost) { boost += StatText.BoostFraction(s.Type, s.Value); continue; }
                 _stats.AddModifier(new StatModifier(s.Stat, s.Type, s.Value, SourceId.EnchantBase));
+            }
+        }
+
+        // 무기 능력치 종합 증가 — 그 무기의 기초 능력치마다 boost만큼 더 (예: 공 +25 · 10% → +2.5)
+        if (!Mathf.Approximately(boost, 0f))
+        {
+            var w = _equip.GetWeapon();
+            if (w != null && w.BaseStats != null)
+                foreach (var s in w.BaseStats)
+                {
+                    float extra = StatText.BoostExtra(s.Stat, s.Type, s.Value, boost);
+                    if (!Mathf.Approximately(extra, 0f))
+                        _stats.AddModifier(new StatModifier(s.Stat, s.Type, extra, SourceId.EnchantBase));
+                }
         }
     }
 

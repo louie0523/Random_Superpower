@@ -20,7 +20,7 @@ MonoBehaviour:
   Kind: 4
   BasePrice: 5
   PriceGrowth: 1.5
-  MaxLevel: 3
+  MaxLevel: 1
   Stat: 0
   ModType: 0
   ValuePerLevel: []

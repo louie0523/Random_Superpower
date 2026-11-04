@@ -53,6 +53,8 @@ MonoBehaviour:
   - Stat: 5
     Type: 0
     Value: 0.1
+  MainStatValue: 0
+  Traits: []
   EnchantTable: {fileID: 0}
   EnchantStoneCost: 1
   EnchantCostPerStage: 0
@@ -130,6 +132,7 @@ MonoBehaviour:
     ComboResetTime: 0.8
     OverrideHitShape: 0
     NoWeaponEnchants: 0
+    Reach: 0
     HitMode: 0
     Range: 3
     HitAngle: 120
@@ -593,6 +596,7 @@ MonoBehaviour:
     ComboResetTime: 0.8
     OverrideHitShape: 0
     NoWeaponEnchants: 0
+    Reach: 0
     HitMode: 0
     Range: 3
     HitAngle: 120
@@ -1069,6 +1073,7 @@ MonoBehaviour:
   TracerPrefab: {fileID: 0}
   ProjectileSpeed: 60
   SpreadAngle: 0
+  HeadshotMul: 0
   AttackSpeedScale: 1
   FireSound: {fileID: 0}
   FireVolume: 0.8

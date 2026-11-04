@@ -214,7 +214,7 @@ public class JokerAbility : AbilityBehaviour
 
             if (Now >= c.BoomAt)
             {
-                Explode(c.Pos, 1f);
+                Explode(c.Pos, 1f, ReachOf(DrawSkill));
                 Broadcast(EvCardGone, c.Pos);
                 _cards.RemoveAt(i);
             }
@@ -234,7 +234,7 @@ public class JokerAbility : AbilityBehaviour
     }
 
     /// <summary>카드·분신 폭발 — 피해 + 둔화</summary>
-    void Explode(Vector3 p, float mul)
+    void Explode(Vector3 p, float mul, SkillReach reach = SkillReach.Other)
     {
         var self = Ctx.Object.InputAuthority;
         var stats = Ctx.Stats;
@@ -249,7 +249,7 @@ public class JokerAbility : AbilityBehaviour
             if (TeamUtil.IsFriendly(self, h)) continue;            // 나 · 같은 팀
 
             float dmg = DamageCalc.CalcOutgoing(stats, (stats.Get(StatType.AttackPower) * Lv(BlastCoef) * 0.01f + Lv(BlastFlat)) * mul,
-                                                DamageSource.Skill, true, out bool crit);
+                                                DamageSource.Skill, true, out bool crit, reach);
             var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), self, p);
             info.IsCrit = crit;
             h.RPC_TakeDamage(info);
@@ -262,7 +262,7 @@ public class JokerAbility : AbilityBehaviour
         if (Hittables.All.Count > 0)
         {
             float sd = DamageCalc.CalcOutgoing(stats, (stats.Get(StatType.AttackPower) * Lv(BlastCoef) * 0.01f + Lv(BlastFlat)) * mul,
-                                               DamageSource.Skill, true, out bool sc);
+                                               DamageSource.Skill, true, out bool sc, reach);
             var si = DamageInfo.FromPlayerHit(Mathf.RoundToInt(sd), self, p);
             si.IsCrit = sc;
             Hittables.DamageSphere(p + Vector3.up * 0.5f, Lv(BlastRadius), Ctx.HitMask, si);
@@ -368,7 +368,7 @@ public class JokerAbility : AbilityBehaviour
 
         if (CloneAlive)
         {
-            if (explode) Explode(_clone.transform.position, Lv(CloneBlastMul));
+            if (explode) Explode(_clone.transform.position, Lv(CloneBlastMul), ReachOf(UltSkill));
             Ctx.Runner.Despawn(_clone);
         }
         _clone = null;

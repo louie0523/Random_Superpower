@@ -154,6 +154,7 @@ public class StatStyle : ScriptableObject
         StatType.HeadshotReduction => H("#A4B0BE"),
         StatType.Shield => H("#E8F1FF"),
         StatType.SoulShield => H("#8CD1FF"),
+        StatType.WeaponStatBoost => H("#FFE08A"),
         _ => Color.white,
     };
 

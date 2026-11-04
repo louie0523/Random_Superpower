@@ -331,6 +331,14 @@ public class WeaponSetupWindow : EditorWindow
                 CaptureAllGrip();
         }
 
+        // ── 인벤토리 사진 (아이템 사진관) ──
+        using (Box())
+        {
+            if (GUILayout.Button(new GUIContent("이 무기 인벤토리 사진 찍기 (아이템 사진관)",
+                "사진관 창을 이 무기를 고른 채로 엶 — 각도 · 조명 · 확대를 맞추고 찍어서 저장"), GUILayout.Height(24)))
+                ItemPhotoStudio.Open(_weapon);
+        }
+
         // ── 배치 ──
         if (Fold("무기 배치"))
             using (Box())
@@ -2613,6 +2621,11 @@ public class WeaponSetupWindow : EditorWindow
         }
         step.NoWeaponEnchants = EditorGUILayout.Toggle(
             new GUIContent("특수 인챈트 끄기", "이 타격에는 무기의 특수 인챈트 효과가 붙지 않음"), step.NoWeaponEnchants);
+        step.Reach = (SkillReach)EditorGUILayout.EnumPopup(new GUIContent("스킬 판정",
+            "이 모션을 쓰는 스킬이 무엇으로 때리는지.\n" +
+            "근거리 = 스킬 피해에 '근접 무기 피해'(예리함 등)도 붙음 · 원거리 = '원거리 무기 피해'도 붙음 · 기타 = 스킬 피해만\n" +
+            "자동 = 스킬 쪽 설정(능력 에셋 스킬의 Reach)을 따르고, 거기도 자동이면 '무기 판정 스킬'일 때 든 무기 계열\n" +
+            "무기 기본 공격 모션에는 영향 없음 (원래 무기 판정)"), step.Reach);
 
         EditorGUILayout.Space(4);
         step.OverrideHitShape = EditorGUILayout.Toggle(

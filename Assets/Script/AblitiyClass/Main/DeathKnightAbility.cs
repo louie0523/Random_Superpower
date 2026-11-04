@@ -572,7 +572,7 @@ public class DeathKnightAbility : AbilityBehaviour
 
         foreach (var h in Cone(Ctx.transform.position, fwd, range, Lv(SlashAngle), SlashHeight))
         {
-            var info = MakeHit(coef, DamageSource.Skill, out float dmg, _flat);
+            var info = MakeHit(coef, DamageSource.Skill, out float dmg, _flat, ReachOf(SlashSkill));
 
             if (Named == DKNamed.Arthur)
             {
@@ -755,7 +755,7 @@ public class DeathKnightAbility : AbilityBehaviour
     void ChargeHit(PlayerHealth h)
     {
         var self = Ctx.Object.InputAuthority;
-        var info = MakeHit(Lv(ChargeCoef) * 0.01f * _chargeDmgMul, DamageSource.Skill, out _);
+        var info = MakeHit(Lv(ChargeCoef) * 0.01f * _chargeDmgMul, DamageSource.Skill, out _, 0f, ReachOf(MountSkill));
         float push = _chargeStun ? Lv(ArthurPush) : 0f;
         info.CanCauseFall = push > 0f;
         h.RPC_TakeDamage(info);
@@ -836,7 +836,7 @@ public class DeathKnightAbility : AbilityBehaviour
             }
 
             if (Named == DKNamed.Arthur)
-                h.RPC_TakeDamage(MakeHit(Lv(ArthurBlastCoef) * 0.01f, DamageSource.Ultimate, out _));
+                h.RPC_TakeDamage(MakeHit(Lv(ArthurBlastCoef) * 0.01f, DamageSource.Ultimate, out _, 0f, ReachOf(UltSkill)));
         }
         Broadcast(Named == DKNamed.Arthur ? EvHoly : EvBlast, c);
     }
@@ -844,10 +844,10 @@ public class DeathKnightAbility : AbilityBehaviour
     // ══════════════════ 공통 ══════════════════
 
     /// <summary>피해 = 공격력 × 계수 + 고정 피해 (치명타·피해 증가 적용)</summary>
-    DamageInfo MakeHit(float coef, DamageSource src, out float dmg, float flat = 0f)
+    DamageInfo MakeHit(float coef, DamageSource src, out float dmg, float flat = 0f, SkillReach reach = SkillReach.Other)
     {
         var stats = Ctx.Stats;
-        dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * coef + flat, src, true, out bool crit);
+        dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * coef + flat, src, true, out bool crit, reach);
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), Ctx.Object.InputAuthority, Ctx.transform.position);
         info.IsCrit = crit;

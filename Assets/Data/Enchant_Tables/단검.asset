@@ -32,6 +32,8 @@ MonoBehaviour:
       Weight: 0
     - Enchant: {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
       Weight: 0
+    - Enchant: {fileID: 11400000, guid: f4d7b93f3ac8ef443b3509d3dfeee57f, type: 2}
+      Weight: 0
   Milestones: []
   SpecialStages: 050000000a000000
   SpecialCandidates:

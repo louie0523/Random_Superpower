@@ -65,12 +65,12 @@ public static class AbilityAim
     }
 
     /// <summary>공격력 coef% 스킬 피해 (치명 · 피해 증가 등 반영)</summary>
-    public static float SkillDamage(AbilityRuntime ctx, float coefPct, out bool crit)
+    public static float SkillDamage(AbilityRuntime ctx, float coefPct, out bool crit, SkillReach reach = SkillReach.Other)
     {
         crit = false;
         var st = ctx != null ? ctx.Stats : null;
         if (st == null) return 0f;
-        return DamageCalc.CalcOutgoing(st, st.Get(StatType.AttackPower) * coefPct * 0.01f, DamageSource.Skill, true, out crit);
+        return DamageCalc.CalcOutgoing(st, st.Get(StatType.AttackPower) * coefPct * 0.01f, DamageSource.Skill, true, out crit, reach);
     }
 
     /// <summary>피해 주기 (권한자) — amount는 최종값</summary>

@@ -148,7 +148,7 @@ public class BlacksmithAbility : AbilityBehaviour
             Vector3 flat = new(to.x, 0f, to.z);
             if (flat.sqrMagnitude > 0.01f && Vector3.Angle(fwd, flat) > angle * 0.5f) continue;
 
-            Hit(h, coef, flatDmg);
+            Hit(h, coef, flatDmg, ReachOf(SmashSkill));
 
             if (h.TryGetComponent<PlayerStatus>(out var st))
             {
@@ -174,7 +174,7 @@ public class BlacksmithAbility : AbilityBehaviour
         Vector3 o = Ctx.transform.position;
         foreach (var h in FindTargets(o, Lv(FurnaceRadius)))
         {
-            Hit(h, coef, flatDmg);
+            Hit(h, coef, flatDmg, ReachOf(FurnaceSkill));
 
             if (Random.value < Lv(BurnChance) && h.TryGetComponent<PlayerStatus>(out var st))
                 st.Apply(StatusType.Burn, Lv(BurnPct), Lv(BurnTime), self);
@@ -259,11 +259,11 @@ public class BlacksmithAbility : AbilityBehaviour
     }
 
     /// <summary>피해 = 공격력 × 계수 + 고정 피해</summary>
-    void Hit(PlayerHealth h, float coef, float flat = 0f)
+    void Hit(PlayerHealth h, float coef, float flat = 0f, SkillReach reach = SkillReach.Other)
     {
         var stats = Ctx.Stats;
         float baseDmg = stats.Get(StatType.AttackPower) * coef + flat;
-        float dmg = DamageCalc.CalcOutgoing(stats, baseDmg, DamageSource.Skill, true, out bool crit);
+        float dmg = DamageCalc.CalcOutgoing(stats, baseDmg, DamageSource.Skill, true, out bool crit, reach);
 
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), Ctx.Object.InputAuthority, Ctx.transform.position);
         info.IsCrit = crit;

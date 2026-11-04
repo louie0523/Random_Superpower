@@ -61,7 +61,7 @@ public static class Shockwave
     }
 
     /// <summary>권한자 — 범위 안 적에게 피해 · 기절 · 밀치기</summary>
-    public static void Hit(AbilityRuntime ctx, Vector3 center, ShockwaveDef d)
+    public static void Hit(AbilityRuntime ctx, Vector3 center, ShockwaveDef d, SkillReach reach = SkillReach.Other)
     {
         if (ctx == null || d == null || !d.Enabled || d.Radius <= 0f) return;
         if (ctx.Object == null || !ctx.Object.IsValid || !ctx.HasStateAuthority) return;
@@ -79,7 +79,7 @@ public static class Shockwave
             if (d.DamageCoef > 0f && stats != null)
             {
                 float dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * d.DamageCoef * 0.01f,
-                                                    DamageSource.Skill, true, out bool crit);
+                                                    DamageSource.Skill, true, out bool crit, reach);
                 var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), me, center, true);
                 info.IsCrit = crit;
                 t.RPC_TakeDamage(info);
@@ -100,7 +100,7 @@ public static class Shockwave
         if (d.DamageCoef > 0f && stats != null && Hittables.All.Count > 0)
         {
             float dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * d.DamageCoef * 0.01f,
-                                                DamageSource.Skill, true, out bool crit);
+                                                DamageSource.Skill, true, out bool crit, reach);
             var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), me, center, true);
             info.IsCrit = crit;
             Hittables.DamageSphere(center, d.Radius, ctx.HitMask, info);

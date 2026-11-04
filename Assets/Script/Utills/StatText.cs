@@ -27,7 +27,27 @@ public static class StatText
     // ══════════════════ 보이는 글 (색 · 아이콘 — StatStyle) ══════════════════
 
     /// <summary>스탯 이름 (번역)</summary>
-    public static string Name(StatType s) => LocUtil.Get($"stat.{s}");
+    public static string Name(StatType s) =>
+        s == StatType.WeaponStatBoost ? LocUtil.GetOr("stat.WeaponStatBoost", "무기 능력치") : LocUtil.Get($"stat.{s}");
+
+    /// <summary>
+    /// 무기 능력치 종합 증가 — 기초 능력치 하나에 boost(0.1 = +10%)만큼 더 붙는 양 (같은 단위로).
+    /// 배율 스탯 Percent는 곱연산이라, 따로 곱해져도 합이 '기초 × (1 + boost)'가 되게 맞춘 값
+    ///   예) 공격력 +25, 10% → +2.5 · 흡혈 0.1, 10% → +0.01 · 근접 피해 +20%, 10% → 곱해서 +22%가 되는 값
+    /// </summary>
+    public static float BoostExtra(StatType s, ModType t, float v, float boost)
+    {
+        if (IsMultiplier(s) && t == ModType.Percent)
+        {
+            float f = v * 0.01f;
+            if (Mathf.Approximately(1f + f, 0f)) return 0f;
+            return f * boost / (1f + f) * 100f;
+        }
+        return v * boost;
+    }
+
+    /// <summary>무기 능력치 종합 증가 합 (0.1 = +10%) — Percent 10 · Flat 0.1 둘 다 받음</summary>
+    public static float BoostFraction(ModType t, float v) => t == ModType.Percent ? v * 0.01f : v;
 
     /// <summary>아이콘 + 스탯 색으로 감싼 글 — 예) Styled(AttackPower, "공격력 120% + 30")</summary>
     public static string Styled(StatType s, string body) => StatStyle.Current.Wrap(s, body);

@@ -392,7 +392,7 @@ public class ShadowWalkerAbility : AbilityBehaviour
 
             var stats = Ctx.Stats;
             float dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * Lv(HandCoef) * 0.01f + Lv(HandFlat),
-                                                DamageSource.Skill, true, out bool crit);
+                                                DamageSource.Skill, true, out bool crit, ReachOf(HandSkill));
             var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), self, hand.Pos);
             info.IsCrit = crit;
             best.RPC_TakeDamage(info);

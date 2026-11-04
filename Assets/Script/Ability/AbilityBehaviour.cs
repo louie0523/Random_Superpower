@@ -116,6 +116,17 @@ public abstract class AbilityBehaviour : ScriptableObject
     /// <summary>Behaviour 전용 스탯 소스 ID. 능력마다 10칸 (n = 0~9)</summary>
     protected int Src(int n = 0) => SourceId.AbilityBase + Data.Id * 10 + n;
 
+    /// <summary>
+    /// 스킬 판정 (근거리 · 원거리 · 기타) — 그 스킬의 'Reach' 칸 (자동이면 무기 판정 스킬 + 든 무기).
+    /// 피해 계산에 넘기면 근거리 스킬은 근접 무기 피해, 원거리 스킬은 원거리 무기 피해도 받음
+    /// </summary>
+    protected SkillReach ReachOf(int skillIndex)
+    {
+        var skills = Data != null ? Data.Skills : null;
+        if (skills == null || skillIndex < 0 || skillIndex >= skills.Length || Ctx == null) return SkillReach.Other;
+        return Ctx.ReachOf(skills[skillIndex]);
+    }
+
     // ══════════════════ 레벨 ══════════════════
     // 항목 번호(local) = 패시브 먼저 0, 1, … 이어서 스킬
     // 예) 패시브 2개 + 스킬 3개 → 패시브 0,1 / 스킬 2,3,4

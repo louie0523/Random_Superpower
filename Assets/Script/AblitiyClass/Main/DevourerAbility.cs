@@ -506,7 +506,7 @@ public class DevourerAbility : AbilityBehaviour
         int n = 0;
         foreach (var h in Cone(o, fwd, Lv(DevourRange), Lv(DevourAngle), DevourHeight))
         {
-            var info = MakeHit(coef, flat, DamageSource.Skill, out float dmg);
+            var info = MakeHit(coef, flat, DamageSource.Skill, out float dmg, ReachOf(DevourSkill));
             info.IsMelee = true;
             h.RPC_TakeDamage(info);
             dealt += dmg;
@@ -580,7 +580,7 @@ public class DevourerAbility : AbilityBehaviour
         var self = Ctx.Object.InputAuthority;
         foreach (var h in Cone(o, fwd, Lv(SpitRange), Lv(SpitAngle), SpitHeight))
         {
-            var info = MakeHit(coef, flat, DamageSource.Skill, out _);
+            var info = MakeHit(coef, flat, DamageSource.Skill, out _, ReachOf(SpitSkill));
             ApplyInheritedPreHit(src, ref info);
             h.RPC_TakeDamage(info);
             ApplyInheritedPostHit(src, h);
@@ -672,7 +672,7 @@ public class DevourerAbility : AbilityBehaviour
             _blasts.RemoveAt(i);
 
             foreach (var h in Around(p.Pos, p.Radius))
-                h.RPC_TakeDamage(MakeHit(p.Coef, 0f, DamageSource.Skill, out _));
+                h.RPC_TakeDamage(MakeHit(p.Coef, 0f, DamageSource.Skill, out _, ReachOf(SpitSkill)));
             Broadcast(EvBlast, p.Pos);
         }
     }
@@ -885,7 +885,7 @@ public class DevourerAbility : AbilityBehaviour
 
         float mul = Lv(MonsterPowerMul);
 
-        var info = MakeHit(Lv(DevourCoef) * 0.01f * mul, Lv(DevourFlat) * mul, DamageSource.Ultimate, out float dmg);
+        var info = MakeHit(Lv(DevourCoef) * 0.01f * mul, Lv(DevourFlat) * mul, DamageSource.Ultimate, out float dmg, ReachOf(UltSkill));
         info.IsMelee = true;
         if (Lv(MonsterLowHp) > 0f)
         {
@@ -979,10 +979,10 @@ public class DevourerAbility : AbilityBehaviour
 
     // ══════════════════ 공통 ══════════════════
 
-    DamageInfo MakeHit(float coef, float flat, DamageSource src, out float dmg)
+    DamageInfo MakeHit(float coef, float flat, DamageSource src, out float dmg, SkillReach reach = SkillReach.Other)
     {
         var stats = Ctx.Stats;
-        dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * coef + flat, src, true, out bool crit);
+        dmg = DamageCalc.CalcOutgoing(stats, stats.Get(StatType.AttackPower) * coef + flat, src, true, out bool crit, reach);
         var info = DamageInfo.FromPlayerHit(Mathf.RoundToInt(dmg), Ctx.Object.InputAuthority, Ctx.transform.position);
         info.IsCrit = crit;
         return info;
