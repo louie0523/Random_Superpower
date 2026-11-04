@@ -71,7 +71,8 @@ public class RandomAbilityHud : MonoBehaviour, ILocRefresh
             st.Width = width; st.Height = rowHeight; st.IconSize = iconSize;
             st.NameSize = nameSize; st.NumberSize = numberSize; st.SummarySize = summarySize;
             st.Background = background;
-            _template = ClassPickUiBuilder.BuildRow(holder.transform, style != null && style.Font != null ? style.Font : font, st);
+            using (GameUiKit.Classic())     // HUD — v2 모양 그대로
+                _template = ClassPickUiBuilder.BuildRow(holder.transform, style != null && style.Font != null ? style.Font : font, st);
         }
 
         Row(0);

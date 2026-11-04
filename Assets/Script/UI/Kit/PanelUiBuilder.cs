@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using K = GameUiKit;
 
 /// <summary>
+/// 게임 창 — 테마 'Graffiti'가 켜져 있으면 v7 카툰 그래피티 (외곽선 · 스프레이 · 빨간 이름표), 꺼져 있으면 v2.
+///   v7 인벤토리 = 왼쪽 내 캐릭터(HudPortrait 온몸 · 못 찍으면 카툰 인형) + 장비 3칸 / 오른쪽 파란 판 무기 칸
+/// ── 아래는 v2 설명 ──
 /// 게임 창 v2 (스티커 카툰) — 'UI 프리팹 만들기 창'의 '게임 창 (v2)'가 이걸로 프리팹 하나를 만듦.
 ///   능력 창 F1 (AbilityPanel + 카드 AbilityEntryView) — 시안 PanelV2: 머리 · 패시브 열 · 스킬 2열
 ///   스킬 상세 (DetailWindow) — 카드 누르면 가운데 창
@@ -66,6 +69,7 @@ public static class PanelUiBuilder
         var name = K.Text("Name", win, display, 56f, K.Ink);
         Abs(name.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(178f, -104f), new Vector2(-260f, -34f));
         name.text = "건마스터";
+        Loud(name);
 
         var flavor = K.Text("Flavor", win, font, 20f, K.Dim, TextAlignmentOptions.TopLeft);
         Wrap(flavor);
@@ -142,8 +146,8 @@ public static class PanelUiBuilder
         bar.rectTransform.anchorMin = new Vector2(0f, 0f);
         bar.rectTransform.anchorMax = new Vector2(0f, 1f);
         bar.rectTransform.pivot = new Vector2(0f, 0.5f);
-        bar.rectTransform.offsetMin = new Vector2(0f, 10f);
-        bar.rectTransform.offsetMax = new Vector2(6f, -10f);
+        bar.rectTransform.offsetMin = new Vector2(K.Graffiti ? 9f : 0f, K.Graffiti ? 14f : 10f);
+        bar.rectTransform.offsetMax = new Vector2(K.Graffiti ? 17f : 6f, K.Graffiti ? -14f : -10f);
 
         // 아이콘 칸 (64) + 아래 키 이름표
         var box = K.Rect("IconBox", rt);
@@ -245,6 +249,7 @@ public static class PanelUiBuilder
         var title = K.Text("Title", titles.transform, display, 36f, K.Ink);
         K.Size(title, -1f, 46f);
         title.text = "정밀사격";
+        Loud(title);
 
         var close = K.Btn("Close", head.transform, font, "×", K.Raised, 24f, out _);
         K.Size(close, 48f, 48f);
@@ -727,6 +732,7 @@ public static class PanelUiBuilder
     static void BuildInventory(RectTransform root, TMP_FontAsset font, TMP_FontAsset display,
                                InventorySlotView slotTpl, Button choiceTpl)
     {
+        if (K.Graffiti) { BuildInventoryV7(root, font, display, slotTpl, choiceTpl); return; }
         var screen = FullScreen(root, "InventoryPanel");
         var p = screen.gameObject.AddComponent<InventoryPanel>();
         var win = Window(screen, "Window", 1180f, 880f);
@@ -803,6 +809,144 @@ public static class PanelUiBuilder
         Wire(p, "upgradeChoicePrefab", choiceTpl);
         Wire(p, "upgradeChoiceTitle", cTitle.gameObject.AddComponent<LocText>());
         Wire(p, "closeButton", close);
+    }
+
+    /// <summary>
+    /// v7 인벤토리 (시안 InvV7) — 창 1720×920
+    ///  ├ 제목 (스프레이 밑줄) · 닫기
+    ///  ├ 왼쪽 '장비': 핑크 스프레이 위에 내 캐릭터 (HudPortrait 온몸 — 못 찍으면 카툰 인형) + 투구 · 갑옷 · 신발 칸
+    ///  └ 오른쪽 파란 판 '무기': 칸 격자 (4열) · [G] 버리기 안내
+    /// InventoryPanel 칸 이름은 v2와 같음
+    /// </summary>
+    static void BuildInventoryV7(RectTransform root, TMP_FontAsset font, TMP_FontAsset display,
+                                 InventorySlotView slotTpl, Button choiceTpl)
+    {
+        var screen = FullScreen(root, "InventoryPanel");
+        var p = screen.gameObject.AddComponent<InventoryPanel>();
+        var win = Window(screen, "Window", 1720f, 920f);
+
+        // 제목
+        var tBox = K.Rect("TitleBox", win);
+        Abs(tBox, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(40f, -118f), new Vector2(560f, -34f));
+        K.Deco(tBox, K.Spray, K.Gold, new Vector2(0f, 0f), new Vector2(170f, 18f), new Vector2(360f, 46f), -2f);
+        var title = K.Text("Title", tBox, display, 58f, K.Ink);
+        K.Fill(title.rectTransform);
+        title.text = "인벤토리";
+        Loud(title);
+        var close = CloseButton(win, font);
+
+        // ── 왼쪽: 장비 + 내 캐릭터 ──
+        var gSec = K.Rect("Gear", win);
+        Abs(gSec, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(40f, 40f), new Vector2(700f, -140f));
+        K.Deco(gSec, K.SprayDrip, K.Pink, new Vector2(0.5f, 0.5f), new Vector2(-10f, -40f), new Vector2(760f, 380f), -14f);
+
+        var who = K.Rect("Character", gSec);
+        who.anchorMin = who.anchorMax = new Vector2(0.5f, 0.5f);
+        who.pivot = new Vector2(0.5f, 0.5f);
+        who.anchoredPosition = new Vector2(0f, -10f);
+        who.sizeDelta = new Vector2(330f, 600f);
+
+        var fallback = K.Rect("Doll", who);
+        K.Fill(fallback);
+        var dw = 250f;
+        var dh = dw * UiGraffitiArt.DollH / UiGraffitiArt.DollW;
+        var shirt = K.Img("Shirt", fallback, K.DollShirt, new Color(0.310f, 0.639f, 0.878f));
+        var doll = K.Img("Body", fallback, K.Doll, Color.white);
+        foreach (var d in new[] { shirt, doll }) K.Center(d.rectTransform, 0f, 0f, dw, dh);
+
+        var live = K.Rect("Live", who);
+        K.Fill(live);
+        var raw = live.gameObject.AddComponent<RawImage>();
+        raw.raycastTarget = false;
+        var cam = who.gameObject.AddComponent<HudPortrait>();
+        cam.Target = raw;
+        cam.LiveRoot = live.gameObject;
+        cam.FallbackRoot = fallback.gameObject;
+        cam.FullBody = true;
+        cam.BodyHeight = 0.95f;
+        cam.Distance = 3.4f;
+        cam.Fov = 30f;
+        cam.Far = 6f;
+        cam.Size = 640;
+        cam.Aspect = 330f / 600f;
+        cam.Background = new Color(0f, 0f, 0f, 0f);
+        live.gameObject.SetActive(false);
+
+        var gTitle = SectionTitle(gSec, display, "장비", K.Light);
+        var helmet = InvSlotTemplate(gSec, font, display, "ui.item.slot.Helmet");
+        var armor = InvSlotTemplate(gSec, font, display, "ui.item.slot.Armor");
+        var boots = InvSlotTemplate(gSec, font, display, "ui.item.slot.Boots");
+        GearAt(helmet, new Vector2(1f, 1f), new Vector2(-90f, -150f), 5f);
+        GearAt(armor, new Vector2(0f, 0.5f), new Vector2(90f, 10f), -4f);
+        GearAt(boots, new Vector2(1f, 0f), new Vector2(-90f, 130f), -3f);
+
+        // ── 오른쪽: 파란 판 · 무기 ──
+        var wSec = K.Rect("Weapons", win);
+        Abs(wSec, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(740f, 110f), new Vector2(-40f, -150f));
+        var wFace = K.Sticker(wSec, K.BluePanel, 0f, 0f);
+        K.StripesOn(wFace, 0.14f);
+        var wTitle = SectionTitle(wSec, display, "무기", K.Danger);
+        ((RectTransform)wTitle.transform.parent).anchoredPosition += new Vector2(22f, 22f);   // 판 위 가장자리에 걸치게
+        var grid = K.Rect("Slots", wFace.transform);
+        Abs(grid, Vector2.zero, Vector2.one, new Vector2(34f, 30f), new Vector2(-30f, -48f));
+        var g = grid.gameObject.AddComponent<GridLayoutGroup>();
+        g.cellSize = new Vector2(196f, 230f);
+        g.spacing = new Vector2(20f, 22f);
+        g.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        g.constraintCount = 4;
+        g.childAlignment = TextAnchor.UpperLeft;
+        for (int i = 0; i < 4; i++) Preview(slotTpl, grid);
+
+        var hint = K.Text("DropHint", win, font, 19f, K.Dim, TextAlignmentOptions.MidlineRight, true);
+        Abs(hint.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-760f, 40f), new Vector2(-44f, 90f));
+        hint.text = "[G] 현재 무기 버리기";
+
+        // ── 진화 갈래 고르기 (창 전체 덮음) ──
+        var choose = K.Rect("UpgradeChoice", win);
+        K.Fill(choose);
+        var cDim = K.Img("Dim", choose, null, new Color(0f, 0f, 0f, 0.6f));
+        cDim.raycastTarget = true;
+        K.Fill(cDim.rectTransform);
+        var cDimBtn = cDim.gameObject.AddComponent<Button>();
+        cDimBtn.transition = Selectable.Transition.None;
+        var box = AutoWindow(choose, "Box", 560f, 30);
+        var cTitle = K.Text("Title", box, display, 32f, K.Ink);
+        K.Size(cTitle, -1f, 46f);
+        cTitle.text = "진화할 무기 고르기";
+        Loud(cTitle);
+        var cList = K.Group("Choices", box, 10f);
+        var cancel = K.Btn("Cancel", box, font, "×", K.Raised, 22f, out _);
+        K.Size(cancel, -1f, 48f);
+        choose.gameObject.SetActive(false);
+#if UNITY_EDITOR
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(cDimBtn.onClick, p.CancelUpgradeChoice);
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(cancel.onClick, p.CancelUpgradeChoice);
+#endif
+
+        Wire(p, "weaponSlotParent", grid);
+        Wire(p, "weaponSlotPrefab", slotTpl);
+        Wire(p, "armorSlot", armor);
+        Wire(p, "helmetSlot", helmet);
+        Wire(p, "bootsSlot", boots);
+        Wire(p, "titleLabel", title.gameObject.AddComponent<LocText>());
+        Wire(p, "weaponSectionLabel", wTitle.gameObject.AddComponent<LocText>());
+        Wire(p, "gearSectionLabel", gTitle.gameObject.AddComponent<LocText>());
+        Wire(p, "dropHint", hint.gameObject.AddComponent<LocText>());
+        Wire(p, "upgradeChoiceRoot", choose.gameObject);
+        Wire(p, "upgradeChoiceParent", cList.transform);
+        Wire(p, "upgradeChoicePrefab", choiceTpl);
+        Wire(p, "upgradeChoiceTitle", cTitle.gameObject.AddComponent<LocText>());
+        Wire(p, "closeButton", close);
+    }
+
+    /// <summary>장비 칸을 캐릭터 둘레에 스티커처럼 붙이기 (앵커 · 위치 · 살짝 돌림)</summary>
+    static void GearAt(InventorySlotView slot, Vector2 anchor, Vector2 pos, float tilt)
+    {
+        var rt = (RectTransform)slot.transform;
+        rt.anchorMin = rt.anchorMax = anchor;
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = pos;
+        rt.localRotation = Quaternion.Euler(0f, 0f, tilt);
     }
 
     /// <summary>
@@ -917,6 +1061,7 @@ public static class PanelUiBuilder
         var title = K.Text("Title", win, display, 34f, K.Ink);
         K.Size(title, -1f, 48f);
         title.text = "순위표";
+        Loud(title);
         SetLocText.Add(title, "ui.score.title");
 
         // 머리줄
@@ -1043,7 +1188,7 @@ public static class PanelUiBuilder
     static RectTransform TextChip(Transform parent, string name, TMP_FontAsset font, float size, Color face, out TextMeshProUGUI text)
     {
         var rt = K.Rect(name, parent);
-        var bg = K.Img("Back", rt, K.Cut, face);
+        var bg = K.Img("Back", rt, K.Graffiti ? K.Para : K.Cut, face);
         K.Fill(bg.rectTransform);
         text = K.Text("Text", rt, font, size, K.TextOn(face), TextAlignmentOptions.Center, true);
         K.Fill(text.rectTransform, 2f);
@@ -1099,6 +1244,7 @@ public static class PanelUiBuilder
 
     static void DropShadow(GameObject go, float d)
     {
+        if (K.Graffiti) return;         // v7 — 그림자 없음
         var s = go.AddComponent<UnityEngine.UI.Shadow>();
         s.effectColor = new Color(0f, 0f, 0f, 0.35f);
         s.effectDistance = new Vector2(0f, -d);
@@ -1115,6 +1261,19 @@ public static class PanelUiBuilder
     /// <summary>열 제목 — ◆ + 큰 글자 (부모 맨 위). 돌려주는 건 글자</summary>
     static TextMeshProUGUI SectionTitle(RectTransform parent, TMP_FontAsset display, string text, Color diamond)
     {
+        if (K.Graffiti)
+        {
+            // v7 — 이름표 (흰 마름모 자리는 빨강, 색 마름모는 그 색)
+            Color face = diamond == K.Light ? K.Danger : diamond;
+            var tag = K.Tag(parent, display, text, face, 24f, out var tt, "Title");
+            tag.anchorMin = tag.anchorMax = new Vector2(0f, 1f);
+            tag.pivot = new Vector2(0f, 1f);
+            tag.anchoredPosition = new Vector2(0f, -2f);
+            var fit = tag.gameObject.AddComponent<ContentSizeFitter>();
+            fit.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            return tt;
+        }
         var rt = K.Rect("Title", parent);
         Abs(rt, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -44f), new Vector2(-240f, 0f));
         var dot = K.Img("Dot", rt, null, diamond);
@@ -1143,7 +1302,7 @@ public static class PanelUiBuilder
     {
         var rt = K.Rect(name, parent);
         rt.sizeDelta = new Vector2(size, size * 0.9f);
-        var rim = K.Img("Rim", rt, K.Hex, K.Light);
+        var rim = K.Img("Rim", rt, K.Hex, K.Graffiti ? K.InkLine : K.Light);
         K.Fill(rim.rectTransform);
         var f = K.Img("Face", rim.transform, K.Hex, face);
         K.Fill(f.rectTransform, Mathf.Max(3f, size * 0.06f));
@@ -1183,7 +1342,7 @@ public static class PanelUiBuilder
     static RectTransform Chip(Transform parent, TMP_FontAsset font, string label, Color face)
     {
         var rt = K.Rect("Chip_" + label, parent);
-        var bg = K.Img("Back", rt, K.Cut, face);
+        var bg = K.Img("Back", rt, K.Graffiti ? K.Para : K.Cut, face);
         K.Fill(bg.rectTransform);
         var t = K.Text("Text", rt, font, 14f, K.TextOn(face), TextAlignmentOptions.Center, true);
         K.Fill(t.rectTransform);
@@ -1220,6 +1379,14 @@ public static class PanelUiBuilder
         g.constraintCount = columns;
         g.childAlignment = TextAnchor.UpperLeft;
         return content;
+    }
+
+    /// <summary>v7 큰 글자 — 기울임 + 검정 외곽선 (v2면 그대로)</summary>
+    static void Loud(TMP_Text t)
+    {
+        if (!K.Graffiti || t == null) return;
+        t.fontStyle = FontStyles.Italic;
+        K.InkOutline(t);
     }
 
     static void Wrap(TMP_Text t)

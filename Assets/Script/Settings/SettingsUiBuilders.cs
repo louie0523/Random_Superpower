@@ -19,6 +19,7 @@ public static class SettingsUiBuilders
     /// </summary>
     public static SettingsView Settings(GameObject host, TMP_FontAsset font)
     {
+        if (K.Graffiti) return SettingsV7(host, font);
         var root = K.MakeScreen(host, 31000, K.DimColor);
         var v = host.AddComponent<SettingsView>();
         v.Root = root.gameObject;
@@ -84,6 +85,164 @@ public static class SettingsUiBuilders
         return v;
     }
 
+    /// <summary>
+    /// v7 설정 창 (시안 SetV7) — 위: 기울어진 큰 제목 + 스프레이 탭 줄 + 닫기 / 아래: 탭마다 스크롤 (줄 = 기울어진 띠)
+    /// SettingsView 칸은 v2와 같음 (Title · Tabs · CloseButton · Crosshair)
+    /// </summary>
+    static SettingsView SettingsV7(GameObject host, TMP_FontAsset font)
+    {
+        var root = K.MakeScreen(host, 31000, K.DimColor);
+        var v = host.AddComponent<SettingsView>();
+        v.Root = root.gameObject;
+
+        K.Window("Window", root, 1740f, 980f, out var c, 26, 18f);
+
+        // 위: 제목 · 탭 · 닫기
+        var top = K.Row("Top", c, 84f, 26f);
+        top.childAlignment = TextAnchor.MiddleLeft;
+        v.Title = K.Header(top.transform, font, "설정", 46f);
+        SetLocText.Add(v.Title, "set.ui.title");
+
+        var tabs = K.Rect("Tabs", top.transform);
+        K.Size(tabs, -1f, -1f, 1f);
+        var th = tabs.gameObject.AddComponent<HorizontalLayoutGroup>();
+        th.spacing = 18f;
+        th.childAlignment = TextAnchor.MiddleLeft;
+        th.childControlWidth = th.childControlHeight = true;
+        th.childForceExpandWidth = false;
+        th.childForceExpandHeight = false;
+
+        v.CloseButton = K.Btn("Close", top.transform, font, "닫기 (Esc)", K.Raised, 22f, out var closeLabel);
+        SetLocText.Add(closeLabel, "set.ui.close");
+        K.Size(v.CloseButton, 190f, 56f);
+
+        // 몸통: 페이지 (탭마다)
+        var pages = K.Rect("Pages", c);
+        K.Size(pages, -1f, -1f, -1f, 1f);
+
+        foreach (var (id, label) in SettingsRegistry.Tabs)
+        {
+            var opt = SprayTab(tabs, font, label);
+            opt.name = "Tab_" + id;
+
+            var page = K.Rect("Page_" + id, pages);
+            K.Fill(page);
+            var content = K.Scroll("Scroll", page, out var sr, 8f);
+            K.Fill((RectTransform)sr.transform);
+
+            if (id == "crosshair") v.Crosshair = CrosshairEditor(content, font);
+
+            foreach (var d in SettingsRegistry.All)
+                if (d.Tab == id) Row(content, font, d);
+
+            if (id == "controls")
+            {
+                var n = K.Note(content, font, "보이스 키는 '채팅 · 보이스' 탭", 18f);
+                SetLocText.Add(n, "set.ui.voice_keys_note");
+                K.Size(n, -1f, 30f);
+            }
+
+            v.Tabs.Add(new SettingsTab { Id = id, Button = opt, Page = page.gameObject });
+            page.gameObject.SetActive(v.Tabs.Count == 1);
+        }
+        Thinner(root);
+        return v;
+    }
+
+    /// <summary>
+    /// v7 외곽선 굵기 맞춤 (Pixels Per Unit Multiplier — 클수록 선이 가늘어짐)
+    ///   체크칸 · 체크 = 6 / 닫기 버튼 = 1.5 / 나머지 판 · 띠 (Back · Face …) = 2
+    /// </summary>
+    static void Thinner(Transform root)
+    {
+        foreach (var img in root.GetComponentsInChildren<Image>(true))
+        {
+            var sp = img.sprite;
+            if (sp == null || img.type != Image.Type.Sliced) continue;
+            if (sp != K.Para && sp != K.Slab && sp != K.Plain) continue;
+            if (img.name == "CheckBox" || img.name == "Check") img.pixelsPerUnitMultiplier = 6f;
+            else if (img.name == "Face" && img.transform.parent != null && img.transform.parent.name == "Close") img.pixelsPerUnitMultiplier = 1.5f;
+            else img.pixelsPerUnitMultiplier = 2f;
+        }
+    }
+
+    /// <summary>스프레이 탭 — 고르면 핑크 스프레이가 글자 뒤에 깔림 (글자 폭만큼)</summary>
+    static UiOption SprayTab(Transform parent, TMP_FontAsset font, string label)
+    {
+        var rt = K.Rect("Tab", parent);
+        var hl = rt.gameObject.AddComponent<HorizontalLayoutGroup>();
+        hl.padding = new RectOffset(14, 14, 8, 8);
+        hl.childAlignment = TextAnchor.MiddleCenter;
+        hl.childControlWidth = hl.childControlHeight = true;
+        hl.childForceExpandWidth = hl.childForceExpandHeight = false;
+
+        var face = K.SprayUnder(rt, K.Pink, "Face");
+        var fr = face.rectTransform;
+        fr.anchorMin = new Vector2(0f, 0.05f);
+        fr.anchorMax = new Vector2(1f, 0.95f);
+        fr.offsetMin = new Vector2(-10f, 0f);
+        fr.offsetMax = new Vector2(10f, 0f);
+        face.raycastTarget = true;
+
+        var t = K.Text("Label", rt, K.Display(font), 26f, K.Ink, TextAlignmentOptions.Center);
+        t.fontStyle = FontStyles.Italic;
+        t.overflowMode = TextOverflowModes.Overflow;
+        t.text = label;
+        K.InkOutline(t, 0.22f);
+
+        var b = rt.gameObject.AddComponent<Button>();
+        b.targetGraphic = face;
+        K.Tint(b);
+
+        var opt = rt.gameObject.AddComponent<UiOption>();
+        opt.Button = b;
+        opt.Face = face;
+        opt.Label = t;
+        opt.OnFace = K.Pink;
+        opt.OffFace = new Color(K.Pink.r, K.Pink.g, K.Pink.b, 0f);
+        opt.AutoTextColor = false;
+        opt.FixedTextColors = true;
+        opt.OnText = K.Ink;
+        opt.OffText = K.Dim;
+        opt.SetOn(false);
+        return opt;
+    }
+
+    /// <summary>v7 고르기 칸 — 종이 띠 안에 ◀ 값 ▶</summary>
+    static void ChoiceV7(SettingRow row, RectTransform right, TMP_FontAsset font)
+    {
+        var bar = K.Rect("Choice", right);
+        K.Size(bar, -1f, -1f, 1f);
+        var face = K.ParaFace(bar, K.PaperFace);
+        var h = face.gameObject.AddComponent<HorizontalLayoutGroup>();
+        h.padding = new RectOffset(22, 22, 6, 8);
+        h.spacing = 6f;
+        h.childAlignment = TextAnchor.MiddleCenter;
+        h.childControlWidth = h.childControlHeight = true;
+        h.childForceExpandWidth = false;
+        h.childForceExpandHeight = true;
+
+        row.Prev = Arrow(face.transform, true);
+        row.Value = K.Text("Text", face.transform, font, 20f, K.InkLine, TextAlignmentOptions.Center, true);
+        K.Size(row.Value, -1f, -1f, 1f);
+        row.Next = Arrow(face.transform, false);
+    }
+
+    static Button Arrow(Transform parent, bool left)
+    {
+        var rt = K.Rect(left ? "Prev" : "Next", parent);
+        K.Size(rt, 36f);
+        var hit = rt.gameObject.AddComponent<Image>();
+        hit.color = new Color(0f, 0f, 0f, 0f);
+        var tri = K.Img("Arrow", rt, K.Tri, K.InkLine);
+        K.Center(tri.rectTransform, 0f, 0f, 18f, 18f);
+        if (left) tri.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 180f);
+        var b = rt.gameObject.AddComponent<Button>();
+        b.targetGraphic = tri;
+        K.Tint(b);
+        return b;
+    }
+
     /// <summary>설정 한 줄 — 왼쪽 이름(+설명) · 오른쪽 조작</summary>
     public static SettingRow Row(Transform parent, TMP_FontAsset font, SettingDef d)
     {
@@ -91,10 +250,11 @@ public static class SettingsUiBuilders
         var rt = K.Rect("Row_" + d.Key, parent);
         K.Size(rt, -1f, note ? 80f : 62f, -1f, 0f);
 
-        var bg = K.Img("Back", rt, K.Cut, K.Soft);
+        bool v7 = K.Graffiti;
+        var bg = v7 ? K.Img("Back", rt, K.Para, K.Soft) : K.Img("Back", rt, K.Cut, K.Soft);
         K.Fill(bg.rectTransform);
         var hl = bg.gameObject.AddComponent<HorizontalLayoutGroup>();
-        hl.padding = new RectOffset(18, 12, 7, 7);
+        hl.padding = v7 ? new RectOffset(34, 30, 8, 8) : new RectOffset(18, 12, 7, 7);
         hl.spacing = 14f;
         hl.childAlignment = TextAnchor.MiddleLeft;
         hl.childControlWidth = hl.childControlHeight = true;
@@ -118,7 +278,7 @@ public static class SettingsUiBuilders
         }
 
         var right = K.Rect("Control", bg.transform);
-        K.Size(right, 440f, -1f, 0f);     // 조작 칸 폭 고정 — 남는 폭은 이름 쪽이 가져감
+        K.Size(right, v7 ? 480f : 440f, -1f, 0f);     // 조작 칸 폭 고정 — 남는 폭은 이름 쪽이 가져감
         var rh = right.gameObject.AddComponent<HorizontalLayoutGroup>();
         rh.spacing = 8f;
         rh.childAlignment = TextAnchor.MiddleLeft;
@@ -136,9 +296,14 @@ public static class SettingsUiBuilders
 
             case SettingKind.Slider:
                 row.Slider = K.SliderBar("Slider", right, 30f);
-                K.Size(row.Slider, -1f, -1f, 1f);
+                if (v7) K.Size(row.Slider, K.PipBarWidth(11), -1f, 0f);    // 칸 11개 딱 (끝 칸 안 잘리게)
+                else K.Size(row.Slider, -1f, -1f, 1f);
                 row.Value = K.Text("Value", right, font, 20f, K.Ink, TextAlignmentOptions.MidlineRight, true);
                 K.Size(row.Value, 90f);
+                break;
+
+            case SettingKind.Choice when v7:
+                ChoiceV7(row, right, font);
                 break;
 
             case SettingKind.Choice:
@@ -154,7 +319,7 @@ public static class SettingsUiBuilders
                 break;
 
             case SettingKind.Key:
-                row.KeyButton = K.Btn("KeyButton", right, font, "T", Color.white, 22f, out var kl);
+                row.KeyButton = K.Btn("KeyButton", right, font, "T", v7 ? K.PaperFace : Color.white, 22f, out var kl);   // v7 = 종이 키 캡
                 K.Size(row.KeyButton, -1f, -1f, 1f);
                 row.KeyLabel = kl;
                 break;

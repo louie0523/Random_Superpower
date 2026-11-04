@@ -134,14 +134,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.16470589, g: 0.1882353, b: 0.22352941, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d76c3f62e8b5b024cb54356a006f3450, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8f64007bd65dfd94ea92f70d28e5d7c0, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d76c3f62e8b5b024cb54356a006f3450, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 506d663231651914091ca60364d35d87, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2.64
 --- !u!1 &6389979510106417250
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4294113015
   m_fontColor: {r: 0.96862745, g: 0.9647059, b: 0.9490196, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -390,7 +390,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -506,7 +506,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d76c3f62e8b5b024cb54356a006f3450, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8f64007bd65dfd94ea92f70d28e5d7c0, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -639,3 +639,6 @@ MonoBehaviour:
   OnFace: {r: 0.29, g: 0.13, b: 0.16, a: 1}
   OffFace: {r: 0.32156864, g: 0.36078432, b: 0.42745098, a: 1}
   AutoTextColor: 1
+  FixedTextColors: 0
+  OnText: {r: 1, g: 1, b: 1, a: 1}
+  OffText: {r: 0.725, g: 0.698, b: 0.769, a: 1}

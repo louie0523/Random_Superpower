@@ -24,7 +24,13 @@ public static class HudUiBuilder
         public Sprite Portrait;   // 내 얼굴 칸 (어두운 해골 스티커)
     }
 
+    /// <summary>게임 HUD — v2 모양 그대로 (메뉴 창이 v7이어도 HUD는 안 바뀜)</summary>
     public static GameObject Build(GameObject host, TMP_FontAsset font, Icons icons)
+    {
+        using (K.Classic()) return BuildHud(host, font, icons);
+    }
+
+    static GameObject BuildHud(GameObject host, TMP_FontAsset font, Icons icons)
     {
         var display = K.Display(font);
         var root = K.MakeScreen(host, 100, null, true);     // 씬 UI가 스크린 카메라 모드면 같이

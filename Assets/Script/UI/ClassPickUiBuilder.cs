@@ -49,7 +49,7 @@ public static class ClassPickUiBuilder
         body.anchoredPosition = Vector2.zero;
         body.sizeDelta = new Vector2(w, h);
 
-        var glow = GameUiKit.Img("Glow", body, GameUiKit.Cut, new Color(1f, 1f, 1f, 0f));
+        var glow = GameUiKit.Img("Glow", body, GameUiKit.Graffiti ? GameUiKit.Shadow : GameUiKit.Cut, new Color(1f, 1f, 1f, 0f));   // v7: 외곽선 없는 부드러운 빛
         GameUiKit.Fill(glow.rectTransform, -10f);
 
         var face = GameUiKit.Sticker(body, GameUiKit.Panel, 0f, 12f);
@@ -63,7 +63,7 @@ public static class ClassPickUiBuilder
         var stripe = GameUiKit.Img("Stripe", body, GameUiKit.Slant, new Color(0.82f, 0.16f, 0.18f));
         Top(stripe.rectTransform, 0f, 16f, w - 40f, 10f);
 
-        var rim = GameUiKit.Img("IconRim", body, GameUiKit.Hex, GameUiKit.Light);
+        var rim = GameUiKit.Img("IconRim", body, GameUiKit.Hex, GameUiKit.Graffiti ? GameUiKit.InkLine : GameUiKit.Light);
         Top(rim.rectTransform, 0f, 40f, 150f, 134f);
         rim.rectTransform.localRotation = GameUiKit.Tilt(-6f);
         var iconBack = GameUiKit.Img("IconBack", rim.transform, GameUiKit.Hex, new Color(0.5f, 0.1f, 0.1f));
@@ -104,7 +104,7 @@ public static class ClassPickUiBuilder
         rr.anchoredPosition = new Vector2(0f, 8f);
         rr.sizeDelta = new Vector2(210f, 50f);
         var rrImg = rr.gameObject.AddComponent<Image>();
-        rrImg.sprite = GameUiKit.Cut;
+        rrImg.sprite = GameUiKit.Graffiti ? GameUiKit.Para : GameUiKit.Cut;
         rrImg.type = Image.Type.Sliced;
         rrImg.color = GameUiKit.Raised;
         var rrBtn = rr.gameObject.AddComponent<Button>();
@@ -172,7 +172,10 @@ public static class ClassPickUiBuilder
 
         var head = GameUiKit.Rect("Head", root);
         Center(head, 0f, 340f, 900f, 70f);
+        if (GameUiKit.Graffiti)        // v7 — 제목 밑 노랑 스프레이
+            GameUiKit.Deco(head, GameUiKit.Spray, GameUiKit.Gold, new Vector2(0.5f, 0.5f), new Vector2(0f, -16f), new Vector2(520f, 64f), -2f);
         var dia = GameUiKit.Img("Dot", head, null, GameUiKit.Mint);
+        dia.enabled = !GameUiKit.Graffiti;
         dia.rectTransform.anchorMin = dia.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
         dia.rectTransform.sizeDelta = new Vector2(22f, 22f);
         dia.rectTransform.anchoredPosition = new Vector2(-190f, 2f);
@@ -180,6 +183,7 @@ public static class ClassPickUiBuilder
         var title = GameUiKit.Text("Title", head, display, 56f, GameUiKit.Ink, TextAlignmentOptions.Center);
         GameUiKit.Fill(title.rectTransform);
         title.text = "클래스 선택";
+        if (GameUiKit.Graffiti) { title.fontStyle = FontStyles.Italic; GameUiKit.InkOutline(title); }
         s.Title = title;
 
         var timerBox = GameUiKit.Rect("Timer", root);

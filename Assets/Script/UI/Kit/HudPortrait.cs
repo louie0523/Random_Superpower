@@ -14,6 +14,16 @@ public class HudPortrait : MonoBehaviour
     public RawImage Target;
     [Tooltip("찍은 그림 묶음 (평소엔 꺼짐 — 머리를 찾으면 켜짐)")]
     public GameObject LiveRoot;
+    [Tooltip("못 찍을 때 보일 그림 (예: 카툰 인형) — 찍으면 꺼짐 (없어도 됨)")]
+    public GameObject FallbackRoot;
+
+    [Header("온몸 (인벤토리)")]
+    [Tooltip("켜짐 = 머리 대신 온몸을 찍음 (발밑 기준 BodyHeight 높이를 봄)")]
+    public bool FullBody;
+    [Tooltip("온몸 — 발밑에서 볼 높이 (m)")]
+    public float BodyHeight = 0.95f;
+    [Tooltip("그림 가로 ÷ 세로 (1 = 정사각형)")]
+    public float Aspect = 1f;
 
     [Header("카메라")]
     [Tooltip("그릴 레이어 — 내 캐릭터 레이어만 넣으면 뒤 배경 없이 얼굴만")]
@@ -67,10 +77,11 @@ public class HudPortrait : MonoBehaviour
         if (_seen != _ver)
         {
             _seen = _ver;
-            _head = FindHead(_subject);
+            _head = FullBody ? null : FindHead(_subject);
         }
 
-        if (_subject == null || _head == null || !_head.gameObject.activeInHierarchy)
+        var anchor = FullBody ? _subject : _head;
+        if (_subject == null || anchor == null || !anchor.gameObject.activeInHierarchy)
         {
             if (_cam != null) _cam.enabled = false;
             Show(false);
@@ -84,7 +95,7 @@ public class HudPortrait : MonoBehaviour
         fwd.y = 0f;
         if (fwd.sqrMagnitude < 0.001f) fwd = Vector3.forward;
         fwd.Normalize();
-        Vector3 look = _head.position + Vector3.up * Height;
+        Vector3 look = FullBody ? _subject.position + Vector3.up * BodyHeight : _head.position + Vector3.up * Height;
         _cam.transform.SetPositionAndRotation(look + fwd * Distance, Quaternion.LookRotation(-fwd, Vector3.up));
         Show(true);
     }
@@ -93,7 +104,8 @@ public class HudPortrait : MonoBehaviour
     {
         if (_rt == null)
         {
-            _rt = new RenderTexture(Size, Size, 16, RenderTextureFormat.ARGB32) { name = "HudPortrait" };
+            int w = Mathf.Max(16, Mathf.RoundToInt(Size * Mathf.Max(0.1f, Aspect)));
+            _rt = new RenderTexture(w, Size, 16, RenderTextureFormat.ARGB32) { name = "HudPortrait" };
             _rt.Create();
         }
         if (_cam == null)
@@ -123,6 +135,7 @@ public class HudPortrait : MonoBehaviour
     void Show(bool on)
     {
         if (LiveRoot != null && LiveRoot.activeSelf != on) LiveRoot.SetActive(on);
+        if (FallbackRoot != null && FallbackRoot.activeSelf == on) FallbackRoot.SetActive(!on);
     }
 
     Transform FindHead(Transform root)

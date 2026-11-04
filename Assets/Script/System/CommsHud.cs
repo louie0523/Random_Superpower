@@ -602,4 +602,4 @@ public static class PlayerPickPanel
     public static void Open(string title, bool includeSelf, Action<PlayerHealth> onPick, Action onCancel = null,
                             PlayerPickView viewPrefab = null) =>
         CommsHud.OpenPick(title, includeSelf, onPick, onCancel, viewPrefab);
-}
+}

@@ -66,6 +66,49 @@ public class UiTheme : ScriptableObject
     [Tooltip("스티커 · 스킬 칸 · 목표 칩을 살짝 기울임 (꺼짐 = 반듯하게)")]
     public bool TiltStickers = false;
 
+    // ══════════════════ v7 카툰 그래피티 — 메뉴 창 (게임 HUD는 위 색 그대로) ══════════════════
+
+    [Header("v7 그래피티 — 메뉴 창 (HUD 빼고 전부)")]
+    [Tooltip("켜짐 = 설정 · 로비 · 인벤토리 · F1 · Tab 등이 v7 모양 (외곽선 · 스프레이). 꺼짐 = 예전 v2 모양")]
+    public bool Graffiti = true;
+    [Tooltip("로비 같은 전체 화면 바탕 (시멘트 벽)")]
+    public Color GWall = new(0.106f, 0.090f, 0.141f, 1f);          // #1B1724
+    [Tooltip("창 · 판 (검정에 가까운 보라)")]
+    public Color GPanel = new(0.086f, 0.071f, 0.114f, 0.97f);      // #16121D
+    [Tooltip("판 안의 줄 · 카드")]
+    public Color GRow = new(0.165f, 0.137f, 0.212f, 1f);           // #2A2336
+    [Tooltip("보통 버튼 · 꺼진 고르기")]
+    public Color GButton = new(0.231f, 0.196f, 0.290f, 1f);        // #3B324A
+    [Tooltip("입력 칸 · 막대 바닥 (판보다 어둡게)")]
+    public Color GDeep = new(0.063f, 0.051f, 0.082f, 1f);          // #100D15
+    [Tooltip("종이 (입력 칸 · 키 캡 · 흰 스티커)")]
+    public Color GPaper = new(0.969f, 0.953f, 0.918f, 1f);         // #F7F3EA
+    [Tooltip("외곽선 · 밝은 면 위 글자")]
+    public Color GInk = new(0.067f, 0.067f, 0.067f, 1f);           // #111111
+    [Tooltip("판 위 글자 / 흐린 글자")]
+    public Color GText = new(0.969f, 0.953f, 0.918f, 1f);
+    public Color GTextDim = new(0.725f, 0.698f, 0.769f, 1f);       // #B9B2C4
+    [Tooltip("고르기 · 켜짐 · 준비 (민트)")]
+    public Color GTeal = new(0.133f, 0.890f, 0.769f, 1f);          // #22E3C4
+    [Tooltip("켜진 줄 바탕 · 고른 칸 (민트를 어둡게)")]
+    public Color GTealDark = new(0.078f, 0.420f, 0.376f, 1f);      // #146B60
+    [Tooltip("실행 버튼 (시작 · 참가) · 소울 · 방장")]
+    public Color GYellow = new(1f, 0.824f, 0.122f, 1f);            // #FFD21F
+    [Tooltip("고른 탭 스프레이 · 장식")]
+    public Color GPink = new(1f, 0.180f, 0.533f, 1f);              // #FF2E88
+    public Color GPurple = new(0.482f, 0.235f, 1f, 1f);            // #7B3CFF
+    public Color GOrange = new(1f, 0.541f, 0.122f, 1f);            // #FF8A1F
+    [Tooltip("줄무늬 파란 판 (무기 · 라인업 · 방 만들기)")]
+    public Color GBlue = new(0.184f, 0.482f, 1f, 1f);              // #2F7BFF
+    [Tooltip("빨간 이름표 · 위험")]
+    public Color GRed = new(1f, 0.231f, 0.306f, 1f);               // #FF3B4E
+    [Tooltip("게임 위에 창이 열렸을 때 뒤 어둡게")]
+    public Color GBackdrop = new(0.047f, 0.039f, 0.063f, 0.72f);
+    [Tooltip("면이 이보다 밝으면 검정 글자 (v7)")]
+    [Range(0.2f, 0.8f)] public float GLightFace = 0.5f;
+    [Tooltip("전체 화면 바탕에 스프레이 · 물감 장식")]
+    public bool GDecor = true;
+
     // ══════════════════ 찾기 ══════════════════
 
     static UiTheme _cur;
@@ -162,6 +205,19 @@ public class UiTheme : ScriptableObject
         Text = H("#1A1D22"); TextDim = H("#5A6370");
         Accent = H("#2FBFA5"); AccentDark = H("#BFE9E1");
         HudPanel = H("#12141A", 0.6f);
+        Touch();
+    }
+
+    [ContextMenu("프리셋: v7 그래피티 색 되돌리기")]
+    public void PresetGraffiti()
+    {
+        Graffiti = true;
+        GWall = H("#1B1724"); GPanel = H("#16121D", 0.97f); GRow = H("#2A2336"); GButton = H("#3B324A");
+        GDeep = H("#100D15"); GPaper = H("#F7F3EA"); GInk = H("#111111");
+        GText = H("#F7F3EA"); GTextDim = H("#B9B2C4");
+        GTeal = H("#22E3C4"); GTealDark = H("#146B60"); GYellow = H("#FFD21F"); GPink = H("#FF2E88");
+        GPurple = H("#7B3CFF"); GOrange = H("#FF8A1F"); GBlue = H("#2F7BFF"); GRed = H("#FF3B4E");
+        GBackdrop = H("#0C0A10", 0.72f); GLightFace = 0.5f; GDecor = true;
         Touch();
     }
 

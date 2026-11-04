@@ -387,6 +387,7 @@ public partial class RoomUI
                 }
                 GameUiKit.Set(row.Name, p.Name.ToString() + (p.Ref == me ? "  (" + SetLoc.T("lobby.me", "나") + ")" : ""));
                 GameUiKit.Active(row.Kick, host && p.Ref != me);
+                row.Look(p.Ref.PlayerId, p.Ref == me);         // v7 카드 — 사람마다 색 · 나 = 민트 테두리
             }
         }
         for (int i = _vPlayers.Count; i < _playerRows.Count; i++) GameUiKit.Active(_playerRows[i], false);

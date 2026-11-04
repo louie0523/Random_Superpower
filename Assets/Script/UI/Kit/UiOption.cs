@@ -15,6 +15,10 @@ public class UiOption : MonoBehaviour
     public Color OffFace = new(0.169f, 0.196f, 0.235f, 1f);     // GameUiKit.Raised
     [Tooltip("켜고 끌 때 글자 색을 면에 맞춰 바꿈 (밝은 면 = 검정 글자)")]
     public bool AutoTextColor = true;
+    [Tooltip("켜짐 · 꺼짐 글자 색을 아래 색으로 (AutoTextColor보다 먼저) — v7 스프레이 탭")]
+    public bool FixedTextColors;
+    public Color OnText = Color.white;
+    public Color OffText = new(0.725f, 0.698f, 0.769f, 1f);
 
     public bool IsOn { get; private set; }
 
@@ -22,7 +26,8 @@ public class UiOption : MonoBehaviour
     {
         IsOn = on;
         if (Face != null) Face.color = on ? OnFace : OffFace;
-        if (AutoTextColor && Label != null && Face != null) Label.color = GameUiKit.TextOn(Face.color);
+        if (FixedTextColors && Label != null) Label.color = on ? OnText : OffText;
+        else if (AutoTextColor && Label != null && Face != null) Label.color = GameUiKit.TextOn(Face.color);
         if (Check != null && Check.enabled != on) Check.enabled = on;
     }
 

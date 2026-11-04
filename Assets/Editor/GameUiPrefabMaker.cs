@@ -226,6 +226,7 @@ public class GameUiPrefabMaker : EditorWindow
         GameUiKit.ShadowOverride = SaveSprite("Shadow_v2", GameUiKit.ShadowTexture(), new Vector4(sb, sb, sb, sb));
         GameUiKit.HexOverride = SaveSprite("Hex_v2", GameUiKit.HexTexture(), Vector4.zero);
         GameUiKit.SlantOverride = SaveSprite("Slant_v2", GameUiKit.SlantTexture(), Vector4.zero);
+        SaveGraffitiArt();
         UiTheme.Reload();
 
         var holder = new GameObject("__GameUiMaker", typeof(RectTransform));
@@ -283,6 +284,7 @@ public class GameUiPrefabMaker : EditorWindow
             Object.DestroyImmediate(holder);
             AbilityUi.RoundedOverride = AbilityUi.CircleOverride = null;
             GameUiKit.CutOverride = GameUiKit.ShadowOverride = GameUiKit.HexOverride = GameUiKit.SlantOverride = null;
+            ClearGraffitiArt();
         }
 
         Relink(links);
@@ -580,6 +582,80 @@ public class GameUiPrefabMaker : EditorWindow
         string parent = System.IO.Path.GetDirectoryName(path).Replace('\\', '/');
         EnsureFolder(parent);
         AssetDatabase.CreateFolder(parent, System.IO.Path.GetFileName(path));
+    }
+
+    // ══════════════════ v7 그래피티 그림 (Assets/UI/Game/UiArt) ══════════════════
+
+    const string ArtFolder = Folder + "/UiArt";
+
+    /// <summary>
+    /// v7 그림을 PNG로 저장해서 끼움 — 이미 있으면 그 PNG를 씀 (손으로 다시 그린 PNG로 바꿔도 됨).
+    /// 코드 그림을 새로 받으려면 UiArt 폴더의 그 PNG를 지우고 다시 만들기
+    /// </summary>
+    static void SaveGraffitiArt()
+    {
+        EnsureFolder(ArtFolder);
+        Vector4 B4(float b) => new(b, b, b, b);
+        float slab = UiGraffitiArt.SlabBorder;
+        GameUiKit.SlabOverride = SaveArt("Slab_v7", () => UiGraffitiArt.Slab(true), B4(slab));
+        GameUiKit.PlainOverride = SaveArt("Plain_v7", () => UiGraffitiArt.Slab(false, 8), B4(slab));
+        GameUiKit.ParaOverride = SaveArt("Para_v7", () => UiGraffitiArt.Para(), GameUiKit.ParaBorder);
+        GameUiKit.DashOverride = SaveArt("Dash_v7", UiGraffitiArt.Dash, B4(UiGraffitiArt.DashBorder));
+        GameUiKit.SprayOverride = SaveArt("Spray_v7", () => UiGraffitiArt.Spray(false), Vector4.zero);
+        GameUiKit.SprayDripOverride = SaveArt("SprayDrip_v7", () => UiGraffitiArt.Spray(true, 9), Vector4.zero);
+        GameUiKit.SplatOverride = SaveArt("Splat_v7", () => UiGraffitiArt.Splat(), Vector4.zero);
+        GameUiKit.GrainOverride = SaveArt("Grain_v7", UiGraffitiArt.Grain, Vector4.zero);
+        GameUiKit.StripeOverride = SaveArt("Stripe_v7", UiGraffitiArt.Stripe, Vector4.zero);
+        GameUiKit.DotsOverride = SaveArt("Dots_v7", UiGraffitiArt.Dots, Vector4.zero);
+        GameUiKit.PipOnOverride = SaveArt("PipOn_v7", () => UiGraffitiArt.Pip(true), Vector4.zero);
+        GameUiKit.PipOffOverride = SaveArt("PipOff_v7", () => UiGraffitiArt.Pip(false), Vector4.zero);
+        GameUiKit.DollOverride = SaveArt("Doll_v7", UiGraffitiArt.Doll, Vector4.zero);
+        GameUiKit.DollShirtOverride = SaveArt("DollShirt_v7", UiGraffitiArt.DollShirt, Vector4.zero);
+        GameUiKit.TriOverride = SaveArt("Tri_v7", UiGraffitiArt.Tri, Vector4.zero);
+    }
+
+    static void ClearGraffitiArt()
+    {
+        GameUiKit.SlabOverride = GameUiKit.PlainOverride = GameUiKit.ParaOverride = GameUiKit.DashOverride = null;
+        GameUiKit.SprayOverride = GameUiKit.SprayDripOverride = GameUiKit.SplatOverride = null;
+        GameUiKit.GrainOverride = GameUiKit.StripeOverride = GameUiKit.DotsOverride = null;
+        GameUiKit.PipOnOverride = GameUiKit.PipOffOverride = null;
+        GameUiKit.DollOverride = GameUiKit.DollShirtOverride = GameUiKit.TriOverride = null;
+    }
+
+    /// <summary>PNG가 없으면 코드로 그려서 저장 · 가져오기 설정은 매번 맞춤 (스프라이트 · 통째 메시 · 압축 없음 · 9-slice 테두리)</summary>
+    static Sprite SaveArt(string name, Func<Texture2D> draw, Vector4 border)
+    {
+        string path = $"{ArtFolder}/{name}.png";
+        if (!File.Exists(path))
+        {
+            var tex = draw();
+            File.WriteAllBytes(path, tex.EncodeToPNG());
+            Object.DestroyImmediate(tex);
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+        }
+
+        var ti = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (ti != null)
+        {
+            bool dirty = false;
+            if (ti.textureType != TextureImporterType.Sprite) { ti.textureType = TextureImporterType.Sprite; dirty = true; }
+            if (ti.spriteImportMode != SpriteImportMode.Single) { ti.spriteImportMode = SpriteImportMode.Single; dirty = true; }
+            if (!ti.alphaIsTransparency) { ti.alphaIsTransparency = true; dirty = true; }
+            if (ti.mipmapEnabled) { ti.mipmapEnabled = false; dirty = true; }
+            if (ti.textureCompression != TextureImporterCompression.Uncompressed) { ti.textureCompression = TextureImporterCompression.Uncompressed; dirty = true; }
+            if (ti.spriteBorder != border) { ti.spriteBorder = border; dirty = true; }
+            var st = new TextureImporterSettings();
+            ti.ReadTextureSettings(st);
+            if (st.spriteMeshType != SpriteMeshType.FullRect)
+            {
+                st.spriteMeshType = SpriteMeshType.FullRect;     // Tiled(반복)로 쓸 때 필요
+                ti.SetTextureSettings(st);
+                dirty = true;
+            }
+            if (dirty) ti.SaveAndReimport();
+        }
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
     }
 }
 
