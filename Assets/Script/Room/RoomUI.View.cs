@@ -101,6 +101,10 @@ public partial class RoomUI
             _showCodeButton.onClick.RemoveAllListeners();
             foreach (var t in _showCodeButton.GetComponentsInChildren<SetLocText>(true)) Destroy(t);   // 복사 글자 번역 연결은 떼기
             _showCodeLabel = _showCodeButton.GetComponentInChildren<TMPro.TMP_Text>(true);
+            var le = _showCodeButton.GetComponent<UnityEngine.UI.LayoutElement>();       // 가로 최소 120 (글자 '코드 가리기'가 안 잘리게)
+            if (le == null) le = _showCodeButton.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+            le.minWidth = Mathf.Max(le.minWidth, 120f);
+            le.preferredWidth = Mathf.Max(le.preferredWidth, 120f);
             On(_showCodeButton, () => ShowCode = !ShowCode);
         }
         On(v.MainButton, MainPressed);
