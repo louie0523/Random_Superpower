@@ -12,7 +12,9 @@ using Object = UnityEngine.Object;
 
 /// <summary>
 /// Tools → UI → 타이틀 씬 만들기
-///   Assets/Scenes/Title.unity — 카메라 · 조명 · 바닥 · 그래피티 벽(스프레이 · 물감 · 망점) · 내 캐릭터 자리(TitleStage) · 타이틀 UI
+///   Assets/Scenes/Title.unity — 카메라 · 조명 · 바닥 · 그래피티 벽 · 내 캐릭터 자리(TitleStage) · 벽 칠하기(TitlePaintMode · PaintView) · 타이틀 UI
+///   벽 · 바닥 = 칠할 수 있는 면(PaintSurface) — 재질은 빈 면(색만), 기본 그래피티는 TitleArt/wall_paint.png · floor_paint.png (투명 · 지워짐)
+///     PNG가 있으면 그대로 씀 · 벽을 골라 인스펙터 '씬에서 칠하기'로 고쳐 저장
 ///   Assets/UI/Game/TitleScreen.prefab — 타이틀 화면 (프리팹에서 마음대로 꾸며도 됨, 다시 만들 때 물어봄)
 ///   Build Settings 맨 앞에 넣음 (이미 있으면 물어보고 옮김)
 /// 캐릭터 모델은 Resources/GameMeta의 '캐릭터 모델' — 비어 있으면 빈 무대
@@ -120,27 +122,33 @@ public static class TitleSceneMaker
         RenderSettings.ambientLight = new Color(0.36f, 0.34f, 0.44f);
         RenderSettings.fog = false;
 
-        // 바닥 · 벽
-        Quad("Ground", new Vector3(0f, 0f, 0f), new Vector3(90f, 0f, 0f), new Vector3(16f, 16f, 1f),
-             Lit("Ground", new Color(0.15f, 0.13f, 0.19f)));
-        Quad("Wall", new Vector3(0f, 3.5f, -2.6f), new Vector3(0f, 180f, 0f), new Vector3(18f, 9f, 1f), Lit("Wall", wallColor));
+        // 바닥 · 벽 — 재질은 빈 면(색만). 코드로 그린 기본 그래피티는 그 위 칠 그림(투명 PNG)으로 → 플레이어가 지울 수 있음
+        var floorColor = new Color(0.15f, 0.13f, 0.19f);
+        var wallTex = DefaultArt("wall", 2048, 1024, new[]
+        {
+            Decal(Spray, new Color(1f, 0.36f, 0.62f, 0.95f), new Vector2(0.69f, 0.40f), new Vector2(0.42f, 0.21f), -8f),
+            Decal(Spray, new Color(0.31f, 0.84f, 0.75f, 0.9f), new Vector2(0.30f, 0.28f), new Vector2(0.36f, 0.18f), 7f),
+            Decal(Spray, new Color(1f, 0.84f, 0.2f, 0.85f), new Vector2(0.47f, 0.62f), new Vector2(0.29f, 0.145f), -3f),
+            Decal(Splat, new Color(1f, 0.84f, 0.2f, 1f), new Vector2(0.62f, 0.66f), new Vector2(0.122f, 0.244f), 0f),
+            Decal(Splat, new Color(0.62f, 0.4f, 1f, 1f), new Vector2(0.34f, 0.57f), new Vector2(0.094f, 0.189f), 25f),
+            Decal(Splat, new Color(1f, 0.36f, 0.62f, 1f), new Vector2(0.24f, 0.48f), new Vector2(0.061f, 0.122f), -15f),
+        });
+        var groundTex = DefaultArt("floor", 1024, 1024, new[]
+        {
+            Decal(Splat, new Color(0.31f, 0.84f, 0.75f, 0.9f), new Vector2(0.5f, 0.5f), new Vector2(0.165f, 0.165f), 20f),
+        });
+        var ground = Quad("Ground", new Vector3(0f, 0f, 0f), new Vector3(90f, 0f, 0f), new Vector3(16f, 16f, 1f), Lit("Ground", floorColor));
+        Surface(ground, "floor", new Vector2Int(1024, 1024), floorColor, groundTex, Vector2.zero);
+        var wall = Quad("Wall", new Vector3(0f, 3.5f, -2.6f), new Vector3(0f, 180f, 0f), new Vector3(18f, 9f, 1f), Lit("Wall", wallColor));
+        Surface(wall, "wall", new Vector2Int(2048, 1024), wallColor, wallTex, new Vector2(0f, -1f));
 
-        // 그래피티 — 벽 위 스프레이 · 물감 · 망점, 발밑 물감
-        var spray = Tex("Spray_v8", () => UiGraffitiArt.Spray(true, 9, 1024), false);     // 4:1 — 늘려서 번지지 않게 붙이는 칸도 4:1
-        var splat = Tex("Splat", () => UiGraffitiArt.Splat(), false);
-        var dots = Tex("Dots", UiGraffitiArt.Dots, true);
-        float z = -2.58f;
-        Quad("Dots", new Vector3(0f, 3.5f, z + 0.005f), new Vector3(0f, 180f, 0f), new Vector3(18f, 9f, 1f),
-             Unlit("Dots", dots, new Color(1f, 1f, 1f, 0.04f), new Vector2(14f, 7f)));
-        Decal("SprayPink", spray, new Color(1f, 0.36f, 0.62f, 0.95f), new Vector3(-3.4f, 2.6f, z), new Vector2(7.6f, 1.9f), -8f, 0.01f);
-        Decal("SprayMint", spray, new Color(0.31f, 0.84f, 0.75f, 0.9f), new Vector3(3.6f, 1.5f, z), new Vector2(6.4f, 1.6f), 7f, 0.015f);
-        Decal("SprayYellow", spray, new Color(1f, 0.84f, 0.2f, 0.85f), new Vector3(0.6f, 4.6f, z), new Vector2(5.2f, 1.3f), -3f, 0.012f);
-        Decal("SplatGold", splat, new Color(1f, 0.84f, 0.2f, 1f), new Vector3(-2.2f, 4.9f, z), new Vector2(2.2f, 2.2f), 0f, 0.02f);
-        Decal("SplatPurple", splat, new Color(0.62f, 0.4f, 1f, 1f), new Vector3(2.8f, 4.1f, z), new Vector2(1.7f, 1.7f), 25f, 0.025f);
-        Decal("SplatPink", splat, new Color(1f, 0.36f, 0.62f, 1f), new Vector3(4.6f, 3.3f, z), new Vector2(1.1f, 1.1f), -15f, 0.03f);
-        var floor = Quad("FloorSplat", new Vector3(0f, 0.006f, 0f), new Vector3(90f, 0f, 0f), new Vector3(2.6f, 2.6f, 1f),
-                         Unlit("FloorSplat", splat, new Color(0.31f, 0.84f, 0.75f, 0.9f), Vector2.one));
-        floor.transform.localRotation = Quaternion.Euler(90f, 20f, 0f);
+        // 벽 칠하기 — 카메라 자리 (벽을 화면 가득) + 모드
+        var view = new GameObject("PaintView");
+        view.transform.position = new Vector3(0f, 2.7f, 7.4f);
+        view.transform.LookAt(new Vector3(0f, 2.45f, -2.6f));
+        var pm = new GameObject("TitlePaintMode").AddComponent<TitlePaintMode>();
+        pm.PaintView = view.transform;
+        pm.Camera = cam;
 
         // 내 캐릭터 자리
         var stage = new GameObject("TitleStage");
@@ -173,50 +181,32 @@ public static class TitleSceneMaker
         return go;
     }
 
-    /// <summary>벽에 붙은 그림 — 겹쳐도 깜빡이지 않게 벽 앞으로 조금씩 (front)</summary>
-    static void Decal(string name, Texture2D tex, Color c, Vector3 pos, Vector2 size, float rot, float front)
+    static void Surface(GameObject go, string id, Vector2Int size, Color baseColor, Texture2D defaultPaint, Vector2 drip)
     {
-        var go = Quad(name, pos + new Vector3(0f, 0f, front), new Vector3(0f, 180f, rot), new Vector3(size.x, size.y, 1f),
-                      Unlit(name, tex, c, Vector2.one));
-        go.GetComponent<MeshRenderer>().receiveShadows = false;
+        var ps = go.AddComponent<PaintSurface>();      // MeshCollider도 같이 붙음 (칠할 곳 찾기)
+        ps.Id = id;
+        ps.Size = size;
+        ps.BaseTexture = null;                          // 바탕 = 빈 면
+        ps.BaseColor = baseColor;
+        ps.DefaultPaint = defaultPaint;                 // 기본 그래피티 (지워짐)
+        ps.DripDirection = drip;
+        ps.RebuildPreview();
     }
 
     // ══════════════════ 재질 · 그림 ══════════════════
 
-    static Material Lit(string name, Color c)
+    static Material Lit(string name, Color c, Texture tex = null)
     {
         var sh = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
         var m = new Material(sh) { name = name };
         m.SetColor("_BaseColor", c);
         m.SetColor("_Color", c);
-        if (m.HasProperty("_Smoothness")) m.SetFloat("_Smoothness", 0.08f);
-        return Save(m);
-    }
-
-    static Material Unlit(string name, Texture2D tex, Color c, Vector2 tiling)
-    {
-        var sh = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Transparent");
-        var m = new Material(sh) { name = name };
-        if (m.HasProperty("_BaseMap"))
+        if (tex != null)
         {
-            m.SetTexture("_BaseMap", tex);
-            m.SetTextureScale("_BaseMap", tiling);
+            if (m.HasProperty("_BaseMap")) m.SetTexture("_BaseMap", tex);
+            m.mainTexture = tex;
         }
-        m.mainTexture = tex;
-        m.mainTextureScale = tiling;
-        m.SetColor("_BaseColor", c);
-        m.SetColor("_Color", c);
-        // 투명 (URP Unlit — 인스펙터의 Surface Type: Transparent와 같게)
-        m.SetFloat("_Surface", 1f);
-        m.SetFloat("_Blend", 0f);
-        m.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
-        m.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
-        m.SetFloat("_SrcBlendAlpha", (float)BlendMode.One);
-        m.SetFloat("_DstBlendAlpha", (float)BlendMode.OneMinusSrcAlpha);
-        m.SetFloat("_ZWrite", 0f);
-        m.SetOverrideTag("RenderType", "Transparent");
-        m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        m.renderQueue = (int)RenderQueue.Transparent;
+        if (m.HasProperty("_Smoothness")) m.SetFloat("_Smoothness", 0.08f);
         return Save(m);
     }
 
@@ -229,29 +219,76 @@ public static class TitleSceneMaker
         return m;
     }
 
-    /// <summary>코드 그림 → PNG (있으면 그대로 — 손으로 다시 그린 PNG로 바꿔도 됨)</summary>
-    static Texture2D Tex(string name, Func<Texture2D> draw, bool repeat)
+    // ══════════════════ 기본 그림 굽기 ══════════════════
+
+    struct DecalDef
     {
-        string path = $"{ArtFolder}/{name}.png";
+        public Func<Texture2D> Draw;
+        public Color Color;
+        public Vector2 Uv, Size;
+        public float Rot;
+    }
+
+    static DecalDef Decal(Func<Texture2D> draw, Color c, Vector2 uv, Vector2 size, float rot) =>
+        new() { Draw = draw, Color = c, Uv = uv, Size = size, Rot = rot };
+
+    static Texture2D Spray() => UiGraffitiArt.Spray(true, 9, 1024);
+    static Texture2D Splat() => UiGraffitiArt.Splat();
+
+    /// <summary>
+    /// 기본 그래피티 (스프레이 · 물감 · 투명 바탕) → {ArtFolder}/{id}_paint.png.
+    /// 이미 있으면 그대로 씀 — 씬에서 칠해 저장한 그림 · 손으로 고친 PNG를 덮지 않게 (새로 받으려면 PNG 지우기)
+    /// </summary>
+    static Texture2D DefaultArt(string id, int w, int h, DecalDef[] decals)
+    {
+        string path = $"{ArtFolder}/{id}_paint.png";
         if (!File.Exists(path))
         {
-            var t = draw();
+            var px = new Color[w * h];        // 전부 투명
+
+            foreach (var dc in decals)
+            {
+                var src = dc.Draw();
+                Stamp(px, w, h, src, dc);
+                Object.DestroyImmediate(src);
+            }
+
+            var t = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            t.SetPixels(px);
+            t.Apply();
             File.WriteAllBytes(path, t.EncodeToPNG());
             Object.DestroyImmediate(t);
-            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
         }
-        if (AssetImporter.GetAtPath(path) is TextureImporter ti)
-        {
-            var wrap = repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp;
-            if (ti.textureType != TextureImporterType.Default || ti.wrapMode != wrap || !ti.alphaIsTransparency)
-            {
-                ti.textureType = TextureImporterType.Default;
-                ti.alphaIsTransparency = true;
-                ti.wrapMode = wrap;
-                ti.SaveAndReimport();
-            }
-        }
+        PaintSurfaceEditor.ImportPaint(path);
         return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+    }
+
+    /// <summary>그림 한 장을 돌려서 찍음 (흰 그림 × 색 · 검은 외곽선은 그대로)</summary>
+    static void Stamp(Color[] px, int w, int h, Texture2D src, DecalDef d)
+    {
+        float cx = d.Uv.x * w, cy = d.Uv.y * h, sw = d.Size.x * w, sh = d.Size.y * h;
+        float rad = d.Rot * Mathf.Deg2Rad, cos = Mathf.Cos(rad), sin = Mathf.Sin(rad);
+        float R = 0.5f * Mathf.Sqrt(sw * sw + sh * sh);
+        int x0 = Mathf.Max(0, (int)(cx - R)), x1 = Mathf.Min(w - 1, (int)(cx + R));
+        int y0 = Mathf.Max(0, (int)(cy - R)), y1 = Mathf.Min(h - 1, (int)(cy + R));
+        for (int y = y0; y <= y1; y++)
+            for (int x = x0; x <= x1; x++)
+            {
+                float dx = x + 0.5f - cx, dy = y + 0.5f - cy;
+                float u = (dx * cos + dy * sin) / sw + 0.5f;
+                float v = (-dx * sin + dy * cos) / sh + 0.5f;
+                if (u < 0f || u > 1f || v < 0f || v > 1f) continue;
+                var s = src.GetPixelBilinear(u, v);
+                float a = s.a * d.Color.a;
+                if (a <= 0.002f) continue;
+                int i = y * w + x;
+                var dst = px[i];
+                float oa = a + dst.a * (1f - a);           // 투명 위에 얹기 (직선 알파)
+                var c = new Color(s.r * d.Color.r, s.g * d.Color.g, s.b * d.Color.b);
+                px[i] = new Color((c.r * a + dst.r * dst.a * (1f - a)) / oa,
+                                  (c.g * a + dst.g * dst.a * (1f - a)) / oa,
+                                  (c.b * a + dst.b * dst.a * (1f - a)) / oa, oa);
+            }
     }
 
     // ══════════════════ 빌드 순서 · 폴더 ══════════════════

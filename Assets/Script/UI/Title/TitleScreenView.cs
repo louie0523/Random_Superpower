@@ -22,12 +22,19 @@ public class TitleScreenView : MonoBehaviour
     public Button Codex;
     public Button Profile;
     public Button Customize;
+    [Tooltip("벽 칠하기 (그래피티)")]
+    public Button Paint;
     public Button Settings;
     public Button Quit;
 
     [Header("지난 판 보상 알림")]
     public GameObject Toast;
     public TMP_Text ToastText;
+
+    [Header("벽 칠하기")]
+    public PaintToolbarView PaintBar;
+    [Tooltip("칠하는 동안 숨길 것 (로고 · 지갑 · 메뉴)")]
+    public GameObject[] HideWhilePainting;
 
     [Header("창")]
     public WeaponGalleryView WeaponPanel;

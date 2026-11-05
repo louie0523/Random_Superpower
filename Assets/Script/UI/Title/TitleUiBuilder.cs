@@ -73,6 +73,7 @@ public static class TitleUiBuilder
             ("Codex", "도감", K.Raised),
             ("Profile", "프로필", K.Raised),
             ("Customize", "꾸미기", K.Mint),
+            ("Paint", "벽 칠하기", K.Orange),
             ("Settings", "설정", K.Raised),
             ("Quit", "종료", K.Panel2),
         };
@@ -80,15 +81,16 @@ public static class TitleUiBuilder
         for (int i = 0; i < items.Length; i++)
         {
             float x = (i % 2 == 0) ? 0f : -30f;         // 엇갈리게 (손으로 붙인 느낌)
-            buttons[i] = MenuButton(menu, font, items[i].name, items[i].label, items[i].face, x, -150f - i * 82f, 390f, 68f, 30f, false);
+            buttons[i] = MenuButton(menu, font, items[i].name, items[i].label, items[i].face, x, -150f - i * 78f, 390f, 64f, 29f, false);
         }
         v.Weapons = buttons[0];
         v.Skins = buttons[1];
         v.Codex = buttons[2];
         v.Profile = buttons[3];
         v.Customize = buttons[4];
-        v.Settings = buttons[5];
-        v.Quit = buttons[6];
+        v.Paint = buttons[5];
+        v.Settings = buttons[6];
+        v.Quit = buttons[7];
 
         // ── 지난 판 보상 ──
         var toast = K.Tag(root, font, "지난 판 1등 · +100 SC", K.Gold, 28f, out var toastText, "Toast");
@@ -98,6 +100,11 @@ public static class TitleUiBuilder
         toast.localRotation = K.Tilt(-2f);
         v.Toast = toast.gameObject;
         v.ToastText = toastText;
+
+        // ── 벽 칠하기 도구 막대 (칠하는 동안만) ──
+        v.PaintBar = PaintToolbarBuilder.Build(root, font, false);
+        v.PaintBar.gameObject.SetActive(false);
+        v.HideWhilePainting = new[] { logo.gameObject, wallet.gameObject, menu.gameObject };
 
         // ── 창 ──
         v.WeaponPanel = Add<WeaponGalleryView>(Frame(root, font, "WeaponPanel", "무기 보기", false, true));

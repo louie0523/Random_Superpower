@@ -21,16 +21,27 @@ public class TitleStage : MonoBehaviour
     float _lastX;
     bool _previewing;
 
+    [Tooltip("벽 칠하기 중엔 캐릭터 숨김 (벽을 가리지 않게)")]
+    public bool HideWhilePainting = true;
+
     void OnEnable()
     {
         Instance = this;
         PlayerSave.Changed += OnSaveChanged;
+        PaintMode.Changed += OnPaintMode;
     }
 
     void OnDisable()
     {
         if (Instance == this) Instance = null;
         PlayerSave.Changed -= OnSaveChanged;
+        PaintMode.Changed -= OnPaintMode;
+    }
+
+    void OnPaintMode(bool on)
+    {
+        if (_model != null && HideWhilePainting) _model.SetActive(!on);
+        _drag = false;
     }
 
     void Start() => Spawn();
@@ -74,7 +85,7 @@ public class TitleStage : MonoBehaviour
 
     void Update()
     {
-        if (_model == null) return;
+        if (_model == null || PaintMode.On) return;
 
         if (Input.GetMouseButtonDown(0))
         {

@@ -67,6 +67,8 @@ public class TitleController : MonoBehaviour
         On(v.Codex, () => Open(v.CodexPanel));
         On(v.Profile, () => Open(v.ProfilePanel));
         On(v.Customize, () => Open(v.CustomizePanel));
+        On(v.Paint, StartPaint);
+        if (v.PaintBar != null) v.PaintBar.gameObject.SetActive(false);
         On(v.Settings, () => SettingsWindow.Open());
         On(v.Quit, () =>
         {
@@ -127,9 +129,34 @@ public class TitleController : MonoBehaviour
         GameUiKit.DropButtonFocus();
     }
 
+    // ══════════════════ 벽 칠하기 ══════════════════
+
+    void StartPaint()
+    {
+        if (View.PaintBar == null) { Debug.LogWarning("[타이틀] 칠하기 도구 막대(PaintBar)가 없어 — 타이틀 화면 프리팹 다시 만들기"); return; }
+        var mode = TitlePaintMode.Instance != null ? TitlePaintMode.Instance : FindFirstObjectByType<TitlePaintMode>();
+        if (mode == null) mode = gameObject.AddComponent<TitlePaintMode>();
+        if (_open != null) _open.Hide();
+        SetPaintHidden(true);
+        mode.Enter(View.PaintBar, () => SetPaintHidden(false));
+        GameUiKit.DropButtonFocus();
+    }
+
+    void SetPaintHidden(bool hide)
+    {
+        if (View.HideWhilePainting != null)
+            foreach (var g in View.HideWhilePainting) if (g != null) g.SetActive(!hide);
+        if (!hide && View.Menu != null) View.Menu.SetActive(_open == null);
+    }
+
     void Update()
     {
         if (!Input.GetKeyDown(KeyCode.Escape)) return;
+        if (PaintMode.On)
+        {
+            if (TitlePaintMode.Instance != null) TitlePaintMode.Instance.Exit();
+            return;
+        }
         if (SettingsWindow.IsOpen || SettingsWindow.ClosedFrame == Time.frameCount) return;     // 설정 창이 스스로 닫음
         if (_open != null) _open.Hide();
     }
