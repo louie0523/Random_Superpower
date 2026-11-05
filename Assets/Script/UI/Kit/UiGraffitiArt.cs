@@ -157,10 +157,13 @@ public static class UiGraffitiArt
 
     // ══════════════════ 스프레이 ══════════════════
 
-    /// <summary>스프레이 자국 — 세 번 겹쳐 뿌린 몸통 + 번진 가장자리 + 점 + (흘러내림)</summary>
-    public static Texture2D Spray(bool drips, int seed = 5)
+    /// <summary>
+    /// 스프레이 자국 — 세 번 겹쳐 뿌린 몸통 + 가장자리 점 + (흘러내림). width = 가로 픽셀 (1024 = 긴 자국, 세로는 같음).
+    /// 뿌연 번짐(halo)은 없음 · 그림 끝 몇 픽셀은 투명 (늘리거나 겹쳐도 가장자리가 번져 보이지 않게)
+    /// </summary>
+    public static Texture2D Spray(bool drips, int seed = 5, int width = 512)
     {
-        int W = 512, H = drips ? 256 : 128;
+        int W = Mathf.Max(128, width), H = drips ? 256 : 128;
         var r = new System.Random(seed);
         float top = H * (drips ? 0.62f : 0.5f);
         float band = H * (drips ? 0.62f : 0.9f);
@@ -172,7 +175,7 @@ public static class UiGraffitiArt
         {
             var (dy, kr, s0, s1) = strokes[k];
             float R = rad * kr;
-            float x0 = R + W * s0 + 2f, x1 = W - R - W * s1 - 2f;
+            float x0 = R + W * s0 + 12f, x1 = W - R - W * s1 - 12f;      // 둥근 끝이 그림 끝(투명 띠)에 안 닿게
             float ph = (float)(r.NextDouble() * 6.28);
             for (int y = 0; y < H; y++)
                 for (int x = 0; x < W; x++)
@@ -183,9 +186,8 @@ public static class UiGraffitiArt
                     float cx = Mathf.Clamp(fx, x0, x1);
                     float d = Mathf.Sqrt((fx - cx) * (fx - cx) + (fy - yc) * (fy - yc)) - (R + wob);
                     float cov = 1f - Smooth(-1.5f, 1.5f, d);
-                    float halo = d > 0f ? Mathf.Exp(-d / (R * 0.22f)) * 0.2f : 0f;
                     int i = y * W + x;
-                    a[i] = Mathf.Max(a[i], Mathf.Max(cov, halo));
+                    a[i] = Mathf.Max(a[i], cov);
                 }
         }
 
@@ -213,7 +215,19 @@ public static class UiGraffitiArt
                 Drip(a, W, H, x, y0, y1, dw);
             }
         }
+        EdgeFade(a, W, H, 6);
         return FromAlpha(a, W, H);
+    }
+
+    /// <summary>그림 끝 n픽셀을 투명으로 (늘렸을 때 끝이 잘려 보이거나 번지지 않게)</summary>
+    static void EdgeFade(float[] a, int W, int H, int n)
+    {
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+            {
+                int e = Mathf.Min(Mathf.Min(x, W - 1 - x), Mathf.Min(y, H - 1 - y));
+                if (e < n) a[y * W + x] *= Mathf.Clamp01(e / (float)n);
+            }
     }
 
     /// <summary>물감 튄 자국 (가운데 덩어리 + 둘레 점 + 흘러내림)</summary>

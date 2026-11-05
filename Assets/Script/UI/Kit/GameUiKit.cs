@@ -142,7 +142,8 @@ public static class GameUiKit
     /// <summary>에디터 프리팹 생성기가 PNG 에셋으로 바꿔 끼움 — 비어 있으면 코드로 그린 것</summary>
     public static Sprite SlabOverride, PlainOverride, ParaOverride, DashOverride, SprayOverride, SprayDripOverride,
                          SplatOverride, GrainOverride, StripeOverride, DotsOverride, PipOnOverride, PipOffOverride,
-                         DollOverride, DollShirtOverride, TriOverride;
+                         DollOverride, DollShirtOverride, TriOverride, SprayLongOverride;
+    static Sprite _sprayLong;
     static Sprite _slab, _plain, _para, _dash, _spray, _sprayDrip, _splat, _grain, _stripe, _dots, _pipOn, _pipOff, _doll, _dollShirt, _tri;
 
     static Sprite Art(ref Sprite cache, Sprite ov, System.Func<Texture2D> draw, Vector4 border)
@@ -167,6 +168,8 @@ public static class GameUiKit
     public static Sprite Dash => Art(ref _dash, DashOverride, UiGraffitiArt.Dash, B(UiGraffitiArt.DashBorder));
     public static Sprite Spray => Art(ref _spray, SprayOverride, () => UiGraffitiArt.Spray(false), Vector4.zero);
     public static Sprite SprayDrip => Art(ref _sprayDrip, SprayDripOverride, () => UiGraffitiArt.Spray(true, 9), Vector4.zero);
+    /// <summary>긴 스프레이 (4:1 · 흘러내림) — 로고 밑 같은 긴 자국. 늘려 쓰지 말고 비슷한 비율로</summary>
+    public static Sprite SprayLong => Art(ref _sprayLong, SprayLongOverride, () => UiGraffitiArt.Spray(true, 11, 1024), Vector4.zero);
     public static Sprite Splat => Art(ref _splat, SplatOverride, () => UiGraffitiArt.Splat(), Vector4.zero);
     public static Sprite Grain => Art(ref _grain, GrainOverride, UiGraffitiArt.Grain, Vector4.zero);
     public static Sprite Stripe => Art(ref _stripe, StripeOverride, UiGraffitiArt.Stripe, Vector4.zero);
@@ -177,6 +180,43 @@ public static class GameUiKit
     public static Sprite DollShirt => Art(ref _dollShirt, DollShirtOverride, UiGraffitiArt.DollShirt, Vector4.zero);
     /// <summary>오른쪽 세모 (고르기 화살표 — 왼쪽은 돌려서)</summary>
     public static Sprite Tri => Art(ref _tri, TriOverride, UiGraffitiArt.Tri, Vector4.zero);
+
+    // ── v7 외곽선 굵기 (Pixels Per Unit Multiplier — 클수록 선이 가늘어짐) ──
+    public const float PpuPanel = 2f;       // 판 · 띠 · 버튼 (Back · Face …)
+    public const float PpuCheck = 6f;       // 체크칸 · 체크
+    public const float PpuDots = 0.7f;      // 망점 (1보다 작으면 점이 커짐 — 0~1)
+    public const float PpuGrain = 0.5f;     // 벽 알갱이
+    /// <summary>망점 진하기 — 잘 보이기보다 옅게 깔리는 느낌 (모든 망점에 곱함)</summary>
+    public const float DotsFade = 0.45f;
+
+    /// <summary>이 그림 · 이름에 맞는 Pixels Per Unit Multiplier (v7)</summary>
+    public static float PpuFor(Sprite s, string name)
+    {
+        if (s == null) return 1f;
+        if (s == Para || s == Slab || s == Plain)
+            return name == "CheckBox" || name == "Check" ? PpuCheck : PpuPanel;
+        if (s == Dots) return PpuDots;
+        if (s == Grain) return PpuGrain;
+        if (s == Stripe) return PpuDots;
+        return 1f;      // 칸 막대(Pip)는 1 그대로 — 칸 폭 계산이 1 기준
+    }
+
+    /// <summary>
+    /// 다 만든 화면 한 번 훑어서 v7 굵기 맞추기 — Img()를 안 거치고 sprite를 직접 넣은 칸까지 (빌더 끝에서 부름)
+    /// </summary>
+    public static void Finish(Transform root)
+    {
+        if (!G || root == null) return;
+        foreach (var img in root.GetComponentsInChildren<Image>(true))
+        {
+            var sp = img.sprite;
+            if (sp == null) continue;
+            if (img.type != Image.Type.Sliced && img.type != Image.Type.Tiled) continue;
+            float want = PpuFor(sp, img.name);
+            if (!Mathf.Approximately(want, 1f) && Mathf.Approximately(img.pixelsPerUnitMultiplier, 1f))
+                img.pixelsPerUnitMultiplier = want;       // 직접 바꾼 값(1이 아닌 것)은 그대로 둠
+        }
+    }
 
     /// <summary>반복 무늬 그림 (Image 'Tiled')</summary>
     public static bool IsTiled(Sprite s) =>
@@ -358,6 +398,7 @@ public static class GameUiKit
         {
             if (IsTiled(sprite)) img.type = Image.Type.Tiled;
             else if (sprite.border != Vector4.zero) img.type = Image.Type.Sliced;
+            if (G) img.pixelsPerUnitMultiplier = PpuFor(sprite, name);
         }
         return img;
     }
@@ -495,10 +536,10 @@ public static class GameUiKit
         return img;
     }
 
-    /// <summary>판 위에 대각선 줄무늬 (파란 판) — 외곽선 안쪽으로</summary>
+    /// <summary>판 위에 흰 망점 (파란 판 — 카툰 느낌) — 외곽선 안쪽으로. 예전 이름 그대로 (빗금 대신 망점)</summary>
     public static Image StripesOn(Image face, float alpha = 0.15f)
     {
-        var s = Img("Stripes", face.transform, Stripe, new Color(1f, 1f, 1f, alpha));
+        var s = Img("Dots", face.transform, Dots, new Color(1f, 1f, 1f, (alpha + 0.05f) * DotsFade));
         Fill(s.rectTransform, 7f);
         s.transform.SetAsFirstSibling();
         var le = s.gameObject.AddComponent<LayoutElement>();
@@ -509,7 +550,7 @@ public static class GameUiKit
     /// <summary>판 위에 망점 (카드)</summary>
     public static Image DotsOn(Image face, float alpha = 0.22f)
     {
-        var s = Img("Dots", face.transform, Dots, new Color(0f, 0f, 0f, alpha));
+        var s = Img("Dots", face.transform, Dots, new Color(0f, 0f, 0f, alpha * DotsFade));
         Fill(s.rectTransform, 7f);
         s.transform.SetAsFirstSibling();
         var le = s.gameObject.AddComponent<LayoutElement>();
@@ -529,6 +570,7 @@ public static class GameUiKit
         img.type = Image.Type.Sliced;
         img.color = face;
         img.raycastTarget = false;
+        if (G) img.pixelsPerUnitMultiplier = PpuPanel;
         var h = rt.gameObject.AddComponent<HorizontalLayoutGroup>();
         h.padding = new RectOffset(Mathf.RoundToInt(size * 0.9f + 8f), Mathf.RoundToInt(size * 0.9f + 8f), 3, 5);
         h.childAlignment = TextAnchor.MiddleCenter;

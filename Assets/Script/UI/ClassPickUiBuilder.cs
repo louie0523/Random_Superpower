@@ -135,6 +135,7 @@ public static class ClassPickUiBuilder
         view.Glow = glow;
         view.Visual = body;
         view.PlatePadding = 44f;
+        GameUiKit.Finish(root);
         return view;
     }
 
@@ -206,6 +207,7 @@ public static class ClassPickUiBuilder
         hlg.childControlWidth = hlg.childControlHeight = false;
         hlg.childForceExpandWidth = hlg.childForceExpandHeight = false;
         s.Cards = cards;
+        GameUiKit.Finish(root);
         return s;
     }
 

@@ -155,6 +155,7 @@ public static class SettingsUiBuilders
     /// </summary>
     static void Thinner(Transform root)
     {
+        K.Finish(root);
         foreach (var img in root.GetComponentsInChildren<Image>(true))
         {
             var sp = img.sprite;
@@ -410,6 +411,7 @@ public static class SettingsUiBuilders
         v.SettingsButton = Big(c, font, "Settings", "설정", Color.white, K.Ink, "set.esc.settings");
         v.LeaveButton = Big(c, font, "Leave", "방 나가기", K.Red, Color.white, "set.esc.leave");
         v.QuitButton = Big(c, font, "Quit", "게임 종료", Color.white, K.Ink, "set.esc.quit");
+        K.Finish(host.transform);
         return v;
     }
 

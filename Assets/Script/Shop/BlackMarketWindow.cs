@@ -143,6 +143,7 @@ public class BlackMarketWindow : MonoBehaviour
         SetLocText.Ensure(ct, "market.close");
         close.onClick.AddListener(Hide);
 
+        K.Finish(_root);                       // v7 외곽선 굵기
         _root.gameObject.SetActive(false);
     }
 

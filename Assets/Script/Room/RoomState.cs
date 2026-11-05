@@ -18,6 +18,7 @@ public struct RoomPlayer : INetworkStruct
     public NetworkBool InGame;         // 이번 게임 참가자 (false면 옵저버)
     public NetworkString<_32> Name;
     public NetworkString<_32> Uid;     // 강퇴 기록용 (기기마다 고정)
+    public NetworkString<_32> Look;    // 꾸미기 부위 (Appearance.PartsCode) — 대기실 카드 사진
 }
 
 /// <summary>
@@ -153,13 +154,13 @@ public class RoomState : NetworkBehaviour
         if (Time.unscaledTime < _nextRegister) return;
 
         _nextRegister = Time.unscaledTime + 1.5f;
-        RPC_Register(Runner.LocalPlayer, RoomLauncher.Nick, RoomLauncher.UserId);
+        RPC_Register(Runner.LocalPlayer, RoomLauncher.Nick, RoomLauncher.UserId, PlayerSave.Look.PartsCode);
     }
 
     // ══════════════════ 명단 ══════════════════
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_Register(PlayerRef p, string name, string uid)
+    public void RPC_Register(PlayerRef p, string name, string uid, string look)
     {
         if (Find(p) >= 0) return;
         if (IsKicked(uid)) { RPC_Removed(p, 1); return; }
@@ -179,6 +180,7 @@ public class RoomState : NetworkBehaviour
             Order = NextOrder,
             Name = Clip(name.Trim(), 16),
             Uid = Clip(uid, 30),
+            Look = Clip(look ?? "", 30),
             InGame = false,   // 게임 중에 들어오면 옵저버
         });
     }

@@ -50,6 +50,7 @@ public static class PanelUiBuilder
 
         tpl.SetAsLastSibling();
         tpl.gameObject.SetActive(false);       // 틀 묶음만 끔 — 틀 자체는 켜진 채 (복제본이 바로 보이게)
+        K.Finish(host.transform);              // v7 외곽선 굵기
         return host;
     }
 
@@ -838,21 +839,27 @@ public static class PanelUiBuilder
         // ── 왼쪽: 장비 + 내 캐릭터 ──
         var gSec = K.Rect("Gear", win);
         Abs(gSec, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(40f, 40f), new Vector2(700f, -140f));
-        K.Deco(gSec, K.SprayDrip, K.Pink, new Vector2(0.5f, 0.5f), new Vector2(-10f, -40f), new Vector2(760f, 380f), -14f);
+        K.Deco(gSec, K.SprayDrip, K.Pink, new Vector2(0.5f, 0.5f), new Vector2(-10f, 20f), new Vector2(760f, 380f), -14f);
 
-        var who = K.Rect("Character", gSec);
-        who.anchorMin = who.anchorMax = new Vector2(0.5f, 0.5f);
-        who.pivot = new Vector2(0.5f, 0.5f);
-        who.anchoredPosition = new Vector2(0f, -10f);
-        who.sizeDelta = new Vector2(330f, 600f);
+        // 내 캐릭터 — 직사각형 판 안에 실제 3D (상반신). 못 찍으면 꾸미기 사진
+        const float FW = 360f, FH = 440f;
+        var frameRt = K.Rect("CharacterFrame", gSec);
+        frameRt.anchorMin = frameRt.anchorMax = new Vector2(0.5f, 0.5f);
+        frameRt.pivot = new Vector2(0.5f, 0.5f);
+        frameRt.anchoredPosition = new Vector2(0f, 10f);
+        frameRt.sizeDelta = new Vector2(FW, FH);
+        var frameFace = K.Sticker(frameRt, K.Panel2, 0f, 0f);
 
-        var fallback = K.Rect("Doll", who);
+        var who = K.Rect("Character", frameFace.transform);
+        K.Fill(who, 8f);
+        who.gameObject.AddComponent<RectMask2D>();
+
+        var fallback = K.Rect("Photo", who);
         K.Fill(fallback);
-        var dw = 250f;
-        var dh = dw * UiGraffitiArt.DollH / UiGraffitiArt.DollW;
-        var shirt = K.Img("Shirt", fallback, K.DollShirt, new Color(0.310f, 0.639f, 0.878f));
-        var doll = K.Img("Body", fallback, K.Doll, Color.white);
-        foreach (var d in new[] { shirt, doll }) K.Center(d.rectTransform, 0f, 0f, dw, dh);
+        var fbImg = fallback.gameObject.AddComponent<RawImage>();
+        fbImg.raycastTarget = false;
+        var fbPhoto = fallback.gameObject.AddComponent<UiCharacterPhoto>();
+        fbPhoto.Width = 344; fbPhoto.Height = 424;
 
         var live = K.Rect("Live", who);
         K.Fill(live);
@@ -862,13 +869,13 @@ public static class PanelUiBuilder
         cam.Target = raw;
         cam.LiveRoot = live.gameObject;
         cam.FallbackRoot = fallback.gameObject;
-        cam.FullBody = true;
-        cam.BodyHeight = 0.95f;
-        cam.Distance = 3.4f;
+        cam.FullBody = true;            // 발밑 기준 높이 → 가슴 · 얼굴 쪽을 봄 (상반신)
+        cam.BodyHeight = 1.35f;
+        cam.Distance = 1.7f;
         cam.Fov = 30f;
-        cam.Far = 6f;
-        cam.Size = 640;
-        cam.Aspect = 330f / 600f;
+        cam.Far = 4f;
+        cam.Size = 512;
+        cam.Aspect = (FW - 16f) / (FH - 16f);
         cam.Background = new Color(0f, 0f, 0f, 0f);
         live.gameObject.SetActive(false);
 
@@ -876,9 +883,9 @@ public static class PanelUiBuilder
         var helmet = InvSlotTemplate(gSec, font, display, "ui.item.slot.Helmet");
         var armor = InvSlotTemplate(gSec, font, display, "ui.item.slot.Armor");
         var boots = InvSlotTemplate(gSec, font, display, "ui.item.slot.Boots");
-        GearAt(helmet, new Vector2(1f, 1f), new Vector2(-90f, -150f), 5f);
-        GearAt(armor, new Vector2(0f, 0.5f), new Vector2(90f, 10f), -4f);
-        GearAt(boots, new Vector2(1f, 0f), new Vector2(-90f, 130f), -3f);
+        GearAt(helmet, new Vector2(1f, 1f), new Vector2(-70f, -140f), 4f);
+        GearAt(armor, new Vector2(0f, 0.5f), new Vector2(70f, 10f), -3f);
+        GearAt(boots, new Vector2(1f, 0f), new Vector2(-70f, 120f), -2f);
 
         // ── 오른쪽: 파란 판 · 무기 ──
         var wSec = K.Rect("Weapons", win);

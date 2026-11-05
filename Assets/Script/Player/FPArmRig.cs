@@ -320,6 +320,13 @@ public class FPArmRig : MonoBehaviour
         MountInternal(weapon);
     }
 
+    /// <summary>지금 무기를 다시 띄움 (무기 스킨이 바뀌었을 때 — PlayerCosmetics)</summary>
+    public void Remount()
+    {
+        if (_overriding || _weapon == null) return;
+        MountInternal(_weapon);
+    }
+
     void MountInternal(EquipmentData weapon)
     {
         DestroyWeapon();
@@ -339,7 +346,10 @@ public class FPArmRig : MonoBehaviour
         Transform hand = ParentTransform(CurrentParentFor(weapon, 0));
         if (hand == null) return;
 
-        _weaponObj = SpawnModel(weapon.ModelPrefab, hand);
+        // 무기 스킨 (게임 중 · 이 사람이 낀 것) — 모델 통째로 또는 재질만
+        var skin = Application.isPlaying ? GetComponentInParent<PlayerCosmetics>()?.SkinFor(weapon.Id) : null;
+        _weaponObj = SpawnModel(WeaponSkins.ModelFor(weapon, skin), hand);
+        WeaponSkins.ApplyMaterials(_weaponObj, skin);
         _parts.Add(new PartInst { Obj = _weaponObj, Phase = Application.isPlaying ? Random.Range(0f, 100f) : 0f });
 
         // 1번~ — 추가 모델 (장식: 콜라이더 끔)

@@ -556,6 +556,32 @@ public class GameUiPrefabMaker : EditorWindow
         EditorGUIUtility.PingObject(t);
     }
 
+    /// <summary>
+    /// 다른 만들기 도구(타이틀 씬 등)용 — 코드 그림을 PNG로 저장해 끼운 채로 build를 실행하고 원래대로.
+    /// 프리팹 안의 그림이 에셋을 가리키게 (실행 중 만든 그림은 저장이 안 됨)
+    /// </summary>
+    public static void WithSavedArt(Action build)
+    {
+        EnsureFolder(Folder);
+        int R = AbilityUi.RoundedRadius;
+        AbilityUi.RoundedOverride = SaveSprite("Rounded", AbilityUi.RoundedTexture(), new Vector4(R, R, R, R));
+        AbilityUi.CircleOverride = SaveSprite("Circle", AbilityUi.CircleTexture(), Vector4.zero);
+        int cb = GameUiKit.CutBorder, sb = GameUiKit.ShadowBorder;
+        GameUiKit.CutOverride = SaveSprite("Cut_v2", GameUiKit.CutTexture(), new Vector4(cb, cb, cb, cb));
+        GameUiKit.ShadowOverride = SaveSprite("Shadow_v2", GameUiKit.ShadowTexture(), new Vector4(sb, sb, sb, sb));
+        GameUiKit.HexOverride = SaveSprite("Hex_v2", GameUiKit.HexTexture(), Vector4.zero);
+        GameUiKit.SlantOverride = SaveSprite("Slant_v2", GameUiKit.SlantTexture(), Vector4.zero);
+        SaveGraffitiArt();
+        UiTheme.Reload();
+        try { build(); }
+        finally
+        {
+            AbilityUi.RoundedOverride = AbilityUi.CircleOverride = null;
+            GameUiKit.CutOverride = GameUiKit.ShadowOverride = GameUiKit.HexOverride = GameUiKit.SlantOverride = null;
+            ClearGraffitiArt();
+        }
+    }
+
     static Sprite SaveSprite(string name, Texture2D tex, Vector4 border)
     {
         string path = $"{Folder}/{name}.png";
@@ -601,8 +627,10 @@ public class GameUiPrefabMaker : EditorWindow
         GameUiKit.PlainOverride = SaveArt("Plain_v7", () => UiGraffitiArt.Slab(false, 8), B4(slab));
         GameUiKit.ParaOverride = SaveArt("Para_v7", () => UiGraffitiArt.Para(), GameUiKit.ParaBorder);
         GameUiKit.DashOverride = SaveArt("Dash_v7", UiGraffitiArt.Dash, B4(UiGraffitiArt.DashBorder));
-        GameUiKit.SprayOverride = SaveArt("Spray_v7", () => UiGraffitiArt.Spray(false), Vector4.zero);
-        GameUiKit.SprayDripOverride = SaveArt("SprayDrip_v7", () => UiGraffitiArt.Spray(true, 9), Vector4.zero);
+        // 스프레이는 v8 — 번짐(뿌연 가장자리) 줄이고 끝을 투명하게 다시 그림
+        GameUiKit.SprayOverride = SaveArt("Spray_v8", () => UiGraffitiArt.Spray(false), Vector4.zero);
+        GameUiKit.SprayDripOverride = SaveArt("SprayDrip_v8", () => UiGraffitiArt.Spray(true, 9), Vector4.zero);
+        GameUiKit.SprayLongOverride = SaveArt("SprayLong_v8", () => UiGraffitiArt.Spray(true, 11, 1024), Vector4.zero);
         GameUiKit.SplatOverride = SaveArt("Splat_v7", () => UiGraffitiArt.Splat(), Vector4.zero);
         GameUiKit.GrainOverride = SaveArt("Grain_v7", UiGraffitiArt.Grain, Vector4.zero);
         GameUiKit.StripeOverride = SaveArt("Stripe_v7", UiGraffitiArt.Stripe, Vector4.zero);
@@ -617,7 +645,7 @@ public class GameUiPrefabMaker : EditorWindow
     static void ClearGraffitiArt()
     {
         GameUiKit.SlabOverride = GameUiKit.PlainOverride = GameUiKit.ParaOverride = GameUiKit.DashOverride = null;
-        GameUiKit.SprayOverride = GameUiKit.SprayDripOverride = GameUiKit.SplatOverride = null;
+        GameUiKit.SprayOverride = GameUiKit.SprayDripOverride = GameUiKit.SplatOverride = GameUiKit.SprayLongOverride = null;
         GameUiKit.GrainOverride = GameUiKit.StripeOverride = GameUiKit.DotsOverride = null;
         GameUiKit.PipOnOverride = GameUiKit.PipOffOverride = null;
         GameUiKit.DollOverride = GameUiKit.DollShirtOverride = GameUiKit.TriOverride = null;
@@ -643,6 +671,9 @@ public class GameUiPrefabMaker : EditorWindow
             if (ti.spriteImportMode != SpriteImportMode.Single) { ti.spriteImportMode = SpriteImportMode.Single; dirty = true; }
             if (!ti.alphaIsTransparency) { ti.alphaIsTransparency = true; dirty = true; }
             if (ti.mipmapEnabled) { ti.mipmapEnabled = false; dirty = true; }
+            bool tiled = name.StartsWith("Dots") || name.StartsWith("Grain") || name.StartsWith("Stripe") || name.StartsWith("Dash") || name.StartsWith("Pip");
+            var wrap = tiled ? TextureWrapMode.Repeat : TextureWrapMode.Clamp;     // 한 장짜리 그림은 Clamp — 가장자리에 반대쪽이 번져 보이지 않게
+            if (ti.wrapMode != wrap) { ti.wrapMode = wrap; dirty = true; }
             if (ti.textureCompression != TextureImporterCompression.Uncompressed) { ti.textureCompression = TextureImporterCompression.Uncompressed; dirty = true; }
             if (ti.spriteBorder != border) { ti.spriteBorder = border; dirty = true; }
             var st = new TextureImporterSettings();

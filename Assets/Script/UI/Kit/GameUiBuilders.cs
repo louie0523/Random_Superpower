@@ -150,6 +150,7 @@ public static class GameUiBuilders
         v.RowColor = K.Graffiti ? K.Soft : K.Raised;
         v.SelfColor = K.MintDark;
         v.DeadColor = new Color(0.1f, 0.11f, 0.13f, 1f);
+        K.Finish(host.transform);
         return v;
     }
 
@@ -279,6 +280,7 @@ public static class GameUiBuilders
 
         v.CloseButton = K.Btn("Close", c, font, "닫기 (Esc)", K.Yellow, 24f, out _);
         K.Size(v.CloseButton, -1f, 64f);
+        K.Finish(host.transform);
         return v;
     }
 
@@ -584,6 +586,7 @@ public static class GameUiBuilders
         v.UnreadyColor = K.Raised;
 
         v.WaitingPanel.SetActive(false);        // 편집할 땐 켜서 보기
+        K.Finish(host.transform);
         return v;
     }
 
@@ -848,18 +851,16 @@ public static class GameUiBuilders
 
         var face = K.Img("Face", rt, K.Plain, CardBack[0]);
         K.Fill(face.rectTransform);
-        K.DotsOn(face, 0.22f);
 
-        var shirt = K.Img("Shirt", face.transform, K.DollShirt, CardShirt[0]);
-        var doll = K.Img("Doll", face.transform, K.Doll, Color.white);
-        foreach (var d in new[] { shirt, doll })
-        {
-            var r = d.rectTransform;
-            r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
-            r.pivot = new Vector2(0.5f, 1f);
-            r.anchoredPosition = new Vector2(0f, -40f);
-            r.sizeDelta = new Vector2(104f, 104f * UiGraffitiArt.DollH / UiGraffitiArt.DollW);
-        }
+        // 캐릭터 사진 (그 사람이 맞춘 꾸미기로 찍은 3D 사진 — RoomUI가 넣음). 이름판 위 전부
+        var photoRt = K.Rect("Photo", face.transform);
+        photoRt.anchorMin = new Vector2(0f, 0f);
+        photoRt.anchorMax = new Vector2(1f, 1f);
+        photoRt.offsetMin = new Vector2(7f, 58f);
+        photoRt.offsetMax = new Vector2(-7f, -7f);
+        var photo = photoRt.gameObject.AddComponent<RawImage>();
+        photo.raycastTarget = false;
+        photo.enabled = false;
 
         var plate = K.Img("Plate", face.transform, null, K.InkLine);
         var pr = plate.rectTransform;
@@ -871,7 +872,7 @@ public static class GameUiBuilders
 
         var v = rt.gameObject.AddComponent<RoomPlayerRowView>();
         v.Face = face;
-        v.Shirt = shirt;
+        v.Photo = photo;
         v.MeRing = ring.gameObject;
         v.CardBacks = (Color[])CardBack.Clone();
         v.CardShirts = (Color[])CardShirt.Clone();
