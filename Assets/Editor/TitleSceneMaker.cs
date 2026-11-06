@@ -146,8 +146,12 @@ public static class TitleSceneMaker
         var view = new GameObject("PaintView");
         view.transform.position = new Vector3(0f, 2.7f, 7.4f);
         view.transform.LookAt(new Vector3(0f, 2.45f, -2.6f));
+        var floorView = new GameObject("PaintViewFloor");       // 바닥 칠하기 (Tab · '바닥' 버튼)
+        floorView.transform.position = new Vector3(0f, 6.5f, 4.7f);
+        floorView.transform.LookAt(new Vector3(0f, 0f, 1.1f));
         var pm = new GameObject("TitlePaintMode").AddComponent<TitlePaintMode>();
         pm.PaintView = view.transform;
+        pm.FloorView = floorView.transform;
         pm.Camera = cam;
 
         // 내 캐릭터 자리

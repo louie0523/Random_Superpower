@@ -150,7 +150,7 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
             GUI.enabled = true;
             GUILayout.EndHorizontal();
         }
-        if (shown == 0) GUILayout.Label(SetLoc.T("lobby.empty", "열린 방이 없어"), _small);
+        if (shown == 0) GUILayout.Label(SetLoc.T("lobby.empty", "열린 방이 없습니다"), _small);
         GUILayout.EndScrollView();
 
         GUILayout.Space(12);
@@ -200,10 +200,10 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
         if (GUILayout.Button(SetLoc.T("lobby.copy", "복사"), GUILayout.Width(100)))
         {
             GUIUtility.systemCopyBuffer = code;
-            L.Toast(SetLoc.T("lobby.code_copied", "방 코드 복사함"));
+            L.Toast(SetLoc.T("lobby.code_copied", "방 코드를 복사했습니다"));
         }
         GUILayout.EndHorizontal();
-        GUILayout.Label(rs.Hidden ? SetLoc.T("lobby.hidden_room", "숨김 방 — 코드로만 들어올 수 있어") : SetLoc.T("lobby.public_room", "공개 방"), _small);
+        GUILayout.Label(rs.Hidden ? SetLoc.T("lobby.hidden_room", "숨김 방 — 코드로만 들어올 수 있습니다") : SetLoc.T("lobby.public_room", "공개 방"), _small);
         GUILayout.Label(SetLoc.F("lobby.people", "사람 {0}/{1}", rs.PlayerCount, rs.MaxPlayers), _small);
         GUILayout.Space(8);
 
@@ -290,7 +290,7 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
 
         s.CentralChannelSeconds = Step(SetLoc.T("lobby.channel", "중앙 채널 시간"), s.CentralChannelSeconds, 1, 1, 60,
                                        v => SetLoc.F("lobby.unit.sec", "{0}초", v), ref changed, false);
-        GUILayout.Label(SetLoc.T("lobby.altar_note", "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됨"), _small);
+        GUILayout.Label(SetLoc.T("lobby.altar_note", "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됩니다"), _small);
         GUILayout.Space(6);
 
         int c0 = Mathf.RoundToInt(s.ChestRefillSeconds);
@@ -365,7 +365,7 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
         if (GUILayout.Button(SetLoc.T("lobby.copy_settings", "설정 복사"), GUILayout.Width(200)))
         {
             GUIUtility.systemCopyBuffer = rs.Settings.ToShareCode();
-            L.Toast(SetLoc.T("lobby.settings_copied", "방 설정을 클립보드에 복사함"));
+            L.Toast(SetLoc.T("lobby.settings_copied", "방 설정을 클립보드에 복사했습니다"));
         }
         GUI.enabled = host;
         if (GUILayout.Button(SetLoc.T("lobby.paste", "붙여넣기"), GUILayout.Width(200)))
@@ -373,7 +373,7 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
             if (RoomSettings.TryParse(GUIUtility.systemCopyBuffer, out var p) && rs.ApplySettings(p))
                 L.Toast(SetLoc.T("lobby.settings_pasted", "붙여 넣은 설정 적용"));
             else
-                L.Toast(SetLoc.T("lobby.no_settings", "클립보드에 방 설정이 없어"));
+                L.Toast(SetLoc.T("lobby.no_settings", "클립보드에 방 설정이 없습니다"));
         }
         GUI.enabled = true;
         GUILayout.EndHorizontal();
@@ -382,7 +382,7 @@ public partial class RoomUI : MonoBehaviour, ILocRefresh
         _presetName = GUILayout.TextField(_presetName, 24, GUILayout.Width(300));
         if (GUILayout.Button(SetLoc.T("lobby.save_file", "파일로 저장"), GUILayout.Width(200)))
         {
-            if (rs.Settings.SaveAs(_presetName)) L.Toast(SetLoc.F("lobby.saved", "[{0}] 저장함", _presetName));
+            if (rs.Settings.SaveAs(_presetName)) L.Toast(SetLoc.F("lobby.saved", "[{0}] 저장했습니다", _presetName));
             _presetRefresh = 0f;
         }
         GUILayout.EndHorizontal();

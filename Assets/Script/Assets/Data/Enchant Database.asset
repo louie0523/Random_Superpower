@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f6ecac951d50f44a05110436c522dd, type: 3}
+  m_Name: Enchant Database
+  m_EditorClassIdentifier: Assembly-CSharp::EnchantDatabase
+  searchFolder: Assets/Data/Enchants
+  All:
+  - {fileID: 11400000, guid: 1abc0e2a916d53a4aaaf02501988dc0b, type: 2}
+  - {fileID: 11400000, guid: fc513c24e370a1f41ac995bd82a1863a, type: 2}
+  - {fileID: 11400000, guid: 9695241646b3de942a591240e1b350c6, type: 2}
+  - {fileID: 11400000, guid: 07b667ebf986f774694093a07bdc6862, type: 2}
+  - {fileID: 11400000, guid: 48a5b838eee414d44b8275d9b44bf22e, type: 2}
+  - {fileID: 11400000, guid: f4d7b93f3ac8ef443b3509d3dfeee57f, type: 2}
+  - {fileID: 11400000, guid: 330d78c8819965c4fa72e4ab150fc1db, type: 2}
+  - {fileID: 11400000, guid: d1bded920ffd74140b06c406e66a7800, type: 2}
+  Specials:
+  - {fileID: 11400000, guid: 9ebd9f92ba58e944aa508c97348eb7b4, type: 2}
+  - {fileID: 11400000, guid: 482acaa3d1d37ce4696de21cf4712d0d, type: 2}
+  - {fileID: 11400000, guid: 91f07d2f1c00ac44ebe7c83eec039a89, type: 2}
+  - {fileID: 11400000, guid: ab9e14981e1b87b4ba813a34e2299315, type: 2}
+  - {fileID: 11400000, guid: 551224af1c823ca4eb55a805e828bec4, type: 2}
+  - {fileID: 11400000, guid: ea638eaa9ea93c548856a4a81edebf5d, type: 2}
+  - {fileID: 11400000, guid: 212897d322fdf194eb5176d34c0242a6, type: 2}
+  - {fileID: 11400000, guid: 265e441175541124e8915d2386fc616f, type: 2}
+  - {fileID: 11400000, guid: 4b5d7f941903cff48ab6f3396a93c2f9, type: 2}

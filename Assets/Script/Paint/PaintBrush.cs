@@ -36,6 +36,9 @@ public class PaintBrush
 
     public static readonly Color Ink = new(0.067f, 0.067f, 0.067f, 1f);
 
+    /// <summary>외곽선 두께 (픽셀) — 붓 반지름에 비례 (12%, 1.5 ~ 12)</summary>
+    public static float OutlinePx(float radiusPx) => Mathf.Clamp(radiusPx * 0.12f, 1.5f, 12f);
+
     /// <summary>기본 물감 색 (그래피티 테마)</summary>
     public static readonly Color[] Palette =
     {

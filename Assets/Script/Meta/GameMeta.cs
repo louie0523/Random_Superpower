@@ -20,6 +20,8 @@ public class GameMeta : ScriptableObject
     public GameObject CharacterModel;
     [Tooltip("타이틀 · 꾸미기에서 틀 애니메이터 (비우면 모델에 들어 있는 것)")]
     public RuntimeAnimatorController IdleAnimator;
+    [Tooltip("타이틀 · 꾸미기 · 사진에 띄울 때 크기 (1 = 모델 그대로). 사진은 크기에 맞춰 찍혀서 영향 없음")]
+    [Range(0.05f, 3f)] public float CharacterScale = 0.5f;
 
     [Header("씬")]
     public string TitleScene = "Title";

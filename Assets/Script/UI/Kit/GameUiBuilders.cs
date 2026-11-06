@@ -393,7 +393,7 @@ public static class GameUiBuilders
         var list = K.Scroll("RoomList", c, out var sr, 10f);
         K.Size(sr, -1f, -1f, -1f, 1f);
         v.RoomListContent = list;
-        v.EmptyText = K.Note(list, font, "열린 방이 없어 — 새로 만들어 봐", 22f);
+        v.EmptyText = K.Note(list, font, "열린 방이 없습니다 — 새로 만들어 보십시오", 22f);
         K.Size(v.EmptyText, -1f, 44f);
 
         var create = K.Row("Create", c, 62f, 12f);
@@ -487,7 +487,7 @@ public static class GameUiBuilders
         v.NeedAllOption = K.Option("NeedAll", body, font, "서브 제단을 전부 열어야 중앙 제단", true, 50f);
         v.NeededRow = K.Stepper("Needed", body, font, "필요한 서브 제단", false);
         v.ChannelRow = K.Stepper("Channel", body, font, "중앙 채널 시간", false);
-        var note = K.Note(body, font, "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됨", 18f);
+        var note = K.Note(body, font, "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됩니다", 18f);
         K.Size(note, -1f, 26f);
 
         K.Section(body, font, "밴");
@@ -621,7 +621,7 @@ public static class GameUiBuilders
         var rows = K.Scroll("RoomList", lc.transform, out var sr, 10f);
         K.Size(sr, -1f, -1f, -1f, 1f);
         v.RoomListContent = rows;
-        v.EmptyText = K.Note(rows, font, "열린 방이 없어 — 새로 만들어 봐", 22f);
+        v.EmptyText = K.Note(rows, font, "열린 방이 없습니다 — 새로 만들어 보십시오", 22f);
         K.Size(v.EmptyText, -1f, 44f);
 
         // ── 오른쪽: 파란 판 — 방 만들기 · 코드로 참가 ──
@@ -737,7 +737,7 @@ public static class GameUiBuilders
         v.NeedAllOption = K.Option("NeedAll", body, font, "서브 제단을 전부 열어야 중앙 제단", true, 50f);
         v.NeededRow = K.Stepper("Needed", body, font, "필요한 서브 제단", false);
         v.ChannelRow = K.Stepper("Channel", body, font, "중앙 채널 시간", false);
-        var note = K.Note(body, font, "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됨", 18f);
+        var note = K.Note(body, font, "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됩니다", 18f);
         K.Size(note, -1f, 26f);
 
         K.Section(body, font, "밴");

@@ -21,7 +21,7 @@ public static class LobbyLoc
         ("lobby.lock", "잠금"),
         ("lobby.map", "맵"),
         ("lobby.col.state", "상태"),
-        ("lobby.empty_hint", "열린 방이 없어 — 새로 만들어 봐"),
+        ("lobby.empty_hint", "열린 방이 없습니다 — 새로 만들어 보십시오"),
         ("lobby.room_name_hint", "비우면 '닉네임의 방'"),
         ("lobby.hidden", "숨김 (코드로만)"),
         ("lobby.create", "방 만들기"),
@@ -45,7 +45,7 @@ public static class LobbyLoc
         ("lobby.need_all", "서브 제단을 전부 열어야 중앙 제단"),
         ("lobby.needed", "필요한 서브 제단"),
         ("lobby.channel", "중앙 채널 시간"),
-        ("lobby.altar_note", "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됨"),
+        ("lobby.altar_note", "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됩니다"),
         ("lobby.section_ban", "밴"),
         ("lobby.unban_all", "전부 풀기"),
         ("lobby.presets", "프리셋"),
@@ -61,17 +61,29 @@ public static class LobbyLoc
     /// <summary>다른 스크립트(RoomState 등)가 한국어로 만든 알림 · 시작 못 하는 이유 (키, 한국어)</summary>
     static readonly (string Key, string Ko)[] Messages =
     {
+        ("lobby.msg.kicked", "방장이 내보냈습니다"),
+        ("lobby.err.full", "방이 가득 찼습니다"),
+        ("lobby.err.not_found", "해당 코드의 방이 없습니다"),
+        ("lobby.err.closed", "들어갈 수 없는 방입니다"),
+        ("lobby.why.host_only", "방장만 시작할 수 있습니다"),
+        ("lobby.why.preparing", "준비 중"),
+        ("lobby.why.no_scene", "맵 씬이 빌드 설정에 없습니다"),
+    };
+
+    static Dictionary<string, string> _staticByKo, _msgByKo;
+    static readonly Regex NotReady = new(@"^준비 안 한 사람 (\d+)명$");
+
+    static readonly (string Key, string Ko)[] Legacy =
+    {
+        ("lobby.empty_hint", "열린 방이 없어 — 새로 만들어 봐"),
+        ("lobby.altar_note", "맵의 서브 제단이 필요 수보다 적으면 전부 열면 됨"),
         ("lobby.msg.kicked", "방장이 내보냈어"),
         ("lobby.err.full", "방이 가득 찼어"),
         ("lobby.err.not_found", "그 코드의 방이 없어"),
         ("lobby.err.closed", "들어갈 수 없는 방이야"),
         ("lobby.why.host_only", "방장만 시작할 수 있어"),
-        ("lobby.why.preparing", "준비 중"),
         ("lobby.why.no_scene", "맵 씬이 빌드 설정에 없어"),
     };
-
-    static Dictionary<string, string> _staticByKo, _msgByKo;
-    static readonly Regex NotReady = new(@"^준비 안 한 사람 (\d+)명$");
 
     static void Build()
     {
@@ -80,6 +92,12 @@ public static class LobbyLoc
         foreach (var (k, ko) in Static) _staticByKo[ko] = k;
         _msgByKo = new Dictionary<string, string>();
         foreach (var (k, ko) in Messages) _msgByKo[ko] = k;
+        // 예전 반말 글자 (이미 만든 프리팹 · 예전 빌드가 보낸 알림)도 같은 키로
+        foreach (var (k, ko) in Legacy)
+        {
+            _staticByKo.TryAdd(ko, k);
+            _msgByKo.TryAdd(ko, k);
+        }
     }
 
     /// <summary>root 아래 고정 글자에 번역 연결 (skip = 코드가 계속 바꾸는 글자). 글자가 넘치면 줄이기도</summary>

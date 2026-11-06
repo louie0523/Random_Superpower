@@ -30,6 +30,12 @@ public class PaintToolbarView : MonoBehaviour
     public UiOption Outline;
     public UiOption Snap;
 
+    [Header("보는 곳 (타이틀: 벽 · 바닥) — 없으면 숨김")]
+    public UiOption[] Views;
+
+    [Tooltip("시야 (카메라 FOV, 0~1) — 타이틀만")]
+    public Slider Zoom;
+
     [Header("버튼")]
     public Button Undo;
     public Button Redo;
@@ -40,6 +46,16 @@ public class PaintToolbarView : MonoBehaviour
     public PaintBrush Brush = new();
 
     public event Action UndoClicked, RedoClicked, ClearClicked, DoneClicked;
+    /// <summary>보는 곳 고름 (0 = 벽 · 1 = 바닥)</summary>
+    public event Action<int> ViewPicked;
+    /// <summary>시야 바뀜 (0~1)</summary>
+    public event Action<float> ZoomChanged;
+
+    [Tooltip("스페이스로 막대를 내리고 올리는 시간 (초)")]
+    public float SlideTime = 0.18f;
+    public bool Hidden { get; private set; }
+    RectTransform _rt;
+    float _shownY, _slide;   // _slide 0 = 보임 · 1 = 숨음
 
     const string PrefKey = "paint.brush";
     float _clearArmed = -10f;
@@ -71,6 +87,22 @@ public class PaintToolbarView : MonoBehaviour
             Size.onValueChanged.AddListener(v => { Brush.Size = v; Changed(); });
         }
 
+        if (Views != null)
+            for (int i = 0; i < Views.Length; i++)
+            {
+                int k = i;
+                Wire(Views[i], () => { SetView(k); ViewPicked?.Invoke(k); });
+            }
+
+        if (Zoom != null)
+        {
+            Zoom.minValue = 0f;
+            Zoom.maxValue = 1f;
+            Zoom.onValueChanged.AddListener(v => ZoomChanged?.Invoke(v));
+        }
+        _rt = (RectTransform)transform;
+        _shownY = _rt.anchoredPosition.y;
+
         if (Undo != null) Undo.onClick.AddListener(() => UndoClicked?.Invoke());
         if (Redo != null) Redo.onClick.AddListener(() => RedoClicked?.Invoke());
         if (Done != null) Done.onClick.AddListener(() => DoneClicked?.Invoke());
@@ -85,6 +117,43 @@ public class PaintToolbarView : MonoBehaviour
     void Update()
     {
         if (_clearArmed > 0f && Time.unscaledTime - _clearArmed > 2.5f) Disarm();
+
+        // 스페이스로 내리기 · 올리기 (아래 화면까지 칠하게)
+        float target = Hidden ? 1f : 0f;
+        if (!Mathf.Approximately(_slide, target))
+        {
+            _slide = Mathf.MoveTowards(_slide, target, Time.unscaledDeltaTime / Mathf.Max(0.01f, SlideTime));
+            float k = _slide * _slide * (3f - 2f * _slide);
+            var p = _rt.anchoredPosition;
+            p.y = Mathf.Lerp(_shownY, -_rt.rect.height - 20f, k);
+            _rt.anchoredPosition = p;
+        }
+    }
+
+    void LateUpdate()
+    {
+        // 버튼을 누른 뒤 선택이 남아 있으면 스페이스가 그 버튼을 또 누름 → 선택 풀기
+        var es = UnityEngine.EventSystems.EventSystem.current;
+        if (es != null && es.currentSelectedGameObject != null && es.currentSelectedGameObject.transform.IsChildOf(transform))
+            es.SetSelectedGameObject(null);
+    }
+
+    /// <summary>막대 내리기 · 올리기</summary>
+    public void SetHidden(bool hide) => Hidden = hide;
+    public void ToggleHidden() => Hidden = !Hidden;
+
+    /// <summary>시야 막대 값만 (소리 없이)</summary>
+    public void SetZoom(float v)
+    {
+        if (Zoom != null) Zoom.SetValueWithoutNotify(Mathf.Clamp01(v));
+    }
+
+    /// <summary>바로 보이게 (들어갈 때)</summary>
+    public void ShowNow()
+    {
+        Hidden = false;
+        _slide = 0f;
+        if (_rt != null) _rt.anchoredPosition = new Vector2(_rt.anchoredPosition.x, _shownY);
     }
 
     static void Wire(UiOption o, Action a)
@@ -98,7 +167,7 @@ public class PaintToolbarView : MonoBehaviour
         if (_clearArmed < 0f)
         {
             _clearArmed = Time.unscaledTime;
-            if (ClearLabel != null) ClearLabel.text = "정말 지울까?";
+            if (ClearLabel != null) ClearLabel.text = "정말 지우시겠습니까?";
             return;
         }
         Disarm();
@@ -109,6 +178,20 @@ public class PaintToolbarView : MonoBehaviour
     {
         _clearArmed = -10f;
         if (ClearLabel != null && _clearText != null) ClearLabel.text = _clearText;
+    }
+
+    /// <summary>보는 곳 표시만 (0 = 벽 · 1 = 바닥)</summary>
+    public void SetView(int i)
+    {
+        if (Views == null) return;
+        for (int k = 0; k < Views.Length; k++) Views[k]?.SetOn(k == i);
+    }
+
+    /// <summary>보는 곳 버튼 보이기 · 숨기기 (UI 위 칠하기는 숨김)</summary>
+    public void ShowViews(bool on)
+    {
+        if (Views == null) return;
+        foreach (var v in Views) if (v != null) v.gameObject.SetActive(on);
     }
 
     public void SetKind(BrushKind k)

@@ -105,7 +105,7 @@ public sealed class PaintCanvas : IDisposable
         m.SetColor(IdColor, c);
         m.SetColor(IdInk, PaintBrush.Ink);
         m.SetVector(IdNoiseScale, new Vector4(Width / 256f, Height / 256f, 0f, 0f));
-        m.SetFloat(IdSpray, brush.IsSpray ? 1f : 0f);
+        m.SetFloat(IdSpray, brush.IsSpray && !brush.Outline ? 1f : 0f);     // 외곽선이면 알갱이 없이 (테두리가 깔끔하게 · 카툰 스티커)
         m.SetFloat(IdErase, brush.IsEraser ? 1f : 0f);
         m.SetFloat(IdOutline, brush.Outline && !brush.IsEraser ? Mathf.Max(0f, outlinePx) : 0f);
         Graphics.Blit(_paint, _preview, m);

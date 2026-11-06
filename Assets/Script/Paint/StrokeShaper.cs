@@ -73,7 +73,7 @@ public class StrokeShaper
         if (_shape != Shape.None) { Adjust(p); return; }
 
         // 손떨림 보정 — 끈 길이만큼 늦게 따라감
-        float lazyR = Stabilize ? Mathf.Lerp(0f, Radius * 1.4f + 10f, StabilizeAmount) : 0f;
+        float lazyR = Stabilize && !Eraser ? Mathf.Lerp(0f, Radius * 1.4f + 10f, StabilizeAmount) : 0f;     // 지우개는 누른 곳 그대로
         var d = p - _lazy;
         float m = d.magnitude;
         if (m > lazyR) _lazy += d / m * (m - lazyR);
@@ -88,7 +88,7 @@ public class StrokeShaper
         }
 
         // 반듯하게 — 누른 채 잠깐 멈춤
-        if (Snap && !_snapTried && time - _lastMoveTime >= HoldToSnap && Length(_pts) > Radius * 4f)
+        if (Snap && !Eraser && !_snapTried && time - _lastMoveTime >= HoldToSnap && Length(_pts) > Radius * 4f)
         {
             _snapTried = true;
             TrySnap();
@@ -201,10 +201,10 @@ public class StrokeShaper
 
         float R = Mathf.Max(0.5f, Radius);
         float spacing = Mathf.Max(0.75f, R * (Spray ? 0.16f : 0.1f));
-        float hard = Eraser ? 0.75f : Spray ? 0.12f : 0.92f;
+        float hard = Eraser ? 0.95f : Spray ? 0.12f : 0.92f;
         float scale = Spray && !Eraser ? 1.35f : 1f;
         float total = Length(_path);
-        bool taperStart = _shape == Shape.None || _shape == Shape.Line;
+        bool taperStart = !Eraser && (_shape == Shape.None || _shape == Shape.Line);     // 지우개는 끝까지 같은 굵기
         bool taperEnd = taperStart && _finished && !closed;
         var rng = new System.Random(_seed);
 
@@ -264,7 +264,7 @@ public class StrokeShaper
         length = Mathf.Clamp(length, 0f, R * 9f);
         if (length < R * 0.5f) return;
         var dir = DripDir.normalized;
-        float w = R * Mathf.Lerp(0.2f, 0.3f, (float)rng.NextDouble());
+        float w = R * Mathf.Lerp(0.14f, 0.2f, (float)rng.NextDouble());     // 붓 굵기에 비례 (가늘게)
         float side = ((float)rng.NextDouble() - 0.5f) * R * 0.8f;
         var perp = new Vector2(-dir.y, dir.x);
         var start = from + perp * side + dir * R * 0.4f;
@@ -274,7 +274,7 @@ public class StrokeShaper
             float k = Mathf.Lerp(1f, 0.8f, s / length);
             dabs.Add(new PaintDab(start + dir * s, w * k, 1f, SafeHard(0.85f, w)));
         }
-        float bulb = w * 1.35f;
+        float bulb = w * 1.6f;
         dabs.Add(new PaintDab(start + dir * length, bulb, 1f, SafeHard(0.85f, bulb)));
     }
 
@@ -301,7 +301,7 @@ public class StrokeShaper
             default:
                 _path.AddRange(_pts);
                 if (!_finished && (_lazy - _pts[_pts.Count - 1]).sqrMagnitude > 0.01f) _path.Add(_lazy);
-                if (Stabilize && _path.Count > 2) SmoothPath();
+                if (Stabilize && !Eraser && _path.Count > 2) SmoothPath();
                 return false;
         }
     }

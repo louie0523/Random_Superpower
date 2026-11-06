@@ -44,6 +44,7 @@ public class UiPaintCanvas : MonoBehaviour
         if (!Allowed) return;
         if (Input.GetKeyDown(Toggle)) { if (Painting) End(true); else Begin(); }
         if (!Painting) return;
+        if (Input.GetKeyDown(KeyCode.Space) && _bar != null) _bar.ToggleHidden();      // 막대 내리기 · 올리기
         StepInput();
     }
 
@@ -170,13 +171,13 @@ public class UiPaintCanvas : MonoBehaviour
             if (inside) _shaper.Move(px, t);
             else _shaper.Tick(t);
             _shaper.Build(_dabs);
-            _canvas.DrawStroke(_bar.Brush, _dabs, Mathf.Max(2f, _shaper.Radius * 0.22f));
+            _canvas.DrawStroke(_bar.Brush, _dabs, PaintBrush.OutlinePx(_shaper.Radius));
         }
         else
         {
             _shaper.Finish(t);
             _shaper.Build(_dabs);
-            _canvas.DrawStroke(_bar.Brush, _dabs, Mathf.Max(2f, _shaper.Radius * 0.22f));
+            _canvas.DrawStroke(_bar.Brush, _dabs, PaintBrush.OutlinePx(_shaper.Radius));
             _canvas.Commit();
             _drawing = false;
         }

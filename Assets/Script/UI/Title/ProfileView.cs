@@ -33,7 +33,7 @@ public class ProfileView : TitlePanel
             var src = _tab == 1 ? PlayerSave.Data.Classes : PlayerSave.Data.Randoms;
             _list.AddRange(src.Where(r => r != null && r.Plays > 0).OrderByDescending(r => r.Plays).ThenByDescending(r => r.WinRate));
         }
-        Frame.SetEmpty(_tab == 0 ? "" : "아직 기록이 없어요 — 한 판 해 보세요");
+        Frame.SetEmpty(_tab == 0 ? "" : "아직 기록이 없습니다 — 한 판 플레이해 보십시오");
 
         var cards = Frame.Layout(_list.Count, c => Pick(c.Data as AbilityRecord));
         for (int i = 0; i < _list.Count; i++)
@@ -56,7 +56,11 @@ public class ProfileView : TitlePanel
     {
         Frame.Clear();
         var d = PlayerSave.Data;
-        Frame.ShowTexture(CharacterPhoto.Get(PlayerSave.Look.PartsCode, CharacterPhoto.Frame.Bust, 384, 384));
+        // 칸 비율대로 찍음 (정사각형을 넓은 칸에 늘리면 옆으로 눌려 보임) — 남는 차이는 ShowTexture가 잘라 맞춤
+        var box = Frame.Preview != null ? Frame.Preview.rectTransform.rect : new Rect(0, 0, 508, 274);
+        float aspect = box.height > 1f ? box.width / box.height : 1.85f;
+        int h = 420, w = Mathf.Clamp(Mathf.RoundToInt(h * aspect), 128, 1400);
+        Frame.ShowTexture(CharacterPhoto.Get(PlayerSave.Look.PartsCode, CharacterPhoto.Frame.Bust, w, h));
         TitlePanelFrame.Set(Frame.Name, RoomLauncher.Nick);
         TitlePanelFrame.Set(Frame.Sub, $"{d.SC:N0} SC · 티켓 {d.Tickets}");
 
@@ -91,6 +95,7 @@ public class ProfileView : TitlePanel
 
         var a = Db != null ? Db.Get(r.AbilityId) : null;
         Frame.ShowIcon(a != null ? a.Icon : null, false);
+        if (a != null) Frame.SetPaint(a.UiAccent);
         TitlePanelFrame.Set(Frame.Name, a != null ? AbilityUi.Name(a) : "#" + r.AbilityId);
         TitlePanelFrame.Set(Frame.Sub, a != null ? AbilityUi.NumberText(a, Db) : "");
         Frame.SetBody(

@@ -631,6 +631,7 @@ public class GameUiPrefabMaker : EditorWindow
         GameUiKit.SprayOverride = SaveArt("Spray_v8", () => UiGraffitiArt.Spray(false), Vector4.zero);
         GameUiKit.SprayDripOverride = SaveArt("SprayDrip_v8", () => UiGraffitiArt.Spray(true, 9), Vector4.zero);
         GameUiKit.SprayLongOverride = SaveArt("SprayLong_v8", () => UiGraffitiArt.Spray(true, 11, 1024), Vector4.zero);
+        GameUiKit.SprayFillOverride = SaveArt("SprayFill_v8", () => UiGraffitiArt.SprayFill(), Vector4.zero);
         GameUiKit.SplatOverride = SaveArt("Splat_v7", () => UiGraffitiArt.Splat(), Vector4.zero);
         GameUiKit.GrainOverride = SaveArt("Grain_v7", UiGraffitiArt.Grain, Vector4.zero);
         GameUiKit.StripeOverride = SaveArt("Stripe_v7", UiGraffitiArt.Stripe, Vector4.zero);
@@ -645,7 +646,7 @@ public class GameUiPrefabMaker : EditorWindow
     static void ClearGraffitiArt()
     {
         GameUiKit.SlabOverride = GameUiKit.PlainOverride = GameUiKit.ParaOverride = GameUiKit.DashOverride = null;
-        GameUiKit.SprayOverride = GameUiKit.SprayDripOverride = GameUiKit.SplatOverride = GameUiKit.SprayLongOverride = null;
+        GameUiKit.SprayOverride = GameUiKit.SprayDripOverride = GameUiKit.SplatOverride = GameUiKit.SprayLongOverride = GameUiKit.SprayFillOverride = null;
         GameUiKit.GrainOverride = GameUiKit.StripeOverride = GameUiKit.DotsOverride = null;
         GameUiKit.PipOnOverride = GameUiKit.PipOffOverride = null;
         GameUiKit.DollOverride = GameUiKit.DollShirtOverride = GameUiKit.TriOverride = null;

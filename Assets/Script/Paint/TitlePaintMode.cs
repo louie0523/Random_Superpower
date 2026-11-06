@@ -11,11 +11,17 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class TitlePaintMode : MonoBehaviour
 {
-    [Tooltip("칠할 때 카메라 자리 (비우면 벽을 보고 저절로)")]
+    [Tooltip("칠할 때 카메라 자리 — 벽 (비우면 벽을 보고 저절로)")]
     public Transform PaintView;
+    [Tooltip("칠할 때 카메라 자리 — 바닥 (비우면 바닥을 내려다보게 저절로)")]
+    public Transform FloorView;
     public Camera Camera;
     [Tooltip("카메라 옮기는 시간 (초)")]
     public float MoveTime = 0.45f;
+    [Header("시야 (카메라 FOV) — 도구 막대 '시야' · 마우스 휠")]
+    public float MinFov = 22f;
+    public float MaxFov = 75f;
+
     [Header("붓 크기 (미터, 반지름)")]
     public float MinRadius = 0.03f;
     public float MaxRadius = 0.6f;
@@ -30,7 +36,10 @@ public class TitlePaintMode : MonoBehaviour
     readonly List<PaintSurface[]> _history = new(), _redo = new();
     PaintSurface _surface;
     int _seed = 1;
+    int _view;
 
+    float _homeFov, _zoom = -1f;
+    const string ZoomPref = "paint.fov";
     Vector3 _homePos, _toPos, _fromPos;
     Quaternion _homeRot, _toRot, _fromRot;
     float _moveT = 1f;
@@ -56,12 +65,22 @@ public class TitlePaintMode : MonoBehaviour
             _bar.RedoClicked += Redo;
             _bar.ClearClicked += ClearAll;
             _bar.DoneClicked += Exit;
+            _bar.ViewPicked += SetView;
+            _bar.ZoomChanged += SetZoom;
+            _bar.ShowViews(true);
+            _bar.SetView(0);
+            _bar.ShowNow();
         }
+        _view = 0;
 
         if (Camera != null)
         {
             _homePos = Camera.transform.position;
             _homeRot = Camera.transform.rotation;
+            _homeFov = Camera.fieldOfView;
+            if (_zoom < 0f) _zoom = PlayerPrefs.GetFloat(ZoomPref, Mathf.InverseLerp(MinFov, MaxFov, Mathf.Max(_homeFov, 38f)));
+            SetZoom(_zoom);
+            _bar?.SetZoom(_zoom);
             PaintPose(out _toPos, out _toRot);
             MoveCam(_toPos, _toRot);
         }
@@ -79,9 +98,15 @@ public class TitlePaintMode : MonoBehaviour
             _bar.RedoClicked -= Redo;
             _bar.ClearClicked -= ClearAll;
             _bar.DoneClicked -= Exit;
+            _bar.ViewPicked -= SetView;
+            _bar.ZoomChanged -= SetZoom;
             _bar.gameObject.SetActive(false);
         }
-        if (Camera != null) MoveCam(_homePos, _homeRot);
+        if (Camera != null)
+        {
+            MoveCam(_homePos, _homeRot);
+            Camera.fieldOfView = _homeFov;
+        }
         PaintMode.Set(false);
         var cb = _onExit;
         _onExit = null;
@@ -105,6 +130,18 @@ public class TitlePaintMode : MonoBehaviour
         bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         if (ctrl && Input.GetKeyDown(KeyCode.Z)) { if (shift) Redo(); else Undo(); }
         if (ctrl && Input.GetKeyDown(KeyCode.Y)) Redo();
+        if (Input.GetKeyDown(KeyCode.Space) && _bar != null) _bar.ToggleHidden();
+        float wheel = Input.mouseScrollDelta.y;
+        if (Mathf.Abs(wheel) > 0.01f && !OverUi())
+        {
+            SetZoom(_zoom - wheel * 0.06f);
+            _bar?.SetZoom(_zoom);
+        }
+        if (Input.GetKeyDown(KeyCode.Tab) && _surface == null)
+        {
+            SetView(1 - _view);
+            _bar?.SetView(_view);
+        }
         if (_bar != null)
         {
             if (Input.GetKeyDown(KeyCode.LeftBracket)) _bar.Nudge(-0.08f);
@@ -166,7 +203,7 @@ public class TitlePaintMode : MonoBehaviour
         if (_surface == null) return;
         _shaper.Build(_dabs);
         var b = _bar != null ? _bar.Brush : new PaintBrush();
-        _surface.Canvas.DrawStroke(b, _dabs, Mathf.Max(2f, _shaper.Radius * 0.22f));
+        _surface.Canvas.DrawStroke(b, _dabs, PaintBrush.OutlinePx(_shaper.Radius));
     }
 
     void EndStroke()
@@ -216,6 +253,57 @@ public class TitlePaintMode : MonoBehaviour
     }
 
     // ══════════════════ 카메라 ══════════════════
+
+    /// <summary>시야 0~1 → FOV (넓히면 벽 위아래 · 바닥 끝까지)</summary>
+    public void SetZoom(float v)
+    {
+        _zoom = Mathf.Clamp01(v);
+        if (Camera != null) Camera.fieldOfView = Mathf.Lerp(MinFov, MaxFov, _zoom);
+        try { PlayerPrefs.SetFloat(ZoomPref, _zoom); } catch { /* 기억 못 해도 됨 */ }
+    }
+
+    /// <summary>보는 곳 바꾸기 (0 = 벽 · 1 = 바닥) — Tab으로도</summary>
+    public void SetView(int view)
+    {
+        if (!PaintMode.On || Camera == null) return;
+        EndStroke();
+        _view = Mathf.Clamp(view, 0, 1);
+        Vector3 pos;
+        Quaternion rot;
+        if (_view == 1) FloorPose(out pos, out rot);
+        else PaintPose(out pos, out rot);
+        MoveCam(pos, rot);
+    }
+
+    void FloorPose(out Vector3 pos, out Quaternion rot)
+    {
+        if (FloorView != null)
+        {
+            pos = FloorView.position;
+            rot = FloorView.rotation;
+            return;
+        }
+        pos = Camera.transform.position;
+        rot = Camera.transform.rotation;
+
+        // 가장 큰 눕힌 면(바닥)을 비스듬히 내려다봄 — 캐릭터가 서던 곳 앞쪽
+        PaintSurface floor = null;
+        float best = 0f;
+        foreach (var s in PaintSurface.All)
+        {
+            if (s == null || Mathf.Abs(s.transform.forward.y) < 0.5f) continue;
+            var size = s.GetComponent<Renderer>().bounds.size;
+            if (size.x * size.z > best) { best = size.x * size.z; floor = s; }
+        }
+        if (floor == null) return;
+        var b = floor.GetComponent<Renderer>().bounds;
+        var toCam = _homePos - b.center;
+        toCam.y = 0f;
+        toCam = toCam.sqrMagnitude > 0.01f ? toCam.normalized : Vector3.forward;
+        var aim = new Vector3(_homePos.x, b.max.y, _homePos.z) - toCam * 3.2f;
+        pos = aim + toCam * 3.6f + Vector3.up * 6.5f;
+        rot = Quaternion.LookRotation(aim - pos, Vector3.up);
+    }
 
     void PaintPose(out Vector3 pos, out Quaternion rot)
     {

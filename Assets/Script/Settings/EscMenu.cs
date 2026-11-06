@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ESC 메뉴 — 다른 창(채팅 · 인벤 · 상점 · 선택 창 · 콘솔 등)이 안 열려 있을 때 Esc.
@@ -87,6 +88,42 @@ public class EscMenu : MonoBehaviour
         if (RoomLauncher.Instance != null) RoomLauncher.Instance.Leave();
     }
 
+    /// <summary>타이틀 씬이 빌드에 있고 지금 타이틀이 아님</summary>
+    public static bool TitleAvailable
+    {
+        get
+        {
+            string s = TitleScene;
+            return !string.IsNullOrEmpty(s) && SceneManager.GetActiveScene().name != s && Application.CanStreamedLevelBeLoaded(s);
+        }
+    }
+
+    static string TitleScene
+    {
+        get
+        {
+            var m = GameMeta.Get();
+            return m != null && !string.IsNullOrEmpty(m.TitleScene) ? m.TitleScene : "Title";
+        }
+    }
+
+    /// <summary>타이틀로 — 방에 있으면 나가고 연결을 끊은 뒤 타이틀 씬</summary>
+    public static void ToTitle()
+    {
+        Close();
+        SettingsWindow.Close();
+        string scene = TitleScene;
+        if (!Application.CanStreamedLevelBeLoaded(scene))
+        {
+            Debug.LogWarning($"[ESC] 타이틀 씬 '{scene}'이 Build Settings에 없습니다");
+            return;
+        }
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        if (RoomLauncher.Instance != null) RoomLauncher.Instance.QuitToTitle(scene);
+        else SceneManager.LoadScene(scene);
+    }
+
     public static void QuitGame()
     {
 #if UNITY_EDITOR
@@ -119,7 +156,9 @@ public class EscMenu : MonoBehaviour
         bool esc = Input.GetKeyDown(KeyCode.Escape);
 
         // 다른 창이 이번 · 지난 프레임에 열려 있었으면 그 창이 Esc를 씀 · 설정 창이 방금 닫혔어도
-        if (esc && !others && !_othersOpenLastFrame && !SettingsWindow.IsOpen && SettingsWindow.ClosedFrame != Time.frameCount)
+        // 타이틀 씬은 자기 메뉴가 있어서 ESC 메뉴를 안 띄움
+        bool inTitle = SceneManager.GetActiveScene().name == TitleScene;
+        if (esc && !inTitle && !others && !_othersOpenLastFrame && !SettingsWindow.IsOpen && SettingsWindow.ClosedFrame != Time.frameCount)
         {
             if (IsOpen) Close();
             else Open();

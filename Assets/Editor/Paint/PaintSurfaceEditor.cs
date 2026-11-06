@@ -208,7 +208,7 @@ public class PaintSurfaceEditor : Editor
     void Draw()
     {
         _shaper.Build(_dabs);
-        C.DrawStroke(PaintBrushGUI.Brush, _dabs, Mathf.Max(2f, _shaper.Radius * 0.22f));
+        C.DrawStroke(PaintBrushGUI.Brush, _dabs, PaintBrush.OutlinePx(_shaper.Radius));
     }
 }
 #endif

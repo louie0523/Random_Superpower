@@ -10,13 +10,17 @@ using K = GameUiKit;
 /// </summary>
 public static class PaintToolbarBuilder
 {
-    public static PaintToolbarView Build(Transform parent, TMP_FontAsset font, bool finish = true)
+    /// <param name="views">보는 곳 버튼 (벽 · 바닥) — 타이틀만</param>
+    static bool _narrow;
+
+    public static PaintToolbarView Build(Transform parent, TMP_FontAsset font, bool finish = true, bool views = false)
     {
+        _narrow = views;
         var rt = K.Rect("PaintBar", parent);
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
         rt.pivot = new Vector2(0.5f, 0f);
         rt.anchoredPosition = new Vector2(0f, 28f);
-        rt.sizeDelta = new Vector2(1600f, 176f);
+        rt.sizeDelta = new Vector2(views ? 1860f : 1600f, 176f);
         var v = rt.gameObject.AddComponent<PaintToolbarView>();
 
         var face = K.Sticker(rt, K.Panel, 0f, 0f);
@@ -70,13 +74,26 @@ public static class PaintToolbarBuilder
         v.Drips = Check(r2.transform, font, "Drips", "흘러내림");
         v.Outline = Check(r2.transform, font, "Outline", "외곽선");
         v.Snap = Check(r2.transform, font, "Snap", "반듯하게");
+        if (views)
+        {
+            Gap(r2.transform, 10f);
+            v.Views = new[] { Tool(r2.transform, font, "ViewWall", "벽"), Tool(r2.transform, font, "ViewFloor", "바닥") };
+            foreach (var o in v.Views) K.Size(o, 96f, 52f);
+
+            // 시야 (카메라 FOV) — 넓히면 벽 위아래까지
+            var zl = K.Text("ZoomLabel", r2.transform, font, 21f, K.Ink, TextAlignmentOptions.MidlineRight, true);
+            zl.text = "시야";
+            K.Size(zl, 52f, 50f);
+            v.Zoom = K.SliderBar("Zoom", r2.transform, 40f);
+            K.Size(v.Zoom, K.PipBarWidth(6), 44f);
+        }
         var flex = K.Rect("Flex", r2.transform);
         K.Size(flex, -1f, -1f, 1f);
-        v.Undo = Btn(r2.transform, font, "Undo", "되돌리기", K.Raised, 140f, out _);
-        v.Redo = Btn(r2.transform, font, "Redo", "다시", K.Raised, 100f, out _);
-        v.Clear = Btn(r2.transform, font, "Clear", "지우기", K.Danger, 170f, out var clearLabel);
+        v.Undo = Btn(r2.transform, font, "Undo", "되돌리기", K.Raised, 124f, out _);
+        v.Redo = Btn(r2.transform, font, "Redo", "다시", K.Raised, 88f, out _);
+        v.Clear = Btn(r2.transform, font, "Clear", "지우기", K.Danger, 150f, out var clearLabel);
         v.ClearLabel = clearLabel;
-        v.Done = Btn(r2.transform, font, "Done", "완료", K.Yellow, 150f, out _);
+        v.Done = Btn(r2.transform, font, "Done", "완료", K.Yellow, 128f, out _);
 
         if (finish) K.Finish(rt);
         return v;
@@ -92,7 +109,7 @@ public static class PaintToolbarBuilder
     static UiOption Check(Transform parent, TMP_FontAsset font, string name, string label)
     {
         var o = K.Option(name, parent, font, label, true, 52f, 21f);
-        K.Size(o, 200f, 52f);
+        K.Size(o, _narrow ? 172f : 200f, 52f);
         return o;
     }
 

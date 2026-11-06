@@ -47,7 +47,7 @@ public class WeaponGalleryView : TitlePanel
         if (db != null && db.All != null)
             _list.AddRange(db.All.Where(d => d != null && InTab(d, _tab)).OrderBy(d => d.Grade).ThenBy(d => d.Id));
 
-        Frame.SetEmpty(db == null ? "GameMeta에 장비 목록(Equipment)이 비어 있어" : "이 종류는 아직 없어");
+        Frame.SetEmpty(db == null ? "장비 목록이 비어 있습니다" : "이 종류는 아직 없습니다");
         var cards = Frame.Layout(_list.Count, c => Pick(c.Data as EquipmentData));
         for (int i = 0; i < _list.Count; i++)
         {

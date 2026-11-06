@@ -150,14 +150,14 @@ public partial class RoomUI
         {
             if (Rs == null) return;
             GUIUtility.systemCopyBuffer = Rs.Settings.ToShareCode();
-            L.Toast(SetLoc.T("lobby.settings_copied", "방 설정을 클립보드에 복사함"));
+            L.Toast(SetLoc.T("lobby.settings_copied", "방 설정을 클립보드에 복사했습니다"));
         });
         On(v.PasteButton, () =>
         {
             if (Rs != null && RoomSettings.TryParse(GUIUtility.systemCopyBuffer, out var p) && Rs.ApplySettings(p))
                 L.Toast(SetLoc.T("lobby.settings_pasted", "붙여 넣은 설정 적용"));
             else
-                L.Toast(SetLoc.T("lobby.no_settings", "클립보드에 방 설정이 없어"));
+                L.Toast(SetLoc.T("lobby.no_settings", "클립보드에 방 설정이 없습니다"));
         });
         if (v.PresetNameInput != null)
         {
@@ -168,7 +168,7 @@ public partial class RoomUI
         {
             if (Rs == null) return;
             string n = v.PresetNameInput != null ? v.PresetNameInput.text.Trim() : _presetName;
-            if (Rs.Settings.SaveAs(n)) L.Toast(SetLoc.F("lobby.saved", "[{0}] 저장함", n));
+            if (Rs.Settings.SaveAs(n)) L.Toast(SetLoc.F("lobby.saved", "[{0}] 저장했습니다", n));
             _vPresetAt = 0f;
         });
         On(v.OpenFolderButton, () =>
@@ -236,7 +236,7 @@ public partial class RoomUI
         var runner = RoomLauncher.Runner;
         string code = runner != null && runner.SessionInfo != null ? runner.SessionInfo.Name : "";
         GUIUtility.systemCopyBuffer = code;
-        L.Toast(SetLoc.T("lobby.code_copied", "방 코드 복사함"));
+        L.Toast(SetLoc.T("lobby.code_copied", "방 코드를 복사했습니다"));
     }
 
     void MainPressed()
@@ -368,7 +368,7 @@ public partial class RoomUI
         GameUiKit.Set(v.RoomTitle, rs.RoomName.ToString());
         GameUiKit.Set(v.CodeText, SetLoc.F("lobby.code_line", "방 코드  {0}", ShowCode ? code : Mask(code)));   // 복사 버튼은 항상 진짜 코드
         GameUiKit.Set(_showCodeLabel, ShowCode ? SetLoc.T("lobby.hide_code", "코드 가리기") : SetLoc.T("lobby.show_code", "코드 보이기"));
-        GameUiKit.Set(v.VisibilityText, rs.Hidden ? SetLoc.T("lobby.hidden_room", "숨김 방 — 코드로만 들어올 수 있어") : SetLoc.T("lobby.public_room", "공개 방"));
+        GameUiKit.Set(v.VisibilityText, rs.Hidden ? SetLoc.T("lobby.hidden_room", "숨김 방 — 코드로만 들어올 수 있습니다") : SetLoc.T("lobby.public_room", "공개 방"));
         GameUiKit.Set(v.CountText, SetLoc.F("lobby.people", "사람 {0}/{1}", rs.PlayerCount, rs.MaxPlayers));
 
         // 명단
@@ -414,7 +414,7 @@ public partial class RoomUI
             if (v.MainButtonFace != null) v.MainButtonFace.color = ready ? v.UnreadyColor : v.ReadyColor;
             if (v.MainButtonFace != null && v.MainButtonLabel != null) v.MainButtonLabel.color = GameUiKit.TextOn(v.MainButtonFace.color);
             GameUiKit.Interact(v.MainButton, true);
-            GameUiKit.Set(v.ReasonText, ready ? SetLoc.T("lobby.wait_host", "방장이 시작하면 게임이 시작돼") : "");
+            GameUiKit.Set(v.ReasonText, ready ? SetLoc.T("lobby.wait_host", "방장이 시작하면 게임이 시작됩니다") : "");
         }
 
         // 설정

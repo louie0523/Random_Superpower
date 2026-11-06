@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2baf98706fd7afd4d84ff1112b448670, type: 3}
+  m_Name: RewardRules
+  m_EditorClassIdentifier: Assembly-CSharp::RewardRules
+  RankSC: 640000004600000032000000
+  OtherSC: 30
+  PerKillSC: 5
+  RankTickets: 01000000

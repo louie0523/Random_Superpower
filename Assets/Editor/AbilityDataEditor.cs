@@ -19,7 +19,7 @@ public class AbilityDataEditor : Editor
     const string TabKey = "AbilityDataEditor.Tab";
     const string PreviewKey = "AbilityDataEditor.PreviewLevel";
 
-    SerializedProperty _id, _displayName, _kind, _tier, _tags, _icon, _flavor;
+    SerializedProperty _id, _displayName, _kind, _tier, _tags, _icon, _flavor, _codex;
     SerializedProperty _passives, _skills, _behaviour, _charges, _exclusiveShop;
     SerializedProperty _maxConcurrent, _excludeFromRoll, _rollWeight, _evolveToId, _evolveKillCount;
 
@@ -49,6 +49,7 @@ public class AbilityDataEditor : Editor
         _tags = serializedObject.FindProperty("Tags");
         _icon = serializedObject.FindProperty("Icon");
         _flavor = serializedObject.FindProperty("Flavor");
+        _codex = serializedObject.FindProperty("CodexText");
         _passives = serializedObject.FindProperty("Passives");
         _skills = serializedObject.FindProperty("Skills");
         _behaviour = serializedObject.FindProperty("Behaviour");
@@ -337,6 +338,13 @@ public class AbilityDataEditor : Editor
     {
         EditorGUILayout.PropertyField(_flavor, new GUIContent("플레이버",
             "능력 한 줄 소개. 시트에 ability.{Id}.flavor 가 있으면 그게 우선"));
+        if (_codex != null)
+        {
+            EditorGUILayout.PropertyField(_codex, new GUIContent("도감 설명",
+                "타이틀 도감에 보이는 글. 비우면 한 줄 요약에서 게임 중 숫자([현재 폰 {x:…}] 같은 것)를 빼고 씀 → 그래도 없으면 플레이버.\n시트에 ability.{Id}.codex 가 있으면 그게 우선"));
+            if (string.IsNullOrWhiteSpace(_codex.stringValue))
+                Hint("도감엔 지금: " + Shorten(AbilityUi.Codex((AbilityData)target)));
+        }
         EditorGUILayout.PropertyField(_tags, new GUIContent("태그", "분류용. 다른 능력이 태그로 찾을 때 사용"), true);
 
         AbilityHudInspector.Draw(serializedObject, (AbilityData)target);     // 추가
@@ -584,9 +592,32 @@ public class AbilityDataEditor : Editor
             Hint("대상 없음 → 효과의 대상은 Self만 동작 (버프·대시 등)");
         }
 
+        // 스킬 판정 — 근거리면 근접 무기 피해, 원거리면 원거리 무기 피해도 이 스킬 피해에 붙음
+        var reach = el.FindPropertyRelative("Reach");
+        EditorGUILayout.PropertyField(reach, new GUIContent("스킬 판정",
+            "근거리 = 스킬 피해에 '근접 무기 피해'(예리함 등)도 붙음 · 원거리 = '원거리 무기 피해'도 붙음 · 기타 = 스킬 피해만\n" +
+            "자동 = 모션 셋업의 '스킬 판정'을 따르고, 거기도 자동이면 '무기 인챈트 적용'(무기 판정)일 때 든 무기 계열"));
+        if ((SkillReach)reach.enumValueIndex == SkillReach.Auto)
+        {
+            var md = el.FindPropertyRelative("MotionData").objectReferenceValue as AbilityMotionData;
+            var mr = md != null && md.Step != null ? md.Step.Reach : SkillReach.Auto;
+            bool weapon = el.FindPropertyRelative("AppliesWeaponEnchants").boolValue;
+            string now = mr != SkillReach.Auto ? $"모션 설정 → {ReachName(mr)}"
+                       : weapon ? "무기 판정 → 든 무기 계열 (근거리 · 원거리)" : "기타";
+            Hint("지금: " + now);
+        }
+
         Section("효과");
         DrawEffects(el.FindPropertyRelative("Effects"), max, true, needs.boolValue);
     }
+
+    static string ReachName(SkillReach r) => r switch
+    {
+        SkillReach.Melee => "근거리",
+        SkillReach.Ranged => "원거리",
+        SkillReach.Other => "기타",
+        _ => "자동",
+    };
 
     void DrawMaxLevel(SerializedProperty el, bool isSkill)
     {
@@ -1240,6 +1271,7 @@ public class AbilityDataEditor : Editor
             el.FindPropertyRelative("HitAngle").floatValue = 60f;
             el.FindPropertyRelative("HitHeight").floatValue = 1.5f;
             el.FindPropertyRelative("MaxTargets").intValue = 1;
+            el.FindPropertyRelative("Reach").enumValueIndex = (int)SkillReach.Auto;   // 새 스킬 = 자동
         }
 
         el.isExpanded = true;
@@ -1412,6 +1444,7 @@ public class AbilityDataEditor : Editor
     }
 
     static void Hint(string text) => GUILayout.Label(text, _hint);
+    static string Shorten(string s) => string.IsNullOrEmpty(s) ? "(비어 있음)" : (s = s.Replace("\n", " ")).Length > 60 ? s.Substring(0, 60) + "…" : s;
     static void Warn(string text) => GUILayout.Label($"<color=#E0A040>⚠ {text}</color>", _hint);
 
     static void EnsureStyles()

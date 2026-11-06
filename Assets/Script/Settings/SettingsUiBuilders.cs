@@ -403,13 +403,14 @@ public static class SettingsUiBuilders
         var v = host.AddComponent<EscMenuView>();
         v.Root = root.gameObject;
 
-        K.Window("Window", root, 480f, 540f, out var c, 30, 16f);
+        K.Window("Window", root, 480f, 626f, out var c, 30, 16f);
         v.Title = K.Header(c, font, "메뉴");
         SetLocText.Add(v.Title, "set.esc.title");
 
         v.ContinueButton = Big(c, font, "Continue", "계속하기", K.Yellow, K.Ink, "set.esc.continue");
         v.SettingsButton = Big(c, font, "Settings", "설정", Color.white, K.Ink, "set.esc.settings");
         v.LeaveButton = Big(c, font, "Leave", "방 나가기", K.Red, Color.white, "set.esc.leave");
+        v.TitleButton = Big(c, font, "ToTitle", "타이틀로", K.Mint, K.Ink, "set.esc.to_title");
         v.QuitButton = Big(c, font, "Quit", "게임 종료", Color.white, K.Ink, "set.esc.quit");
         K.Finish(host.transform);
         return v;

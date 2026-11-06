@@ -219,6 +219,45 @@ public static class UiGraffitiArt
         return FromAlpha(a, W, H);
     }
 
+    /// <summary>
+    /// 스프레이로 채운 직사각형 판 — 울퉁불퉁한 가장자리 · 알갱이 · 둘레 점. 그림 칸 바탕 같은 큰 면에 (늘려도 덜 티 나게 칸 비율로)
+    /// </summary>
+    public static Texture2D SprayFill(int W = 512, int H = 320, int seed = 4)
+    {
+        var a = new float[W * H];
+        var d = new float[W * H];
+        var r = new System.Random(seed);
+        const float pad = 30f, rc = 34f;
+        float hw = W * 0.5f - pad, hh = H * 0.5f - pad;
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+            {
+                float fx = x + 0.5f, fy = y + 0.5f;
+                float qx = Mathf.Abs(fx - W * 0.5f) - (hw - rc), qy = Mathf.Abs(fy - H * 0.5f) - (hh - rc);
+                float ox = Mathf.Max(qx, 0f), oy = Mathf.Max(qy, 0f);
+                float sdf = Mathf.Sqrt(ox * ox + oy * oy) + Mathf.Min(Mathf.Max(qx, qy), 0f) - rc;
+                float dd = sdf - (Noise(fx, fy, seed, 0.012f) * 20f + Noise(fx, fy, seed + 3, 0.05f) * 6f);
+                int i = y * W + x;
+                d[i] = dd;
+                a[i] = Mathf.Clamp01(0.5f - dd / 5f + ((float)r.NextDouble() - 0.5f) * 1.3f);     // 알갱이 가장자리
+            }
+
+        // 둘레에 튄 점
+        int n = 0;
+        for (int k = 0; k < 4000 && n < 170; k++)
+        {
+            float x = (float)r.NextDouble() * W, y = (float)r.NextDouble() * H;
+            float dd = d[Mathf.Min(H - 1, (int)y) * W + Mathf.Min(W - 1, (int)x)];
+            if (dd > 2f && dd < 26f && r.NextDouble() < 1f - dd / 26f)
+            {
+                Disc(a, W, H, x, y, 0.8f + (float)r.NextDouble() * 1.8f);
+                n++;
+            }
+        }
+        EdgeFade(a, W, H, 6);
+        return FromAlpha(a, W, H);
+    }
+
     /// <summary>그림 끝 n픽셀을 투명으로 (늘렸을 때 끝이 잘려 보이거나 번지지 않게)</summary>
     static void EdgeFade(float[] a, int W, int H, int n)
     {

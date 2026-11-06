@@ -18,6 +18,8 @@ public class StatusIconBar : MonoBehaviour
     [SerializeField] private Transform parent;
     [SerializeField] private StatusIconView iconPrefab;
     [SerializeField] private IconDef[] icons;
+    [Tooltip("이보다 오래 가는 상태(초)는 아이콘 안 띄움 — 능력이 계속 걸어 두는 상태(예: 언데드의 의지)는 그 능력 HUD가 보여 줌")]
+    [SerializeField] private float hideLongerThan = 3600f;
 
     private PlayerStatus _status;
     private StatusIconView[] _views;
@@ -42,6 +44,28 @@ public class StatusIconBar : MonoBehaviour
         }
     }
 
+    /// <summary>시트에 없을 때 한국어 이름 (영어 이름 앞 두 글자 'Un' 같은 게 안 보이게)</summary>
+    static string KoName(StatusType t) => t switch
+    {
+        StatusType.Slow => "둔화",
+        StatusType.Burn => "화상",
+        StatusType.Frost => "동상",
+        StatusType.Seal => "봉인",
+        StatusType.Stun => "기절",
+        StatusType.DeepWound => "깊은 상처",
+        StatusType.Poison => "중독",
+        StatusType.Evade => "회피",
+        StatusType.ArmorBreak => "방어 감소",
+        StatusType.Ghost => "고스트",
+        StatusType.Blind => "암전",
+        StatusType.Root => "속박",
+        StatusType.Invisible => "투명",
+        StatusType.Undead => "언데드",
+        StatusType.Curse => "저주",
+        StatusType.Weaken => "약화",
+        _ => t.ToString(),
+    };
+
     void Update()
     {
         if (_views == null) return;
@@ -54,10 +78,10 @@ public class StatusIconBar : MonoBehaviour
             if (v == null) continue;
 
             var type = icons[i].Type;
-            bool has = valid && _status.Has(type);
+            bool has = valid && _status.Has(type) && _status.Remaining(type) < hideLongerThan;
 
             if (has && !v.gameObject.activeSelf)
-                v.SetName(LocUtil.GetOr($"status.{type}", type.ToString()));    // 새로 걸릴 때 (언어도 그때 반영)
+                v.SetName(LocUtil.GetOr($"status.{type}", KoName(type)));    // 새로 걸릴 때 (언어도 그때 반영)
             if (v.gameObject.activeSelf != has) v.gameObject.SetActive(has);
             if (!has) { _peak[i] = 0f; continue; }
 

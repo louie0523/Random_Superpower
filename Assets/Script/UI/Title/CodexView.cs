@@ -56,7 +56,7 @@ public class CodexView : TitlePanel
     {
         _list.Clear();
         _list.AddRange(Source(_tab).Where(a => a != null));
-        Frame.SetEmpty(Db == null ? "GameMeta에 능력 목록(Abilities)이 비어 있어" : "아직 없어");
+        Frame.SetEmpty(Db == null ? "능력 목록이 비어 있습니다" : "아직 없습니다");
 
         var cards = Frame.Layout(_list.Count, c => Pick(c.Data as AbilityData));
         for (int i = 0; i < _list.Count; i++)
@@ -67,7 +67,7 @@ public class CodexView : TitlePanel
             cards[i].Data = a;
             cards[i].Id = a.Id;
             string title = seen || !evo ? AbilityUi.Name(a) : "???";
-            string sub = seen ? AbilityUi.NumberText(a, Db) : evo ? "진화" : "아직 못 만남";
+            string sub = seen ? AbilityUi.NumberText(a, Db) : evo ? "진화" : "아직 만나지 못했습니다";
             cards[i].Set(title, sub, a.Icon, null, seen ? a.UiAccent : (Color?)null, !seen, null);
         }
 
@@ -85,6 +85,7 @@ public class CodexView : TitlePanel
         bool seen = PlayerSave.Seen(a.Id);
         bool evo = IsEvolution(a);
         Frame.ShowIcon(a.Icon, !seen);
+        if (seen) Frame.SetPaint(a.UiAccent);        // 능력 색 스프레이 · 그림은 흰색
 
         if (!seen && evo)
         {
@@ -92,22 +93,22 @@ public class CodexView : TitlePanel
             string fromName = AbilityUi.Name(from);
             TitlePanelFrame.Set(Frame.Name, "???");
             TitlePanelFrame.Set(Frame.Sub, "진화형");
-            Frame.SetBody($"<b>{fromName}</b>{Josa(fromName, "을", "를")} 진화시켜 보세요" +
+            Frame.SetBody($"<b>{fromName}</b>{Josa(fromName, "을", "를")} 진화시켜 보십시오" +
                 (from.EvolveKillCount > 0 ? $"\n<color=#9A93A8>처치 {from.EvolveKillCount}번</color>" : ""));
             return;
         }
 
         TitlePanelFrame.Set(Frame.Name, AbilityUi.Name(a));
-        TitlePanelFrame.Set(Frame.Sub, AbilityUi.NumberText(a, Db) + (seen ? "" : " · 아직 못 만남"));
+        TitlePanelFrame.Set(Frame.Sub, AbilityUi.NumberText(a, Db) + (seen ? "" : " · 아직 만나지 못했습니다"));
 
         var sb = new StringBuilder();
-        string sum = AbilityUi.Summary(a);
+        string sum = AbilityUi.Codex(a);         // 도감 설명 (게임 중 숫자 칸은 뺌)
         if (!string.IsNullOrWhiteSpace(sum)) sb.AppendLine(sum);
         if (seen)
         {
-            string det = AbilityUi.Details(a);
+            string det = AbilityUi.StripLive(AbilityUi.Details(a));
             if (!string.IsNullOrWhiteSpace(det)) sb.AppendLine().Append(det.TrimEnd()).AppendLine();
-            string fl = AbilityUi.Flavor(a);
+            string fl = AbilityUi.StripLive(AbilityUi.Flavor(a));
             if (!string.IsNullOrWhiteSpace(fl) && fl != sum) sb.AppendLine().Append("<i><color=#9A93A8>").Append(fl).AppendLine("</color></i>");
 
             var rec = Find(a);

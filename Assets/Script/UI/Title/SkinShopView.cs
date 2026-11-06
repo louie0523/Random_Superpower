@@ -63,8 +63,8 @@ public class SkinShopView : TitlePanel
                 _list.AddRange(db.WeaponSkins.Where(s => s != null && s.InGacha).OrderByDescending(s => s.Grade).ThenBy(s => s.Id));
             }
         }
-        Frame.SetEmpty(db == null ? "GameMeta에 꾸미기 목록(Cosmetics)이 비어 있어" :
-                       _tab == 0 ? "스킨이 아직 없어 — CosmeticDatabase에 추가" : "뽑기에 나올 게 없어 — 'In Gacha' 켜기");
+        Frame.SetEmpty(db == null ? "꾸미기 목록이 비어 있습니다" :
+                       _tab == 0 ? "아직 스킨이 없습니다" : "뽑기에서 나올 항목이 없습니다");
 
         Frame.Layout(_list.Count, c => Pick(c.Data));
         Paint();
@@ -129,14 +129,14 @@ public class SkinShopView : TitlePanel
         TitlePanelFrame.Set(Frame.Sub, $"<color={Hex(g.Color)}>{g.Name}</color> · {MetaUi.ItemName(w)} 스킨");
         if (_tab == 1) return;
 
-        Frame.SetBody(s.InGacha ? "뽑기에서도 나와요" : "");
+        Frame.SetBody(s.InGacha ? "뽑기에서도 나옵니다" : "");
         bool own = PlayerSave.OwnsSkin(s.Id);
         bool on = PlayerSave.EquippedSkin(s.WeaponId) == s.Id;
         if (!own)
         {
             bool canBuy = s.PriceSC > 0 && PlayerSave.SC >= s.PriceSC;
             Frame.Action1(s.PriceSC > 0 ? $"사기 · {s.PriceSC:N0} SC" : "뽑기 전용", () => Buy(s), canBuy);
-            if (s.PriceSC > 0 && !canBuy) Frame.SetNote($"SC가 {s.PriceSC - PlayerSave.SC:N0} 모자라요");
+            if (s.PriceSC > 0 && !canBuy) Frame.SetNote($"SC가 {s.PriceSC - PlayerSave.SC:N0} 부족합니다");
         }
         else if (!on) Frame.Action1("장착", () => { PlayerSave.EquipSkin(s.WeaponId, s.Id); PlayerSave.Commit(); Pick(s); });
         else Frame.Action1("장착 해제", () => { PlayerSave.EquipSkin(s.WeaponId, 0); PlayerSave.Commit(); Pick(s); });
@@ -153,12 +153,12 @@ public class SkinShopView : TitlePanel
 
     void Buy(WeaponSkinData s)
     {
-        if (!PlayerSave.TrySpendSC(s.PriceSC)) { Frame.SetNote("SC가 모자라요"); return; }
+        if (!PlayerSave.TrySpendSC(s.PriceSC)) { Frame.SetNote("SC가 부족합니다"); return; }
         PlayerSave.GrantSkin(s.Id);
         PlayerSave.EquipSkin(s.WeaponId, s.Id);
         PlayerSave.Commit();
         Pick(s);
-        Frame.SetNote("샀어요 — 바로 장착");
+        Frame.SetNote("구매했습니다 — 바로 장착합니다");
     }
 
     // ══════════════════ 뽑기 ══════════════════
@@ -173,7 +173,7 @@ public class SkinShopView : TitlePanel
         }
 
         var sb = new StringBuilder();
-        if (t == null) sb.AppendLine("GameMeta에 뽑기 표(Gacha)가 비어 있어");
+        if (t == null) sb.AppendLine("뽑기 표가 비어 있습니다");
         else
         {
             float sum = t.Grades.Sum(x => Mathf.Max(0f, x.Weight));
@@ -210,11 +210,11 @@ public class SkinShopView : TitlePanel
         var pool = new List<object>();
         pool.AddRange(db.Parts.Where(p => p != null && p.InGacha && !db.IsFree(p.Id)));
         pool.AddRange(db.WeaponSkins.Where(s => s != null && s.InGacha));
-        if (pool.Count == 0) { Frame.SetNote("뽑기에 나올 게 없어요"); return; }
+        if (pool.Count == 0) { Frame.SetNote("뽑기에서 나올 항목이 없습니다"); return; }
 
         if (!Pay(n == 1 ? t.SingleTickets : t.TenTickets, n == 1 ? t.SingleSC : t.TenSC))
         {
-            Frame.SetNote("티켓 · SC가 모자라요");
+            Frame.SetNote("티켓 · SC가 부족합니다");
             return;
         }
 
@@ -245,7 +245,7 @@ public class SkinShopView : TitlePanel
         }
         PlayerSave.Commit();
         Pick(_sel);
-        if (refund > 0) Frame.SetNote($"겹친 것 {refund:N0} SC 돌려받음");
+        if (refund > 0) Frame.SetNote($"중복된 항목으로 {refund:N0} SC를 돌려받았습니다");
     }
 
     static CosmeticGrade GradeOf(object o) => o is PartData p ? p.Grade : o is WeaponSkinData s ? s.Grade : CosmeticGrade.Common;

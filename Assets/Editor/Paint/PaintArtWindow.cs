@@ -245,7 +245,7 @@ public class PaintArtWindow : EditorWindow
     {
         if (_canvas == null) return;
         _shaper.Build(_dabs);
-        _canvas.DrawStroke(PaintBrushGUI.Brush, _dabs, Mathf.Max(2f, _shaper.Radius * 0.22f));
+        _canvas.DrawStroke(PaintBrushGUI.Brush, _dabs, PaintBrush.OutlinePx(_shaper.Radius));
     }
 
     // ══════════════════ 파일 ══════════════════

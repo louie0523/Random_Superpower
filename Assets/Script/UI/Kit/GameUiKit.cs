@@ -142,7 +142,7 @@ public static class GameUiKit
     /// <summary>에디터 프리팹 생성기가 PNG 에셋으로 바꿔 끼움 — 비어 있으면 코드로 그린 것</summary>
     public static Sprite SlabOverride, PlainOverride, ParaOverride, DashOverride, SprayOverride, SprayDripOverride,
                          SplatOverride, GrainOverride, StripeOverride, DotsOverride, PipOnOverride, PipOffOverride,
-                         DollOverride, DollShirtOverride, TriOverride, SprayLongOverride;
+                         DollOverride, DollShirtOverride, TriOverride, SprayLongOverride, SprayFillOverride;
     static Sprite _sprayLong;
     static Sprite _slab, _plain, _para, _dash, _spray, _sprayDrip, _splat, _grain, _stripe, _dots, _pipOn, _pipOff, _doll, _dollShirt, _tri;
 
@@ -170,6 +170,9 @@ public static class GameUiKit
     public static Sprite SprayDrip => Art(ref _sprayDrip, SprayDripOverride, () => UiGraffitiArt.Spray(true, 9), Vector4.zero);
     /// <summary>긴 스프레이 (4:1 · 흘러내림) — 로고 밑 같은 긴 자국. 늘려 쓰지 말고 비슷한 비율로</summary>
     public static Sprite SprayLong => Art(ref _sprayLong, SprayLongOverride, () => UiGraffitiArt.Spray(true, 11, 1024), Vector4.zero);
+    static Sprite _sprayFill;
+    /// <summary>스프레이로 채운 직사각형 (8:5) — 그림 칸 바탕</summary>
+    public static Sprite SprayFill => Art(ref _sprayFill, SprayFillOverride, () => UiGraffitiArt.SprayFill(), Vector4.zero);
     public static Sprite Splat => Art(ref _splat, SplatOverride, () => UiGraffitiArt.Splat(), Vector4.zero);
     public static Sprite Grain => Art(ref _grain, GrainOverride, UiGraffitiArt.Grain, Vector4.zero);
     public static Sprite Stripe => Art(ref _stripe, StripeOverride, UiGraffitiArt.Stripe, Vector4.zero);

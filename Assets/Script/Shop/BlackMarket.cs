@@ -98,7 +98,7 @@ public class BlackMarket : MonoBehaviour
         if (me == null || !me.TryGetComponent<PlayerHealth>(out var hp)) { reason = ""; return false; }
         if (hp.IsDead) { reason = SetLoc.T("market.reason.dead", "죽은 상태"); return false; }
         if (Vector3.Distance(me.transform.position, transform.position) > radius + 0.75f) { reason = SetLoc.T("market.reason.far", "너무 멀어요"); return false; }
-        if (outOfCombatOnly && hp.InCombat) { reason = SetLoc.T("market.reason.combat", "전투 중에는 거래 안 함"); return false; }
+        if (outOfCombatOnly && hp.InCombat) { reason = SetLoc.T("market.reason.combat", "전투 중에는 거래할 수 없습니다"); return false; }
         return true;
     }
 
@@ -132,7 +132,7 @@ public class BlackMarket : MonoBehaviour
         }
         else ok = eq.EquipArmor(d.Id, e.Enchant != null ? e.Enchant.Id : 0, true);
 
-        if (!ok) { reason = SetLoc.T("market.reason.fail", "지금은 살 수 없음"); return false; }
+        if (!ok) { reason = SetLoc.T("market.reason.fail", "지금은 살 수 없습니다"); return false; }
 
         hp.SpendSoul(price);
         reason = SetLoc.F("market.bought", "{0} 구매", d.GetName());

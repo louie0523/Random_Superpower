@@ -56,7 +56,7 @@ public class CustomizeView : TitlePanel
         int cur = Current;
         _sel = _list.FirstOrDefault(p => p != null && p.Id == cur);
         Pick(_sel, _sel == null);
-        if (Db == null) Frame.SetNote("GameMeta에 꾸미기 목록(Cosmetics)이 비어 있어");
+        if (Db == null) Frame.SetNote("꾸미기 목록이 비어 있습니다");
     }
 
     void Paint()
@@ -113,7 +113,7 @@ public class CustomizeView : TitlePanel
         {
             bool can = p.PriceSC > 0 && PlayerSave.SC >= p.PriceSC;
             Frame.Action1(p.PriceSC > 0 ? $"사기 · {p.PriceSC:N0} SC" : "뽑기 전용", () => Buy(p), can);
-            if (p.PriceSC > 0 && !can) Frame.SetNote($"SC가 {p.PriceSC - PlayerSave.SC:N0} 모자라요");
+            if (p.PriceSC > 0 && !can) Frame.SetNote($"SC가 {p.PriceSC - PlayerSave.SC:N0} 부족합니다");
         }
         else if (cur != p.Id) Frame.Action1("장착", () => Equip(p.Id));
         else if (HasEmptyCard) Frame.Action1(slot.Required ? "기본으로" : "벗기", () => Equip(0));
@@ -122,7 +122,7 @@ public class CustomizeView : TitlePanel
 
     void Buy(PartData p)
     {
-        if (!PlayerSave.TrySpendSC(p.PriceSC)) { Frame.SetNote("SC가 모자라요"); return; }
+        if (!PlayerSave.TrySpendSC(p.PriceSC)) { Frame.SetNote("SC가 부족합니다"); return; }
         PlayerSave.GrantPart(p.Id);
         Equip(p.Id);
     }

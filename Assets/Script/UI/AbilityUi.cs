@@ -28,6 +28,37 @@ public static class AbilityUi
         return s ?? "";
     }
 
+    /// <summary>
+    /// 도감 설명 — 시트 ability.{Id}.codex → Codex Text 칸 → 한 줄 요약(게임 중 숫자 부분 뺌) → 플레이버
+    /// </summary>
+    public static string Codex(AbilityData a)
+    {
+        if (a == null) return "";
+        string s = LocUtil.GetOr($"ability.{a.Id}.codex", LocUtil.Resolve(a.CodexText ?? ""));
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            string sum = LocUtil.GetOr($"ability.{a.Id}.summary", LocUtil.Resolve(a.Summary ?? ""));
+            s = StripLive(sum);
+        }
+        if (string.IsNullOrWhiteSpace(s)) s = StripLive(Flavor(a));
+        return s ?? "";
+    }
+
+    static readonly System.Text.RegularExpressions.Regex LiveGroup =
+        new(@"[ \t]*[\[\(（【][^\]\)）】\n]*\{[^}\n]*\}[^\]\)）】\n]*[\]\)）】]");
+    static readonly System.Text.RegularExpressions.Regex LiveToken = new(@"\{[^}\n]*\}");
+    static readonly System.Text.RegularExpressions.Regex BlankLines = new(@"\n[ \t]*(\n[ \t]*)+");
+
+    /// <summary>게임 중에만 채워지는 숫자 칸 빼기 — "[현재 폰 {x:pawns} / {x:pawnsneed}]" 같은 괄호 묶음째, 남은 {…}도</summary>
+    public static string StripLive(string s)
+    {
+        if (string.IsNullOrEmpty(s) || s.IndexOf('{') < 0) return s ?? "";
+        s = LiveGroup.Replace(s, "");
+        s = LiveToken.Replace(s, "");
+        s = BlankLines.Replace(s, "\n");
+        return s.Trim();
+    }
+
     /// <summary>플레이버 — 능력이 지금 바꾼 글(변신 등) → 시트 ability.{Id}.flavor → Flavor 칸</summary>
     public static string Flavor(AbilityData a)
     {

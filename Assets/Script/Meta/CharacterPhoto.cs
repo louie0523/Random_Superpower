@@ -72,6 +72,7 @@ public static class CharacterPhoto
         }
 
         go.transform.SetParent(parent, false);
+        go.transform.localScale = meta.CharacterModel.transform.localScale * Mathf.Max(0.01f, meta.CharacterScale);
         Object.Destroy(holder);
 
         var ap = go.GetComponent<CharacterAppearanceApplier>();

@@ -55,6 +55,7 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
     NetworkSceneManagerDefault _sceneMgr;
     readonly List<SessionInfo> _sessions = new();
     bool _purposeLeave;
+    bool _toTitle;
     float _roomWait;
     float _reconnectAt;
 
@@ -263,10 +264,35 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
         HandleRunnerGone(runner, ShutdownReason.Ok);   // OnShutdown이 먼저 처리했으면 무시됨
     }
 
+    /// <summary>
+    /// 방 · 로비 연결을 모두 끊고 타이틀 씬으로 (ESC 메뉴 '타이틀로'). 이 런처도 없앰 — 대기실에 다시 들어가면 새로 생겨 로비에 접속
+    /// </summary>
+    public async void QuitToTitle(string titleScene)
+    {
+        if (_toTitle) return;
+        _toTitle = true;
+        _reconnectAt = 0f;
+        var runner = _runner;
+        if (runner != null)
+        {
+            _purposeLeave = true;
+            State = LinkState.Leaving;
+            try { await runner.Shutdown(); }
+            catch (Exception e) { Debug.LogWarning("[Room] 타이틀로 가며 끊기 실패 — " + e.Message); }
+        }
+        DropRunner();
+        State = LinkState.Offline;
+        Spectator.End();
+        if (Instance == this) Instance = null;
+        SceneManager.LoadScene(titleScene);
+        Destroy(gameObject);
+    }
+
     /// <summary>러너가 끝났을 때 (나가기 · 끊김 · 참가 실패) — 대기실 씬으로 돌아가 로비 다시 접속</summary>
     void HandleRunnerGone(NetworkRunner runner, ShutdownReason reason)
     {
         if (runner != _runner) return;
+        if (_toTitle) return;      // 타이틀로 가는 중 — QuitToTitle이 정리
 
         bool wasJoining = State == LinkState.Joining;
         bool purpose = _purposeLeave;
@@ -277,7 +303,7 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
         Spectator.End();
 
         if (wasJoining) Toast(JoinFailText(reason));
-        else if (!purpose && reason != ShutdownReason.Ok) Toast(SetLoc.F("lobby.err.disconnected", "연결이 끊겼어 ({0})", reason));
+        else if (!purpose && reason != ShutdownReason.Ok) Toast(SetLoc.F("lobby.err.disconnected", "연결이 끊겼습니다 ({0})", reason));
 
         if (SceneManager.GetActiveScene().name != lobbySceneName && LobbyBuildIndex >= 0)
             SceneManager.LoadScene(lobbySceneName);
@@ -291,11 +317,11 @@ public class RoomLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             case "GameNotFound":
             case "GameDoesNotExist":
-                return SetLoc.T("lobby.err.not_found", "그 코드의 방이 없어");
+                return SetLoc.T("lobby.err.not_found", "해당 코드의 방이 없습니다");
             case "GameIsFull":
-                return SetLoc.T("lobby.err.full", "방이 가득 찼어");
+                return SetLoc.T("lobby.err.full", "방이 가득 찼습니다");
             case "GameClosed":
-                return SetLoc.T("lobby.err.closed", "들어갈 수 없는 방이야");
+                return SetLoc.T("lobby.err.closed", "들어갈 수 없는 방입니다");
             default:
                 return SetLoc.F("lobby.err.join", "참가 실패 ({0})", r);
         }

@@ -16,7 +16,14 @@ public class TitleController : MonoBehaviour
     [Tooltip("코드로 만들 때 글꼴 (비우면 UiPrefabSet의 글꼴)")]
     public TMP_FontAsset Font;
 
+    [Header("시야 (마우스 휠)")]
+    public float MinFov = 16f;
+    public float MaxFov = 50f;
+
     static bool _toastShown;
+    const string FovPref = "title.fov";
+    Camera _cam;
+    float _fov = -1f;
     TitlePanel _open;
 
     void Awake()
@@ -49,6 +56,12 @@ public class TitleController : MonoBehaviour
         if (View.Nick != null) View.Nick.SetTextWithoutNotify(RoomLauncher.Nick);
         Paint();
         ShowToast();
+        _cam = Camera.main;
+        if (_cam != null)
+        {
+            _fov = Mathf.Clamp(PlayerPrefs.GetFloat(FovPref, _cam.fieldOfView), MinFov, MaxFov);
+            _cam.fieldOfView = _fov;
+        }
         if (meta == null) Debug.LogWarning("[타이틀] Resources/GameMeta가 없어 — Create → Game/Meta/Game Meta 로 만들어 Resources 폴더에");
     }
 
@@ -151,6 +164,7 @@ public class TitleController : MonoBehaviour
 
     void Update()
     {
+        Zoom();
         if (!Input.GetKeyDown(KeyCode.Escape)) return;
         if (PaintMode.On)
         {
@@ -159,6 +173,21 @@ public class TitleController : MonoBehaviour
         }
         if (SettingsWindow.IsOpen || SettingsWindow.ClosedFrame == Time.frameCount) return;     // 설정 창이 스스로 닫음
         if (_open != null) _open.Hide();
+    }
+
+    /// <summary>마우스 휠 = 카메라 시야 (UI 위 · 벽 칠하기 중엔 안 함 — 벽 칠하기는 따로)</summary>
+    void Zoom()
+    {
+        if (_cam == null || _fov < 0f || PaintMode.On) return;
+        float w = Input.mouseScrollDelta.y;
+        bool overUi = UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+        if (Mathf.Abs(w) > 0.01f && !overUi)
+        {
+            _fov = Mathf.Clamp(_fov - w * 2.5f, MinFov, MaxFov);
+            try { PlayerPrefs.SetFloat(FovPref, _fov); } catch { /* 기억 못 해도 됨 */ }
+        }
+        if (!Mathf.Approximately(_cam.fieldOfView, _fov))
+            _cam.fieldOfView = Mathf.Lerp(_cam.fieldOfView, _fov, 1f - Mathf.Exp(-14f * Time.unscaledDeltaTime));
     }
 
     void Paint()

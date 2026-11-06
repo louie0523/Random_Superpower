@@ -102,7 +102,7 @@ public static class TitleUiBuilder
         v.ToastText = toastText;
 
         // ── 벽 칠하기 도구 막대 (칠하는 동안만) ──
-        v.PaintBar = PaintToolbarBuilder.Build(root, font, false);
+        v.PaintBar = PaintToolbarBuilder.Build(root, font, false, true);
         v.PaintBar.gameObject.SetActive(false);
         v.HideWhilePainting = new[] { logo.gameObject, wallet.gameObject, menu.gameObject };
 
@@ -349,8 +349,7 @@ public static class TitleUiBuilder
         var rt = K.Rect("Detail", body);
         K.Size(rt, 560f, -1f, 0f);
         var face = K.Sticker(rt, K.Panel2, 0f, 0f);
-        face.raycastTarget = true;
-        K.StripesOn(face, 0.02f);
+        face.raycastTarget = true;          // 판 안은 망점 없이 (바깥 창 바탕만)
         var v = face.gameObject.AddComponent<VerticalLayoutGroup>();
         v.padding = new RectOffset(26, 26, 26, 22);
         v.spacing = 10f;
@@ -363,7 +362,11 @@ public static class TitleUiBuilder
         K.Size(box, -1f, 290f);
         var back = K.Img("Back", box, K.Plain, K.Field);
         K.Fill(back.rectTransform);
-        K.Deco(back.transform, K.Spray, K.Purple, new Vector2(0.5f, 0.3f), Vector2.zero, new Vector2(420f, 160f), -6f, 0.35f);
+        // 그림 칸을 채우는 스프레이 판 (찍 그은 한 줄 대신)
+        var fill = K.Img("SprayFill", back.transform, K.SprayFill, K.Purple);
+        K.Fill(fill.rectTransform, 6f);
+        fill.color = new Color(K.Purple.r, K.Purple.g, K.Purple.b, 0.32f);
+        f.PreviewPaint = fill;
 
         var raw = K.Rect("Preview", box).gameObject.AddComponent<RawImage>();
         K.Fill(raw.rectTransform, 8f);
@@ -412,7 +415,6 @@ public static class TitleUiBuilder
         K.Size(rt, -1f, 250f, -1f, 0f);
         var face = K.Sticker(rt, K.Panel2, 0f, 0f);
         face.raycastTarget = true;
-        K.StripesOn(face, 0.02f);
         var v = face.gameObject.AddComponent<VerticalLayoutGroup>();
         v.padding = new RectOffset(24, 24, 20, 18);
         v.spacing = 8f;

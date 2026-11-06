@@ -29,6 +29,9 @@ public class AbilityData : ScriptableObject
     [TextArea(1, 2)]
     [Tooltip("한 줄 요약 — 랜덤 능력 HUD · 클래스 카드. 비우면 플레이버. 시트 키 ability.{Id}.summary가 있으면 그게 우선")]
     public string Summary;
+    [TextArea(1, 3)]
+    [Tooltip("도감 설명 — 비우면 한 줄 요약에서 게임 중 숫자 부분([현재 폰 {x:…}] 같은 것)을 빼고 씀 → 그래도 없으면 플레이버.\n시트 키 ability.{Id}.codex가 있으면 그게 우선")]
+    public string CodexText;
     [Tooltip("이름표 배경 · 카드 테두리 색")]
     public Color UiAccent = new Color(0.82f, 0.16f, 0.18f, 1f);
     [Tooltip("이름 글자 색")]

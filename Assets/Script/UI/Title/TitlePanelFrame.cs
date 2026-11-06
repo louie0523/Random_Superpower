@@ -30,6 +30,8 @@ public class TitlePanelFrame : MonoBehaviour
     public RawImage Preview;
     public ModelViewport Viewport;
     public Image PreviewIcon;
+    [Tooltip("그림 칸 바탕 스프레이 — 능력이면 그 능력 색 (없으면 원래 색)")]
+    public Image PreviewPaint;
     public TMP_Text Name;
     public TMP_Text Sub;
     public TMP_Text Body;
@@ -51,10 +53,17 @@ public class TitlePanelFrame : MonoBehaviour
     Action _a, _b;
 
     public bool IsOpen => gameObject.activeSelf;
+    Color _paintDefault;
+    bool _paintSaved;
     public IReadOnlyList<UiItemCard> Cards => _cards;
 
     void Awake()
     {
+        if (PreviewPaint == null && Preview != null && Preview.transform.parent != null)
+        {
+            var t = Preview.transform.parent.Find("Back/SprayFill");       // 예전 프리팹
+            if (t != null) PreviewPaint = t.GetComponent<Image>();
+        }
         if (TabTemplate != null) TabTemplate.gameObject.SetActive(false);
         if (CardTemplate != null) CardTemplate.gameObject.SetActive(false);
         if (Back != null) Back.onClick.AddListener(Close);
@@ -153,12 +162,22 @@ public class TitlePanelFrame : MonoBehaviour
         Set(Sub, "");
         SetBody("");
         SetNote("");
+        SetPaint(null);
         Action1(null, null);
         Action2(null, null);
     }
 
+    /// <summary>그림 칸 바탕 스프레이 색 (null = 원래 색) — 그림(아이콘)은 흰색 그대로</summary>
+    public void SetPaint(Color? c)
+    {
+        if (PreviewPaint == null) return;
+        if (!_paintSaved) { _paintDefault = PreviewPaint.color; _paintSaved = true; }
+        PreviewPaint.color = c.HasValue ? new Color(c.Value.r, c.Value.g, c.Value.b, 0.85f) : _paintDefault;
+    }
+
     public void ShowModel(GameObject prefab, WeaponSkinData skin = null)
     {
+        if (Preview != null) Preview.uvRect = new Rect(0f, 0f, 1f, 1f);
         if (Viewport != null) Viewport.Show(prefab, skin);
         else if (Preview != null) Preview.enabled = false;
         if (prefab != null && PreviewIcon != null) PreviewIcon.enabled = false;
@@ -182,7 +201,22 @@ public class TitlePanelFrame : MonoBehaviour
         Preview.texture = tex;
         Preview.enabled = tex != null;
         Preview.color = Color.white;
+        Preview.uvRect = Crop(tex, Preview.rectTransform.rect);
         if (tex != null && PreviewIcon != null) PreviewIcon.enabled = false;
+    }
+
+    /// <summary>그림 비율 ≠ 칸 비율이면 가운데를 잘라 맞춤 (옆으로 눌려 보이지 않게)</summary>
+    static Rect Crop(Texture tex, Rect box)
+    {
+        if (tex == null || box.width < 1f || box.height < 1f || tex.height == 0) return new Rect(0f, 0f, 1f, 1f);
+        float ta = tex.width / (float)tex.height, ba = box.width / box.height;
+        if (ta > ba)
+        {
+            float w = ba / ta;
+            return new Rect((1f - w) * 0.5f, 0f, w, 1f);
+        }
+        float h = ta / ba;
+        return new Rect(0f, 1f - h, 1f, h);      // 세로로 길면 위쪽(얼굴) 기준
     }
 
     public void Action1(string label, Action click, bool interactable = true)

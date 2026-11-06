@@ -191,7 +191,7 @@ public class RoomState : NetworkBehaviour
     {
         if (target != Runner.LocalPlayer) return;
         if (RoomLauncher.Instance != null)
-            RoomLauncher.Instance.Leave(reason == 1 ? "방장이 내보냈어" : "방이 가득 찼어");
+            RoomLauncher.Instance.Leave(reason == 1 ? "방장이 내보냈습니다" : "방이 가득 찼습니다");
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -248,12 +248,12 @@ public class RoomState : NetworkBehaviour
     public bool CanStart(out string why)
     {
         why = "";
-        if (!HasStateAuthority) { why = "방장만 시작할 수 있어"; return false; }
+        if (!HasStateAuthority) { why = "방장만 시작할 수 있습니다"; return false; }
         if (Phase != RoomPhase.Waiting || SceneTimer.IsRunning) { why = "준비 중"; return false; }
 
         var L = RoomLauncher.Instance;
         if (L == null) { why = "RoomLauncher 없음"; return false; }
-        if (L.MapBuildIndex(MapIndex) < 0) { why = "맵 씬이 빌드 설정에 없어"; return false; }
+        if (L.MapBuildIndex(MapIndex) < 0) { why = "맵 씬이 빌드 설정에 없습니다"; return false; }
 
         if (L.RequireAllReady)
         {
