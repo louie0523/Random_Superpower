@@ -115,7 +115,7 @@ public class ItemShotSettings : ScriptableObject
     {
         ShotKind.Gun => "총",
         ShotKind.Melee => "근접 무기",
-        ShotKind.Ranged => "활 · 지팡이 · 던지기",
+        ShotKind.Ranged => "활 · 지팡이 · 투척류",
         ShotKind.Armor => "갑옷",
         ShotKind.Helmet => "투구",
         ShotKind.Boots => "신발",

@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167485640704
-    m_Localized: Fold
+    m_Localized: Collapse
     m_Metadata:
       m_Items: []
   - m_Id: 442167552749568
@@ -35,7 +35,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943872
-    m_Localized: During combat
+    m_Localized: In combat
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943873
@@ -43,27 +43,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943874
-    m_Localized: opening
+    m_Localized: Open
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943875
-    m_Localized: Regular box
+    m_Localized: Common Chest
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943876
-    m_Localized: Rare box
+    m_Localized: Rare Chest
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943877
-    m_Localized: Hero Chest
+    m_Localized: Epic Chest
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943878
-    m_Localized: Enchantment Box
+    m_Localized: Enchant Chest
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943879
-    m_Localized: class
+    m_Localized: Class
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943880
@@ -71,7 +71,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943881
-    m_Localized: doesn't exist
+    m_Localized: None
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943882
@@ -91,11 +91,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943886
-    m_Localized: "Anterior {0}\xB0 sector"
+    m_Localized: "{0}\xB0 frontal cone"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943887
-    m_Localized: The entire surrounding area
+    m_Localized: All around
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943888
@@ -111,55 +111,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943891
-    m_Localized: 'tip:'
+    m_Localized: 'Tip:'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943892
-    m_Localized: bare hands
+    m_Localized: Unarmed
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943893
-    m_Localized: melee weapons
+    m_Localized: Melee weapon
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943894
-    m_Localized: bow
+    m_Localized: Bow
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943895
-    m_Localized: cane
+    m_Localized: Staff
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943896
-    m_Localized: firearms
+    m_Localized: Gun
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943897
-    m_Localized: Throwing weapons
+    m_Localized: Throwables
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943898
-    m_Localized: Ranged weapons
+    m_Localized: Ranged weapon
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943899
-    m_Localized: All weapons
+    m_Localized: Any weapon
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943900
-    m_Localized: store
+    m_Localized: Shop
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943901
-    m_Localized: '[B] Store'
+    m_Localized: '[B] Shop'
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943902
-    m_Localized: "During combat \u2014 Shop unavailable"
+    m_Localized: "In combat \u2014 Shop unavailable"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943903
-    m_Localized: enforce
+    m_Localized: General
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943904
@@ -167,19 +167,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943905
-    m_Localized: Special
+    m_Localized: Exclusive
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943906
-    m_Localized: purchase
+    m_Localized: Buy
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943907
-    m_Localized: This ability does not have a special shop.
+    m_Localized: There are no exclusive products.
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943908
-    m_Localized: Recover stamina {0}
+    m_Localized: Restore {0} HP
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943909
@@ -187,23 +187,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943910
-    m_Localized: Unavailable for purchase
+    m_Localized: Can't buy
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943911
-    m_Localized: maximum
+    m_Localized: Max level
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943912
-    m_Localized: Soul shortage
+    m_Localized: Not enough Souls
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943913
-    m_Localized: Firearms Only
+    m_Localized: Guns only
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943914
-    m_Localized: Full ammunition
+    m_Localized: Ammo full
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943915
@@ -227,7 +227,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943920
-    m_Localized: No weapons
+    m_Localized: No weapon
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943921
@@ -235,7 +235,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943922
-    m_Localized: No weapons
+    m_Localized: No weapon
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943923
@@ -243,15 +243,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943924
-    m_Localized: Gun enchantment impossible
+    m_Localized: Guns require an ability
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943925
-    m_Localized: Maximum level
+    m_Localized: Max stage
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943926
-    m_Localized: Stone shortage
+    m_Localized: Not enough Stones
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943927
@@ -259,11 +259,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943928
-    m_Localized: weapon
+    m_Localized: Weapons
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943929
-    m_Localized: equipment
+    m_Localized: Gear
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943930
@@ -271,19 +271,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943931
-    m_Localized: '[G] Discard current weapon'
+    m_Localized: "G \u2014 Discard active weapon"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138176
-    m_Localized: Intersection {0}m
+    m_Localized: Range {0}m
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138177
-    m_Localized: "Decision angle {0}\xB0"
+    m_Localized: "Hit angle {0}\xB0"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138178
-    m_Localized: '{0} rounds of ammunition'
+    m_Localized: Max ammo {0}
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138179
@@ -303,31 +303,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138183
-    m_Localized: No enchantment yet
+    m_Localized: No enchantment
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138184
-    m_Localized: Weapons that cannot be enchanted
+    m_Localized: Cannot be enchanted
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138185
-    m_Localized: bow
+    m_Localized: Bow
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138186
-    m_Localized: cane
+    m_Localized: Staff
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138187
-    m_Localized: firearms
+    m_Localized: Gun
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138188
-    m_Localized: Throw
+    m_Localized: Throwable
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138189
-    m_Localized: Goal {0}
+    m_Localized: "Goal {0} \xB7 1st Place {1}"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138190
@@ -343,7 +343,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138193
-    m_Localized: Maximum HP
+    m_Localized: Max HP
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138194
@@ -375,11 +375,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138201
-    m_Localized: Bloodsucking
+    m_Localized: Lifesteal
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138202
-    m_Localized: damage
+    m_Localized: Damage dealt
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138203
@@ -412,10 +412,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3001745490423809
     m_Localized: Max {0}
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3001745490423810
-    m_Localized: Q / E / R / Ultimate
     m_Metadata:
       m_Items: []
   - m_Id: 3001745490423811
@@ -494,7 +490,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4030871831687168
-    m_Localized: vicinity
+    m_Localized: Melee
     m_Metadata:
       m_Items: []
   - m_Id: 4030871894601728
@@ -506,27 +502,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4030871894601730
-    m_Localized: armor
+    m_Localized: Armor
     m_Metadata:
       m_Items: []
   - m_Id: 4030871894601731
-    m_Localized: pitching
+    m_Localized: Helmet
     m_Metadata:
       m_Items: []
   - m_Id: 4030871894601732
-    m_Localized: shoes
+    m_Localized: Boots
     m_Metadata:
       m_Items: []
   - m_Id: 4030871894601733
-    m_Localized: Both hands
+    m_Localized: Two-handed
     m_Metadata:
       m_Items: []
   - m_Id: 4030871894601734
-    m_Localized: heaviness
+    m_Localized: Heavy
     m_Metadata:
       m_Items: []
   - m_Id: 4031231723941888
-    m_Localized: basic
+    m_Localized: Basic
     m_Metadata:
       m_Items: []
   - m_Id: 4071974098284544
@@ -546,8 +542,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072769
-    m_Localized: "Purchase +1 Skill Point \u2014 You can upgrade any skill you want
-      in the Ability Panel (F1)."
+    m_Localized: "Purchase +1 Skill Point \u2014 You can upgrade any skill in the
+      Ability Panel (F1)."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072770
@@ -571,7 +567,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072775
-    m_Localized: '{0} {1} ({2} seconds) upon hit'
+    m_Localized: 'On hit: {0} {1} ({2}s)'
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072776
@@ -584,11 +580,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072778
-    m_Localized: designation
+    m_Localized: Choose
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072779
-    m_Localized: Next Enchant Designation
+    m_Localized: Choose Next Enchant
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072780
@@ -600,7 +596,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267075
-    m_Localized: bare hands
+    m_Localized: Bare Hands
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267076
@@ -608,7 +604,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267077
-    m_Localized: dagger
+    m_Localized: Dagger
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267078
@@ -616,7 +612,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267079
-    m_Localized: wooden bow
+    m_Localized: Wooden Bow
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267080
@@ -624,7 +620,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267081
-    m_Localized: wooden walking stick
+    m_Localized: Wooden Staff
     m_Metadata:
       m_Items: []
   - m_Id: 5221716635267082
@@ -641,7 +637,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191309283328
-    m_Localized: slowdown
+    m_Localized: Slow
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837760
@@ -649,7 +645,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837761
-    m_Localized: burn
+    m_Localized: Burn
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837762
@@ -658,16 +654,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837763
-    m_Localized: statue
+    m_Localized: Frostbite
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Inflicts the target's <color=#00BBFF>Frostbite</color> effect for
+    m_Localized: Inflicts <color=#00BBFF>Frostbite</color> effect on the target for
       {d0} seconds, reducing their attack speed by {v1}%.
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837765
-    m_Localized: judgment
+    m_Localized: Judgment
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837766
@@ -684,7 +680,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237727723520
-    m_Localized: poisoning
+    m_Localized: Poison
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277952
@@ -692,7 +688,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Steal {0}% of damage dealt on hit
+    m_Localized: Lifesteal {0}% of damage dealt on hit
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -704,7 +700,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603072
-    m_Localized: Seohwasang
+    m_Localized: Frostburn
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603073
@@ -713,7 +709,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603074
-    m_Localized: poisoning
+    m_Localized: Poison
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
@@ -722,7 +718,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
-    m_Localized: gash
+    m_Localized: Deep Wound
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603077
@@ -731,7 +727,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603078
-    m_Localized: thunder
+    m_Localized: Thunder
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603079
@@ -740,7 +736,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603080
-    m_Localized: Bloodline
+    m_Localized: Blood Strike
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603081
@@ -762,7 +758,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5887265069445122
-    m_Localized: New round after {0} seconds
+    m_Localized: New round in {0}s
     m_Metadata:
       m_Items: []
   - m_Id: 15217183884423168
@@ -782,27 +778,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171907
-    m_Localized: Treatment {0}
+    m_Localized: Kills {0}
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171908
-    m_Localized: evolution
+    m_Localized: Evolution
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171909
-    m_Localized: Treatment {0}/{1}
+    m_Localized: Kills {0}/{1}
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171910
-    m_Localized: Enhance {0}/{1}
+    m_Localized: Enchant {0}/{1}
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171911
-    m_Localized: From Lesson 0
+    m_Localized: Resets to +0
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171912
-    m_Localized: Class Selection
+    m_Localized: Choose a Class
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171913
@@ -810,15 +806,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171914
-    m_Localized: "\u21BB Refresh ({0})"
+    m_Localized: "\u21BB Reroll ({0})"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171915
     m_Localized: NO. {0}
-    m_Metadata:
-      m_Items: []
-  - m_Id: 15217183922171916
-    m_Localized: One-line summary by ability
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171917
@@ -838,8 +830,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171921
-    m_Localized: "Revenge successful! Movement Speed \u200B\u200B\xB7 Max Health
-      \xB7 Attack Power +{0}% until death!"
+    m_Localized: Revenge successful! Movement Speed, Max Health, and Attack Power
+      increase by {0}% until your next death!
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171922
@@ -851,23 +843,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171924
-    m_Localized: common
+    m_Localized: General
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171925
-    m_Localized: graphics
+    m_Localized: Graphics
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171926
-    m_Localized: sound
+    m_Localized: Audio
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171927
-    m_Localized: operation
+    m_Localized: Controls
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171928
-    m_Localized: Aiming point
+    m_Localized: Crosshair
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171929
@@ -879,24 +871,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171931
-    m_Localized: language
+    m_Localized: Language
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171932
-    m_Localized: "Skill \u2014 Use when detaching"
+    m_Localized: "Skills \u2014 cast on release"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171933
-    m_Localized: If you turn it off, it uses the moment you press it.
+    m_Localized: If you turn it off, it will be used the moment you press it.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171934
-    m_Localized: "Dash \u2014 In the direction you are looking"
+    m_Localized: "Dash \u2014 toward where you look"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171935
-    m_Localized: If turned off, it moves in the direction of movement (only applies
-      to dash in the direction of movement)
+    m_Localized: Turning it off makes you dash in the direction you are moving (only
+      dashes in the direction of movement)
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171936
@@ -904,8 +896,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171937
-    m_Localized: If you turn it off, pick it up with the interaction key (Souls and
-      Stones always pick up automatically)
+    m_Localized: If you turn it off, pick it up using the interaction key (Souls
+      and Stones are always picked up automatically)
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171938
@@ -913,23 +905,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171939
-    m_Localized: Not applied in editor (only in build)
+    m_Localized: It does not apply in the editor (applies only in the build)
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171940
-    m_Localized: resolution
+    m_Localized: Resolution
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171941
-    m_Localized: Not applied in editor (only in build)
+    m_Localized: It does not apply in the editor (applies only in the build)
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171942
-    m_Localized: Vertical synchronization
+    m_Localized: V-Sync
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171943
-    m_Localized: If turned on, the FPS limit is ignored.
+    m_Localized: If you turn it on, the FPS limit is ignored.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171944
@@ -937,7 +929,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171945
-    m_Localized: quality
+    m_Localized: Quality
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171946
@@ -945,11 +937,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171947
-    m_Localized: Lowering it makes it blurry and faster
+    m_Localized: If you lower it, it becomes blurry but faster.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171948
-    m_Localized: shadow
+    m_Localized: Shadows
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171949
@@ -961,15 +953,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366208
-    m_Localized: entire
+    m_Localized: Master
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366209
-    m_Localized: sound effects
+    m_Localized: Sound effects
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366210
-    m_Localized: music
+    m_Localized: Music
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366211
@@ -989,36 +981,36 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366215
-    m_Localized: Set all keys to default values
+    m_Localized: Reset all keys
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366216
-    m_Localized: default
+    m_Localized: Reset
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Voice keys (Chat \xB7 Voice Tab) rotate together \xB7 If the same
-      key is entered, the keys for the two actions are swapped"
+    m_Localized: "The voice keys (Chat \xB7 Voice Tab) are also reset. If the same
+      key is entered, the keys for the two actions are swapped."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
-    m_Localized: Show aiming point
+    m_Localized: Show crosshair
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366219
-    m_Localized: Same aiming point on all weapons
+    m_Localized: Same crosshair for all weapons
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366220
-    m_Localized: color
+    m_Localized: Color
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366221
-    m_Localized: outline
+    m_Localized: Outline
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366222
-    m_Localized: Thickness of the border
+    m_Localized: Outline opacity
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366223
@@ -1026,7 +1018,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366224
-    m_Localized: middle dot
+    m_Localized: Center dot
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366225
@@ -1034,11 +1026,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366226
-    m_Localized: Dot thickness
+    m_Localized: Dot opacity
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366227
-    m_Localized: inner line
+    m_Localized: Inner lines
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366228
@@ -1054,7 +1046,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366231
-    m_Localized: Inner line thickness
+    m_Localized: Inner line opacity
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366232
@@ -1066,7 +1058,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366234
-    m_Localized: outer line
+    m_Localized: Outer lines
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366235
@@ -1082,7 +1074,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366238
-    m_Localized: Outer line thickness
+    m_Localized: Outer line opacity
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366239
@@ -1094,7 +1086,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366241
-    m_Localized: one
+    m_Localized: Circle
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366242
@@ -1106,7 +1098,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366244
-    m_Localized: Circle intensity
+    m_Localized: Circle opacity
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366245
@@ -1122,7 +1114,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366248
-    m_Localized: The unfolding century
+    m_Localized: Spread amount
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366249
@@ -1134,15 +1126,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366251
-    m_Localized: Microphone method
+    m_Localized: Mic mode
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366252
-    m_Localized: Press and speak
+    m_Localized: Push to talk
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366253
-    m_Localized: Open Microphone
+    m_Localized: Open mic
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366254
@@ -1150,15 +1142,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366255
-    m_Localized: The further to the left, the more sensitive
+    m_Localized: The further to the left, the more sensitive it is.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366256
-    m_Localized: mike
+    m_Localized: Microphone
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366257
-    m_Localized: Mute game microphone
+    m_Localized: Mute match mic
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366258
@@ -1166,23 +1158,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366259
-    m_Localized: Game voice volume
+    m_Localized: Match voice volume
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366260
-    m_Localized: Team Voice Size
+    m_Localized: Team voice volume
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366261
-    m_Localized: "Game \u2014 Press and speak"
+    m_Localized: "Match \u2014 Push to talk"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366262
-    m_Localized: Game microphone mute key
+    m_Localized: Mute match mic key
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366263
-    m_Localized: "Team \u2014 Press and speak"
+    m_Localized: "Team \u2014 Push to talk"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366264
@@ -1194,11 +1186,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366266
-    m_Localized: Voice Key default
+    m_Localized: Reset voice keys
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366267
-    m_Localized: default
+    m_Localized: Reset
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366268
@@ -1214,55 +1206,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366271
-    m_Localized: Name above the head
+    m_Localized: Names above heads
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366272
-    m_Localized: Health bar above your head
+    m_Localized: Health bars above heads
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366273
-    m_Localized: "Screen shaking (when hit \xB7 explosion)"
+    m_Localized: "Screen shake (hits \xB7 explosions)"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366274
-    m_Localized: Screen jiggling when walking
+    m_Localized: Head bob while walking
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366275
-    m_Localized: Reduce if you get motion sickness
+    m_Localized: If you get motion sickness, reduce the amount.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366276
-    m_Localized: Screen flashing
+    m_Localized: Screen flash
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366277
-    m_Localized: Hit Stop
+    m_Localized: Hit stop
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366278
-    m_Localized: red border color
+    m_Localized: Enemy outline color
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366279
-    m_Localized: Change if it is difficult to distinguish colors
+    m_Localized: If you have difficulty distinguishing colors, please change it.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366280
-    m_Localized: from now on
+    m_Localized: Move forward
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366281
-    m_Localized: back
+    m_Localized: Move back
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366282
-    m_Localized: left
+    m_Localized: Move left
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366283
-    m_Localized: right
+    m_Localized: Move right
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366284
@@ -1298,39 +1290,39 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560512
-    m_Localized: "Interaction (Altar \xB7 Chest \xB7 Picking up)"
+    m_Localized: "Interact (Altar \xB7 Chest \xB7 Pick up)"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560513
-    m_Localized: Discard weapons
+    m_Localized: Drop weapon
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560514
-    m_Localized: Weapon No. 1
+    m_Localized: Weapon 1
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560515
-    m_Localized: Weapon No. 2
+    m_Localized: Weapon 2
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560516
-    m_Localized: Weapon No. 3
+    m_Localized: Weapon 3
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560517
-    m_Localized: Weapon No. 4
+    m_Localized: Weapon 4
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560518
-    m_Localized: Weapon No. 5
+    m_Localized: Weapon 5
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560519
-    m_Localized: Weapon No. 6
+    m_Localized: Weapon 6
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560520
-    m_Localized: Weapon No. 7
+    m_Localized: Weapon 7
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560521
@@ -1338,7 +1330,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560522
-    m_Localized: store
+    m_Localized: Shop
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560523
@@ -1346,11 +1338,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560524
-    m_Localized: Chatting
+    m_Localized: Chat
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560525
-    m_Localized: standing
+    m_Localized: Scoreboard
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560526
@@ -1402,19 +1394,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560538
-    m_Localized: Fear
+    m_Localized: Off
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560539
-    m_Localized: lowness
+    m_Localized: Low
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560540
-    m_Localized: middle
+    m_Localized: Medium
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560541
-    m_Localized: height
+    m_Localized: High
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560542
@@ -1426,7 +1418,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560544
-    m_Localized: Jahong
+    m_Localized: Magenta
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560545
@@ -1434,19 +1426,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560546
-    m_Localized: white
+    m_Localized: White
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560547
-    m_Localized: abstract
+    m_Localized: Green
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560548
-    m_Localized: light green
+    m_Localized: Lime
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560549
-    m_Localized: yellow
+    m_Localized: Yellow
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560550
@@ -1454,23 +1446,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560551
-    m_Localized: pink
+    m_Localized: Pink
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560552
-    m_Localized: red
+    m_Localized: Red
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560553
-    m_Localized: black
+    m_Localized: Black
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560554
-    m_Localized: Copy code to clipboard
+    m_Localized: I copied the code to the clipboard.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560555
-    m_Localized: Paste
+    m_Localized: I pasted it.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560556
@@ -1478,11 +1470,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560557
-    m_Localized: Reset to default
+    m_Localized: I reverted to the default.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560558
-    m_Localized: Put the same into other weapons as well.
+    m_Localized: I applied the same to other weapons.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560559
@@ -1498,7 +1490,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560562
-    m_Localized: preparing
+    m_Localized: Coming soon
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560563
@@ -1506,7 +1498,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560564
-    m_Localized: (directly)
+    m_Localized: (Custom)
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560565
@@ -1514,15 +1506,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560566
-    m_Localized: Press one more time to reset
+    m_Localized: Press one more time to reset.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560567
-    m_Localized: System Basics
+    m_Localized: System default
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560568
-    m_Localized: setting
+    m_Localized: Settings
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560569
@@ -1534,7 +1526,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560571
-    m_Localized: gun
+    m_Localized: Gun
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560572
@@ -1542,12 +1534,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560573
-    m_Localized: vicinity
+    m_Localized: Melee
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560574
-    m_Localized: '[Same crosshair on all weapons] is enabled, so all crosshairs are
-      used.'
+    m_Localized: '[Same crosshair for all weapons] is enabled, so all weapons use
+      the gun crosshair.'
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560575
@@ -1567,15 +1559,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560579
-    m_Localized: With this weapon as the default
+    m_Localized: Reset this weapon
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560580
-    m_Localized: The same applies to other weapons.
+    m_Localized: Apply to all weapons
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560581
-    m_Localized: menu
+    m_Localized: Menu
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560582
@@ -1583,15 +1575,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560583
-    m_Localized: setting
+    m_Localized: Settings
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560584
-    m_Localized: Exiting the room
+    m_Localized: Leave room
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560585
-    m_Localized: Game over
+    m_Localized: Quit game
     m_Metadata:
       m_Items: []
   - m_Id: 15224945284591616
@@ -1631,7 +1623,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340356
-    m_Localized: 'The enchantment limit increases up to 100.
+    m_Localized: 'The enchantment limit increases to 100.
 
 
       You can specify
@@ -1654,9 +1646,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340360
-    m_Localized: Swing a hammer forward to deal {dmg:SmashCoef+SmashFlat} damage,
-      and stun enemies hit for 0.25 seconds. Additionally, enemies hit gain a status
-      effect that reduces their armor by {b:ArmorBreakPct}% for 5 seconds.
+    m_Localized: Swing a hammer forward to deal {dmg:SmashCoef+SmashFlat} damage
+      and stun enemies hit for 0.25 seconds. Additionally, enemies hit have their
+      armor reduced by {b:ArmorBreakPct}% for 5 seconds.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340361
@@ -1664,7 +1656,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340363
-    m_Localized: It reaches maximum power when HP is reduced to 30%.
+    m_Localized: It reaches maximum power when HP drops to 30%.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340364
@@ -1672,19 +1664,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340365
-    m_Localized: 'For {b:UltDuration} seconds, your body is enveloped in fire, and
-      you enter the Descendant of Fire state.
+    m_Localized: 'For {b:UltDuration} seconds, your body is enveloped in fire, becoming
+      ''Descendant of Fire''.
 
 
-      Enemies who strike you with
-      melee attacks gain the Burn effect, and all item effects are increased by 25%.
-      Additionally, the cooldown of Furnace is reset every time your health drops
-      by 15%, such as at 85%, 70%, 55%, etc.'
+      Enemies that strike you with melee attacks
+      gain the Burn effect, and all item effects are increased by 25%. Additionally,
+      the cooldown of ''Furnace Burst'' is reset every time your health drops by
+      15%, such as at 85%, 70%, 55%, etc.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340366
-    m_Localized: Among Descendants of Fire, the consumption of Enchant Stones due
-      to Enchant is reduced by half.
+    m_Localized: While in 'Descendant of Fire' state, the amount of Enchant Stones
+      required for Enchant is reduced by half.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340367
@@ -1692,7 +1684,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340369
-    m_Localized: Gun enchantment
+    m_Localized: Gun Enchantment
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340370
@@ -1701,8 +1693,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340372
     m_Localized: "When equipped with a firearm, Attack Speed \u200B\u200Bincreases
-      by {0}%, Movement Speed \u200B\u200Bby {1}, and Critical Damage increases by
-      an additional {2}%.\n\nThe default weapon becomes 'Glock'."
+      by {0}% and Movement Speed \u200B\u200Bby {1}, and Critical Damage increases
+      by an additional {2}%.\n\nThe default weapon becomes 'Glock'."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340373
@@ -1726,8 +1718,8 @@ MonoBehaviour:
 
 
       Instead,
-      the next bullet deals {b:AimBonusPct:all}% additional damage upon hitting and
-      always hits as a critical strike.'
+      the next bullet deals {b:AimBonusPct:all}% additional damage on hit and always
+      hits critically.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340377
@@ -1735,10 +1727,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340378
-    m_Localized: "Enter 'Spray' state for 12 seconds, increasing attack speed by
-      {b:UltAtkSpeedPct:all}% and gaining 20% \u200B\u200Blifesteal. During the duration,
-      when firing weapons, bullet spread increases by 30% instead of ricocheting
-      {b:UltRicochets:all} times against walls."
+    m_Localized: "Enter 'Spray' for 12 seconds, increasing your attack speed by {b:UltAtkSpeedPct:all}%
+      and granting 20% \u200B\u200Blifesteal. During the duration, instead of ricocheting
+      {b:UltRicochets:all} times off walls, your bullet spread increases by 30%."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340379
@@ -1754,7 +1745,7 @@ MonoBehaviour:
 
 
       You
-      might have been just a peasant, or you might have been a great one.'
+      might have been just a peasant, or you might have been a great man.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340383
@@ -1796,7 +1787,7 @@ MonoBehaviour:
       by {b:MountDamageReduce}%.
 
 
-      Reuse while mounted to quickly dash forward,
+      Reuse while mounted to dash forward rapidly,
       dealing {dmg:ChargeCoef} damage.'
     m_Metadata:
       m_Items: []
@@ -1855,7 +1846,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340402
     m_Localized: Bite forward to deal {dmg:DevourCoef+DevourFlat} damage. If the
-      damaged target dies within 1 second, gain additional souls and prepare <b>Spit
+      damaged target dies within 1 second, gain an additional soul and prepare <b>Spit
       Out</b>.
     m_Metadata:
       m_Items: []
@@ -1864,13 +1855,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340406
-    m_Localized: 'Base damage is {dmg:SpitCoef+SpitFlat}, and deals additional damage
-      equal to {b:InheritKillAtkPct}% of the target''s attack power if the target
-      is a player, or {b:InheritWeaponAtkPct}% if the target is a weapon.
+    m_Localized: 'The base damage is {dmg:SpitCoef+SpitFlat}, and deals additional
+      damage equal to {b:InheritKillAtkPct}% of the target''s attack power if the
+      target is a player, or {b:InheritWeaponAtkPct}% if the target is a weapon.
 
 
-      May
-      be affected by random enemy abilities or weapon enchantments.'
+      It
+      may be affected by random enemy abilities or weapon enchantments.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340407
@@ -1897,21 +1888,21 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340411
-    m_Localized: "The monster has a 3-second attack cooldown per target and deals
+    m_Localized: "The Monster has a 3-second attack cooldown per target and deals
       {b:MonsterLowHpBonus:all}% additional damage to targets with 30% or less health.\n\nDuring
       the duration, Attack Power, Attack Speed, and Movement Speed \u200B\u200Bare
       slightly increased."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340412
-    m_Localized: Shidou Walker
+    m_Localized: Shadow Walker
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340415
     m_Localized: 'A shadow follows the Shadow Walker.
 
 
-      When not in combat,
+      Whenever not in combat,
       charge <b>Darkness</b> over {b:DarkChargeTime:all} seconds.
 
 
@@ -1926,8 +1917,8 @@ MonoBehaviour:
 
       When
       attacking with the weapon, your illusion attacks in the same direction with
-      the same weapon after a short delay, dealing {b:EchoPct:all}% of your base
-      power as damage.'
+      the same weapon after a short delay, dealing {b:EchoPct:all}% of the base power
+      as damage.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340418
@@ -1943,17 +1934,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340422
-    m_Localized: 'Leaves a <b>Shadow Hand</b> where you are looking. If there are
-      enemies within {b:HandRadius:all}m of the <b>Shadow Hand</b>, the hand extends
+    m_Localized: 'Leaves a <b>Shadow Hand</b> where you are looking. If there is
+      an enemy within {b:HandRadius:all}m of the <b>Shadow Hand</b>, the hand extends
       outward.
 
 
       On hit, it deals {dmg:HandCoef+HandFlat} damage and roots
-      for {b:HandRoot:all} seconds.
+      the enemy for {b:HandRoot:all} seconds.
 
 
-      You can leave up to {b:HandMax:all} Shadow
-      Hands on the map at once.'
+      You can leave up to {b:HandMax:all}
+      Shadow Hands on the map at a time.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340423
@@ -2005,10 +1996,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340433
     m_Localized: "The maximum range is {b:OrbitRange:all}m, and firearms cannot be
-      controlled by the Master of Weapons.\n\nBows and staffs are based on a 100%
-      charge time.\n\nSpecial enchantments on the corresponding weapon have a 50%
-      chance of activating, and their values \u200B\u200Band duration are also halved.
-      (Lifesteal does not apply.)"
+      controlled by the Weapon Master.\n\nBows and staffs are based on a 100% charge
+      time.\n\nSpecial enchantments on the corresponding weapon have a 50% chance
+      of activating, and their values \u200B\u200Band duration are halved. (Lifesteal
+      does not apply.)"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340434
@@ -2016,8 +2007,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340435
-    m_Localized: The amount of Enchant Stones obtained increases by {b:StoneGain:all}
-      times.
+    m_Localized: The amount of Enchant Stones obtained is multiplied by {b:StoneGain:all}.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340436
@@ -2025,14 +2015,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340437
-    m_Localized: As Master of Weapons, floating weapons rush in the direction they
-      are facing, dealing damage equal to the number of weapons X {dmg:CommandCoef}.
+    m_Localized: "The floating weapons rush in the direction they are facing, dealing
+      damage equal to the number of weapons \xD7 {dmg:CommandCoef}."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340439
-    m_Localized: For {b:HasteDuration:all} seconds, the base attack time of Weapon
-      Master is reduced by {b:HasteIntervalPct:all}% and the speed of commands is
-      increased by 50%.
+    m_Localized: For {b:HasteDuration:all} seconds, the Weapon Master's base attack
+      interval decreases by {b:HasteIntervalPct:all}%, and command speed increases
+      by 50%.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340440
@@ -2040,12 +2030,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340441
-    m_Localized: 'Fires all weapons currently floating as Weapon Master at the location
-      you are looking for for {b:DancerDuration:all} seconds.
+    m_Localized: 'Fires all currently floating weapons at the point you are looking
+      for for {b:DancerDuration:all} seconds.
 
 
-      During this
-      time, the damage of the weapons is reduced by up to {b:DancerCoef:all}%.'
+      Damage of weapons is reduced
+      by up to {b:DancerCoef:all}% during this time.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340443
@@ -2069,9 +2059,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340449
-    m_Localized: Teleports backward, leaving a Joker card at your original location.
-      If stepped on, the card explodes after a short delay, dealing {dmg:BlastCoef+BlastFlat}
-      damage and applying {b:BlastSlowPct:all}% slow for 2 seconds.
+    m_Localized: Teleports backward, leaving a Joker card at the original location.
+      If someone steps on the card, it explodes after a short delay, dealing {dmg:BlastCoef+BlastFlat}
+      damage and slowing them by {b:BlastSlowPct:all}% for 2 seconds.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340450
@@ -2084,8 +2074,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340452
     m_Localized: Adds {b:OneCardSeconds:all} seconds to the cooldown of all normal
-      skills (excluding ultimate and random abilities) for all enemies within {b:OneCardRadius:all}m
-      of them.
+      skills, excluding ultimates and random abilities, for all enemies within {b:OneCardRadius:all}m.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340453
@@ -2094,16 +2083,16 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340456
     m_Localized: 'Summons an identical clone of yourself with random abilities and
-      items forward for {b:CloneDuration:all} seconds.
+      items in front of you for {b:CloneDuration:all} seconds.
 
 
-      The clone follows
-      the nearest enemy by default.
+      The clone
+      follows the nearest enemy by default.
 
 
-      When the clone dies or you press the
-      Ultimate key again, it explodes, dealing {b:CloneBlastMul*100:all}% Joker Draw
-      explosion damage to nearby enemies.
+      When the clone dies or you press
+      the Ultimate key again, it explodes, dealing {b:CloneBlastMul*100:all}% Joker
+      Draw explosion to nearby enemies.
 
 
       The clone attacks enemies within
@@ -2127,13 +2116,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340461
-    m_Localized: Instead of increasing your speed significantly, you take damage
-      whenever you stop!
+    m_Localized: Instead of a significant increase in speed, you take damage whenever
+      you stop!
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340463
-    m_Localized: Movement speed and health increase, and melee weapon damage increases
-      significantly, but you can only move to the sides.
+    m_Localized: Movement speed and health are increased, and melee weapon damage
+      is significantly increased, but you can only move sideways.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340464
@@ -2150,7 +2139,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340467
-    m_Localized: If I am within 5 meters of someone for more than 3 seconds, I get
+    m_Localized: If I'm within 5 meters of someone for more than 3 seconds, I get
       so embarrassed I explode!
     m_Metadata:
       m_Items: []
@@ -2170,9 +2159,8 @@ MonoBehaviour:
     m_Localized: 'Upon death, you enter ''Revenge Time'' for 1 minute.
 
 
-      During
-      ''Revenge Time'', if you defeat the enemy who killed you, you gain a very powerful
-      effect!'
+      Defeat
+      the enemy who killed you during ''Revenge Time'' to gain a very powerful effect!'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534659
@@ -2197,7 +2185,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534664
-    m_Localized: Select one player to have them commit suicide after 60 seconds.
+    m_Localized: Select one player you want to have commit 'suicide' after 60 seconds.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534665
@@ -2205,7 +2193,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534668
-    m_Localized: Select one desired player and inflict the 'Curse' status for 20
+    m_Localized: Select one player and inflict the 'Curse' status on them for 20
       seconds, preventing them from communicating. Additionally, they receive a 'Seal'
       effect for up to 999 seconds while alive.
     m_Metadata:
@@ -2247,7 +2235,7 @@ MonoBehaviour:
 
 
       (Current Pawns {x:pawns}
-      / {x:pawnsneed} )'
+      / {x:pawnsneed})'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534682
@@ -2259,16 +2247,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534684
-    m_Localized: Jump forward twice with the Knight's movement, and reuse within
-      3 seconds to jump diagonally to the left/right.
+    m_Localized: Jump forward twice with the Knight's movement, and if reused within
+      3 seconds, jump diagonally to the left/right.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534687
-    m_Localized: 'Ultimate cooldown decreases 40% faster.
+    m_Localized: 'Ultimate cooldowns decrease 40% faster.
 
 
       Using Ultimate
-      5 times kills half of the living players. ( Current : {x:stack})'
+      5 times kills half of the living players. (Current: {x:stack})'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534689
@@ -2294,8 +2282,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: 'Damage dealt to targets when they are not looking at you increases
-      by 100%.
+    m_Localized: 'Damage dealt when the target is not looking at you increases by
+      100%.
 
 
       Becomes invisible for 3 seconds when used.'
@@ -2351,12 +2339,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534706
-    m_Localized: 'After designating a location in front, ascend high into the sky
-      and throw a <b>Earth<b> at that location.
+    m_Localized: 'Designate a spot in front, ascend high into the sky, and throw
+      a <b>Earth</b> at that location.
 
 
-      Return to the casting location
-      after use.'
+      Return to the casting location after
+      use.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534707
@@ -2376,8 +2364,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534711
-    m_Localized: '''Comrades'' cannot harm each other, and a special event occurs
-      when all players become ''Comrades''.'
+    m_Localized: '''Allies'' cannot harm each other, and a special event occurs when
+      all players become ''Allies''.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534712
@@ -2385,11 +2373,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534713
-    m_Localized: 'When used, it pulls one target, grabs them, and charges.
+    m_Localized: 'When used, grabs one target and charges.
 
 
-      No
-      one knows where the destination is.'
+      No one knows where
+      the destination is.'
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534714
@@ -2397,7 +2385,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534715
-    m_Localized: When used, it takes one target to the future.
+    m_Localized: When used, it takes one target and heads toward the future.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534716
@@ -2405,11 +2393,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534717
-    m_Localized: 'When using a skill, you shout a Legendary Dragon Language.
+    m_Localized: 'When using a skill, you shout the Legendary Dragon Language.
 
 
       If
-      you shout it 30 times, you become a Legendary Dragon.
+      you shout it 30 times, you become a legendary dragon.
 
 
       If you survive
@@ -2459,8 +2447,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340368
-    m_Localized: You are the Master of All Firearms. A Gun Master can enchant all
-      firearms and receives calibrations for the weapons.
+    m_Localized: You are the Master of All Firearms. A Gunmaster can enchant all
+      firearms and receives calibrations for firearms.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340371
@@ -2487,9 +2475,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340393
-    m_Localized: Wielding a cursed sword of dark magic, strike down to deal {dmg:FinisherCoef+FinisherFlat}
-      weapon damage to enemies in front, and trigger a dark magic explosion in front
-      to inflict massive poison.
+    m_Localized: Slam down a cursed sword of dark magic to deal {dmg:FinisherCoef+FinisherFlat}
+      weapon damage to enemies in front, and trigger a dark magic explosion in front,
+      inflicting massive poison.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340401
@@ -2501,8 +2489,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340405
-    m_Localized: Available when you have recently killed an enemy or consumed a weapon
-      with 'Gluttony'. Spit vomit forward, dealing {dmg:SpitCoef+SpitFlat} damage.
+    m_Localized: Can be used when you have recently killed an enemy or consumed a
+      weapon with 'Gluttony'. Spits vomit forward, dealing {dmg:SpitCoef+SpitFlat}
+      damage.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340413
@@ -2534,7 +2523,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340425
-    m_Localized: 'Designates the surrounding area as a <b>Shadow Zone</b>, greatly
+    m_Localized: 'Designate the surrounding area as a <b>Shadow Zone</b>, significantly
       reducing the visibility range of enemies within the zone, excluding yourself.
 
 
@@ -2564,9 +2553,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340454
-    m_Localized: Changes the cooldown of one of the random abilities currently on
-      cooldown to the cooldown of the substitute card skill, and instead resets the
-      cooldown of that random ability.
+    m_Localized: Change the cooldown of one of the random abilities currently on
+      cooldown to the cooldown of the substitute card skill, and reset the cooldown
+      of that random ability instead.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340455
@@ -2615,7 +2604,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534686
-    m_Localized: 'Ultimate cooldown decreases 40% faster.
+    m_Localized: 'Ultimate cooldowns decrease 40% faster.
 
 
       Using Ultimate
@@ -2758,7 +2747,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15324686622240768
-    m_Localized: Activated altar
+    m_Localized: Altars activated
     m_Metadata:
       m_Items: []
   - m_Id: 15328367992221696
@@ -2770,7 +2759,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581825
-    m_Localized: nickname
+    m_Localized: Nickname
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581826
@@ -2778,7 +2767,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581827
-    m_Localized: personnel
+    m_Localized: Players
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581828
@@ -2790,7 +2779,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581830
-    m_Localized: situation
+    m_Localized: Status
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581831
@@ -2798,7 +2787,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581832
-    m_Localized: When emptied, it becomes 'Nickname's Room'.
+    m_Localized: If you leave it empty, it becomes a 'nickname room'.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581833
@@ -2806,7 +2795,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581834
-    m_Localized: Making a room
+    m_Localized: Create room
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581835
@@ -2818,19 +2807,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581837
-    m_Localized: copy
+    m_Localized: Copy
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581838
-    m_Localized: Exiting the room
+    m_Localized: Leave room
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581839
-    m_Localized: game
+    m_Localized: Game
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581840
-    m_Localized: Maximum number of people
+    m_Localized: Max players
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581841
@@ -2838,27 +2827,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581842
-    m_Localized: Starting Soul
+    m_Localized: Start Soul
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581843
-    m_Localized: Box refill
+    m_Localized: Chest refill
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581844
-    m_Localized: Falling to death
+    m_Localized: Falling
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581845
-    m_Localized: instant death
+    m_Localized: Instant death
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581846
-    m_Localized: To the resurrection point
+    m_Localized: Return to respawn point
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581847
-    m_Localized: "Team Match (Settings only \u2014 Team splitting later)"
+    m_Localized: Team Match (In preparation)
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581848
@@ -2878,7 +2867,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581852
-    m_Localized: After activating all sub-altars, the central altar
+    m_Localized: You must activate all sub-altars for the central altar to open.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581853
@@ -2891,15 +2880,15 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15328368021581855
     m_Localized: If the number of sub-altars on the map is less than the required
-      amount, just open them all.
+      amount, you can activate all of them.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581856
-    m_Localized: van
+    m_Localized: Bans
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581857
-    m_Localized: Solve everything
+    m_Localized: Unban all
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581858
@@ -2927,11 +2916,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581864
-    m_Localized: Import
+    m_Localized: Load
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581865
-    m_Localized: kicked out
+    m_Localized: Kick
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776128
@@ -2947,7 +2936,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776131
-    m_Localized: On my way out...
+    m_Localized: Leaving...
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776132
@@ -2955,7 +2944,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776133
-    m_Localized: During the game
+    m_Localized: In game
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776134
@@ -2963,11 +2952,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776135
-    m_Localized: Watching
+    m_Localized: Spectate
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776136
-    m_Localized: Participation
+    m_Localized: Join
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776137
@@ -2987,23 +2976,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776141
-    m_Localized: person {0}/{1}
+    m_Localized: Players {0}/{1}
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776142
-    m_Localized: Room Manager
+    m_Localized: Host
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776143
-    m_Localized: preparation
+    m_Localized: Ready
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776144
-    m_Localized: atmosphere
+    m_Localized: Waiting
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776145
-    m_Localized: me
+    m_Localized: Me
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776146
@@ -3011,11 +3000,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776147
-    m_Localized: Cancel preparation
+    m_Localized: Cancel ready
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776148
-    m_Localized: I am waiting for the host to start.
+    m_Localized: Waiting for the host to start.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776149
@@ -3027,11 +3016,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776151
-    m_Localized: borderless
+    m_Localized: Unlimited
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776152
-    m_Localized: '{0} people'
+    m_Localized: '{0} players'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776153
@@ -3043,7 +3032,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776155
-    m_Localized: '{0} items'
+    m_Localized: '{0}'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776156
@@ -3051,23 +3040,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776157
-    m_Localized: Class Ban
+    m_Localized: Class bans
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776158
-    m_Localized: Random ability ban
+    m_Localized: Random ability bans
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776159
-    m_Localized: Copy room code
+    m_Localized: I copied the room code.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776160
-    m_Localized: Copy room settings to clipboard
+    m_Localized: I copied the room settings to the clipboard.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776161
-    m_Localized: Apply pasted settings
+    m_Localized: I applied the pasted settings.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776162
@@ -3075,15 +3064,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776163
-    m_Localized: '[{0}] Saved'
+    m_Localized: '[{0}] saved'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776164
-    m_Localized: '[{0}] Load'
+    m_Localized: '[{0}] loaded'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776165
-    m_Localized: '[{0}] Load failed'
+    m_Localized: '[{0}] Failed to load'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776166
@@ -3095,7 +3084,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776168
-    m_Localized: Server connection failed ({0})
+    m_Localized: Failed to connect to server ({0})
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776169
@@ -3111,15 +3100,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776172
-    m_Localized: This is a room you cannot participate in.
+    m_Localized: This room can't be joined.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776173
-    m_Localized: Failed to participate ({0})
+    m_Localized: Could not participate ({0})
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776174
-    m_Localized: The room owner kicked you out.
+    m_Localized: The host removed you from the room.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776175
@@ -3127,7 +3116,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776176
-    m_Localized: preparing
+    m_Localized: Preparing
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776177
@@ -3135,31 +3124,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776178
-    m_Localized: '{0} people who didn''t prepare'
+    m_Localized: There are {0} people who are not prepared.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776179
-    m_Localized: mike
+    m_Localized: Mic
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776180
-    m_Localized: Spectator microphone
+    m_Localized: Spectator mic
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776181
-    m_Localized: Press and speak ({0})
+    m_Localized: Push to talk ({0})
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776182
-    m_Localized: Open Microphone
+    m_Localized: Open mic
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776183
-    m_Localized: Mute
+    m_Localized: Muted
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776184
-    m_Localized: Team Mute
+    m_Localized: Team muted
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776185
@@ -3167,7 +3156,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776186
-    m_Localized: game
+    m_Localized: Match
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776187
@@ -3175,7 +3164,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776188
-    m_Localized: Watching
+    m_Localized: Spectator
     m_Metadata:
       m_Items: []
   - m_Id: 15336411908124672
@@ -3191,7 +3180,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020416
-    m_Localized: black market
+    m_Localized: Black Market
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020417
@@ -3199,47 +3188,47 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020418
-    m_Localized: '{0} Purchase'
+    m_Localized: I purchased {0}
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020419
-    m_Localized: close
+    m_Localized: Close
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020420
-    m_Localized: If you select an item, it shows it in detail.
+    m_Localized: There are no selected items.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020421
-    m_Localized: No trading during combat
+    m_Localized: You cannot trade during combat.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020422
-    m_Localized: dead state
+    m_Localized: You cannot live while dead
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020423
-    m_Localized: Cannot buy now
+    m_Localized: I cannot buy it now
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020424
-    m_Localized: It's too far.
+    m_Localized: It is too far.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020425
-    m_Localized: Cannot change while transforming
+    m_Localized: You cannot change equipment while transforming.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020426
-    m_Localized: Soul shortage
+    m_Localized: I am lacking soul.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020427
-    m_Localized: armor
+    m_Localized: Armor
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020428
-    m_Localized: weapon
+    m_Localized: Weapons
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020429
@@ -3271,7 +3260,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020436
-    m_Localized: Recover stamina {0}
+    m_Localized: Restore {0} HP
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020437
@@ -3287,11 +3276,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020440
-    m_Localized: To yourself {0} {1}
+    m_Localized: '{0} {1} on self'
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020441
-    m_Localized: To the target {0} {1}
+    m_Localized: '{0} {1} on target'
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020442
@@ -3323,7 +3312,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020449
-    m_Localized: Max {0} nesting
+    m_Localized: Up to {0} stacks
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214720
@@ -3335,27 +3324,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214722
-    m_Localized: '{0} When heard'
+    m_Localized: While holding {0}
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214723
-    m_Localized: Installing
+    m_Localized: While equipped
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214724
-    m_Localized: Assist
+    m_Localized: On assist
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214725
-    m_Localized: When shooting a headshot
+    m_Localized: On headshot
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214726
-    m_Localized: If you suffer damages
+    m_Localized: When hit
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214727
-    m_Localized: When treating
+    m_Localized: On kill
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214728
@@ -3363,11 +3352,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214729
-    m_Localized: When using random abilities
+    m_Localized: On random ability use
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214730
-    m_Localized: At the time of resurrection
+    m_Localized: On respawn
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214731
@@ -3375,15 +3364,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214732
-    m_Localized: When using a skill
+    m_Localized: On skill use
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214733
-    m_Localized: When involved in treatment
+    m_Localized: On takedown
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214734
-    m_Localized: When using the ultimate ability
+    m_Localized: On ultimate use
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214735
@@ -3395,7 +3384,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214737
-    m_Localized: During combat
+    m_Localized: In combat
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214738
@@ -3403,7 +3392,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214739
-    m_Localized: Non-combat
+    m_Localized: Out of combat
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214740
@@ -3415,7 +3404,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214742
-    m_Localized: Intrinsic characteristics
+    m_Localized: Unique traits
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214743
@@ -3435,23 +3424,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214747
-    m_Localized: standing
+    m_Localized: Scoreboard
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214748
-    m_Localized: ranking
+    m_Localized: Rank
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214749
-    m_Localized: name
+    m_Localized: Name
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214750
-    m_Localized: class
+    m_Localized: Class
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214751
-    m_Localized: altar
+    m_Localized: Altars
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214752
@@ -3467,7 +3456,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214755
-    m_Localized: Regeneration Shield
+    m_Localized: Regen Shield
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214756
@@ -3475,19 +3464,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278020640768
-    m_Localized: '{0} seconds while digesting'
+    m_Localized: Digesting {0}s
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389504
-    m_Localized: "Digestion complete \u2014 Can eat"
+    m_Localized: "Digestion complete \u2014 You can eat"
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389505
-    m_Localized: Can spit out the power of defeated enemies
+    m_Localized: You can spitt out the power of defeated enemies.
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389506
-    m_Localized: Can spit out {0}
+    m_Localized: You can spit out {0}
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389507
@@ -3495,19 +3484,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389508
-    m_Localized: Last desperate struggle {0} seconds
+    m_Localized: Last Stand {0}s
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389509
-    m_Localized: used it all up
+    m_Localized: Used up
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389510
-    m_Localized: Promotion
+    m_Localized: Promoted
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389511
-    m_Localized: Phone {0} / {1}
+    m_Localized: Pawns {0} / {1}
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389512
@@ -3523,8 +3512,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389515
-    m_Localized: "<b>Darkness Charged</b> \u2014 The next weapon attack will darken
-      the target"
+    m_Localized: "<b>Dark Charged</b> \u2014 The next weapon attack darkens the target"
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389516
@@ -3544,7 +3532,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389520
-    m_Localized: dragon
+    m_Localized: Dragon
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389521
@@ -3560,7 +3548,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389524
-    m_Localized: game
+    m_Localized: Match
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389525
@@ -3572,11 +3560,163 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389527
-    m_Localized: Watching
+    m_Localized: Spectator
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389528
     m_Localized: "Enter message\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023742001152
+    m_Localized: Back to title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749888
+    m_Localized: NO. {0} - {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749889
+    m_Localized: Limited!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749890
+    m_Localized: "Limited! \u2014 next rotation in {0}:{1:00}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749891
+    m_Localized: Special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749892
+    m_Localized: Weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749893
+    m_Localized: Armor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749894
+    m_Localized: All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749895
+    m_Localized: "The black market has opened \u2014 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749896
+    m_Localized: The black market has closed as someone completed a transaction.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749897
+    m_Localized: A single transaction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749898
+    m_Localized: The black market is closed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749899
+    m_Localized: "Black Market \u2014 Currently closed"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749900
+    m_Localized: "\u25C6 {0}  Buy"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749901
+    m_Localized: There are no items for sale.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749902
+    m_Localized: Sold Out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749903
+    m_Localized: Missing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749904
+    m_Localized: Enchant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749905
+    m_Localized: Black Market only
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749906
+    m_Localized: Black Market
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749907
+    m_Localized: I have already purchased this limited edition.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749908
+    m_Localized: Weapon stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749909
+    m_Localized: Damage reduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138496
+    m_Localized: Slow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138497
+    m_Localized: Burn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138498
+    m_Localized: Frostbite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138499
+    m_Localized: Seal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138500
+    m_Localized: Stun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138501
+    m_Localized: Deep Wound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138502
+    m_Localized: Evade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138503
+    m_Localized: Armor Break
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138504
+    m_Localized: Ghost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138505
+    m_Localized: Blind
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138506
+    m_Localized: Root
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138507
+    m_Localized: Invisible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138508
+    m_Localized: Undead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138509
+    m_Localized: Curse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138510
+    m_Localized: Weaken
     m_Metadata:
       m_Items: []
   references:

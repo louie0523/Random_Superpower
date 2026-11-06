@@ -367,6 +367,7 @@ public class GameHUD : MonoBehaviour
     (StatType.UltimateDamage,    "궁극기 피해", "P0"),
     (StatType.HeadshotDamage,    "헤드샷 추가", "P0"),
     (StatType.HeadshotReduction, "헤드샷 감소", "P0"),
+    (StatType.BodyDamageReduction, "피해 감소", "P0"),
     (StatType.Shield,            "재생 쉴드",   "0"),
     (StatType.SoulShield,        "소울 쉴드",   "0"),
 };

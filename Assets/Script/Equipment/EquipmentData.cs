@@ -77,6 +77,23 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Tooltip("체크하면 상자·스포너에서 안 나옴. 진화로만 얻는 특수 무기")]
     public bool IsSpecial = false;
 
+    [Tooltip("암시장에서만 나옴 — 상자 · 스포너 · 상점 한정판엔 안 나오고, 도감엔 '암시장' 표시로 보임")]
+    public bool BlackMarketOnly = false;
+    [Tooltip("상점 한정판 · 암시장 가격에 더하는 이 아이템만의 추가 가격 (소울)")]
+    [Min(0)] public int MarketExtraPrice = 0;
+
+    /// <summary>
+    /// 도감 · 상점 · 암시장에 나오는 번호 — 무기 1001~1099 · 갑옷 2001~2099 · 투구 3001~3099 · 신발 4001~4099.
+    /// x000(빈 칸 · 맨손)과 x100 이상(따로 쓰는 대역)은 빼고
+    /// </summary>
+    public static bool IsListedId(int id)
+    {
+        int band = id / 1000, rest = id % 1000;
+        return band >= 1 && band <= 4 && rest >= 1 && rest <= 99;
+    }
+
+    public bool IsListed => IsListedId(Id);
+
     [Header("태그")]
     [Tooltip("툴팁 하단에 표시할 로컬라이즈 키 목록")]
     public string[] Tags;
@@ -90,21 +107,27 @@ public class EquipmentData : ScriptableObject, IMotionSource
     [Tooltip("칸마다 정해진 주요 능력치의 값 (기초 스탯과 따로 더해짐)\n" +
              "투구 = 받는 헤드샷 피해 감소 (0.2 = 20%)\n" +
              "신발 = 이동 속도 % (10 = +10%)\n" +
-             "갑옷 = 아직 없음 (나중에 쉴드 등으로 확장 — MainStatOf에 한 줄)")]
+             "갑옷 = 받는 피해 감소 (0.15 = 15%) — 헤드샷 피해에는 안 걸림")]
     public float MainStatValue;
+
+    [Header("─── 방어구: 특수 인챈트 후보 ───")]
+    [Tooltip("이 방어구에 붙어 나올 수 있는 특수 인챈트 (무기 EnchantTable의 Special Candidates처럼).\n" +
+             "비우면 Armor Enchant Database에서 이 칸에 맞는 것 전부.\n" +
+             "여기 넣은 인챈트도 Armor Enchant Database의 All에 들어 있어야 함 (번호로 찾음)")]
+    public ArmorEnchantCandidate[] ArmorEnchants;
 
     [Header("─── 고유 특성 ───")]
     [Tooltip("이 아이템만의 특성 — 언제(Trigger) + 무엇을(Effect). 무기는 들고 있을 때, 방어구는 끼고 있을 때")]
     public ItemTrait[] Traits;
 
-    /// <summary>칸별 주요 능력치 — 없으면 false (갑옷은 아직 비움)</summary>
+    /// <summary>칸별 주요 능력치 — 없으면 false</summary>
     public static bool MainStatOf(EquipSlot slot, out StatType stat, out ModType mod)
     {
         switch (slot)
         {
             case EquipSlot.Helmet: stat = StatType.HeadshotReduction; mod = ModType.Flat; return true;
             case EquipSlot.Boots: stat = StatType.MoveSpeed; mod = ModType.Percent; return true;
-            // case EquipSlot.Armor: stat = StatType.Shield; mod = ModType.Flat; return true;   ← 갑옷 주요 능력치를 정하면 여기
+            case EquipSlot.Armor: stat = StatType.BodyDamageReduction; mod = ModType.Flat; return true;
             default: stat = default; mod = default; return false;
         }
     }
@@ -380,6 +403,17 @@ public class EquipmentData : ScriptableObject, IMotionSource
         return Combo[Mathf.Abs(index) % Combo.Length];
     }
 
+    /// <summary>번역 키 앞부분 — weapon · armor · helmet · boots (키: {앞}.{Id}.name / .desc / .trait.{i})</summary>
+    public string LocPrefix => Slot switch
+    {
+        EquipSlot.Armor => "armor",
+        EquipSlot.Helmet => "helmet",
+        EquipSlot.Boots => "boots",
+        _ => "weapon",
+    };
+    public string NameKey => $"{LocPrefix}.{Id}.name";
+    public string DescKey => $"{LocPrefix}.{Id}.desc";
+
     public string GetName()
     {
         if (!NameEntry.IsEmpty)
@@ -387,8 +421,11 @@ public class EquipmentData : ScriptableObject, IMotionSource
             string s = NameEntry.GetLocalizedString();
             if (!string.IsNullOrEmpty(s)) return s;
         }
-        return DisplayName;
+        if (!Application.isPlaying) return DisplayName;                    // 에디터 창 — 번역 표를 안 건드림
+        return LocUtil.GetOr(NameKey, LocUtil.Resolve(DisplayName));      // 시트 키 (아이템 → 시트) · 없으면 적어 둔 이름
     }
+
+    public string GetDesc() => LocUtil.GetOr(DescKey, LocUtil.Resolve(Description ?? ""));
 
     public Vector3 GetPosOffset(bool firstPerson) =>
         firstPerson && FpPositionOffset != Vector3.zero ? FpPositionOffset : PositionOffset;
@@ -397,6 +434,15 @@ public class EquipmentData : ScriptableObject, IMotionSource
         firstPerson && FpRotationOffset != Vector3.zero ? FpRotationOffset : RotationOffset;
 
     // ══════════ 중첩 타입 ══════════
+
+    [System.Serializable]
+    public class ArmorEnchantCandidate
+    {
+        public ArmorEnchantData Enchant;
+        [Tooltip("뽑힐 무게 — 0이면 그 인챈트 에셋의 Weight 그대로")]
+        [Min(0f)] public float Weight = 0f;
+        public float GetWeight() => Weight > 0f ? Weight : Enchant != null ? Enchant.Weight : 0f;
+    }
 
     [System.Serializable]
     public struct StatEntry

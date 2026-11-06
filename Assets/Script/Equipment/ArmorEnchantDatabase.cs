@@ -44,6 +44,43 @@ public class ArmorEnchantDatabase : ScriptableObject
         return _pool[^1].Id;
     }
 
+    /// <summary>
+    /// 이 방어구에 붙일 특수 인챈트 하나 — 방어구의 후보 배열(ArmorEnchants)이 있으면 그 안에서,
+    /// 없으면 이 데이터베이스에서 칸에 맞는 것 중. 없으면 0
+    /// </summary>
+    public int Roll(EquipmentData d)
+    {
+        if (d == null) return 0;
+        var c = d.ArmorEnchants;
+        if (c == null || c.Length == 0) return Roll(d.Slot);
+
+        float sum = 0f;
+        foreach (var e in c) if (e != null && e.Enchant != null) sum += e.GetWeight();
+        if (sum <= 0f) return 0;
+        float x = Random.value * sum;
+        ArmorEnchantData pick = null;
+        foreach (var e in c)
+        {
+            if (e == null || e.Enchant == null) continue;
+            float w = e.GetWeight();
+            if (w <= 0f) continue;
+            pick = e.Enchant;
+            x -= w;
+            if (x <= 0f) break;
+        }
+        if (pick == null) return 0;
+        if (Get(pick.Id) == null)
+            Debug.LogWarning($"[방어구 인챈트] '{pick.name}'({pick.Id})가 {name}의 All에 없음 — {d.name}의 후보에서 뽑혔지만 끼면 안 보임. All에 넣어 줘", pick);
+        return pick.Id;
+    }
+
+    /// <summary>데이터베이스가 없어도 — 후보 배열 · Default 순</summary>
+    public static int RollFor(EquipmentData d, ArmorEnchantDatabase db = null)
+    {
+        db = db != null ? db : Default;
+        return db != null ? db.Roll(d) : 0;
+    }
+
 #if UNITY_EDITOR
     void OnValidate() => _map = null;
 #endif

@@ -51,6 +51,29 @@ public class BlackMarket : MonoBehaviour
     public float Radius => radius;
     public string Name => LocUtil.GetOr(nameKey, displayName);
 
+    /// <summary>모든 컴퓨터에서 같은 순서 (위치 순) — MarketDirector가 번호로 고름</summary>
+    public static List<BlackMarket> Sorted()
+    {
+        var l = new List<BlackMarket>(_all);
+        l.RemoveAll(m => m == null);
+        l.Sort((a, b) =>
+        {
+            var p = a.transform.position;
+            var q = b.transform.position;
+            int c = Mathf.RoundToInt(p.x * 10f).CompareTo(Mathf.RoundToInt(q.x * 10f));
+            if (c == 0) c = Mathf.RoundToInt(p.z * 10f).CompareTo(Mathf.RoundToInt(q.z * 10f));
+            if (c == 0) c = Mathf.RoundToInt(p.y * 10f).CompareTo(Mathf.RoundToInt(q.y * 10f));
+            return c;
+        });
+        return l;
+    }
+
+    /// <summary>글로벌 이벤트로 도는 중 (맵에 MarketDirector) — 아니면 예전처럼 늘 열림 · Stock 판매</summary>
+    public static bool Global => MarketDirector.Instance != null && MarketDirector.Instance.Object != null && MarketDirector.Instance.Object.IsValid;
+
+    /// <summary>지금 이 암시장이 열려 있나</summary>
+    public bool IsOpenNow => !Global || MarketDirector.Instance.IsOpen(this);
+
     void OnEnable() { if (!_all.Contains(this)) _all.Add(this); }
     void OnDisable() => _all.Remove(this);
 
@@ -65,7 +88,7 @@ public class BlackMarket : MonoBehaviour
         var db = database != null ? database : FindDatabase();
         if (db != null && db.All != null)
             foreach (var d in db.All)
-                if (d != null && !d.IsSpecial && !d.IsUnarmed && (d.IsWeapon || d.IsArmorPiece))
+                if (d != null && d.IsListed && !d.IsSpecial && !d.IsUnarmed && (d.IsWeapon || d.IsArmorPiece))
                     _auto.Add(new Entry { Item = d });
         _auto.Sort((a, b) => a.Item.IsWeapon != b.Item.IsWeapon ? (a.Item.IsWeapon ? -1 : 1)
                                 : a.Item.Grade != b.Item.Grade ? a.Item.Grade.CompareTo(b.Item.Grade)
@@ -96,8 +119,9 @@ public class BlackMarket : MonoBehaviour
         reason = null;
         var me = PlayerAttack.Local;
         if (me == null || !me.TryGetComponent<PlayerHealth>(out var hp)) { reason = ""; return false; }
-        if (hp.IsDead) { reason = SetLoc.T("market.reason.dead", "죽은 상태"); return false; }
-        if (Vector3.Distance(me.transform.position, transform.position) > radius + 0.75f) { reason = SetLoc.T("market.reason.far", "너무 멀어요"); return false; }
+        if (hp.IsDead) { reason = SetLoc.T("market.reason.dead", "죽은 상태에서는 살 수 없습니다"); return false; }
+        if (!IsOpenNow) { reason = SetLoc.T("market.reason.closed", "암시장이 닫혔습니다"); return false; }
+        if (Vector3.Distance(me.transform.position, transform.position) > radius + 0.75f) { reason = SetLoc.T("market.reason.far", "너무 멉니다"); return false; }
         if (outOfCombatOnly && hp.InCombat) { reason = SetLoc.T("market.reason.combat", "전투 중에는 거래할 수 없습니다"); return false; }
         return true;
     }
@@ -109,8 +133,8 @@ public class BlackMarket : MonoBehaviour
         var hp = me.GetComponent<PlayerHealth>();
         var eq = me.GetComponent<PlayerEquipment>();
         if (eq == null || e?.Item == null) { reason = ""; return false; }
-        if (eq.Locked) { reason = SetLoc.T("market.reason.locked", "변신 중에는 못 바꿈"); return false; }
-        if (hp.Soul < PriceOf(e)) { reason = SetLoc.T("market.reason.soul", "소울 부족"); return false; }
+        if (eq.Locked) { reason = SetLoc.T("market.reason.locked", "변신 중에는 장비를 바꿀 수 없습니다"); return false; }
+        if (hp.Soul < PriceOf(e)) { reason = SetLoc.T("market.reason.soul", "소울이 부족합니다"); return false; }
         return true;
     }
 
@@ -135,7 +159,7 @@ public class BlackMarket : MonoBehaviour
         if (!ok) { reason = SetLoc.T("market.reason.fail", "지금은 살 수 없습니다"); return false; }
 
         hp.SpendSoul(price);
-        reason = SetLoc.F("market.bought", "{0} 구매", d.GetName());
+        reason = SetLoc.F("market.bought", "{0}을(를) 구매했습니다", d.GetName());
         return true;
     }
 
@@ -146,6 +170,11 @@ public class BlackMarket : MonoBehaviour
         if (me == null) return;
         if (Vector3.Distance(me.transform.position, transform.position) > radius) return;
         if (me.TryGetComponent<PlayerHealth>(out var hp) && hp.IsDead) return;
+        if (!IsOpenNow)
+        {
+            AltarHud.Prompt(SetLoc.T("market.black.closed_prompt", "암시장 — 지금은 닫혀 있습니다"));
+            return;
+        }
 
         AltarHud.Prompt(SetLoc.F("market.black.prompt", "[{0}] {1}", KeyBinds.Name(GameAction.Interact), Name));
         if (KeyBinds.Down(GameAction.Interact)) BlackMarketWindow.Open(this);

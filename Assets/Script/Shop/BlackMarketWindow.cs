@@ -6,8 +6,8 @@ using UnityEngine.UI;
 using K = GameUiKit;
 
 /// <summary>
-/// 암시장 창 — 씬에 없어도 저절로 생김 (설정 창과 같은 카툰 모양, 코드로 만듦).
-/// 왼쪽: 물건 목록 (이름 · 종류 · [◆ 가격]) / 오른쪽: 고른 물건 자세히.
+/// 암시장 창 — 씬에 없어도 저절로 생김 (v7 그래피티, 코드로 만듦).
+/// 진열대(GearOfferPage — 상점 한정판과 같은 모양): 왼쪽 카드 격자 (뒤 스프레이 = 등급 색) / 오른쪽 자세히 + 구매.
 /// 닫기: Esc · 상호작용 키 · 멀어지거나 전투가 시작되면 저절로
 /// </summary>
 public class BlackMarketWindow : MonoBehaviour
@@ -18,20 +18,12 @@ public class BlackMarketWindow : MonoBehaviour
     public static int ClosedFrame { get; private set; } = -10;
 
     BlackMarket _market;
-    RectTransform _root, _list;
-    TMP_Text _title, _soul, _detail, _msg;
-    float _msgUntil;
+    RectTransform _root;
+    TMP_Text _title, _soul;
+    GearOfferPage _page;
     int _openFrame;
-    BlackMarket.Entry _selected;
-
-    class Row
-    {
-        public BlackMarket.Entry E;
-        public UiListRow V;
-    }
-    readonly List<Row> _rows = new();
-
-    static readonly string[] GradeHex = { "#A9B0BA", "#5BC8FF", "#C08BFF", "#FFD447" };   // 어두운 판 위에서 잘 보이게
+    int _serial = -1;              // 전역 암시장 — 연 때의 회차 (바뀌면 다시 채움)
+    bool _closingAfterBuy;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void AutoCreate()
@@ -71,16 +63,14 @@ public class BlackMarketWindow : MonoBehaviour
     {
         Build();
         _market = m;
-        _selected = null;
         _openFrame = Time.frameCount;
-        FillRows();
+        _closingAfterBuy = false;
         K.Set(_title, m.Name);
-        K.Set(_msg, "");
         _root.gameObject.SetActive(true);
         IsOpen = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        RefreshDetail();
+        Fill();
     }
 
     void Hide()
@@ -105,96 +95,78 @@ public class BlackMarketWindow : MonoBehaviour
         var screen = K.MakeScreen(gameObject, 465, K.DimColor);
         _root = screen;
 
-        var win = K.Window("Window", screen, 1180f, 740f, out var content);
-        _title = K.Header(content, font, "암시장");
+        var win = K.Window("Window", screen, 1400f, 860f, out var content);
+        K.StripesOn(content.GetComponent<Image>(), 0.02f);       // 창 바탕만 옅은 망점
 
-        _soul = K.Text("Soul", content, font, 24f, K.Gold, TextAlignmentOptions.MidlineLeft, true);
-        K.Size(_soul, -1f, 32f);
-
-        // 본문 — 왼쪽 목록 · 오른쪽 자세히
-        var body = K.Rect("Body", content);
-        K.Size(body, -1f, 470f, 1f, 1f);
-        var h = body.gameObject.AddComponent<HorizontalLayoutGroup>();
-        h.spacing = 18f;
-        h.childControlWidth = h.childControlHeight = true;
-        h.childForceExpandWidth = false;
-        h.childForceExpandHeight = true;
-
-        var listHost = K.Rect("ListHost", body);
-        K.Size(listHost, 640f, -1f, 0f, 1f);
-        _list = K.Scroll("List", listHost, out _, 8f);
-        K.Fill((RectTransform)_list.parent.parent);
-
-        var detailHost = K.Rect("DetailHost", body);
-        K.Size(detailHost, -1f, -1f, 1f, 1f);
-        var face = K.Sticker(detailHost, K.Field, 0f, 0f);
-        _detail = K.Text("Detail", face.transform, font, 20f, K.Ink, TextAlignmentOptions.TopLeft);
-        _detail.textWrappingMode = TextWrappingModes.Normal;
-        _detail.overflowMode = TextOverflowModes.Overflow;
-        _detail.richText = true;
-        K.Fill(_detail.rectTransform, 16f);
-
-        // 아래 — 알림 · 닫기
-        var bottom = K.Row("Bottom", content, 56f, 12f);
-        _msg = K.Text("Msg", bottom.transform, font, 22f, K.Muted, TextAlignmentOptions.MidlineLeft);
-        K.Size(_msg, -1f, -1f, 1f);
-        var close = K.Btn("Close", bottom.transform, font, SetLoc.T("market.close", "닫기"), K.Raised, 22f, out var ct);
-        K.Size(close, 160f);
+        // 위 — 제목 · 소울 · 닫기
+        var top = K.Row("Top", content, 72f, 16f);
+        _title = K.Header(top.transform, font, "암시장", 44f);
+        var header = _title.transform;
+        while (header.parent != null && header.name != "Header") header = header.parent;
+        K.Size(header, -1f, -1f, 1f);
+        K.Tag(top.transform, font, "BLACK MARKET", K.Purple, 18f, out _, "Tag").localRotation = K.Tilt(-4f);
+        _soul = K.Text("Soul", top.transform, K.Display(font), 30f, K.Gold, TextAlignmentOptions.MidlineRight, true);
+        K.Size(_soul, 260f, 60f);
+        var close = K.Btn("Close", top.transform, font, SetLoc.T("market.close", "닫기"), K.Raised, 22f, out var ct);
+        K.Size(close, 150f, 58f);
         SetLocText.Ensure(ct, "market.close");
         close.onClick.AddListener(Hide);
+
+        // 진열대 (상점 한정판과 같은 모양)
+        var host = K.Rect("Offers", content);
+        K.Size(host, -1f, -1f, -1f, 1f);
+        _page = GearOfferBuilder.Build(host, font);
+        _page.CanBuy = o =>
+        {
+            if (_market == null) return (false, "");
+            if (o.Market != null)                                     // 전역 암시장 — 상품은 MarketDirector가 정함
+            {
+                if (!_market.CanUse(out var r)) return (false, r);
+                bool can = GearPurchase.CanBuy(o.Item, o.Price, out var r2);
+                return (can, r2);
+            }
+            bool ok = _market.CanBuy((BlackMarket.Entry)o.Tag, out var why);
+            return (ok, why);
+        };
+        _page.Buy = o =>
+        {
+            if (_market == null) return (false, "");
+            if (o.Market != null)
+            {
+                if (!_market.CanUse(out var r)) return (false, r);
+                if (!GearPurchase.Buy(o.Market, out var msg)) return (false, msg);
+                // 하나라도 사면 이 암시장은 닫힘 — 다음 암시장은 7~11분 뒤 다른 곳에서
+                MarketDirector.Instance?.MarkBought();
+                AltarHud.Toast(SetLoc.F("market.bought", "{0}을(를) 구매했습니다", o.Item.GetName()));
+                _closingAfterBuy = true;
+                return (true, msg);
+            }
+            bool ok = _market.Buy((BlackMarket.Entry)o.Tag, out var msg2);
+            return (ok, msg2);
+        };
 
         K.Finish(_root);                       // v7 외곽선 굵기
         _root.gameObject.SetActive(false);
     }
 
-    void FillRows()
+    void Fill()
     {
-        // 전부 지우고 다시 (섹션 제목 포함)
-        for (int i = _list.childCount - 1; i >= 0; i--)
+        if (_market == null || _page == null) return;
+        var offers = new List<GearOfferPage.Offer>();
+        _serial = -1;
+        if (BlackMarket.Global)
         {
-            var c = _list.GetChild(i);
-            c.SetParent(null);
-            Destroy(c.gameObject);
+            var dir = MarketDirector.Instance;
+            _serial = dir.Serial;
+            foreach (var o in dir.Stock()) offers.Add(GearOfferPage.Offer.From(o));
+            _page.SetOffers(offers);
+            _page.SetHeader(SetLoc.T("market.header", "단 한 번의 거래"));
+            return;
         }
-        _rows.Clear();
-        if (_market == null) return;
-
-        var font = UiFont.Get();
-        bool? lastWeapon = null;
         foreach (var e in _market.Items())
-        {
-            if (e == null || e.Item == null) continue;
-            bool w = e.Item.IsWeapon;
-            if (lastWeapon != w)
-            {
-                K.Section(_list, font, w ? SetLoc.T("market.section.weapons", "무기") : SetLoc.T("market.section.armor", "방어구"));
-                lastWeapon = w;
-            }
-
-            var v = K.ListRow("Item", _list, font, true, "", 62f, true);
-            var row = new Row { E = e, V = v };
-            v.Button.onClick.AddListener(() => { _selected = row.E; RefreshDetail(); });
-            v.Action.onClick.AddListener(() => BuyRow(row));
-            _rows.Add(row);
-        }
-        UiTextFit.Apply(_list);     // 긴 이름 · 다른 언어 — 줄이기
-    }
-
-    void BuyRow(Row r)
-    {
-        if (_market == null) return;
-        _selected = r.E;
-        bool ok = _market.Buy(r.E, out string why);
-        ShowMsg(why, ok);
-        RefreshDetail();
-    }
-
-    void ShowMsg(string s, bool good)
-    {
-        if (_msg == null) return;
-        _msg.color = good ? K.Ok : K.Red;
-        K.Set(_msg, s ?? "");
-        _msgUntil = Time.time + 3f;
+            if (e != null && e.Item != null)
+                offers.Add(new GearOfferPage.Offer { Item = e.Item, Enchant = e.Enchant, Price = _market.PriceOf(e), Tag = e });
+        _page.SetOffers(offers);
     }
 
     // ══════════════════ 매 프레임 ══════════════════
@@ -210,48 +182,25 @@ public class BlackMarketWindow : MonoBehaviour
         // 닫기 — Esc · 상호작용 키(연 프레임 제외) · 멀어짐 · 전투
         if (Input.GetKeyDown(KeyCode.Escape) || (Time.frameCount > _openFrame && KeyBinds.Down(GameAction.Interact)))
         { Hide(); return; }
+        if (_closingAfterBuy) { Hide(); return; }
         if (!_market.CanUse(out string why))
         {
             Hide();
             if (!string.IsNullOrEmpty(why)) AltarHud.Prompt(why);
             return;
         }
+        if (BlackMarket.Global && MarketDirector.Instance.Serial != _serial) Fill();
 
         var me = PlayerAttack.Local;
         int soul = me != null && me.TryGetComponent<PlayerHealth>(out var hp) ? hp.Soul : 0;
-        K.Set(_soul, SetLoc.F("market.soul", "◆ 보유 소울 {0}", soul));
-
-        foreach (var r in _rows)
-        {
-            var d = r.E.Item;
-            string name = $"<color={GradeHex[Mathf.Clamp((int)d.Grade, 0, 3)]}>[{d.Grade}]</color> {d.GetName()}";
-            if (r.E.Enchant != null && d.IsArmorPiece)
-                name += $" <color=#{ColorUtility.ToHtmlStringRGB(r.E.Enchant.Color)}>◆</color>";
-            K.Set(r.V.Label, name);
-            K.Set(r.V.Sub, KindText(d));
-            K.Set(r.V.ActionLabel, $"◆ {_market.PriceOf(r.E)}");
-            K.Interact(r.V.Action, _market.CanBuy(r.E, out _));
-            r.V.Face.color = r.E == _selected ? K.CheckOn : K.Raised;
-        }
-
-        if (_msgUntil > 0f && Time.time > _msgUntil) { _msgUntil = 0f; K.Set(_msg, ""); }
+        K.Set(_soul, SetLoc.F("market.soul", "◆ {0}", soul));
+        _page?.Refresh();
     }
 
     static string KindText(EquipmentData d)
     {
         if (d.IsArmorPiece) return LocUtil.Get($"ui.item.slot.{d.Slot}");
         return d.Class == WeaponClass.Melee ? LocUtil.Get("ui.item.class.Melee") : LocUtil.Get($"ui.item.ranged_kind.{d.RangedKind}");
-    }
-
-    void RefreshDetail()
-    {
-        if (_detail == null) return;
-        if (_selected == null || _selected.Item == null)
-        {
-            K.Set(_detail, $"<color=#A9B0BA>{SetLoc.T("market.detail.empty", "물건을 고르면 자세히 보여 줌")}</color>");
-            return;
-        }
-        K.Set(_detail, Describe(_selected.Item, _selected.Item.IsArmorPiece ? _selected.Enchant : null));
     }
 
     /// <summary>아이템 설명 — 이름 · 종류 · 주요 능력치 · 기초 스탯 · 설명 · 고유 특성 · 특수 인챈트</summary>

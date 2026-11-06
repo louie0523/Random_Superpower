@@ -125,6 +125,7 @@ public class SkinShopView : TitlePanel
         else Frame.ShowIcon(s.Icon, false);
 
         var g = MetaUi.Grade(s.Grade);
+        Frame.SetPaint(g.Color);
         TitlePanelFrame.Set(Frame.Name, s.Name);
         TitlePanelFrame.Set(Frame.Sub, $"<color={Hex(g.Color)}>{g.Name}</color> · {MetaUi.ItemName(w)} 스킨");
         if (_tab == 1) return;

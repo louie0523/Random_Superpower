@@ -387,6 +387,8 @@ public static class PanelUiBuilder
         var mainTab = Tab(tabs, font, "메인", out var mainLbl);
         var enchTab = Tab(tabs, font, "인챈트", out var enchLbl);
         var specTab = Tab(tabs, font, "특수", out var specLbl);
+        var limTab = Tab(tabs, font, "한정판!", out var limLbl);
+        SetLocText.Add(limLbl, "ui.shop.tab_limited");
         mainTab.interactable = false;       // 시안: 메인 고른 모양
 
         // ── 페이지 ──
@@ -413,6 +415,11 @@ public static class PanelUiBuilder
         specEmpty.text = "특수 상점 물품이 없습니다";
         specPage.gameObject.SetActive(false);
 
+        var limPage = K.Rect("LimitedPage", pages);       // 몇 분마다 바뀌는 무기 · 방어구
+        K.Fill(limPage);
+        var lim = GearOfferBuilder.Build(limPage, font);
+        limPage.gameObject.SetActive(false);
+
         Wire(p, "soulValue", soulVal);
         Wire(p, "soulLabel", soulLbl.gameObject.AddComponent<LocText>());
         Wire(p, "titleLabel", title.gameObject.AddComponent<LocText>());
@@ -432,6 +439,9 @@ public static class PanelUiBuilder
         Wire(p, "specialParent", specGrid);
         Wire(p, "specialItemPrefab", item);
         Wire(p, "specialEmptyLabel", specEmpty.gameObject.AddComponent<LocText>());
+        Wire(p, "limitedTab", limTab);
+        Wire(p, "limitedPage", limPage.gameObject);
+        Wire(p, "limitedView", lim);
     }
 
     /// <summary>인챈트 탭 — 왼쪽: 대상 무기 · 스톤 · 실행 / 오른쪽: 붙은 인챈트 목록 (특수 선택 · 대장장이 지정은 위에 덮음)</summary>

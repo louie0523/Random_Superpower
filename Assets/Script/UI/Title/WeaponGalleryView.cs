@@ -9,33 +9,83 @@ using UnityEngine;
 /// </summary>
 public class WeaponGalleryView : TitlePanel
 {
-    static readonly string[] TabNames = { "근접", "활", "지팡이", "총", "던지기", "방어구" };
-
     [Tooltip("'스킨 보기'를 누르면 — 무기 Id")]
     public System.Action<int> OpenSkins;
 
-    int _tab;
+    // 위 탭 = 무구 / 방어구 · 아래 탭 = 전체 + 종류
+    int _group;          // 0 무구 · 1 방어구
+    int _sub;            // 0 전체
     EquipmentData _sel;
     readonly List<EquipmentData> _list = new();
+
+    static readonly EquipSlot[] ArmorSlots = { EquipSlot.Armor, EquipSlot.Helmet, EquipSlot.Boots };
 
     public override void Show()
     {
         Frame.Open();
-        Frame.Tabs(TabNames, _tab, i => { _tab = i; _sel = null; Refresh(); });
+        Frame.Tabs(new[] { SetLoc.T("ui.codex.tab.weapons", "무구"), SetLoc.T("ui.codex.tab.armor", "방어구") }, _group,
+                   i => { _group = i; _sub = 0; _sel = null; RefreshTabs(); Refresh(); });
+        RefreshTabs();
         Refresh();
     }
 
-    bool InTab(EquipmentData d, int tab)
+    void OnDisable()
     {
-        if (tab == 5) return d.IsArmorPiece;
-        if (d.Slot != EquipSlot.Weapon) return false;
-        if (tab == 0) return d.Class == WeaponClass.Melee;
-        if (d.Class != WeaponClass.Ranged) return false;
-        return tab switch
+        if (Frame != null) Frame.SubTabs(null, 0, null);      // 다른 창은 아래 탭 줄 없음
+    }
+
+    static string All => SetLoc.T("ui.codex.tab.all", "전체");
+
+    string[] SubNames(int group) => group == 0
+        ? new[]
         {
-            1 => d.RangedKind == RangedType.Bow,
-            2 => d.RangedKind == RangedType.Staff,
-            3 => d.RangedKind == RangedType.Gun,
+            All,
+            LocUtil.GetOr("ui.item.class.Melee", "근접"),
+            LocUtil.GetOr("ui.item.ranged_kind.Bow", "활"),
+            LocUtil.GetOr("ui.item.ranged_kind.Staff", "지팡이"),
+            LocUtil.GetOr("ui.item.ranged_kind.Gun", "총"),
+            LocUtil.GetOr("ui.item.ranged_kind.Thrown", "투척류"),
+        }
+        : new[]
+        {
+            All,
+            LocUtil.GetOr("ui.item.slot.Armor", "갑옷"),
+            LocUtil.GetOr("ui.item.slot.Helmet", "투구"),
+            LocUtil.GetOr("ui.item.slot.Boots", "신발"),
+        };
+
+    void RefreshTabs()
+    {
+        var names = SubNames(_group);
+        for (int i = 0; i < names.Length; i++) names[i] = $"{names[i]} {Listed().Count(d => InTab(d, _group, i))}";
+        Frame.SubTabs(names, _sub, i => { _sub = i; _sel = null; Refresh(); });
+        Frame.SetTabText(0, $"{SetLoc.T("ui.codex.tab.weapons", "무구")} {Listed().Count(d => d.Slot == EquipSlot.Weapon)}");
+        Frame.SetTabText(1, $"{SetLoc.T("ui.codex.tab.armor", "방어구")} {Listed().Count(d => d.IsArmorPiece)}");
+    }
+
+    static IEnumerable<EquipmentData> Listed()
+    {
+        var db = Meta != null ? Meta.Equipment : null;
+        if (db == null || db.All == null) return Enumerable.Empty<EquipmentData>();
+        return db.All.Where(d => d != null && d.IsListed);
+    }
+
+    static bool InTab(EquipmentData d, int group, int sub)
+    {
+        if (group == 1)
+        {
+            if (!d.IsArmorPiece) return false;
+            return sub == 0 || (sub - 1 < ArmorSlots.Length && d.Slot == ArmorSlots[sub - 1]);
+        }
+        if (d.Slot != EquipSlot.Weapon) return false;
+        if (sub == 0) return true;
+        if (sub == 1) return d.Class == WeaponClass.Melee;
+        if (d.Class != WeaponClass.Ranged) return false;
+        return sub switch
+        {
+            2 => d.RangedKind == RangedType.Bow,
+            3 => d.RangedKind == RangedType.Staff,
+            4 => d.RangedKind == RangedType.Gun,
             _ => d.RangedKind == RangedType.Thrown,
         };
     }
@@ -45,7 +95,7 @@ public class WeaponGalleryView : TitlePanel
         _list.Clear();
         var db = Meta != null ? Meta.Equipment : null;
         if (db != null && db.All != null)
-            _list.AddRange(db.All.Where(d => d != null && InTab(d, _tab)).OrderBy(d => d.Grade).ThenBy(d => d.Id));
+            _list.AddRange(db.All.Where(d => d != null && d.IsListed && InTab(d, _group, _sub)).OrderBy(d => d.Grade).ThenBy(d => d.Id));
 
         Frame.SetEmpty(db == null ? "장비 목록이 비어 있습니다" : "이 종류는 아직 없습니다");
         var cards = Frame.Layout(_list.Count, c => Pick(c.Data as EquipmentData));
@@ -54,8 +104,9 @@ public class WeaponGalleryView : TitlePanel
             var d = _list[i];
             cards[i].Data = d;
             cards[i].Id = d.Id;
+            string badge = d.BlackMarketOnly ? SetLoc.T("shop.gear.market_tag", "암시장") : Skins(d) > 0 ? "스킨 " + Skins(d) : null;
             cards[i].Set(MetaUi.ItemName(d), MetaUi.ItemGradeName(d.Grade), ItemThumbnail.Get(d), null,
-                         MetaUi.ItemGradeColor(d.Grade), false, Skins(d) > 0 ? "스킨 " + Skins(d) : null);
+                         MetaUi.ItemGradeColor(d.Grade), false, badge);
         }
 
         if (_sel == null || !_list.Contains(_sel)) _sel = _list.Count > 0 ? _list[0] : null;
@@ -75,6 +126,7 @@ public class WeaponGalleryView : TitlePanel
         foreach (var c in Frame.Cards) if (c.gameObject.activeSelf && c.Data == (object)d) Frame.Select(c);
         if (d == null) return;
 
+        Frame.SetPaint(MetaUi.ItemGradeColor(d.Grade));      // 뒤 스프레이 = 등급 색
         var skin = WeaponSkins.Get(PlayerSave.EquippedSkin(d.Id));
         var model = WeaponSkins.ModelFor(d, skin);
         if (model != null) Frame.ShowModel(model, skin);
@@ -83,6 +135,7 @@ public class WeaponGalleryView : TitlePanel
         TitlePanelFrame.Set(Frame.Name, MetaUi.ItemName(d));
         string kind = MetaUi.ItemKind(d);
         TitlePanelFrame.Set(Frame.Sub, $"<color={Hex(MetaUi.ItemGradeColor(d.Grade))}>{MetaUi.ItemGradeName(d.Grade)}</color> · {kind}" +
+                                       (d.BlackMarketOnly ? " · <color=#C08BFF>" + SetLoc.T("shop.gear.market_only", "암시장 전용") + "</color>" : "") +
                                        (skin != null ? " · 스킨: " + skin.Name : ""));
 
         var sb = new StringBuilder();

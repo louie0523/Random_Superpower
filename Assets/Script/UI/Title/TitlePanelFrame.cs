@@ -102,6 +102,64 @@ public class TitlePanelFrame : MonoBehaviour
         SetTab(current);
     }
 
+    // ── 아래 탭 줄 (큰 탭 안의 작은 탭 — 무구 → 전체 · 근접 …) ──
+
+    RectTransform _subRow;
+    readonly List<UiOption> _subTabs = new();
+    Action<int> _onSub;
+
+    /// <summary>위 탭 바로 아래 두 번째 탭 줄 — labels가 비면 숨김. 줄은 처음 부를 때 위 탭 줄을 복사해서 만듦</summary>
+    public void SubTabs(IReadOnlyList<string> labels, int current, Action<int> pick)
+    {
+        _onSub = pick;
+        if (labels == null || labels.Count == 0 || TabTemplate == null || TabRow == null)
+        {
+            if (_subRow != null) _subRow.gameObject.SetActive(false);
+            return;
+        }
+        if (_subRow == null)
+        {
+            var go = Instantiate(TabRow.gameObject, TabRow.parent);
+            go.name = "SubTabs";
+            go.transform.SetSiblingIndex(TabRow.GetSiblingIndex() + 1);
+            for (int i = go.transform.childCount - 1; i >= 0; i--) Destroy(go.transform.GetChild(i).gameObject);
+            _subRow = (RectTransform)go.transform;
+            if (go.TryGetComponent<LayoutElement>(out var rowLe))
+            {
+                rowLe.preferredHeight = Mathf.Max(40f, rowLe.preferredHeight * 0.8f);
+                rowLe.minHeight = Mathf.Min(rowLe.minHeight, rowLe.preferredHeight);
+            }
+        }
+        _subRow.gameObject.SetActive(true);
+        while (_subTabs.Count < labels.Count)
+        {
+            var t = Instantiate(TabTemplate, _subRow);
+            t.gameObject.name = "SubTab";
+            t.gameObject.SetActive(true);
+            if (t.TryGetComponent<LayoutElement>(out var le))
+            {
+                le.preferredWidth *= 0.8f;
+                le.preferredHeight *= 0.8f;
+                le.minHeight = Mathf.Min(le.minHeight, le.preferredHeight);
+            }
+            int idx = _subTabs.Count;
+            t.Button.onClick.AddListener(() => { SetSubTab(idx); _onSub?.Invoke(idx); });
+            _subTabs.Add(t);
+        }
+        for (int i = 0; i < _subTabs.Count; i++)
+        {
+            bool on = i < labels.Count;
+            _subTabs[i].gameObject.SetActive(on);
+            if (on) _subTabs[i].SetText(labels[i]);
+        }
+        SetSubTab(current);
+    }
+
+    public void SetSubTab(int i)
+    {
+        for (int k = 0; k < _subTabs.Count; k++) _subTabs[k].SetOn(k == i);
+    }
+
     public void SetTabText(int i, string label)
     {
         if (i >= 0 && i < _tabs.Count) _tabs[i].SetText(label);

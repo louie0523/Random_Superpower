@@ -264,7 +264,7 @@ public class LootChest : NetworkBehaviour
         var data = equipDatabase != null ? equipDatabase.Get(id) : null;
         var edb = armorEnchants != null ? armorEnchants : ArmorEnchantDatabase.Default;
         float ec = cfg != null ? cfg.ArmorEnchantChance : 0.25f;
-        int ench = data != null && edb != null && Random.value < ec ? edb.Roll(data.Slot) : 0;
+        int ench = data != null && edb != null && Random.value < ec ? edb.Roll(data) : 0;
 
         float angle = index * 137f;
         Vector3 off = Quaternion.Euler(0f, angle, 0f) * Vector3.forward * dropSpread;
@@ -315,7 +315,7 @@ public class LootChest : NetworkBehaviour
         if (src == null) return 0;
 
         foreach (var w in src)
-            if (w != null && (armor ? w.IsArmorPiece : w.Slot == EquipSlot.Weapon) && !w.IsSpecial && WeaponWeight(w) > 0f)
+            if (w != null && (armor ? w.IsArmorPiece : w.Slot == EquipSlot.Weapon) && !w.IsSpecial && !w.BlackMarketOnly && WeaponWeight(w) > 0f)
                 _cands.Add(w);
 
         if (_cands.Count == 0) return 0;

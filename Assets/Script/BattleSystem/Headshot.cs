@@ -9,6 +9,7 @@ using UnityEngine;
 ///  - 배율: 무기 <see cref="EquipmentData.HeadshotMul"/> (0 = 기본: 총 2 · 활/지팡이/투척 1.5 · -1 = 헤드샷 없음)
 ///          + 때린 사람 스탯 <see cref="StatType.HeadshotDamage"/> (0.25 = +0.25배)
 ///  - 감소: 맞는 쪽에서 <see cref="StatType.HeadshotReduction"/> (투구 · 0.2 = 헤드샷 피해 20% 감소, 몸샷보다 아래로는 안 내려감)
+///  - 갑옷: <see cref="StatType.BodyDamageReduction"/> (0.15 = 받는 피해 15% 감소) — 헤드샷이 아닐 때만 (<see cref="BodyArmor"/>)
 /// </summary>
 public static class Headshot
 {
@@ -54,6 +55,17 @@ public static class Headshot
         if (col.GetComponent<HeadZone>() != null) return true;
         var b = col.bounds;
         return point.y >= b.max.y - Mathf.Max(0.3f, b.size.y * 0.2f);
+    }
+
+    /// <summary>갑옷 감소 최대치 (갑옷 · 인챈트를 다 합쳐도 이만큼까지만)</summary>
+    public const float MaxBodyReduction = 0.8f;
+
+    /// <summary>맞는 쪽 — 갑옷(받는 피해 감소) 배율. 헤드샷이면 1 (갑옷이 안 막음)</summary>
+    public static float BodyArmor(float headshotMul, PlayerStats target)
+    {
+        if (headshotMul > 1f || target == null) return 1f;
+        float red = Mathf.Clamp(target.Get(StatType.BodyDamageReduction), 0f, MaxBodyReduction);
+        return 1f - red;
     }
 
     /// <summary>맞는 쪽 — 투구 감소를 넣은 최종 배율 (1 이상)</summary>

@@ -84,7 +84,7 @@ public class PickupSpawner : NetworkBehaviour
 
         var pool = new System.Collections.Generic.List<int>();
         foreach (var e in equipDatabase.All)
-            if (e != null && e.Slot == EquipSlot.Weapon) pool.Add(e.Id);
+            if (e != null && e.Slot == EquipSlot.Weapon && !e.BlackMarketOnly) pool.Add(e.Id);
 
         return pool.Count > 0 ? pool[Random.Range(0, pool.Count)] : 0;
     }

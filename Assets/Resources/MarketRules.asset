@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e718e4d011930a64dac35ad92d988ae5, type: 3}
+  m_Name: MarketRules
+  m_EditorClassIdentifier: Assembly-CSharp::MarketRules
+  ShopRotateMinutes: 5
+  Shop:
+    Count: 5
+    ArmorChance: 0.4
+    MaxArmor: 3
+    MinGrade: 0
+    GradeWeightEarly:
+    - 60
+    - 30
+    - 10
+    - 0
+    GradeWeightLate:
+    - 10
+    - 30
+    - 35
+    - 25
+    LateMinutes: 20
+    MaxS: 2
+    MinStage: 1
+    MaxStage: 10
+    ArmorEnchantChance: 0.5
+    GradePrice: 320000006e000000c80000007c010000
+    PerStage: 0.05
+    PerSpecial: 0.2
+    Discounts: []
+  Market:
+    Count: 5
+    ArmorChance: 0.4
+    MaxArmor: 3
+    MinGrade: 1
+    GradeWeightEarly:
+    - 0
+    - 55
+    - 35
+    - 10
+    GradeWeightLate:
+    - 0
+    - 20
+    - 40
+    - 40
+    LateMinutes: 14
+    MaxS: 0
+    MinStage: 1
+    MaxStage: 20
+    ArmorEnchantChance: 0.6
+    GradePrice: 320000006e000000c80000007c010000
+    PerStage: 0.02
+    PerSpecial: 0.1
+    Discounts:
+    - Min: 0.1
+      Max: 0.2
+      Weight: 50
+    - Min: 0.21
+      Max: 0.35
+      Weight: 40
+    - Min: 0.36
+      Max: 0.5
+      Weight: 10
+  FirstOpenMinutes: {x: 3, y: 5}
+  ReopenMinutes: {x: 7, y: 11}
+  LostChance: 0.5
+  LostExtraDiscount: 0.1

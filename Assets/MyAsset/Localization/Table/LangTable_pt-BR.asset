@@ -135,7 +135,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943897
-    m_Localized: Armas de arremesso
+    m_Localized: Arremessar objetos
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943898
@@ -159,7 +159,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943903
-    m_Localized: aplicar
+    m_Localized: comum
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943904
@@ -167,7 +167,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943905
-    m_Localized: Especial
+    m_Localized: Exclusivo
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943906
@@ -175,7 +175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943907
-    m_Localized: "Essa habilidade n\xE3o possui uma loja espec\xEDfica."
+    m_Localized: "N\xE3o existem produtos exclusivos."
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943908
@@ -191,7 +191,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943911
-    m_Localized: "m\xE1ximo"
+    m_Localized: "N\xEDvel m\xE1ximo"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943912
@@ -203,7 +203,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943914
-    m_Localized: "Muni\xE7\xE3o completa"
+    m_Localized: "Cheio de muni\xE7\xE3o"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943915
@@ -243,7 +243,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943924
-    m_Localized: "Encantamento de arma imposs\xEDvel"
+    m_Localized: Armas exigem habilidade
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943925
@@ -271,7 +271,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943931
-    m_Localized: '[G] Descartar arma atual'
+    m_Localized: "G \u2014 Descartar arma ativa"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138176
@@ -279,11 +279,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138177
-    m_Localized: "\xC2ngulo de decis\xE3o {0}\xB0"
+    m_Localized: "\xC2ngulo de julgamento {0} graus"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138178
-    m_Localized: "{0} rodadas de muni\xE7\xE3o"
+    m_Localized: "Muni\xE7\xE3o m\xE1xima {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138179
@@ -303,11 +303,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138183
-    m_Localized: "Ainda n\xE3o h\xE1 encantamento."
+    m_Localized: Sem encantamento
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138184
-    m_Localized: "Armas que n\xE3o podem ser encantadas"
+    m_Localized: "N\xE3o pode ser encantado"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138185
@@ -323,11 +323,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138188
-    m_Localized: "Lan\xE7ar"
+    m_Localized: Arremessar objetos
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138189
-    m_Localized: Objetivo {0}
+    m_Localized: "Objetivo {0} \xB7 1\xBA Lugar {1}"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138190
@@ -412,10 +412,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3001745490423809
     m_Localized: "M\xE1ximo {0}"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3001745490423810
-    m_Localized: Q / E / R / Ultimate
     m_Metadata:
       m_Items: []
   - m_Id: 3001745490423811
@@ -534,7 +530,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5221716631072769
     m_Localized: "Adquira +1 Ponto de Habilidade \u2014 Voc\xEA pode aprimorar qualquer
-      habilidade que desejar no Painel de Habilidades (F1)."
+      habilidade no Painel de Habilidades (F1)."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072770
@@ -650,7 +646,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5227191342837764
-    m_Localized: Aplica o efeito <color=#00BBFF>Congelamento</color> no alvo por
+    m_Localized: Inflige o efeito <color=#00BBFF>Congelamento</color> no alvo por
       {d0} segundos, reduzindo sua velocidade de ataque em {v1}%.
     m_Metadata:
       m_Items: []
@@ -680,7 +676,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Rouba {0}% do dano causado ao acertar
+    m_Localized: Roubo de vida {0}% do dano causado ao acertar
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -706,8 +702,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603075
-    m_Localized: "Envenena o alvo por {d0} segundos, causando {v0}% da sa\xFAde m\xE1xima
-      de dano por segundo por ac\xFAmulo. (M\xE1ximo de {s0} ac\xFAmulos)"
+    m_Localized: "Envenena o alvo por {d0} segundos, causando {v0}% do dano m\xE1ximo
+      de vida por segundo por ac\xFAmulo. (M\xE1ximo de {s0} ac\xFAmulos)"
     m_Metadata:
       m_Items: []
   - m_Id: 5452611497603076
@@ -805,10 +801,6 @@ MonoBehaviour:
     m_Localized: "N\xC3O. {0}"
     m_Metadata:
       m_Items: []
-  - m_Id: 15217183922171916
-    m_Localized: Resumo em uma linha por habilidade
-    m_Metadata:
-      m_Items: []
   - m_Id: 15217183922171917
     m_Localized: "Outro jogador est\xE1 escolhendo"
     m_Metadata:
@@ -826,8 +818,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171921
-    m_Localized: "Vingan\xE7a bem-sucedida! Velocidade de Movimento \xB7 Vida M\xE1xima
-      \xB7 Poder de Ataque +{0}% at\xE9 a morte!"
+    m_Localized: "Vingan\xE7a bem-sucedida! Velocidade de Movimento, Vida M\xE1xima
+      e Poder de Ataque aumentam em {0}% at\xE9 sua pr\xF3xima morte!"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171922
@@ -875,8 +867,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171933
-    m_Localized: "Se voc\xEA deslig\xE1-lo, ele usar\xE1 o momento em que voc\xEA
-      o pressionar."
+    m_Localized: "Se voc\xEA deslig\xE1-lo, ele ser\xE1 usado no momento em que voc\xEA
+      pression\xE1-lo."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171934
@@ -884,8 +876,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171935
-    m_Localized: "Se desligado, move-se na dire\xE7\xE3o do movimento (aplica-se
-      apenas ao dash na dire\xE7\xE3o do movimento)."
+    m_Localized: "Desativ\xE1-lo faz com que voc\xEA d\xEA um impulso na dire\xE7\xE3o
+      em que est\xE1 se movendo (apenas impulsos na dire\xE7\xE3o do movimento)."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171936
@@ -893,8 +885,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171937
-    m_Localized: "Se voc\xEA deslig\xE1-lo, pegue-o com a tecla de intera\xE7\xE3o
-      (Almas e Pedras sempre s\xE3o coletadas automaticamente)."
+    m_Localized: "Se voc\xEA deslig\xE1-lo, pegue-o usando a tecla de intera\xE7\xE3o
+      (Almas e Pedras s\xE3o sempre coletadas automaticamente)."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171938
@@ -902,15 +894,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171939
-    m_Localized: "N\xE3o aplicado no editor (apenas na compila\xE7\xE3o)"
+    m_Localized: "N\xE3o se aplica no editor (aplica-se apenas na compila\xE7\xE3o)."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171940
-    m_Localized: "resolu\xE7\xE3o"
+    m_Localized: "Resolu\xE7\xE3o"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171941
-    m_Localized: "N\xE3o aplicado no editor (apenas na compila\xE7\xE3o)"
+    m_Localized: "N\xE3o se aplica no editor (aplica-se apenas na compila\xE7\xE3o)."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171942
@@ -918,7 +910,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171943
-    m_Localized: "Se ativada, a limita\xE7\xE3o de FPS \xE9 ignorada."
+    m_Localized: "Se voc\xEA ativar essa op\xE7\xE3o, o limite de FPS ser\xE1 ignorado."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171944
@@ -934,7 +926,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171947
-    m_Localized: "Diminuir a intensidade torna a imagem desfocada e mais r\xE1pida."
+    m_Localized: "Se voc\xEA diminuir a intensidade, a imagem fica desfocada, mas
+      mais r\xE1pida."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171948
@@ -986,7 +979,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "As teclas de voz (Chat \xB7 Aba de Voz) s\xE3o rotacionadas simultaneamente.
+    m_Localized: "As teclas de voz (Chat \xB7 Aba de Voz) tamb\xE9m s\xE3o redefinidas.
       Se a mesma tecla for pressionada, as teclas para as duas a\xE7\xF5es ser\xE3o
       trocadas."
     m_Metadata:
@@ -1060,7 +1053,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366235
-    m_Localized: Comprimento da linha externa
+    m_Localized: comprimento da linha externa
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366236
@@ -1076,7 +1069,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366239
-    m_Localized: "Linha externa \u2014 espalha-se quando movida"
+    m_Localized: "Linha externa \u2014 se espalha quando movida"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366240
@@ -1141,7 +1134,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366255
-    m_Localized: "Quanto mais para a esquerda, mais sens\xEDvel."
+    m_Localized: "Quanto mais para a esquerda, mais sens\xEDvel ele \xE9."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366256
@@ -1157,7 +1150,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366259
-    m_Localized: Volume de voz do jogo
+    m_Localized: Tamanho da voz do jogo
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366260
@@ -1221,7 +1214,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366275
-    m_Localized: "Reduza a frequ\xEAncia de uso se voc\xEA costuma enjoar em viagens."
+    m_Localized: "Se voc\xEA sofre de enjoo de movimento, reduza a quantidade."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366276
@@ -1237,7 +1230,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366279
-    m_Localized: Mude se tiver dificuldade em distinguir as cores.
+    m_Localized: "Se voc\xEA tiver dificuldade em distinguir as cores, por favor,
+      altere a configura\xE7\xE3o."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366280
@@ -1457,11 +1451,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560554
-    m_Localized: "Copiar c\xF3digo para a \xE1rea de transfer\xEAncia"
+    m_Localized: "Copiei o c\xF3digo para a \xE1rea de transfer\xEAncia."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560555
-    m_Localized: Colar
+    m_Localized: Eu colei.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560556
@@ -1469,11 +1463,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560557
-    m_Localized: "Restaurar para as configura\xE7\xF5es padr\xE3o"
+    m_Localized: "Voltei \xE0s configura\xE7\xF5es padr\xE3o."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560558
-    m_Localized: "Aplique o mesmo em outras armas tamb\xE9m."
+    m_Localized: Apliquei o mesmo a outras armas.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560559
@@ -1505,7 +1499,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560566
-    m_Localized: Pressione mais uma vez para reiniciar
+    m_Localized: Pressione mais uma vez para reiniciar.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560567
@@ -1537,8 +1531,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560574
-    m_Localized: "A op\xE7\xE3o [Mesma mira em todas as armas] est\xE1 ativada, portanto
-      todas as miras ser\xE3o usadas."
+    m_Localized: "A op\xE7\xE3o [Mesma mira para todas as armas] est\xE1 ativada,
+      portanto, todas as armas usar\xE3o a mira padr\xE3o da arma."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560575
@@ -1612,8 +1606,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: "O dano causado aos alvos quando eles n\xE3o est\xE3o olhando para
-      voc\xEA aumenta em 100%.\n\nTorna-se invis\xEDvel por 3 segundos ao usar."
+    m_Localized: "O dano causado quando o alvo n\xE3o est\xE1 olhando para voc\xEA
+      aumenta em 100%.\n\nTorna-se invis\xEDvel por 3 segundos ao usar."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534698
@@ -1657,8 +1651,8 @@ MonoBehaviour:
   - m_Id: 15224945322340360
     m_Localized: "Balance o martelo para a frente para causar {dmg:SmashCoef+SmashFlat}
       de dano e atordoar os inimigos atingidos por 0,25 segundos. Al\xE9m disso,
-      os inimigos atingidos recebem um efeito de status que reduz sua armadura em
-      {b:ArmorBreakPct}% por 5 segundos."
+      a armadura dos inimigos atingidos \xE9 reduzida em {b:ArmorBreakPct}% por 5
+      segundos."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340361
@@ -1672,8 +1666,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340363
-    m_Localized: "Atinge a pot\xEAncia m\xE1xima quando a pot\xEAncia (HP) \xE9 reduzida
-      para 30%."
+    m_Localized: "Atinge a pot\xEAncia m\xE1xima quando a pot\xEAncia (HP) cai para
+      30%."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340364
@@ -1681,11 +1675,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340365
-    m_Localized: "Durante {b:UltDuration} segundos, seu corpo \xE9 envolto em chamas
-      e voc\xEA entra no estado Descendente do Fogo.\n\nInimigos que o atacarem com
-      golpes corpo a corpo sofrer\xE3o o efeito Queimadura, e todos os efeitos de
-      itens s\xE3o aumentados em 25%. Al\xE9m disso, o tempo de recarga de Fornalha
-      \xE9 zerado sempre que sua vida cair 15%, como em 85%, 70%, 55%, etc."
+    m_Localized: "Durante {b:UltDuration} segundos, seu corpo \xE9 envolto em chamas,
+      tornando-se um 'Descendente do Fogo'.\n\nInimigos que o atacarem com golpes
+      corpo a corpo sofrer\xE3o o efeito de Queimadura, e todos os efeitos de itens
+      s\xE3o aumentados em 25%. Al\xE9m disso, o tempo de recarga de 'Explos\xE3o
+      da Fornalha' \xE9 zerado sempre que sua vida cair 15%, como em 85%, 70%, 55%,
+      etc."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340367
@@ -1693,13 +1688,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340368
-    m_Localized: "Voc\xEA \xE9 o Mestre de Todas as Armas de Fogo. Um Mestre das
-      Armas pode encantar todas as armas de fogo e recebe calibra\xE7\xF5es para
-      elas."
+    m_Localized: "Voc\xEA \xE9 o Mestre de Todas as Armas de Fogo. Um Mestre de Armas
+      pode encantar todas as armas de fogo e recebe calibra\xE7\xF5es para elas."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340369
-    m_Localized: Encantamento de arma
+    m_Localized: Encantamento de Arma
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340371
@@ -1708,8 +1702,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340372
     m_Localized: "Ao ser equipado com uma arma de fogo, a Velocidade de Ataque aumenta
-      em {0}%, a Velocidade de Movimento em {1}% e o Dano Cr\xEDtico aumenta em mais
-      {2}%.\n\nA arma padr\xE3o passa a ser a 'Glock'."
+      em {0}% e a Velocidade de Movimento em {1}, e o Dano Cr\xEDtico aumenta em
+      mais {2}%.\n\nA arma padr\xE3o passa a ser a 'Glock'."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340373
@@ -1730,10 +1724,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340378
-    m_Localized: "Entra no estado 'Spray' por 12 segundos, aumentando a velocidade
-      de ataque em {b:UltAtkSpeedPct:all}% e ganhando 20% de roubo de vida. Durante
-      a dura\xE7\xE3o, ao disparar armas, a dispers\xE3o dos proj\xE9teis aumenta
-      em 30% em vez de ricochetear {b:UltRicochets:all} vezes contra as paredes."
+    m_Localized: "Entre em 'Spray' por 12 segundos, aumentando sua velocidade de
+      ataque em {b:UltAtkSpeedPct:all}% e concedendo 20% de roubo de vida. Durante
+      a dura\xE7\xE3o, em vez de ricochetear {b:UltRicochets:all} vezes nas paredes,
+      a dispers\xE3o dos seus proj\xE9teis aumenta em 30%."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340379
@@ -1744,7 +1738,7 @@ MonoBehaviour:
     m_Localized: "Voc\xEA \xE9 algu\xE9m que morreu h\xE1 muito tempo, mas retornou
       por algum motivo.\n\nAs habilidades de um Cavaleiro da Morte mudam de acordo
       com o 'nome' que lhe foi atribu\xEDdo.\n\nVoc\xEA pode ter sido apenas um campon\xEAs,
-      ou pode ter sido um grande campon\xEAs."
+      ou pode ter sido um grande homem."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340381
@@ -1798,10 +1792,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340393
-    m_Localized: "Empunhando uma espada amaldi\xE7oada de magia negra, desferir um
-      golpe para baixo, causando {dmg:FinisherCoef+FinisherFlat} de dano de arma
-      aos inimigos \xE0 frente e desencadeando uma explos\xE3o de magia negra \xE0
-      frente para infligir veneno massivo."
+    m_Localized: "Golpeie com uma espada amaldi\xE7oada de magia negra para causar
+      {dmg:FinisherCoef+FinisherFlat} de dano de arma aos inimigos \xE0 frente e
+      desencadear uma explos\xE3o de magia negra \xE0 frente, infligindo veneno massivo."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340395
@@ -1853,31 +1846,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340405
-    m_Localized: "Dispon\xEDvel quando voc\xEA tiver matado um inimigo recentemente
-      ou consumido uma arma com 'Gula'. Cuspa v\xF4mito para frente, causando dano
+    m_Localized: "Pode ser usado quando voc\xEA tiver matado um inimigo recentemente
+      ou consumido uma arma com 'Gula'. Cospe v\xF4mito para frente, causando dano
       de {dmg:SpitCoef+SpitFlat}."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340406
-    m_Localized: "O dano base \xE9 {dmg:SpitCoef+SpitFlat} e causa dano adicional
+    m_Localized: "O dano base \xE9 {dmg:SpitCoef+SpitFlat}, e causa dano adicional
       igual a {b:InheritKillAtkPct}% do poder de ataque do alvo se o alvo for um
       jogador, ou {b:InheritWeaponAtkPct}% se o alvo for uma arma.\n\nPode ser afetado
       por habilidades inimigas aleat\xF3rias ou encantamentos de armas."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340408
-    m_Localized: Consuma a arma que estiver segurando.
+    m_Localized: "Consuma a arma que voc\xEA tem em m\xE3os."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340411
-    m_Localized: "O monstro possui um tempo de recarga de ataque de 3 segundos por
+    m_Localized: "O Monstro possui um tempo de recarga de ataque de 3 segundos por
       alvo e causa {b:MonsterLowHpBonus:all}% de dano adicional a alvos com 30% ou
       menos de vida.\n\nDurante a dura\xE7\xE3o, o Poder de Ataque, a Velocidade
       de Ataque e a Velocidade de Movimento s\xE3o ligeiramente aumentados."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340412
-    m_Localized: Andarilho Shidou
+    m_Localized: Andarilho das Sombras
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340413
@@ -1890,9 +1883,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340417
-    m_Localized: "Ativa Arma Sombria por {b:WeaponDuration:all} segundos.\n\nAo atacar
-      com a arma, sua ilus\xE3o ataca na mesma dire\xE7\xE3o com a mesma arma ap\xF3s
-      um breve intervalo, causando {b:EchoPct:all}% do seu poder base como dano."
+    m_Localized: "Ativa a Arma Sombria por {b:WeaponDuration:all} segundos.\n\nAo
+      atacar com a arma, sua ilus\xE3o ataca na mesma dire\xE7\xE3o com a mesma arma
+      ap\xF3s um breve intervalo, causando {b:EchoPct:all}% do poder base como dano."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340418
@@ -1915,10 +1908,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340422
     m_Localized: "Deixa uma <b>M\xE3o Sombria</b> onde voc\xEA est\xE1 olhando. Se
-      houver inimigos dentro de {b:HandRadius:all}m da <b>M\xE3o Sombria</b>, a m\xE3o
-      se estende para fora.\n\nAo atingir o alvo, causa {dmg:HandCoef+HandFlat} de
-      dano e imobiliza o alvo por {b:HandRoot:all} segundos.\n\nVoc\xEA pode deixar
-      at\xE9 {b:HandMax:all} M\xE3os Sombrias no mapa simultaneamente."
+      houver um inimigo a at\xE9 {b:HandRadius:all}m da <b>M\xE3o Sombria</b>, a
+      m\xE3o se estende para fora.\n\nAo atingir o alvo, causa {dmg:HandCoef+HandFlat}
+      de dano e imobiliza o inimigo por {b:HandRoot:all} segundos.\n\nVoc\xEA pode
+      deixar at\xE9 {b:HandMax:all} M\xE3os Sombrias no mapa ao mesmo tempo."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340424
@@ -1926,12 +1919,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340425
-    m_Localized: "Designa a \xE1rea circundante como uma <b>Zona de Sombra</b>, reduzindo
-      drasticamente o alcance de visibilidade dos inimigos dentro da zona, com exce\xE7\xE3o
-      de voc\xEA.\n\nInimigos fora da Zona de Sombra n\xE3o conseguem ver o interior.\n\nDentro
-      da Zona de Sombra, o tempo de recarga do Movimento Sombrio dos Andarilhos das
-      Sombras passa a ser de {b:ZoneMoveCooldown:all} segundos, e sua velocidade
-      de movimento aumenta em {b:ZoneMoveSpeedPct:all}%."
+    m_Localized: "Designe a \xE1rea ao redor como uma <b>Zona de Sombra</b>, reduzindo
+      significativamente o alcance de visibilidade dos inimigos dentro da zona, com
+      exce\xE7\xE3o de voc\xEA.\n\nInimigos fora da Zona de Sombra n\xE3o podem ver
+      o interior.\n\nDentro da Zona de Sombra, o tempo de recarga do Movimento Sombrio
+      dos Andarilhos das Sombras passa a ser de {b:ZoneMoveCooldown:all} segundos,
+      e sua velocidade de movimento aumenta em {b:ZoneMoveSpeedPct:all}%."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340426
@@ -1960,8 +1953,8 @@ MonoBehaviour:
     m_Localized: "O alcance m\xE1ximo \xE9 de {b:OrbitRange:all}m, e armas de fogo
       n\xE3o podem ser controladas pelo Mestre de Armas.\n\nArcos e cajados t\xEAm
       um tempo de carregamento de 100%.\n\nEncantamentos especiais na arma correspondente
-      t\xEAm 50% de chance de ativa\xE7\xE3o, e seus valores e dura\xE7\xE3o tamb\xE9m
-      s\xE3o reduzidos pela metade. (Roubo de vida n\xE3o se aplica.)"
+      t\xEAm 50% de chance de ativa\xE7\xE3o, e seus valores e dura\xE7\xE3o s\xE3o
+      reduzidos pela metade. (Roubo de vida n\xE3o se aplica.)"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340434
@@ -1969,8 +1962,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340435
-    m_Localized: A quantidade de Pedras de Encantamento obtidas aumenta em {b:StoneGain:all}
-      vezes.
+    m_Localized: "A quantidade de Pedras de Encantamento obtidas \xE9 multiplicada
+      por {b:StoneGain:all}."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340436
@@ -1986,9 +1979,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340441
-    m_Localized: "Como Mestre de Armas, dispara todas as armas flutuando no local
-      que voc\xEA est\xE1 procurando por {b:DancerDuration:all} segundos.\n\nDurante
-      esse tempo, o dano das armas \xE9 reduzido em at\xE9 {b:DancerCoef:all}%."
+    m_Localized: "Dispara todas as armas flutuantes no ponto que voc\xEA est\xE1
+      mirando por {b:DancerDuration:all} segundos.\n\nO dano das armas \xE9 reduzido
+      em at\xE9 {b:DancerCoef:all}% durante esse per\xEDodo."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340442
@@ -2017,10 +2010,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340449
-    m_Localized: "Teleporta-se para tr\xE1s, deixando uma carta Coringa em sua localiza\xE7\xE3o
-      original. Se pisada, a carta explode ap\xF3s um breve atraso, causando dano
-      de {dmg:BlastCoef+BlastFlat} e aplicando lentid\xE3o de {b:BlastSlowPct:all}%
-      por 2 segundos."
+    m_Localized: "Teleporta-se para tr\xE1s, deixando uma carta Coringa no local
+      original. Se algu\xE9m pisar na carta, ela explode ap\xF3s um breve atraso,
+      causando dano de {dmg:BlastCoef+BlastFlat} e reduzindo a velocidade do alvo
+      em {b:BlastSlowPct:all}% por 2 segundos."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340450
@@ -2033,8 +2026,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340452
     m_Localized: "Adiciona {b:OneCardSeconds:all} segundos ao tempo de recarga de
-      todas as habilidades normais (exceto habilidades supremas e aleat\xF3rias)
-      para todos os inimigos dentro de {b:OneCardRadius:all}m deles."
+      todas as habilidades normais, exceto habilidades supremas e habilidades aleat\xF3rias,
+      para todos os inimigos dentro de {b:OneCardRadius:all}m."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340453
@@ -2042,9 +2035,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340454
-    m_Localized: "Altera o tempo de recarga de uma das habilidades aleat\xF3rias
+    m_Localized: "Altere o tempo de recarga de uma das habilidades aleat\xF3rias
       atualmente em recarga para o tempo de recarga da habilidade da carta substituta
-      e, em vez disso, redefine o tempo de recarga dessa habilidade aleat\xF3ria."
+      e, em seguida, redefina o tempo de recarga dessa habilidade aleat\xF3ria."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340455
@@ -2064,9 +2057,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340463
-    m_Localized: "A velocidade de movimento e a sa\xFAde aumentam, e o dano das armas
-      de combate corpo a corpo aumenta significativamente, mas voc\xEA s\xF3 pode
-      se mover para os lados."
+    m_Localized: "A velocidade de movimento e a sa\xFAde s\xE3o aumentadas, e o dano
+      das armas de combate corpo a corpo \xE9 significativamente aumentado, mas voc\xEA
+      s\xF3 pode se mover lateralmente."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340464
@@ -2100,9 +2093,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534658
-    m_Localized: "Ao morrer, voc\xEA entra no 'Tempo da Vingan\xE7a' por 1 minuto.\n\nDurante
-      o 'Tempo da Vingan\xE7a', se voc\xEA derrotar o inimigo que o matou, voc\xEA
-      ganha um efeito muito poderoso!"
+    m_Localized: "Ao morrer, voc\xEA entra no 'Tempo da Vingan\xE7a' por 1 minuto.\n\nDerrote
+      o inimigo que o matou durante o 'Tempo da Vingan\xE7a' para obter um efeito
+      muito poderoso!"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534659
@@ -2136,9 +2129,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534668
-    m_Localized: "Selecione um jogador e aplique o efeito \"Maldi\xE7\xE3o\" por
-      20 segundos, impedindo-o de se comunicar. Al\xE9m disso, ele receber\xE1 o
-      efeito \"Selo\" por at\xE9 999 segundos enquanto estiver vivo."
+    m_Localized: "Selecione um jogador e aplique o efeito \"Maldi\xE7\xE3o\" nele
+      por 20 segundos, impedindo-o de se comunicar. Al\xE9m disso, ele receber\xE1
+      o efeito \"Selo\" por at\xE9 999 segundos enquanto estiver vivo."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534669
@@ -2186,7 +2179,7 @@ MonoBehaviour:
   - m_Id: 15224945326534680
     m_Localized: "Colete 1 'Pe\xE3o' ao derrotar um jogador.\n\nColete 6 ou mais
       Pe\xF5es para se tornar um 'Colosso do Xadrez'.\n\n(Pe\xF5es atuais {x:pe\xF5es}
-      / {x:pe\xF5esnecess\xE1rios} )"
+      / {x:pe\xF5esnecess\xE1rios})"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534681
@@ -2198,8 +2191,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534684
-    m_Localized: "D\xEA dois saltos para a frente com o movimento do Cavaleiro e
-      reutilize-o dentro de 3 segundos para saltar diagonalmente para a esquerda/direita."
+    m_Localized: "Com o movimento do Cavaleiro, d\xEA dois saltos para a frente e,
+      se o movimento for reutilizado em at\xE9 3 segundos, d\xEA um salto diagonal
+      para a esquerda/direita."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534685
@@ -2207,12 +2201,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534686
-    m_Localized: "O tempo de recarga da habilidade suprema diminui 40% mais r\xE1pido.\n\nUsar
+    m_Localized: "O tempo de recarga das habilidades supremas diminui 40% mais r\xE1pido.\n\nUsar
       a habilidade suprema 5 vezes elimina metade dos jogadores restantes."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534687
-    m_Localized: "O tempo de recarga da habilidade suprema diminui 40% mais r\xE1pido.\n\nUsar
+    m_Localized: "O tempo de recarga das habilidades supremas diminui 40% mais r\xE1pido.\n\nUsar
       a habilidade suprema 5 vezes elimina metade dos jogadores vivos. (Atual: {x:stack})"
     m_Metadata:
       m_Items: []
@@ -2280,9 +2274,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534706
-    m_Localized: "Ap\xF3s designar um local \xE0 sua frente, suba bem alto no c\xE9u
-      e lance um <b>Terra<b> nesse local.\n\nRetorne ao local de lan\xE7amento ap\xF3s
-      o uso."
+    m_Localized: "Escolha um ponto \xE0 sua frente, suba bem alto no c\xE9u e lance
+      um <b>P\xE1ssaro da Terra</b> nesse local.\n\nRetorne ao local de lan\xE7amento
+      ap\xF3s o uso."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534707
@@ -2303,8 +2297,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534711
-    m_Localized: "Os 'camaradas' n\xE3o podem se ferir uns aos outros, e um evento
-      especial ocorre quando todos os jogadores se tornam 'camaradas'."
+    m_Localized: "Os 'Aliados' n\xE3o podem se prejudicar mutuamente, e um evento
+      especial ocorre quando todos os jogadores se tornam 'Aliados'."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534712
@@ -2312,22 +2306,22 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534715
-    m_Localized: Quando utilizado, ele leva um alvo para o futuro.
+    m_Localized: "Quando utilizado, ele seleciona um alvo e avan\xE7a em dire\xE7\xE3o
+      ao futuro."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534716
-    m_Localized: "A Lend\xE1ria L\xEDngua dos Drag\xF5es"
+    m_Localized: "Linguagem Lend\xE1ria dos Drag\xF5es"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534717
-    m_Localized: "Ao usar uma habilidade, voc\xEA grita um pronunciamento da L\xEDngua
-      dos Drag\xF5es Lend\xE1rios.\n\nSe voc\xEA gritar 30 vezes, voc\xEA se torna
-      um Drag\xE3o Lend\xE1rio.\n\nSe voc\xEA sobreviver por 3 minutos, voc\xEA vence
-      imediatamente."
+    m_Localized: "Ao usar uma habilidade, voc\xEA grita a L\xEDngua dos Drag\xF5es
+      Lend\xE1rios.\n\nSe voc\xEA gritar 30 vezes, voc\xEA se torna um drag\xE3o
+      lend\xE1rio.\n\nSe voc\xEA sobreviver por 3 minutos, voc\xEA vence imediatamente."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534718
-    m_Localized: "A Lend\xE1ria L\xEDngua dos Drag\xF5es"
+    m_Localized: "Linguagem Lend\xE1ria dos Drag\xF5es"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534719
@@ -2352,7 +2346,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340356
-    m_Localized: "O limite de encantamentos aumenta at\xE9 100.\n\nVoc\xEA pode especificar
+    m_Localized: "O limite de encantamentos aumenta para 100.\n\nVoc\xEA pode especificar
       o valor do pr\xF3ximo encantamento consumindo Alma."
     m_Metadata:
       m_Items: []
@@ -2361,8 +2355,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340366
-    m_Localized: "Entre os Descendentes do Fogo, o consumo de Pedras de Encantamento
-      devido ao encantamento \xE9 reduzido pela metade."
+    m_Localized: "Enquanto estiver no estado 'Descendente do Fogo', a quantidade
+      de Pedras de Encantamento necess\xE1rias para encantar \xE9 reduzida pela metade."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340370
@@ -2370,9 +2364,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340376
-    m_Localized: "Aproxime a mira por {b:AimTimeout} segundos e reduza sua velocidade
+    m_Localized: "Aproxime a mira por {b:AimTimeout} segundos e diminua sua velocidade
       de movimento.\n\nEm vez disso, o pr\xF3ximo proj\xE9til causa {b:AimBonusPct:all}%
-      de dano adicional ao atingir o alvo e sempre acerta como um golpe cr\xEDtico."
+      de dano adicional ao atingir o alvo e sempre acerta criticamente."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340388
@@ -2384,8 +2378,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340402
-    m_Localized: "D\xEA uma mordida para frente para causar dano de {dmg:DevourCoef+DevourFlat}.
-      Se o alvo atingido morrer em 1 segundo, ganhe almas adicionais e prepare <b>Cuspir</b>."
+    m_Localized: "D\xEA uma mordida para causar dano de {dmg:DevourCoef+DevourFlat}.
+      Se o alvo atingido morrer em 1 segundo, ganhe uma alma adicional e prepare
+      <b>Cuspir</b>."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340407
@@ -2405,8 +2400,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340415
-    m_Localized: "Uma sombra segue o Andarilho das Sombras.\n\nQuando n\xE3o estiver
-      em combate, carregue <b>Escurid\xE3o</b> ao longo de {b:DarkChargeTime:all}
+    m_Localized: "Uma sombra segue o Andarilho das Sombras.\n\nSempre que n\xE3o
+      estiver em combate, carregue <b>Escurid\xE3o</b> ao longo de {b:DarkChargeTime:all}
       segundos.\n\nAo atacar um inimigo, se <b>Escurid\xE3o</b> estiver carregada,
       cegue o alvo por {b:BlindTime:all} segundos."
     m_Metadata:
@@ -2425,18 +2420,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340437
-    m_Localized: "Como Mestre das Armas, as armas flutuantes avan\xE7am na dire\xE7\xE3o
-      para a qual est\xE3o viradas, causando dano igual ao n\xFAmero de armas X {dmg:CommandCoef}."
+    m_Localized: "As armas flutuantes avan\xE7am na dire\xE7\xE3o para a qual est\xE3o
+      viradas, causando dano igual ao n\xFAmero de armas \xD7 {dmg:CommandCoef}."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340439
-    m_Localized: "Durante {b:HasteDuration:all} segundos, o tempo de ataque base
-      do Mestre de Armas \xE9 reduzido em {b:HasteIntervalPct:all}% e a velocidade
-      dos comandos \xE9 aumentada em 50%."
+    m_Localized: Durante {b:HasteDuration:all} segundos, o intervalo de ataque base
+      do Mestre de Armas diminui em {b:HasteIntervalPct:all}% e a velocidade de comando
+      aumenta em 50%.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340447
-    m_Localized: O ganho de almas torna-se {b:SoulGain:all} vezes.
+    m_Localized: O ganho de almas se torna {b:SoulGain:all} vezes.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340456
@@ -2444,7 +2439,7 @@ MonoBehaviour:
       aleat\xF3rios \xE0 sua frente por {b:CloneDuration:all} segundos.\n\nO clone
       segue o inimigo mais pr\xF3ximo por padr\xE3o.\n\nQuando o clone morre ou voc\xEA
       pressiona a tecla de Ultimate novamente, ele explode, causando {b:CloneBlastMul*100:all}%
-      de dano de explos\xE3o do Joker Draw aos inimigos pr\xF3ximos.\n\nO clone ataca
+      de dano de explos\xE3o Joker Draw aos inimigos pr\xF3ximos.\n\nO clone ataca
       inimigos em um raio de 10m com sua arma atual."
     m_Metadata:
       m_Items: []
@@ -2457,7 +2452,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340461
-    m_Localized: "Em vez de aumentar significativamente sua velocidade, voc\xEA sofre
+    m_Localized: "Em vez de um aumento significativo na velocidade, voc\xEA sofre
       dano sempre que para!"
     m_Metadata:
       m_Items: []
@@ -2466,8 +2461,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534664
-    m_Localized: "Selecione um jogador para que ele cometa suic\xEDdio ap\xF3s 60
-      segundos."
+    m_Localized: "Selecione um jogador que voc\xEA deseja que cometa 'suic\xEDdio'
+      ap\xF3s 60 segundos."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534682
@@ -2485,8 +2480,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534713
-    m_Localized: "Quando usado, ele puxa um alvo, agarra-o e avan\xE7a.\n\nNingu\xE9m
-      sabe qual \xE9 o destino."
+    m_Localized: "Ao ser utilizado, agarra um alvo e avan\xE7a.\n\nNingu\xE9m sabe
+      qual \xE9 o destino."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534714
@@ -2667,7 +2662,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581832
-    m_Localized: Quando esvaziado, torna-se o 'Quarto do Apelido'.
+    m_Localized: "Se voc\xEA deixar vazio, ele se torna um \"quarto com apelidos\"."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581833
@@ -2727,8 +2722,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581847
-    m_Localized: "Partida em Equipe (Apenas configura\xE7\xF5es \u2014 Divis\xE3o
-      das equipes posteriormente)"
+    m_Localized: "Jogo em equipe (em prepara\xE7\xE3o)"
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581848
@@ -2748,7 +2742,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581852
-    m_Localized: "Ap\xF3s ativar todos os subaltares, o altar central"
+    m_Localized: "Voc\xEA precisa ativar todos os altares secund\xE1rios para que
+      o altar central se abra."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581853
@@ -2761,7 +2756,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15328368021581855
     m_Localized: "Se o n\xFAmero de subaltares no mapa for menor que o necess\xE1rio,
-      basta abri-los todos."
+      voc\xEA poder\xE1 ativar todos eles."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581856
@@ -2929,15 +2924,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776159
-    m_Localized: "Copiar c\xF3digo da sala"
+    m_Localized: "Eu copiei o c\xF3digo do quarto."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776160
-    m_Localized: "Copiar configura\xE7\xF5es da sala para a \xE1rea de transfer\xEAncia"
+    m_Localized: "Copiei as configura\xE7\xF5es da sala para a \xE1rea de transfer\xEAncia."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776161
-    m_Localized: "Aplicar as configura\xE7\xF5es coladas"
+    m_Localized: "Apliquei as configura\xE7\xF5es coladas."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776162
@@ -2945,11 +2940,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776163
-    m_Localized: '[{0}] Salvo'
+    m_Localized: '[{0}] salvo'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776164
-    m_Localized: '[{0}] Carregar'
+    m_Localized: '[{0}] carregado'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776165
@@ -2965,7 +2960,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776168
-    m_Localized: "Falha na conex\xE3o com o servidor ({0})"
+    m_Localized: Falha ao conectar ao servidor ({0})
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776169
@@ -2985,7 +2980,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776173
-    m_Localized: "N\xE3o participou ({0})"
+    m_Localized: "N\xE3o foi poss\xEDvel participar ({0})"
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776174
@@ -3005,7 +3000,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776178
-    m_Localized: "{0} pessoas que n\xE3o se prepararam"
+    m_Localized: "Existem {0} pessoas que n\xE3o est\xE3o preparadas."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776179
@@ -3069,7 +3064,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020418
-    m_Localized: '{0} Compra'
+    m_Localized: Comprei {0}
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020419
@@ -3077,19 +3072,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020420
-    m_Localized: "Ao selecionar um item, ele ser\xE1 exibido em detalhes."
+    m_Localized: "N\xE3o h\xE1 itens selecionados."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020421
-    m_Localized: "\xC9 proibido negociar durante o combate."
+    m_Localized: "N\xE3o \xE9 poss\xEDvel negociar durante o combate."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020422
-    m_Localized: estado morto
+    m_Localized: "N\xE3o se pode viver enquanto estiver morto."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020423
-    m_Localized: "N\xE3o \xE9 poss\xEDvel comprar agora."
+    m_Localized: "N\xE3o posso compr\xE1-lo agora."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020424
@@ -3097,11 +3092,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020425
-    m_Localized: "N\xE3o \xE9 poss\xEDvel alterar durante a transforma\xE7\xE3o."
+    m_Localized: "N\xE3o \xE9 poss\xEDvel trocar de equipamento durante a transforma\xE7\xE3o."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020426
-    m_Localized: Escassez de alma
+    m_Localized: Me falta alma.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020427
@@ -3161,7 +3156,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020441
-    m_Localized: Para o alvo {0} {1}
+    m_Localized: '{0} {1} para o alvo'
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020442
@@ -3349,15 +3344,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389504
-    m_Localized: "Digest\xE3o completa \u2014 Pode comer"
+    m_Localized: "Digest\xE3o completa \u2014 Voc\xEA pode comer"
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389505
-    m_Localized: Capaz de expelir o poder dos inimigos derrotados.
+    m_Localized: "Voc\xEA pode expelir o poder dos inimigos derrotados."
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389506
-    m_Localized: Pode expelir {0}
+    m_Localized: "Voc\xEA pode cuspir {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389507
@@ -3369,11 +3364,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389509
-    m_Localized: usou tudo
+    m_Localized: Usei tudo.
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389510
-    m_Localized: "Promo\xE7\xE3o"
+    m_Localized: Fui promovido(a)
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389511
@@ -3393,8 +3388,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389515
-    m_Localized: "<b>Carregado de Escurid\xE3o</b> \u2014 O pr\xF3ximo ataque com
-      arma escurecer\xE1 o alvo."
+    m_Localized: "<b>Carregado Sombrio</b> \u2014 O pr\xF3ximo ataque com arma escurece
+      o alvo"
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389516
@@ -3447,6 +3442,160 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 16022278058389528
     m_Localized: "Digite a mensagem\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023742001152
+    m_Localized: "Voltar ao t\xEDtulo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749888
+    m_Localized: "N\xBA {0} - {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749889
+    m_Localized: "Edi\xE7\xE3o Limitada!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749890
+    m_Localized: "Edi\xE7\xE3o Limitada! \u2014 At\xE9 a pr\xF3xima reposi\xE7\xE3o
+      {0}:{1:00}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749891
+    m_Localized: Especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749892
+    m_Localized: armadura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749893
+    m_Localized: armadura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749894
+    m_Localized: inteiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749895
+    m_Localized: "O mercado negro foi aberto \u2014 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749896
+    m_Localized: "O mercado negro foi encerrado assim que algu\xE9m concluiu uma
+      transa\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749897
+    m_Localized: "Uma \xFAnica transa\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749898
+    m_Localized: "O mercado negro est\xE1 fechado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749899
+    m_Localized: "Mercado Negro \u2014 Atualmente fechado"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749900
+    m_Localized: "\u25C6 {0} Compra"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749901
+    m_Localized: "N\xE3o h\xE1 itens \xE0 venda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749902
+    m_Localized: Vendido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749903
+    m_Localized: ausente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749904
+    m_Localized: aplicar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749905
+    m_Localized: Exclusivo do mercado negro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749906
+    m_Localized: mercado negro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749907
+    m_Localized: "Eu j\xE1 comprei esta edi\xE7\xE3o limitada."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749908
+    m_Localized: "Estat\xEDsticas da arma"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749909
+    m_Localized: "Redu\xE7\xE3o dos danos recebidos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138496
+    m_Localized: desacelerar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138497
+    m_Localized: queimar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138498
+    m_Localized: "est\xE1tua"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138499
+    m_Localized: selo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138500
+    m_Localized: desmaio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138501
+    m_Localized: corte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138502
+    m_Localized: "evas\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138503
+    m_Localized: "Redu\xE7\xE3o da defesa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138504
+    m_Localized: fantasma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138505
+    m_Localized: "Apag\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138506
+    m_Localized: "escravid\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138507
+    m_Localized: "transpar\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138508
+    m_Localized: Mortos-vivos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138509
+    m_Localized: xingamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138510
+    m_Localized: enfraquecimento
     m_Metadata:
       m_Items: []
   references:

@@ -223,6 +223,7 @@ public class JokerClone : NetworkBehaviour, IHittable
         if (info.MissingHpPercent > 0f) raw += Mathf.Max(0, MaxHP - HP) * info.MissingHpPercent * 0.01f;
         if (info.ExecuteBelow > 0f && HP <= MaxHP * info.ExecuteBelow) raw *= 1f + info.ExecuteBonus;
         if (info.HeadshotMul > 1f) raw *= Headshot.Incoming(info.HeadshotMul, st);
+        else raw *= Headshot.BodyArmor(info.HeadshotMul, st);
 
         int final = info.IgnoreDefense
             ? Mathf.Max(1, Mathf.RoundToInt(raw))

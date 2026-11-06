@@ -35,10 +35,6 @@ MonoBehaviour:
     m_Key: ui.hud.in_combat
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943873
-    m_Key: ui.tooltip.click_detail
-    m_Metadata:
-      m_Items: []
   - m_Id: 442167556943874
     m_Key: ui.interact.open
     m_Metadata:
@@ -143,10 +139,6 @@ MonoBehaviour:
     m_Key: ui.weapon_req.Any
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943900
-    m_Key: ui.shop.title
-    m_Metadata:
-      m_Items: []
   - m_Id: 442167556943901
     m_Key: ui.shop.open_hint
     m_Metadata:
@@ -155,64 +147,8 @@ MonoBehaviour:
     m_Key: ui.shop.combat_blocked
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943903
-    m_Key: ui.shop.tab_main
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943904
-    m_Key: ui.shop.tab_enchant
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943905
-    m_Key: ui.shop.tab_special
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943906
-    m_Key: ui.shop.buy
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943907
-    m_Key: ui.shop.special_empty
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943908
-    m_Key: ui.shop.heal_amount
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943909
-    m_Key: ui.shop.ammo_ratio
-    m_Metadata:
-      m_Items: []
   - m_Id: 442167556943910
     m_Key: ui.shop.reason.none
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943911
-    m_Key: ui.shop.reason.max
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943912
-    m_Key: ui.shop.reason.no_soul
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943913
-    m_Key: ui.shop.reason.not_gun
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943914
-    m_Key: ui.shop.reason.ammo_full
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943915
-    m_Key: ui.shop.reason.need_ability
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943916
-    m_Key: ui.shop.reason.no_enchant
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167556943917
-    m_Key: ui.enchant.stones
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943918
@@ -223,32 +159,48 @@ MonoBehaviour:
     m_Key: ui.enchant.empty_slot
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943920
-    m_Key: ui.enchant.no_weapon
-    m_Metadata:
-      m_Items: []
   - m_Id: 442167556943921
     m_Key: ui.enchant.gain
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943922
-    m_Key: ui.enchant.reason.no_weapon
+  - m_Id: 442167561138185
+    m_Key: ui.item.ranged_kind.Bow
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943923
-    m_Key: ui.enchant.reason.cannot
+  - m_Id: 442167561138186
+    m_Key: ui.item.ranged_kind.Staff
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943924
-    m_Key: ui.enchant.reason.gun_locked
+  - m_Id: 442167561138187
+    m_Key: ui.item.ranged_kind.Gun
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943925
-    m_Key: ui.enchant.reason.max_stage
+  - m_Id: 442167561138188
+    m_Key: ui.item.ranged_kind.Thrown
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943926
-    m_Key: ui.enchant.reason.no_stone
+  - m_Id: 442167561138190
+    m_Key: ui.round.top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138191
+    m_Key: ui.round.win
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138192
+    m_Key: ui.round.restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745419120640
+    m_Key: ui.ability.skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423808
+    m_Key: ui.ability.special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3001745490423809
+    m_Key: ui.ability.charge_max
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943927
@@ -263,12 +215,16 @@ MonoBehaviour:
     m_Key: ui.inventory.gear
     m_Metadata:
       m_Items: []
+  - m_Id: 442167556943931
+    m_Key: ui.inventory.drop_hint
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167556943930
     m_Key: ui.inventory.empty
     m_Metadata:
       m_Items: []
-  - m_Id: 442167556943931
-    m_Key: ui.inventory.drop_hint
+  - m_Id: 442167556943873
+    m_Key: ui.tooltip.click_detail
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138176
@@ -307,54 +263,6 @@ MonoBehaviour:
     m_Key: ui.item.cannot_enchant
     m_Metadata:
       m_Items: []
-  - m_Id: 442167561138185
-    m_Key: ui.item.ranged_kind.Bow
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167561138186
-    m_Key: ui.item.ranged_kind.Staff
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167561138187
-    m_Key: ui.item.ranged_kind.Gun
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167561138188
-    m_Key: ui.item.ranged_kind.Thrown
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167561138189
-    m_Key: ui.round.goal
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167561138190
-    m_Key: ui.round.top
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167561138191
-    m_Key: ui.round.win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 442167561138192
-    m_Key: ui.round.restart
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3001745419120640
-    m_Key: ui.ability.skill
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3001745490423808
-    m_Key: ui.ability.special
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3001745490423809
-    m_Key: ui.ability.charge_max
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3001745490423810
-    m_Key: ui.skill.slot.0 ~
-    m_Metadata:
-      m_Items: []
   - m_Id: 4030871831687168
     m_Key: ui.item.class.Melee
     m_Metadata:
@@ -391,12 +299,96 @@ MonoBehaviour:
     m_Key: tag.basic
     m_Metadata:
       m_Items: []
+  - m_Id: 442167556943900
+    m_Key: ui.shop.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943906
+    m_Key: ui.shop.buy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943903
+    m_Key: ui.shop.tab_main
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943904
+    m_Key: ui.shop.tab_enchant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943905
+    m_Key: ui.shop.tab_special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943907
+    m_Key: ui.shop.special_empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943908
+    m_Key: ui.shop.heal_amount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943909
+    m_Key: ui.shop.ammo_ratio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943911
+    m_Key: ui.shop.reason.max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943912
+    m_Key: ui.shop.reason.no_soul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943916
+    m_Key: ui.shop.reason.no_enchant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943915
+    m_Key: ui.shop.reason.need_ability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943913
+    m_Key: ui.shop.reason.not_gun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943914
+    m_Key: ui.shop.reason.ammo_full
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943922
+    m_Key: ui.enchant.reason.no_weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943924
+    m_Key: ui.enchant.reason.gun_locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943923
+    m_Key: ui.enchant.reason.cannot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943925
+    m_Key: ui.enchant.reason.max_stage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943926
+    m_Key: ui.enchant.reason.no_stone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943917
+    m_Key: ui.enchant.stones
+    m_Metadata:
+      m_Items: []
   - m_Id: 4071974098284544
     m_Key: ui.enchant.do
     m_Metadata:
       m_Items: []
   - m_Id: 4071974161199104
     m_Key: ui.enchant.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167556943920
+    m_Key: ui.enchant.no_weapon
     m_Metadata:
       m_Items: []
   - m_Id: 5221716563963904
@@ -459,10 +451,6 @@ MonoBehaviour:
     m_Key: ui.enchant.pick_normal
     m_Metadata:
       m_Items: []
-  - m_Id: 5448237727723520
-    m_Key: status.Poison
-    m_Metadata:
-      m_Items: []
   - m_Id: 5448237761277952
     m_Key: ui.special.chance
     m_Metadata:
@@ -481,6 +469,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5887265010724864
     m_Key: ui.score.player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 442167561138189
+    m_Key: ui.round.goal
     m_Metadata:
       m_Items: []
   - m_Id: 5887265069445120
@@ -545,10 +537,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15217183922171915
     m_Key: ui.ability.number
-    m_Metadata:
-      m_Items: []
-  - m_Id: 15217183922171916
-    m_Key: ability.{Id}.summary
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171917
@@ -2131,6 +2119,90 @@ MonoBehaviour:
     m_Key: ui.chat.placeholder
     m_Metadata:
       m_Items: []
+  - m_Id: 17144023742001152
+    m_Key: set.esc.to_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749888
+    m_Key: ui.ability.number_evolved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749889
+    m_Key: ui.shop.tab_limited
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749890
+    m_Key: ui.shop.limited_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749891
+    m_Key: ui.item.tag.special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749892
+    m_Key: ui.codex.tab.weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749893
+    m_Key: ui.codex.tab.armor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749894
+    m_Key: ui.codex.tab.all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749895
+    m_Key: market.event.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749896
+    m_Key: market.event.closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749897
+    m_Key: market.header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749898
+    m_Key: market.reason.closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749899
+    m_Key: market.black.closed_prompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749900
+    m_Key: shop.gear.buy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749901
+    m_Key: shop.gear.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749902
+    m_Key: shop.gear.sold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749903
+    m_Key: shop.gear.lost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749904
+    m_Key: shop.gear.stage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749905
+    m_Key: shop.gear.market_only
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749906
+    m_Key: shop.gear.market_tag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749907
+    m_Key: shop.limited.sold
+    m_Metadata:
+      m_Items: []
   - m_Id: 442167561138193
     m_Key: stat.MaxHP
     m_Metadata:
@@ -2205,6 +2277,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 16007805629214756
     m_Key: stat.SoulShield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749908
+    m_Key: stat.WeaponStatBoost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749909
+    m_Key: stat.BodyDamageReduction
     m_Metadata:
       m_Items: []
   - m_Id: 3001745490423811
@@ -3241,6 +3321,70 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5452611497603081
     m_Key: special.9510.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138496
+    m_Key: status.Slow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138497
+    m_Key: status.Burn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138498
+    m_Key: status.Frost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138499
+    m_Key: status.Seal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138500
+    m_Key: status.Stun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138501
+    m_Key: status.DeepWound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5448237727723520
+    m_Key: status.Poison
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138502
+    m_Key: status.Evade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138503
+    m_Key: status.ArmorBreak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138504
+    m_Key: status.Ghost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138505
+    m_Key: status.Blind
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138506
+    m_Key: status.Root
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138507
+    m_Key: status.Invisible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138508
+    m_Key: status.Undead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138509
+    m_Key: status.Curse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138510
+    m_Key: status.Weaken
     m_Metadata:
       m_Items: []
   m_Metadata:

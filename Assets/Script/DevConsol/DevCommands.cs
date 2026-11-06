@@ -357,7 +357,7 @@ public static class DevCommands
             var edb = eq.ArmorEnchants;
             int eid = 0;
             if (!string.IsNullOrEmpty(ench))
-                eid = ench == "r" || ench == "랜덤" ? (edb != null ? edb.Roll(d.Slot) : 0) : int.TryParse(ench, out var n) ? n : 0;
+                eid = ench == "r" || ench == "랜덤" ? (edb != null ? edb.Roll(d) : 0) : int.TryParse(ench, out var n) ? n : 0;
             if (!eq.EquipArmor(d.Id, eid, false)) return Err("지금은 못 낌 (변신 중?)");
             var ed = edb != null ? edb.Get(eid) : null;
             return Ok($"{c.Who} 장착: {ItemName(d)} ({d.Id})" + (ed != null ? $" + {ed.GetName()} ({ed.Id})" : ""));

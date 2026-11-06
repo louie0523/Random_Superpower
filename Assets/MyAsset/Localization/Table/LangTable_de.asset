@@ -135,7 +135,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943897
-    m_Localized: Wurfwaffen
+    m_Localized: "Werfen von Gegenst\xE4nden"
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943898
@@ -159,7 +159,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943903
-    m_Localized: erzwingen
+    m_Localized: gemeinsam
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943904
@@ -167,7 +167,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943905
-    m_Localized: Besonders
+    m_Localized: Exklusiv
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943906
@@ -175,7 +175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943907
-    m_Localized: "Diese F\xE4higkeit hat keinen speziellen Shop."
+    m_Localized: Es gibt keine Exklusivprodukte.
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943908
@@ -191,7 +191,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943911
-    m_Localized: maximal
+    m_Localized: Maximale Stufe
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943912
@@ -203,7 +203,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943914
-    m_Localized: Volle Munition
+    m_Localized: Voll mit Munition
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943915
@@ -243,7 +243,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943924
-    m_Localized: "Waffenverzauberung unm\xF6glich"
+    m_Localized: Waffen erfordern Geschicklichkeit
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943925
@@ -271,7 +271,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167556943931
-    m_Localized: '[G] Aktuelle Waffe ablegen'
+    m_Localized: "G \u2014 Aktive Waffe abwerfen"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138176
@@ -279,11 +279,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138177
-    m_Localized: "Entscheidungswinkel {0}\xB0"
+    m_Localized: Urteilswinkel {0} Grad
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138178
-    m_Localized: '{0} Schuss Munition'
+    m_Localized: Maximale Munition {0}
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138179
@@ -303,11 +303,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138183
-    m_Localized: Noch keine Verzauberung
+    m_Localized: Keine Verzauberung
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138184
-    m_Localized: "Waffen, die nicht verzaubert werden k\xF6nnen"
+    m_Localized: Kann nicht verzaubert werden
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138185
@@ -323,11 +323,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138188
-    m_Localized: Werfen
+    m_Localized: "Werfen von Gegenst\xE4nden"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138189
-    m_Localized: Tor {0}
+    m_Localized: "Tor {0} \xB7 1. Platz {1}"
     m_Metadata:
       m_Items: []
   - m_Id: 442167561138190
@@ -412,10 +412,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3001745490423809
     m_Localized: Max {0}
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3001745490423810
-    m_Localized: Q / E / R / Ultimativ
     m_Metadata:
       m_Items: []
   - m_Id: 3001745490423811
@@ -535,8 +531,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072769
-    m_Localized: "Kaufe +1 Fertigkeitspunkt \u2014 Du kannst jede beliebige Fertigkeit
-      im F\xE4higkeiten-Panel (F1) verbessern."
+    m_Localized: "Kaufe +1 Fertigkeitspunkt \u2014 Du kannst jede Fertigkeit im F\xE4higkeiten-Panel
+      (F1) verbessern."
     m_Metadata:
       m_Items: []
   - m_Id: 5221716631072770
@@ -684,7 +680,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277953
-    m_Localized: Stehle {0}% des beim Treffer verursachten Schadens.
+    m_Localized: Lebensraub {0}% des beim Treffer verursachten Schadens
     m_Metadata:
       m_Items: []
   - m_Id: 5448237761277954
@@ -810,10 +806,6 @@ MonoBehaviour:
     m_Localized: Nr. {0}
     m_Metadata:
       m_Items: []
-  - m_Id: 15217183922171916
-    m_Localized: "Einzeilige Zusammenfassung nach F\xE4higkeit"
-    m_Metadata:
-      m_Items: []
   - m_Id: 15217183922171917
     m_Localized: "Ein anderer Spieler w\xE4hlt aus"
     m_Metadata:
@@ -831,8 +823,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171921
-    m_Localized: "Rache erfolgreich! Bewegungsgeschwindigkeit \xB7 Maximale Gesundheit
-      \xB7 Angriffskraft +{0}% bis zum Tod!"
+    m_Localized: "Rache erfolgreich! Bewegungsgeschwindigkeit, maximale Gesundheit
+      und Angriffskraft erh\xF6hen sich bis zu deinem n\xE4chsten Tod um {0}%!"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171922
@@ -880,8 +872,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171933
-    m_Localized: "Wenn Sie es ausschalten, wird es in dem Moment verwendet, in dem
-      Sie es dr\xFCcken."
+    m_Localized: "Wenn Sie es ausschalten, wird es sofort nach dem Dr\xFCcken verwendet."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171934
@@ -889,8 +880,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171935
-    m_Localized: "Wenn deaktiviert, bewegt es sich in Bewegungsrichtung (gilt nur
-      f\xFCr Striche in Bewegungsrichtung)."
+    m_Localized: Wenn du es ausschaltest, sprintest du in die Richtung, in die du
+      dich bewegst (sprintet nur in Bewegungsrichtung).
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171936
@@ -898,8 +889,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171937
-    m_Localized: "Wenn du es ausschaltest, hebe es mit der Interaktionstaste auf
-      (Seelen und Steine \u200B\u200Bwerden immer automatisch aufgehoben)."
+    m_Localized: "Wenn du es ausschaltest, kannst du es mit der Interaktionstaste
+      aufheben (Seelen und Steine \u200B\u200Bwerden immer automatisch aufgesammelt)."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171938
@@ -907,7 +898,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171939
-    m_Localized: Wird im Editor nicht angewendet (nur im Build-Prozess)
+    m_Localized: Dies gilt nicht im Editor (gilt nur im Build-Prozess).
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171940
@@ -915,7 +906,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171941
-    m_Localized: Wird im Editor nicht angewendet (nur im Build-Prozess)
+    m_Localized: Dies gilt nicht im Editor (gilt nur im Build-Prozess).
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171942
@@ -923,7 +914,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171943
-    m_Localized: Wenn diese Option aktiviert ist, wird die FPS-Begrenzung ignoriert.
+    m_Localized: Wenn Sie diese Option aktivieren, wird die FPS-Begrenzung ignoriert.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171944
@@ -939,7 +930,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171947
-    m_Localized: "Durch Senken wird das Bild unsch\xE4rfer und schneller."
+    m_Localized: Wenn Sie den Wert senken, wird das Bild unscharf, aber schneller.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183922171948
@@ -991,9 +982,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366217
-    m_Localized: "Die Sprachtasten (Chat \xB7 Sprach-Tab) wechseln gemeinsam. \xB7
-      Wird dieselbe Taste gedr\xFCckt, werden die Tasten f\xFCr die beiden Aktionen
-      vertauscht."
+    m_Localized: "Die Sprachtasten (Chat \xB7 Sprachregisterkarte) werden ebenfalls
+      zur\xFCckgesetzt. Wird dieselbe Taste gedr\xFCckt, werden die Tasten f\xFCr
+      die beiden Aktionen vertauscht."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366218
@@ -1037,7 +1028,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366228
-    m_Localized: "innere Linienl\xE4nge"
+    m_Localized: "innere Leitungsl\xE4nge"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366229
@@ -1146,7 +1137,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366255
-    m_Localized: Je weiter links, desto empfindlicher
+    m_Localized: Je weiter links, desto empfindlicher ist es.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366256
@@ -1162,7 +1153,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366259
-    m_Localized: "Lautst\xE4rke der Spielstimme"
+    m_Localized: "Spiellautst\xE4rke"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366260
@@ -1218,7 +1209,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366273
-    m_Localized: "Bildschirmwackeln (bei Treffer \xB7 Explosion)"
+    m_Localized: "Bildschirmwackeln (bei Aufprall \xB7 Explosion)"
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366274
@@ -1226,7 +1217,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366275
-    m_Localized: "Reduzieren Sie die Dosis, wenn Sie zu Reise\xFCbelkeit neigen."
+    m_Localized: "Wenn Sie zu Reise\xFCbelkeit neigen, reduzieren Sie die Menge."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366276
@@ -1242,7 +1233,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366279
-    m_Localized: "\xC4ndern Sie die Farbe, falls sie schwer zu unterscheiden ist."
+    m_Localized: Falls Sie Schwierigkeiten haben, Farben zu unterscheiden, wechseln
+      Sie bitte die Farbe.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183926366280
@@ -1386,7 +1378,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560535
-    m_Localized: Vollbildmodus (ohne Rahmen)
+    m_Localized: Vollbild (ohne Rahmen)
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560536
@@ -1462,11 +1454,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560554
-    m_Localized: Code in die Zwischenablage kopieren
+    m_Localized: Ich habe den Code in die Zwischenablage kopiert.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560555
-    m_Localized: Paste
+    m_Localized: "Ich habe es eingef\xFCgt."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560556
@@ -1474,11 +1466,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560557
-    m_Localized: "Auf Standardeinstellungen zur\xFCcksetzen"
+    m_Localized: Ich habe die Standardeinstellung wiederhergestellt.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560558
-    m_Localized: Das Gleiche sollte man auch bei anderen Waffen anwenden.
+    m_Localized: Ich habe das Gleiche auch auf andere Waffen angewendet.
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560559
@@ -1510,7 +1502,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560566
-    m_Localized: "Dr\xFCcken Sie erneut, um zur\xFCckzusetzen."
+    m_Localized: "Dr\xFCcken Sie noch einmal, um den Vorgang zur\xFCckzusetzen."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560567
@@ -1543,7 +1535,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15217183930560574
     m_Localized: "Die Option [Gleiches Fadenkreuz f\xFCr alle Waffen] ist aktiviert,
-      daher werden alle Fadenkreuze verwendet."
+      sodass alle Waffen das Fadenkreuz der Pistole verwenden."
     m_Metadata:
       m_Items: []
   - m_Id: 15217183930560575
@@ -1633,8 +1625,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340356
-    m_Localized: "Die maximale Anzahl an Verzauberungen betr\xE4gt 100.\n\nDu kannst
-      den Wert der n\xE4chsten Verzauberung durch den Verbrauch von Seelen festlegen."
+    m_Localized: "Das Verzauberungslimit erh\xF6ht sich auf 100.\n\nDu kannst den
+      Wert der n\xE4chsten Verzauberung durch den Verbrauch von Seelen festlegen."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340357
@@ -1653,8 +1645,8 @@ MonoBehaviour:
   - m_Id: 15224945322340360
     m_Localized: "Schwinge einen Hammer nach vorn, um {dmg:SmashCoef+SmashFlat} Schaden
       zu verursachen und getroffene Gegner 0,25 Sekunden lang zu bet\xE4uben. Zus\xE4tzlich
-      erhalten getroffene Gegner einen Statuseffekt, der ihre R\xFCstung 5 Sekunden
-      lang um {b:ArmorBreakPct}% verringert."
+      wird die R\xFCstung getroffener Gegner 5 Sekunden lang um {b:ArmorBreakPct}%
+      reduziert."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340362
@@ -1665,8 +1657,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340363
-    m_Localized: Die maximale Leistung wird erreicht, wenn die HP auf 30 % reduziert
-      wird.
+    m_Localized: Die maximale Leistung wird erreicht, wenn die HP auf 30 % sinken.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340364
@@ -1675,16 +1666,16 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340365
     m_Localized: "F\xFCr {b:UltDuration} Sekunden ist dein K\xF6rper von Feuer umh\xFCllt
-      und du wechselst in den Zustand \u201ENachkomme des Feuers\u201C.\n\nGegner,
-      die dich mit Nahkampfangriffen treffen, erleiden den Effekt \u201EVerbrennen\u201C,
-      und alle Gegenstandseffekte werden um 25 % verst\xE4rkt. Au\xDFerdem wird die
-      Abklingzeit von \u201EOfen\u201C jedes Mal zur\xFCckgesetzt, wenn deine Gesundheit
-      um 15 % sinkt, z. B. bei 85 %, 70 %, 55 % usw."
+      und du wirst zum \u201ENachkommen des Feuers\u201C.\n\nGegner, die dich mit
+      Nahkampfangriffen treffen, erleiden den Verbrennungseffekt, und alle Gegenstandseffekte
+      werden um 25 % verst\xE4rkt. Au\xDFerdem wird die Abklingzeit von \u201EFeuersto\xDF\u201C
+      jedes Mal zur\xFCckgesetzt, wenn deine Gesundheit um 15 % sinkt, z. B. bei
+      85 %, 70 %, 55 % usw."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340366
-    m_Localized: Bei den Nachkommen des Feuers wird der Verbrauch von Verzauberungssteinen
-      durch die Verzauberung halbiert.
+    m_Localized: "Im Zustand \u201ENachkomme des Feuers\u201C wird die f\xFCr Verzauberungen
+      ben\xF6tigte Menge an Verzauberungssteinen um die H\xE4lfte reduziert."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340367
@@ -1693,7 +1684,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340368
     m_Localized: "Du bist der Meister aller Schusswaffen. Ein Waffenmeister kann
-      alle Schusswaffen verzaubern und erh\xE4lt Kalibrierungen f\xFCr die Waffen."
+      alle Schusswaffen verzaubern und erh\xE4lt Kalibrierungen f\xFCr Schusswaffen."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340369
@@ -1709,9 +1700,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340372
-    m_Localized: "Mit einer Schusswaffe ausger\xFCstet, erh\xF6ht sich die Angriffsgeschwindigkeit
-      um {0}%, die Bewegungsgeschwindigkeit um {1}% und der kritische Schaden um
-      weitere {2}%.\n\nDie Standardwaffe ist eine Glock."
+    m_Localized: "Ausger\xFCstet mit einer Schusswaffe erh\xF6ht sich die Angriffsgeschwindigkeit
+      um {0}% und die Bewegungsgeschwindigkeit um {1}, der kritische Schaden zus\xE4tzlich
+      um {2}%.\n\nDie Standardwaffe ist nun eine Glock."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340373
@@ -1725,9 +1716,9 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340376
     m_Localized: "Zoome f\xFCr {b:AimTimeout} Sekunden heran und verlangsame deine
-      Bewegungsgeschwindigkeit.\n\nStattdessen verursacht die n\xE4chste Kugel beim
-      Treffer {b:AimBonusPct:all}% zus\xE4tzlichen Schaden und ist immer ein kritischer
-      Treffer."
+      Bewegungsgeschwindigkeit.\n\nStattdessen verursacht die n\xE4chste Kugel bei
+      einem Treffer {b:AimBonusPct:all}% zus\xE4tzlichen Schaden und ist immer ein
+      kritischer Treffer."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340377
@@ -1735,10 +1726,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340378
-    m_Localized: "Wechselt f\xFCr 12 Sekunden in den \u201ESpray\u201C-Zustand, wodurch
-      die Angriffsgeschwindigkeit um {b:UltAtkSpeedPct:all}% erh\xF6ht und 20 % Lebensraub
-      gew\xE4hrt werden. W\xE4hrend dieser Zeit erh\xF6ht sich die Streuung der Kugeln
-      beim Abfeuern um 30 %, anstatt {b:UltRicochets:all}-mal von W\xE4nden abzuprallen."
+    m_Localized: "Aktiviere \u201ESpray\u201C f\xFCr 12 Sekunden, um deine Angriffsgeschwindigkeit
+      um {b:UltAtkSpeedPct:all}% zu erh\xF6hen und 20 % Lebensraub zu erhalten. W\xE4hrend
+      dieser Zeit prallen deine Kugeln nicht {b:UltRicochets:all}-mal von W\xE4nden
+      ab, sondern ihre Streuung erh\xF6ht sich um 30 %."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340379
@@ -1783,7 +1774,7 @@ MonoBehaviour:
   - m_Id: 15224945322340390
     m_Localized: "Reite f\xFCr {b:MountDuration} Sekunden auf einem untoten Pferd.
       W\xE4hrend du reitest, erh\xF6ht sich deine Bewegungsgeschwindigkeit um {b:MountSpeed}
-      und der erlittene Schaden wird um {b:MountDamageReduce}% reduziert.\n\nVerwende
+      und der erlittene Schaden wird um {b:MountDamageReduce}% reduziert.\n\nBenutze
       diese F\xE4higkeit erneut, w\xE4hrend du reitest, um schnell nach vorne zu
       st\xFCrmen und {dmg:ChargeCoef} Schaden zu verursachen."
     m_Metadata:
@@ -1793,9 +1784,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340393
-    m_Localized: "Mit einem verfluchten Schwert der dunklen Magie schl\xE4gt er zu,
-      um Feinden vor ihm {dmg:FinisherCoef+FinisherFlat} Waffenschaden zuzuf\xFCgen
-      und l\xF6st vor ihm eine Explosion dunkler Magie aus, die massives Gift verursacht."
+    m_Localized: "Schl\xE4gt ein verfluchtes Schwert der dunklen Magie nieder, um
+      {dmg:FinisherCoef+FinisherFlat} Waffenschaden an Feinden vor euch zu verursachen
+      und l\xF6st eine Explosion dunkler Magie vor euch aus, die massives Gift verursacht."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340394
@@ -1816,8 +1807,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340402
     m_Localized: "Bei\xDF nach vorn, um {dmg:DevourCoef+DevourFlat} Schaden zu verursachen.
-      Stirbt das getroffene Ziel innerhalb von 1 Sekunde, erh\xE4ltst du zus\xE4tzliche
-      Seelen und bereitest <b>Ausspucken</b> vor."
+      Stirbt das getroffene Ziel innerhalb von 1 Sekunde, erh\xE4ltst du eine zus\xE4tzliche
+      Seele und bereitest <b>Ausspucken</b> vor."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340403
@@ -1830,16 +1821,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340405
-    m_Localized: "Verf\xFCgbar, wenn du k\xFCrzlich einen Gegner get\xF6tet oder
-      eine Waffe mit \u201EV\xF6llerei\u201C verbraucht hast. Spucke Erbrochenes
-      nach vorn und verursache {dmg:SpitCoef+SpitFlat} Schaden."
+    m_Localized: "Kann verwendet werden, wenn man k\xFCrzlich einen Gegner get\xF6tet
+      oder eine Waffe mit \u201EV\xF6llerei\u201C verbraucht hat. Spuckt Erbrochenes
+      nach vorn und verursacht {dmg:SpitCoef+SpitFlat} Schaden."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340406
     m_Localized: "Der Basisschaden betr\xE4gt {dmg:SpitCoef+SpitFlat} und verursacht
       zus\xE4tzlichen Schaden in H\xF6he von {b:InheritKillAtkPct}% der Angriffskraft
       des Ziels, falls es sich um einen Spieler handelt, oder in H\xF6he von {b:InheritWeaponAtkPct}%,
-      falls es sich um eine Waffe handelt.\n\nKann durch zuf\xE4llige gegnerische
+      falls es sich um eine Waffe handelt.\n\nEr kann durch zuf\xE4llige gegnerische
       F\xE4higkeiten oder Waffenverzauberungen beeinflusst werden."
     m_Metadata:
       m_Items: []
@@ -1864,7 +1855,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340412
-    m_Localized: Shidou Walker
+    m_Localized: "Schattenl\xE4ufer"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340413
@@ -1884,7 +1875,7 @@ MonoBehaviour:
     m_Localized: "Aktiviert die Schattenwaffe f\xFCr {b:WeaponDuration:all} Sekunden.\n\nWenn
       du mit der Waffe angreifst, greift deine Illusion nach kurzer Verz\xF6gerung
       in dieselbe Richtung mit derselben Waffe an und verursacht {b:EchoPct:all}%
-      deiner Grundst\xE4rke als Schaden."
+      der Basisst\xE4rke als Schaden."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340419
@@ -1906,9 +1897,9 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340422
     m_Localized: "Hinterl\xE4sst eine <b>Schattenhand</b> an deiner Blickrichtung.
-      Befinden sich Gegner innerhalb von {b:HandRadius:all} Metern um die <b>Schattenhand</b>,
+      Befindet sich ein Gegner innerhalb von {b:HandRadius:all} Metern um die <b>Schattenhand</b>,
       f\xE4hrt diese aus.\n\nBei einem Treffer verursacht sie {dmg:HandCoef+HandFlat}
-      Schaden und h\xE4lt Gegner {b:HandRoot:all} Sekunden lang fest.\n\nDu kannst
+      Schaden und h\xE4lt den Gegner {b:HandRoot:all} Sekunden lang fest.\n\nDu kannst
       bis zu {b:HandMax:all} Schattenh\xE4nde gleichzeitig auf der Karte platzieren."
     m_Metadata:
       m_Items: []
@@ -1917,10 +1908,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340425
-    m_Localized: "Die Umgebung wird als Schattenzone definiert, wodurch die Sichtweite
-      von Gegnern innerhalb der Zone stark reduziert wird (ausgenommen du selbst).\n\nGegner
-      au\xDFerhalb der Schattenzone k\xF6nnen nicht hineinsehen.\n\nInnerhalb der
-      Schattenzone betr\xE4gt die Abklingzeit der Schattenbewegung von Schattenl\xE4ufern
+    m_Localized: "Legt den umliegenden Bereich als <b>Schattenzone</b> fest, wodurch
+      die Sichtweite von Gegnern innerhalb der Zone (ausgenommen ihr selbst) deutlich
+      reduziert wird.\n\nGegner au\xDFerhalb der Schattenzone k\xF6nnen nicht hineinsehen.\n\nInnerhalb
+      der Schattenzone betr\xE4gt die Abklingzeit der Schattenbewegung von Schattenl\xE4ufern
       {b:ZoneMoveCooldown:all} Sekunden, und ihre Bewegungsgeschwindigkeit erh\xF6ht
       sich um {b:ZoneMoveSpeedPct:all}%."
     m_Metadata:
@@ -1950,15 +1941,15 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340433
     m_Localized: "Die maximale Reichweite betr\xE4gt {b:OrbitRange:all} m, und Schusswaffen
-      k\xF6nnen vom Waffenmeister nicht kontrolliert werden.\n\nB\xF6gen und St\xE4be
+      k\xF6nnen nicht vom Waffenmeister kontrolliert werden.\n\nB\xF6gen und St\xE4be
       haben eine Ladezeit von 100 %.\n\nSpezielle Verzauberungen auf der entsprechenden
       Waffe haben eine Aktivierungschance von 50 %; ihre Werte und Dauer sind halbiert.
       (Lebensraub ist nicht anwendbar.)"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340435
-    m_Localized: "Die Anzahl der erhaltenen Verzauberungssteine \u200B\u200Berh\xF6ht
-      sich um das {b:StoneGain:all}-fache."
+    m_Localized: "Die Anzahl der erhaltenen Verzauberungssteine \u200B\u200Bwird
+      mit {b:StoneGain:all} multipliziert."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340436
@@ -1966,9 +1957,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340437
-    m_Localized: "Als Meister der Waffen st\xFCrmen schwebende Waffen in die Richtung,
-      in die sie zeigen, und verursachen Schaden in H\xF6he der Anzahl der Waffen
-      X {dmg:CommandCoef}."
+    m_Localized: "Die schwebenden Waffen st\xFCrmen in die Richtung, in die sie zeigen,
+      und verursachen Schaden in H\xF6he der Anzahl der Waffen \xD7 {dmg:CommandCoef}."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340438
@@ -1976,15 +1966,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340439
-    m_Localized: "F\xFCr {b:HasteDuration:all} Sekunden wird die Basisangriffszeit
-      des Waffenmeisters um {b:HasteIntervalPct:all}% reduziert und die Befehlsgeschwindigkeit
-      um 50% erh\xF6ht."
+    m_Localized: "F\xFCr {b:HasteDuration:all} Sekunden verringert sich das Basisangriffsintervall
+      des Waffenmeisters um {b:HasteIntervalPct:all}%, und die Befehlsgeschwindigkeit
+      erh\xF6ht sich um 50%."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340441
-    m_Localized: "Feuert als Waffenmeister alle aktuell schwebenden Waffen am anvisierten
-      Ort f\xFCr {b:DancerDuration:all} Sekunden ab.\n\nW\xE4hrend dieser Zeit wird
-      der Waffenschaden um bis zu {b:DancerCoef:all}% reduziert."
+    m_Localized: "Feuert alle aktuell schwebenden Waffen an dem anvisierten Punkt
+      f\xFCr {b:DancerDuration:all} Sekunden ab.\n\nDer Waffenschaden wird w\xE4hrend
+      dieser Zeit um bis zu {b:DancerCoef:all}% reduziert."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340442
@@ -2013,9 +2003,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340454
-    m_Localized: "\xC4ndert die Abklingzeit einer der zuf\xE4lligen F\xE4higkeiten,
-      die sich aktuell in der Abklingzeit befindet, auf die Abklingzeit der Ersatzkartenf\xE4higkeit
-      und setzt stattdessen die Abklingzeit dieser zuf\xE4lligen F\xE4higkeit zur\xFCck."
+    m_Localized: "\xC4ndere die Abklingzeit einer der zuf\xE4lligen F\xE4higkeiten,
+      die sich aktuell in der Abklingzeit befinden, auf die Abklingzeit der Ersatzkartenf\xE4higkeit
+      und setze stattdessen die Abklingzeit dieser zuf\xE4lligen F\xE4higkeit zur\xFCck."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340455
@@ -2024,10 +2014,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340456
     m_Localized: "Beschw\xF6rt einen identischen Klon von dir mit zuf\xE4lligen F\xE4higkeiten
-      und Gegenst\xE4nden f\xFCr {b:CloneDuration:all} Sekunden.\n\nDer Klon folgt
-      standardm\xE4\xDFig dem n\xE4chsten Gegner.\n\nWenn der Klon stirbt oder du
-      die Ultimative F\xE4higkeit erneut dr\xFCckst, explodiert er und verursacht
-      {b:CloneBlastMul*100:all}% Joker-Draw-Explosionsschaden an nahen Gegnern.\n\nDer
+      und Gegenst\xE4nden vor dir f\xFCr {b:CloneDuration:all} Sekunden.\n\nDer Klon
+      folgt standardm\xE4\xDFig dem n\xE4chsten Gegner.\n\nWenn der Klon stirbt oder
+      du die Ultimative F\xE4higkeit erneut dr\xFCckst, explodiert er und verursacht
+      {b:CloneBlastMul*100:all}% Joker-Explosionsschaden bei nahen Gegnern.\n\nDer
       Klon greift Gegner innerhalb von 10 m mit seiner aktuellen Waffe an."
     m_Metadata:
       m_Items: []
@@ -2044,8 +2034,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340461
-    m_Localized: "Anstatt deine Geschwindigkeit deutlich zu erh\xF6hen, erleidest
-      du jedes Mal Schaden, wenn du anh\xE4ltst!"
+    m_Localized: "Statt einer deutlichen Geschwindigkeitssteigerung erleidest du
+      jedes Mal Schaden, wenn du anh\xE4ltst!"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340462
@@ -2054,7 +2044,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340463
     m_Localized: "Bewegungsgeschwindigkeit und Gesundheit werden erh\xF6ht, und der
-      Nahkampfwaffenschaden steigt deutlich an, aber man kann sich nur zur Seite
+      Nahkampfwaffenschaden wird deutlich erh\xF6ht, aber man kann sich nur seitw\xE4rts
       bewegen."
     m_Metadata:
       m_Items: []
@@ -2086,8 +2076,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945326534658
     m_Localized: "Nach deinem Tod trittst du f\xFCr 1 Minute in die \u201ERachezeit\u201C
-      ein.\n\nBesiegst du w\xE4hrend der \u201ERachezeit\u201C den Feind, der dich
-      get\xF6tet hat, erh\xE4ltst du einen sehr m\xE4chtigen Effekt!"
+      ein.\n\nBesiege den Gegner, der dich w\xE4hrend der \u201ERachezeit\u201C get\xF6tet
+      hat, um einen sehr m\xE4chtigen Effekt zu erhalten!"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534660
@@ -2105,8 +2095,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534664
-    m_Localized: "W\xE4hle einen Spieler aus, der nach 60 Sekunden Selbstmord begehen
-      soll."
+    m_Localized: "W\xE4hle einen Spieler aus, der nach 60 Sekunden \"Selbstmord\"
+      begehen soll."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534665
@@ -2182,15 +2172,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534686
-    m_Localized: "Die Abklingzeit der Ultimativen F\xE4higkeit verringert sich um
-      40 % schneller.\n\nF\xFCnfmaliger Einsatz der Ultimativen F\xE4higkeit t\xF6tet
+    m_Localized: "Die Abklingzeiten der Ultimativen F\xE4higkeit verringern sich
+      um 40 % schneller.\n\nF\xFCnfmaliger Einsatz der Ultimativen F\xE4higkeit t\xF6tet
       die H\xE4lfte der verbleibenden Spieler."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534687
-    m_Localized: "Die Abklingzeit der Ultimativen F\xE4higkeit verringert sich um
+    m_Localized: "Die Abklingzeiten der Ultimativen F\xE4higkeit verringern sich
       40 % schneller.\n\nF\xFCnfmaliger Einsatz der Ultimativen F\xE4higkeit t\xF6tet
-      die H\xE4lfte der verbleibenden Spieler. (Aktuell: {x:stack})"
+      die H\xE4lfte der \xFCberlebenden Spieler. (Aktuell: {x:stack})"
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534688
@@ -2220,10 +2210,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534696
-    m_Localized: "Du kannst mithilfe einer Fertigkeit entscheiden, ob du den Tarnumhang
-      einsetzt.\n\nSolange du den Tarnumhang tr\xE4gst, wirst du unsichtbar. Dein
-      K\xF6rper (ohne Waffen) ist also nicht sichtbar, aber der verursachte Schaden
-      wird um 50 % reduziert."
+    m_Localized: "Du kannst mithilfe einer Fertigkeit entscheiden, ob du den Unsichtbarkeitsumhang
+      einsetzt.\n\nSolange du den Unsichtbarkeitsumhang tr\xE4gst, wirst du unsichtbar.
+      Dein K\xF6rper (ohne Waffen) ist also nicht sichtbar, aber der verursachte
+      Schaden wird um 50 % reduziert."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534697
@@ -2257,9 +2247,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534706
-    m_Localized: "Nachdem du einen Zielpunkt vor dir festgelegt hast, steige hoch
-      in den Himmel und wirf eine <b>Erde<b> dorthin.\n\nKehre nach der Benutzung
-      zum Ausgangspunkt zur\xFCck."
+    m_Localized: "W\xE4hle einen Punkt vor dir, steige hoch in den Himmel und wirf
+      eine <b>Erde</b> auf diesen Punkt.\n\nKehre nach Gebrauch zum Ausgangspunkt
+      zur\xFCck."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534707
@@ -2276,13 +2266,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534711
-    m_Localized: "\u201EKameraden\u201C k\xF6nnen einander nicht schaden, und ein
-      besonderes Ereignis tritt ein, wenn alle Spieler zu \u201EKameraden\u201C werden."
+    m_Localized: "\u201EVerb\xFCndete\u201C k\xF6nnen einander nicht schaden, und
+      ein besonderes Ereignis tritt ein, wenn alle Spieler zu \u201EVerb\xFCndeten\u201C
+      werden."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534713
-    m_Localized: "Bei der Benutzung zieht es ein Ziel an sich, packt es und l\xE4dt
-      sich auf.\n\nNiemand wei\xDF, wo das Ziel ist."
+    m_Localized: "Bei Benutzung erfasst es ein Ziel und l\xE4dt es auf.\n\nNiemand
+      wei\xDF, wo das Ziel ist."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534714
@@ -2290,7 +2281,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534715
-    m_Localized: Bei der Anwendung wird ein Ziel in die Zukunft versetzt.
+    m_Localized: Bei der Anwendung wird ein Ziel verfolgt und es richtet sich in
+      Richtung Zukunft.
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534716
@@ -2298,9 +2290,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534717
-    m_Localized: "Wenn du eine F\xE4higkeit einsetzt, rufst du die Sprache eines
-      legend\xE4ren Drachen.\n\nRufst du sie 30 Mal, verwandelst du dich in einen
-      legend\xE4ren Drachen.\n\n\xDCberlebst du 3 Minuten, gewinnst du sofort."
+    m_Localized: "Wenn du eine F\xE4higkeit einsetzt, rufst du die Sprache des legend\xE4ren
+      Drachen.\n\nRufst du sie 30 Mal, verwandelst du dich in einen legend\xE4ren
+      Drachen.\n\n\xDCberlebst du 3 Minuten, gewinnst du sofort."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534718
@@ -2335,8 +2327,8 @@ MonoBehaviour:
   - m_Id: 15224945322340380
     m_Localized: "Du bist jemand, der vor langer Zeit starb, aber aus irgendeinem
       Grund zur\xFCckgekehrt ist.\n\nDie F\xE4higkeiten eines Todesritters h\xE4ngen
-      von seinem Namen ab.\n\nDu warst vielleicht nur ein Bauer oder ein m\xE4chtiger
-      Krieger."
+      von seinem Namen ab.\n\nDu k\xF6nntest ein einfacher Bauer gewesen sein oder
+      ein gro\xDFer Mann."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340384
@@ -2374,15 +2366,15 @@ MonoBehaviour:
   - m_Id: 15224945322340411
     m_Localized: "Das Monster hat pro Ziel eine Angriffsabklingzeit von 3 Sekunden
       und verursacht {b:MonsterLowHpBonus:all}% zus\xE4tzlichen Schaden an Zielen
-      mit 30 % oder weniger Gesundheit.\n\nW\xE4hrend der Wirkungsdauer sind Angriffskraft,
+      mit 30 % oder weniger Gesundheit.\n\nW\xE4hrend der Wirkungsdauer werden Angriffskraft,
       Angriffsgeschwindigkeit und Bewegungsgeschwindigkeit leicht erh\xF6ht."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340415
-    m_Localized: "Ein Schatten folgt dem Schattenwandler.\n\nAu\xDFerhalb des Kampfes
-      l\xE4dt sich Dunkelheit {b:DarkChargeTime:all} Sekunden lang auf.\n\nWenn du
-      einen Gegner angreifst und Dunkelheit aufgeladen ist, wird das Ziel {b:BlindTime:all}
-      Sekunden lang geblendet."
+    m_Localized: "Ein Schatten folgt dem Schattenwandler.\n\nWenn du dich nicht im
+      Kampf befindest, lade Dunkelheit f\xFCr {b:DarkChargeTime:all} Sekunden auf.\n\nWenn
+      du einen Gegner angreifst und Dunkelheit aufgeladen ist, wird das Ziel f\xFCr
+      {b:BlindTime:all} Sekunden geblendet."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340418
@@ -2432,9 +2424,9 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340449
     m_Localized: "Teleportiert sich r\xFCckw\xE4rts und hinterl\xE4sst eine Jokerkarte
-      an seinem urspr\xFCnglichen Standort. Tritt man auf die Karte, explodiert sie
-      nach kurzer Verz\xF6gerung und verursacht {dmg:BlastCoef+BlastFlat} Schaden
-      sowie {b:BlastSlowPct:all}% Verlangsamung f\xFCr 2 Sekunden."
+      am urspr\xFCnglichen Ort. Tritt jemand auf die Karte, explodiert sie nach kurzer
+      Verz\xF6gerung und verursacht {dmg:BlastCoef+BlastFlat} Schaden. Au\xDFerdem
+      wird der Spieler 2 Sekunden lang um {b:BlastSlowPct:all}% verlangsamt."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340451
@@ -2443,8 +2435,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945322340452
     m_Localized: "F\xFCgt {b:OneCardSeconds:all} Sekunden zur Abklingzeit aller normalen
-      F\xE4higkeiten (ausgenommen ultimative und zuf\xE4llige F\xE4higkeiten) f\xFCr
-      alle Gegner innerhalb von {b:OneCardRadius:all} Metern hinzu."
+      F\xE4higkeiten hinzu, ausgenommen Ultimates und zuf\xE4llige F\xE4higkeiten,
+      f\xFCr alle Gegner innerhalb von {b:OneCardRadius:all}m."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945322340460
@@ -2465,8 +2457,9 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15224945326534668
     m_Localized: "W\xE4hle einen Spieler aus und belege ihn f\xFCr 20 Sekunden mit
-      dem Status \u201EFluch\u201C, wodurch er nicht mehr kommunizieren kann. Zus\xE4tzlich
-      erh\xE4lt er, solange er lebt, f\xFCr bis zu 999 Sekunden den Effekt \u201ESiegel\u201C."
+      dem Status \u201EFluch\u201C, wodurch er an der Kommunikation gehindert wird.
+      Zus\xE4tzlich erh\xE4lt er, solange er lebt, f\xFCr bis zu 999 Sekunden den
+      Effekt \u201ESiegel\u201C."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534675
@@ -2478,8 +2471,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534684
-    m_Localized: "Springe mit der Bewegung des Ritters zweimal vorw\xE4rts und setze
-      sie innerhalb von 3 Sekunden erneut ein, um diagonal nach links/rechts zu springen."
+    m_Localized: "Springe mit der Bewegung des Ritters zweimal vorw\xE4rts, und wenn
+      du sie innerhalb von 3 Sekunden erneut verwendest, springe diagonal nach links/rechts."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534689
@@ -2487,8 +2480,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534694
-    m_Localized: "Der Schaden an Zielen, die dich nicht ansehen, erh\xF6ht sich um
-      100 %.\n\nWird bei Benutzung f\xFCr 3 Sekunden unsichtbar."
+    m_Localized: "Der Schaden, der verursacht wird, wenn das Ziel dich nicht ansieht,
+      erh\xF6ht sich um 100 %.\n\nWird bei Benutzung f\xFCr 3 Sekunden unsichtbar."
     m_Metadata:
       m_Items: []
   - m_Id: 15224945326534700
@@ -2688,7 +2681,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581832
-    m_Localized: "Wenn es leerger\xE4umt ist, wird es zu \u201ESpitznamens Zimmer\u201C."
+    m_Localized: "Wenn man es leer l\xE4sst, wird es zu einem \u201ESpitznamenzimmer\u201C."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581833
@@ -2728,7 +2721,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581842
-    m_Localized: Startseele
+    m_Localized: Start Soul
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581843
@@ -2748,7 +2741,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581847
-    m_Localized: "Teammatch (Nur Einstellungen \u2013 Teamaufteilung sp\xE4ter)"
+    m_Localized: Mannschaftsspiel (in Vorbereitung)
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581848
@@ -2768,7 +2761,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581852
-    m_Localized: "Nach der Aktivierung aller Nebenalt\xE4re wird der zentrale Altar"
+    m_Localized: "Sie m\xFCssen alle Nebenalt\xE4re aktivieren, damit sich der Hauptaltar
+      \xF6ffnen kann."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581853
@@ -2776,12 +2770,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581854
-    m_Localized: Zentrale Kanalzeit
+    m_Localized: Zentralkanalzeit
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581855
     m_Localized: "Wenn die Anzahl der Unteralt\xE4re auf der Karte geringer ist als
-      die erforderliche Anzahl, \xF6ffne sie einfach alle."
+      die erforderliche Anzahl, k\xF6nnen Sie alle aktivieren."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368021581856
@@ -2949,15 +2943,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776159
-    m_Localized: Raumcode kopieren
+    m_Localized: Ich habe den Zimmercode kopiert.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776160
-    m_Localized: Raumeinstellungen in die Zwischenablage kopieren
+    m_Localized: Ich habe die Raumeinstellungen in die Zwischenablage kopiert.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776161
-    m_Localized: "Eingef\xFCgte Einstellungen anwenden"
+    m_Localized: "Ich habe die eingef\xFCgten Einstellungen angewendet."
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776162
@@ -2965,11 +2959,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776163
-    m_Localized: '[{0}] Gespeichert'
+    m_Localized: '[{0}] gespeichert'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776164
-    m_Localized: '[{0}] Laden'
+    m_Localized: '[{0}] geladen'
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776165
@@ -2985,7 +2979,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776168
-    m_Localized: Serververbindung fehlgeschlagen ({0})
+    m_Localized: Verbindung zum Server fehlgeschlagen ({0})
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776169
@@ -3005,7 +2999,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776173
-    m_Localized: Teilnahme fehlgeschlagen ({0})
+    m_Localized: Konnte nicht teilnehmen ({0})
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776174
@@ -3025,7 +3019,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776178
-    m_Localized: '{0} Personen, die sich nicht vorbereitet haben'
+    m_Localized: Es gibt {0} Personen, die nicht vorbereitet sind.
     m_Metadata:
       m_Items: []
   - m_Id: 15328368025776179
@@ -3077,7 +3071,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805591465984
-    m_Localized: Seelenschildladung (Halten)
+    m_Localized: Seelenschild-Aufladung (Halten)
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020416
@@ -3089,7 +3083,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020418
-    m_Localized: '{0} Kauf'
+    m_Localized: Ich habe {0} gekauft
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020419
@@ -3097,19 +3091,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020420
-    m_Localized: "Wenn Sie einen Artikel ausw\xE4hlen, wird dieser detailliert angezeigt."
+    m_Localized: "Es sind keine Elemente ausgew\xE4hlt."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020421
-    m_Localized: "Kein Handel w\xE4hrend des Kampfes"
+    m_Localized: "W\xE4hrend des Kampfes ist kein Handel m\xF6glich."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020422
-    m_Localized: toter Zustand
+    m_Localized: "Man kann nicht leben, w\xE4hrend man tot ist."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020423
-    m_Localized: Kann jetzt nicht gekauft werden
+    m_Localized: Ich kann es jetzt nicht kaufen.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020424
@@ -3117,11 +3111,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020425
-    m_Localized: "Kann w\xE4hrend der Transformation nicht ge\xE4ndert werden."
+    m_Localized: "W\xE4hrend des Transformationsvorgangs kann die Ausr\xFCstung nicht
+      gewechselt werden."
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020426
-    m_Localized: Seelenmangel
+    m_Localized: Mir fehlt die Seele.
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020427
@@ -3181,7 +3176,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020441
-    m_Localized: Zum Ziel {0} {1}
+    m_Localized: '{0} {1} zum Ziel'
     m_Metadata:
       m_Items: []
   - m_Id: 16007805625020442
@@ -3265,7 +3260,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214732
-    m_Localized: Bei der Verwendung einer Fertigkeit
+    m_Localized: Bei der Anwendung einer Fertigkeit
     m_Metadata:
       m_Items: []
   - m_Id: 16007805629214733
@@ -3369,15 +3364,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389504
-    m_Localized: "Verdauung abgeschlossen \u2013 Kann gegessen werden"
+    m_Localized: "Verdauung abgeschlossen \u2013 Sie k\xF6nnen essen"
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389505
-    m_Localized: Kann die Kraft besiegter Feinde ausspucken
+    m_Localized: Du kannst die Kraft besiegter Feinde ausspucken.
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389506
-    m_Localized: Kann {0} ausgeben
+    m_Localized: Du kannst {0} ausgeben.
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389507
@@ -3389,11 +3384,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389509
-    m_Localized: alles aufgebraucht
+    m_Localized: Ich habe alles benutzt.
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389510
-    m_Localized: "F\xF6rderung"
+    m_Localized: "Ich wurde bef\xF6rdert."
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389511
@@ -3413,8 +3408,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389515
-    m_Localized: "<b>Dunkelheit aufgeladen</b> \u2014 Der n\xE4chste Waffenangriff
-      wird das Ziel verdunkeln."
+    m_Localized: "<b>Dunkel aufgeladen</b> \u2014 Der n\xE4chste Waffenangriff verdunkelt
+      das Ziel"
     m_Metadata:
       m_Items: []
   - m_Id: 16022278058389516
@@ -3467,6 +3462,159 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 16022278058389528
     m_Localized: "Nachricht eingeben\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023742001152
+    m_Localized: "Zur\xFCck zum Titel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749888
+    m_Localized: Nr. {0} - {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749889
+    m_Localized: "Limitierte Auflage, beschr\xE4nkte Auflage!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749890
+    m_Localized: "Limitierte Auflage! \u2014 Bis zum n\xE4chsten Austausch {0}:{1:00}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749891
+    m_Localized: Besonders
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749892
+    m_Localized: "R\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749893
+    m_Localized: "R\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749894
+    m_Localized: gesamte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749895
+    m_Localized: "Der Schwarzmarkt hat er\xF6ffnet \u2014 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749896
+    m_Localized: Der Schwarzmarkt hat geschlossen, da eine Transaktion abgeschlossen
+      wurde.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749897
+    m_Localized: Eine einzelne Transaktion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749898
+    m_Localized: Der Schwarzmarkt ist geschlossen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749899
+    m_Localized: "Schwarzmarkt \u2013 Derzeit geschlossen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749900
+    m_Localized: "\u25C6 {0} Kauf"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749901
+    m_Localized: "Es sind keine Artikel zum Verkauf verf\xFCgbar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749902
+    m_Localized: Ausverkauft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749903
+    m_Localized: fehlen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749904
+    m_Localized: erzwingen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749905
+    m_Localized: Exklusiv auf dem Schwarzmarkt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749906
+    m_Localized: Schwarzmarkt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749907
+    m_Localized: Ich habe diese limitierte Auflage bereits gekauft.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749908
+    m_Localized: Waffenwerte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023779749909
+    m_Localized: Reduzierung des erhaltenen Schadens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138496
+    m_Localized: verlangsamen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138497
+    m_Localized: brennen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138498
+    m_Localized: Statue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138499
+    m_Localized: Siegel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138500
+    m_Localized: Ohnmacht
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138501
+    m_Localized: Schnitt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138502
+    m_Localized: Ausweichen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138503
+    m_Localized: Verteidigungsreduzierung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138504
+    m_Localized: Geist
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138505
+    m_Localized: Blackout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138506
+    m_Localized: Knechtschaft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138507
+    m_Localized: Transparenz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138508
+    m_Localized: Untote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138509
+    m_Localized: Fluch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17144023788138510
+    m_Localized: "Schw\xE4chung"
     m_Metadata:
       m_Items: []
   references:

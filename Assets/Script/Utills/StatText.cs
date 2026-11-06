@@ -11,7 +11,8 @@ public static class StatText
     public static bool IsRatio(StatType s) =>
         s == StatType.CritChance || s == StatType.CritDamage ||
         s == StatType.CooldownReduction || s == StatType.LifeSteal ||
-        s == StatType.HeadshotDamage || s == StatType.HeadshotReduction;
+        s == StatType.HeadshotDamage || s == StatType.HeadshotReduction ||
+        s == StatType.BodyDamageReduction;
 
     /// <summary>+25 / +25% / -10% 형태</summary>
     public static string Value(StatType stat, ModType type, float v)
@@ -28,7 +29,9 @@ public static class StatText
 
     /// <summary>스탯 이름 (번역)</summary>
     public static string Name(StatType s) =>
-        s == StatType.WeaponStatBoost ? LocUtil.GetOr("stat.WeaponStatBoost", "무기 능력치") : LocUtil.Get($"stat.{s}");
+        s == StatType.WeaponStatBoost ? LocUtil.GetOr("stat.WeaponStatBoost", "무기 능력치")
+        : s == StatType.BodyDamageReduction ? LocUtil.GetOr("stat.BodyDamageReduction", "받는 피해 감소")
+        : LocUtil.Get($"stat.{s}");
 
     /// <summary>
     /// 무기 능력치 종합 증가 — 기초 능력치 하나에 boost(0.1 = +10%)만큼 더 붙는 양 (같은 단위로).

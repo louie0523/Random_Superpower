@@ -130,6 +130,15 @@ public class Pickup : NetworkBehaviour
             return;
         }
 
+        // 낙사 구역 아래로 떨어진 무기 — 사라지고, 낮은 확률로 암시장에 '행방불명'으로 나옴
+        if (PickupKind == PickupKind.Weapon && ItemId != 0 && transform.position.y < PlayerHealth.FallDeathYGlobal)
+        {
+            Log("낙사 구역 아래 무기 → 행방불명");
+            MarketDirector.ReportLost(ItemId, ExportEnchants());
+            Runner.Despawn(Object);
+            return;
+        }
+
         if (Claimer != PlayerRef.None && ClaimTimer.Expired(Runner))
         {
             Log($"임자 {Claimer} 타임아웃 → 해제");

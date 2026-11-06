@@ -18,6 +18,9 @@ public partial class PlayerHealth : NetworkBehaviour
     [SerializeField] private float fallCreditWindow = 5f;
     [Tooltip("이 높이(Y) 아래로 떨어지면 낙사")]
     [SerializeField] private float fallDeathY = -20f;
+    /// <summary>낙사 높이 (마지막으로 생긴 플레이어 기준) — 떨어진 무기가 사라지는 높이로도 씀</summary>
+    public static float FallDeathYGlobal = -20f;
+    public float FallDeathY => fallDeathY;
 
     [Header("소울")]
     [Tooltip("처치 시 고정 획득")]
@@ -143,13 +146,13 @@ public partial class PlayerHealth : NetworkBehaviour
 
     public int SoulPerKill => soulPerKill;
     public int SoulPerAssist => soulPerAssist;
-    public float FallDeathY => fallDeathY;
 
     /// <summary>피해자별 마지막 처치로 얻은 소울 (사망회귀가 되돌릴 때)</summary>
     private readonly Dictionary<PlayerRef, int> _lastKillGain = new();
 
     public override void Spawned()
     {
+        FallDeathYGlobal = fallDeathY;
         _stats = GetComponent<PlayerStats>();
         _cc = GetComponent<CharacterController>();
         _ability = GetComponent<AbilityRuntime>();
@@ -349,6 +352,8 @@ public partial class PlayerHealth : NetworkBehaviour
         // 헤드샷 — 투구(헤드샷 감소)를 넣고 곱함. 몸샷보다 덜 들어가진 않음
         if (info.HeadshotMul > 1f)
             raw *= Headshot.Incoming(info.HeadshotMul, _stats);
+        else
+            raw *= Headshot.BodyArmor(info.HeadshotMul, _stats);      // 갑옷 — 받는 피해 N% 감소 (헤드샷 제외)
 
         raw *= ruleMul;
 
